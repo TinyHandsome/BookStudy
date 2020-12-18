@@ -1855,13 +1855,2734 @@
   - CGGNet
   - Inception-v4
 
+## 14. 循环神经网络
 
+- TensorFlow中的基本RNN
+  - 假设RNN只运行两个时间迭代，每个时间迭代输入一个大小为3的向量。
 
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+        @author: Li Tian
+        @contact: 694317828@qq.com
+        @software: pycharm
+        @file: simple_rnn.py
+        @time: 2019/6/15 16:53
+        @desc: 实现一个最简单的RNN网络。我们将使用tanh激活函数创建一个由5个
+                神经元组成的一层RNN。假设RNN只运行两个时间迭代，每个时间迭代
+                输入一个大小为3的向量。
+        """
+    import tensorflow as tf
+    import numpy as np
+    
+    n_inputs = 3
+    n_neurons = 5
+    
+    x0 = tf.placeholder(tf.float32, [None, n_inputs])
+    x1 = tf.placeholder(tf.float32, [None, n_inputs])
+    
+    Wx = tf.Variable(tf.random_normal(shape=[n_inputs, n_neurons], dtype=tf.float32))
+    Wy = tf.Variable(tf.random_normal(shape=[n_neurons, n_neurons], dtype=tf.float32))
+    b = tf.Variable(tf.zeros([1, n_neurons], dtype=tf.float32))
+    
+    y0 = tf.tanh(tf.matmul(x0, Wx) + b)
+    y1 = tf.tanh(tf.matmul(y0, Wy) + tf.matmul(x1, Wx) + b)
+    
+    init = tf.global_variables_initializer()
+    
+    # Mini-batch：包含4个实例的小批次
+    x0_batch = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 0, 1]])   # t=0
+    x1_batch = np.array([[9, 8, 7], [0, 0, 0], [6, 5, 4], [3, 2, 1]])   # t=1
+    
+    with tf.Session() as sess:
+        init.run()
+        y0_val, y1_val = sess.run([y0, y1], feed_dict={x0: x0_batch, x1: x1_batch})
+        print(y0_val)
+        print('-'*50)
+        print(y1_val)
+    ```
+  
+  - 运行结果
+  
+    ![img](https://img-blog.csdnimg.cn/20190616140922727.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
+- 通过时间静态展开
+  - static_rnn()函数通过链式单元来创建一个展开的RNN网络。
 
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: simple_rnn2.py
+    @time: 2019/6/15 17:06
+    @desc: 与前一个程序相同
+    """
+    
+    import tensorflow as tf
+    from tensorflow.contrib.rnn import BasicRNNCell
+    from tensorflow.contrib.rnn import static_rnn
+    import numpy as np
+    
+    n_inputs = 3
+    n_neurons = 5
+    
+    x0 = tf.placeholder(tf.float32, [None, n_inputs])
+    x1 = tf.placeholder(tf.float32, [None, n_inputs])
+    
+    basic_cell = BasicRNNCell(num_units=n_neurons)
+    output_seqs, states = static_rnn(basic_cell, [x0, x1], dtype=tf.float32)
+    
+    y0, y1 = output_seqs
+    
+    init = tf.global_variables_initializer()
+    
+    # Mini-batch：包含4个实例的小批次
+    x0_batch = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 0, 1]])   # t=0
+    x1_batch = np.array([[9, 8, 7], [0, 0, 0], [6, 5, 4], [3, 2, 1]])   # t=1
+    
+    with tf.Session() as sess:
+        init.run()
+        y0_val, y1_val = sess.run([y0, y1], feed_dict={x0: x0_batch, x1: x1_batch})
+        print(y0_val)
+        print('-'*50)
+        print(y1_val)
+    ```
 
+  - 运行结果
 
+  ![img](https://img-blog.csdnimg.cn/20190617091015679.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
+- 通过时间动态展开
+  - 利用dynamic_rnn()和while_loop()
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: dynamic_rnn1.py
+    @time: 2019/6/16 13:37
+    @desc:  通过时间动态展开 dynamic_rnn
+    """
+    
+    import tensorflow as tf
+    from tensorflow.contrib.rnn import BasicRNNCell
+    import numpy as np
+    
+    
+    n_steps = 2
+    n_inputs = 3
+    n_neurons = 5
+    
+    x = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+    basic_cell = BasicRNNCell(num_units=n_neurons)
+    outputs, states = tf.nn.dynamic_rnn(basic_cell, x, dtype=tf.float32)
+    
+    x_batch = np.array([
+        [[0, 1, 2], [9, 8, 7]],
+        [[3, 4, 5], [0, 0, 0]],
+        [[6, 7, 8], [6, 5, 4]],
+        [[9, 0, 1], [3, 2, 1]],
+    ])
+    
+    init = tf.global_variables_initializer()
+    
+    with tf.Session() as sess:
+        init.run()
+        outputs_val = outputs.eval(feed_dict={x: x_batch})
+        print(outputs_val)
+    ```
+
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/20190616140352857.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+    这时问题来了，动态、静态这两种有啥区别呢？
+
+    参考：[tensor flow dynamic_rnn 与rnn有啥区别？](<https://www.zhihu.com/question/52200883>)
+
+- 处理长度可变输入序列
+
+  ```python
+  #!/usr/bin/env python
+  # -*- coding: UTF-8 -*-
+  # coding=utf-8 
+  
+  """
+  @author: Li Tian
+  @contact: 694317828@qq.com
+  @software: pycharm
+  @file: dynamic_rnn2.py
+  @time: 2019/6/17 9:42
+  @desc: 处理长度可变输入序列
+  """
+  
+  import tensorflow as tf
+  from tensorflow.contrib.rnn import BasicRNNCell
+  import numpy as np
+  
+  
+  n_steps = 2
+  n_inputs = 3
+  n_neurons = 5
+  
+  seq_length = tf.placeholder(tf.int32, [None])
+  x = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+  basic_cell = BasicRNNCell(num_units=n_neurons)
+  outputs, states = tf.nn.dynamic_rnn(basic_cell, x, dtype=tf.float32, sequence_length=seq_length)
+  
+  # 假设第二个输出序列仅包含一个输入。为了适应输入张量X，必须使用零向量填充输入。
+  x_batch = np.array([
+      [[0, 1, 2], [9, 8, 7]],
+      [[3, 4, 5], [0, 0, 0]],
+      [[6, 7, 8], [6, 5, 4]],
+      [[9, 0, 1], [3, 2, 1]],
+  ])
+  
+  seq_length_batch = np.array([2, 1, 2, 2])
+  
+  init = tf.global_variables_initializer()
+  
+  with tf.Session() as sess:
+      init.run()
+      outputs_val, states_val = sess.run([outputs, states], feed_dict={x: x_batch, seq_length: seq_length_batch})
+      print(outputs_val)
+  ```
+
+  - 运行结果
+
+  ![img](https://img-blog.csdnimg.cn/20190617095932695.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+  - 结果分析
+
+    RNN每一次迭代超过输入长度的部分输出零向量。
+
+    此外，状态张量包含了每个单元的最终状态（除了零向量）。
+
+- 处理长度可变输出序列
+  
+- 最通常的解决方案是定义一种被称为**序列结束令牌（EOS token）**的特殊输出。
+  
+- 训练RNN
+  
+- **通过时间反向传播（BPTT）**：梯度通过被成本函数使用的所有输出向后流动，而不是仅仅通过输出最终输出。
+  
+- 训练序列分类器
+
+  ```python
+  #!/usr/bin/env python
+  # -*- coding: UTF-8 -*-
+  # coding=utf-8 
+  
+  """
+  @author: Li Tian
+  @contact: 694317828@qq.com
+  @software: pycharm
+  @file: rnn_test1.py
+  @time: 2019/6/17 10:28
+  @desc: 训练一个识别MNIST图像的RNN网络。
+  """
+  
+  import tensorflow as tf
+  from tensorflow.contrib.layers import fully_connected
+  from tensorflow.contrib.rnn import BasicRNNCell
+  
+  from tensorflow.examples.tutorials.mnist import input_data
+  
+  
+  n_steps = 28
+  n_inputs = 28
+  n_neurons = 150
+  n_outputs = 10
+  
+  learning_rate = 0.001
+  
+  n_epochs = 100
+  batch_size = 150
+  
+  X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+  y = tf.placeholder(tf.int32, [None])
+  
+  basic_cell = BasicRNNCell(num_units=n_neurons)
+  outputs, states = tf.nn.dynamic_rnn(basic_cell, X, dtype=tf.float32)
+  
+  logits = fully_connected(states, n_outputs, activation_fn=None)
+  xentropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y, logits=logits)
+  
+  loss = tf.reduce_mean(xentropy)
+  optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+  training_op = optimizer.minimize(loss)
+  correct = tf.nn.in_top_k(logits, y, 1)
+  accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+  init = tf.global_variables_initializer()
+  
+  # 加载MNIST数据，并按照网格的要求改造测试数据。
+  mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+  X_test = mnist.test.images.reshape((-1, n_steps, n_inputs))
+  y_test = mnist.test.labels
+  
+  with tf.Session() as sess:
+      init.run()
+      for epoch in range(n_epochs):
+          for iteration in range(mnist.train.num_examples // batch_size):
+              X_batch, y_batch = mnist.train.next_batch(batch_size)
+              X_batch = X_batch.reshape((-1, n_steps, n_inputs))
+              sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+  
+          acc_train = accuracy.eval(feed_dict={X: X_batch, y: y_batch})
+          acc_test = accuracy.eval(feed_dict={X: X_test, y: y_test})
+          print(epoch, "Train accuracy: ", acc_train, "Test accuracy: ", acc_test)
+  ```
+
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/2019061715470573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+    **tf.nn.in_top_k**：主要是用于计算预测的结果和实际结果的是否相等，返回一个bool类型的张量，tf.nn.in_top_k(prediction, target, K):prediction就是表示你预测的结果，大小就是预测样本的数量乘以输出的维度，类型是tf.float32等。target就是实际样本类别的索引，大小就是样本数量的个数。K表示每个样本的预测结果的前K个最大的数里面是否含有target中的值。一般都是取1。
+
+    参考链接：[tf.nn.in_top_k的用法](<https://blog.csdn.net/uestc_c2_403/article/details/73187915>)
+
+    **tf.cast**：将x的数据格式转化成dtype。例如，原来x的数据格式是bool，那么将其转化成float以后，就能够将其转化成0和1的序列。反之也可以。
+
+    ```
+    cast(
+        x,
+        dtype,
+        name=None
+    )
+    ```
+
+- 训练预测时间序列
+
+  ```python
+  #!/usr/bin/env python
+  # -*- coding: UTF-8 -*-
+  # coding=utf-8 
+  
+  """
+  @author: Li Tian
+  @contact: 694317828@qq.com
+  @software: pycharm
+  @file: rnn_test2.py
+  @time: 2019/6/18 10:11
+  @desc: 训练预测时间序列
+  """
+  
+  import tensorflow as tf
+  import numpy as np
+  from tensorflow.contrib.layers import fully_connected
+  from tensorflow.contrib.rnn import BasicRNNCell
+  from tensorflow.contrib.rnn import OutputProjectionWrapper
+  import pandas as pd
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+  sns.set()
+  
+  
+  n_steps = 100
+  n_inputs = 1
+  n_neurous = 100
+  n_outputs = 1
+  
+  learning_rate = 0.001
+  
+  n_iterations = 10000
+  batch_size = 50
+  
+  X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+  y = tf.placeholder(tf.float32, [None, n_steps, n_outputs])
+  
+  # 现在在每个时间迭代，有一个大小为100的输出向量，但是实际上我们需要一个单独的输出值。
+  # 最简单的解决方案是将单元格包装在OutputProjectionWrapper中。
+  # cell = OutputProjectionWrapper(BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu), output_size=n_outputs)
+  
+  # 用技巧提高速度
+  cell = BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu)
+  rnn_outputs, states = tf.nn.dynamic_rnn(cell, X, dtype=tf.float32)
+  stacked_rnn_outputs = tf.reshape(rnn_outputs, [-1, n_neurous])
+  stacked_outputs = fully_connected(stacked_rnn_outputs, n_outputs, activation_fn=None)
+  outputs = tf.reshape(stacked_outputs, [-1, n_steps, n_outputs])
+  
+  loss = tf.reduce_mean(tf.square(outputs - y))
+  optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+  training_op = optimizer.minimize(loss)
+  
+  init = tf.global_variables_initializer()
+  
+  X_data = np.linspace(0, 15, 101)
+  with tf.Session() as sess:
+      init.run()
+      for iteration in range(n_iterations):
+          X_batch = X_data[:-1][np.newaxis, :, np.newaxis]
+          y_batch = X_batch * np.sin(X_batch) / 3 + 2 * np.sin(5 * X_batch)
+          sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+          if iteration % 100 == 0:
+              mse = loss.eval(feed_dict={X: X_batch, y: y_batch})
+              print(iteration, "\tMSE", mse)
+  
+      X_new = X_data[1:][np.newaxis, :, np.newaxis]
+      y_true = X_new * np.sin(X_new) / 3 + 2 * np.sin(5 * X_new)
+      y_pred = sess.run(outputs, feed_dict={X: X_new})
+  
+  print(X_new.flatten())
+  print('真实结果：', y_true.flatten())
+  print('预测结果：', y_pred.flatten())
+  
+  fig = plt.figure(dpi=150)
+  plt.plot(X_new.flatten(), y_true.flatten(), 'r', label='y_true')
+  plt.plot(X_new.flatten(), y_pred.flatten(), 'b', label='y_pred')
+  plt.legend()
+  plt.show()
+  ```
+
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/20190619091623791.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 创造性的RNN
+
+  ```python
+  #!/usr/bin/env python
+  # -*- coding: UTF-8 -*-
+  # coding=utf-8 
+  
+  """
+  @author: Li Tian
+  @contact: 694317828@qq.com
+  @software: pycharm
+  @file: rnn_test3.py
+  @time: 2019/6/19 8:47
+  @desc: 创造性RNN
+  """
+  
+  import tensorflow as tf
+  import numpy as np
+  from tensorflow.contrib.layers import fully_connected
+  from tensorflow.contrib.rnn import BasicRNNCell
+  from tensorflow.contrib.rnn import OutputProjectionWrapper
+  import pandas as pd
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+  sns.set()
+  
+  
+  n_steps = 20
+  n_inputs = 1
+  n_neurous = 100
+  n_outputs = 1
+  
+  learning_rate = 0.001
+  
+  n_iterations = 10000
+  batch_size = 50
+  
+  X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+  y = tf.placeholder(tf.float32, [None, n_steps, n_outputs])
+  
+  # 现在在每个时间迭代，有一个大小为100的输出向量，但是实际上我们需要一个单独的输出值。
+  # 最简单的解决方案是将单元格包装在OutputProjectionWrapper中。
+  # cell = OutputProjectionWrapper(BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu), output_size=n_outputs)
+  
+  # 用技巧提高速度
+  cell = BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu)
+  rnn_outputs, states = tf.nn.dynamic_rnn(cell, X, dtype=tf.float32)
+  stacked_rnn_outputs = tf.reshape(rnn_outputs, [-1, n_neurous])
+  stacked_outputs = fully_connected(stacked_rnn_outputs, n_outputs, activation_fn=None)
+  outputs = tf.reshape(stacked_outputs, [-1, n_steps, n_outputs])
+  
+  loss = tf.reduce_mean(tf.square(outputs - y))
+  optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+  training_op = optimizer.minimize(loss)
+  
+  init = tf.global_variables_initializer()
+  
+  X_data = np.linspace(0, 19, 20)
+  with tf.Session() as sess:
+      init.run()
+      for iteration in range(n_iterations):
+          X_batch = X_data[np.newaxis, :, np.newaxis]
+          y_batch = X_batch * np.sin(X_batch) / 3 + 2 * np.sin(5 * X_batch)
+          sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+          if iteration % 100 == 0:
+              mse = loss.eval(feed_dict={X: X_batch, y: y_batch})
+              print(iteration, "\tMSE", mse)
+  
+      # sequence = [0.] * n_steps
+      sequence = list(y_batch.flatten())
+      for iteration in range(300):
+          XX_batch = np.array(sequence[-n_steps:]).reshape(1, n_steps, 1)
+          y_pred = sess.run(outputs, feed_dict={X: XX_batch})
+          sequence.append(y_pred[0, -1, 0])
+  
+  fig = plt.figure(dpi=150)
+  plt.plot(sequence)
+  plt.legend()
+  plt.show()
+  ```
+
+  - 结果1：使用零值作为种子序列
+
+    ![img](https://img-blog.csdnimg.cn/20190619100641977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+  - 结果2：使用实例作为种子序列
+
+    ![img](https://img-blog.csdnimg.cn/2019061910082647.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 深层RNN
+
+  ```python
+  #!/usr/bin/env python
+  # -*- coding: UTF-8 -*-
+  # coding=utf-8 
+  
+  """
+  @author: Li Tian
+  @contact: 694317828@qq.com
+  @software: pycharm
+  @file: rnn_test4.py
+  @time: 2019/6/19 10:10
+  @desc: 深层RNN
+  """
+  
+  import tensorflow as tf
+  import numpy as np
+  from tensorflow.contrib.layers import fully_connected
+  from tensorflow.contrib.rnn import BasicRNNCell
+  from tensorflow.contrib.rnn import MultiRNNCell
+  from tensorflow.contrib.rnn import OutputProjectionWrapper
+  import pandas as pd
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+  sns.set()
+  
+  
+  n_steps = 100
+  n_inputs = 1
+  n_neurous = 100
+  n_outputs = 1
+  
+  n_layers = 10
+  
+  learning_rate = 0.00001
+  
+  n_iterations = 10000
+  batch_size = 50
+  
+  X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+  y = tf.placeholder(tf.float32, [None, n_steps, n_outputs])
+  
+  # 现在在每个时间迭代，有一个大小为100的输出向量，但是实际上我们需要一个单独的输出值。
+  # 最简单的解决方案是将单元格包装在OutputProjectionWrapper中。
+  # cell = OutputProjectionWrapper(BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu), output_size=n_outputs)
+  
+  # 用技巧提高速度
+  # cell = BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu)
+  # multi_layer_cell = MultiRNNCell([cell] * n_layers)
+  layers = [BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu) for _ in range(n_layers)]
+  multi_layer_cell = MultiRNNCell(layers)
+  rnn_outputs, states = tf.nn.dynamic_rnn(multi_layer_cell, X, dtype=tf.float32)
+  stacked_rnn_outputs = tf.reshape(rnn_outputs, [-1, n_neurous])
+  stacked_outputs = fully_connected(stacked_rnn_outputs, n_outputs, activation_fn=None)
+  outputs = tf.reshape(stacked_outputs, [-1, n_steps, n_outputs])
+  
+  loss = tf.reduce_mean(tf.square(outputs - y))
+  optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+  training_op = optimizer.minimize(loss)
+  
+  init = tf.global_variables_initializer()
+  
+  X_data = np.linspace(0, 15, 101)
+  with tf.Session() as sess:
+      init.run()
+      for iteration in range(n_iterations):
+          X_batch = X_data[:-1][np.newaxis, :, np.newaxis]
+          y_batch = X_batch * np.sin(X_batch) / 3 + 2 * np.sin(5 * X_batch)
+          sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+          if iteration % 100 == 0:
+              mse = loss.eval(feed_dict={X: X_batch, y: y_batch})
+              print(iteration, "\tMSE", mse)
+  
+      X_new = X_data[1:][np.newaxis, :, np.newaxis]
+      y_true = X_new * np.sin(X_new) / 3 + 2 * np.sin(5 * X_new)
+      y_pred = sess.run(outputs, feed_dict={X: X_new})
+  
+  print(X_new.flatten())
+  print('真实结果：', y_true.flatten())
+  print('预测结果：', y_pred.flatten())
+  
+  plt.rcParams['font.sans-serif']=['SimHei']  # 用来正常显示中文标签
+  plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+  fig = plt.figure(dpi=150)
+  plt.plot(X_new.flatten(), y_true.flatten(), 'r', label='y_true')
+  plt.plot(X_new.flatten(), y_pred.flatten(), 'b', label='y_pred')
+  plt.title('深层RNN预测')
+  plt.legend()
+  plt.show()
+  ```
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/201906191209500.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 在多个GPU中分配一个深层RNN
+  - 并没有多个GPU，所以只是整理了一下代码。。。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: rnn_gpu.py
+    @time: 2019/6/19 12:11
+    @desc: 在多个GPU中分配一个深层RNN
+    """
+    
+    import tensorflow as tf
+    import numpy as np
+    from tensorflow.contrib.rnn import RNNCell
+    from tensorflow.contrib.rnn import BasicRNNCell
+    from tensorflow.contrib.rnn import MultiRNNCell
+    from tensorflow.contrib.layers import fully_connected
+    
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    sns.set()
+    
+    
+    class DeviceCellWrapper(RNNCell):
+        def __init__(self, device, cell):
+            self._cell = cell
+            self._device = device
+    
+        @property
+        def state_size(self):
+            return self._cell.state_size
+    
+        @property
+        def output(self):
+            return self._cell.output_size
+    
+        def __call__(self, inputs, state, scope=None):
+            with tf.device(self._device):
+                return self._cell(inputs, state, scope)
+    
+    
+    n_steps = 100
+    n_inputs = 1
+    n_neurous = 100
+    n_outputs = 1
+    
+    n_layers = 10
+    
+    learning_rate = 0.00001
+    
+    n_iterations = 10000
+    batch_size = 50
+    
+    X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+    y = tf.placeholder(tf.float32, [None, n_steps, n_outputs])
+    
+    
+    devices = ['/gpu:0', '/gpu:1', '/gpu:2']
+    cells = [DeviceCellWrapper(dev, BasicRNNCell(num_units=n_neurous)) for dev in devices]
+    multi_layer_cell = MultiRNNCell(cells)
+    rnn_outputs,  states = tf.nn.dynamic_rnn(multi_layer_cell, X, dtype=tf.float32)
+    
+    stacked_rnn_outputs = tf.reshape(rnn_outputs, [-1, n_neurous])
+    stacked_outputs = fully_connected(stacked_rnn_outputs, n_outputs, activation_fn=None)
+    outputs = tf.reshape(stacked_outputs, [-1, n_steps, n_outputs])
+    
+    loss = tf.reduce_mean(tf.square(outputs - y))
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    
+    X_data = np.linspace(0, 15, 101)
+    with tf.Session() as sess:
+        init.run()
+        for iteration in range(n_iterations):
+            X_batch = X_data[:-1][np.newaxis, :, np.newaxis]
+            y_batch = X_batch * np.sin(X_batch) / 3 + 2 * np.sin(5 * X_batch)
+            sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+            if iteration % 100 == 0:
+                mse = loss.eval(feed_dict={X: X_batch, y: y_batch})
+                print(iteration, "\tMSE", mse)
+    
+        X_new = X_data[1:][np.newaxis, :, np.newaxis]
+        y_true = X_new * np.sin(X_new) / 3 + 2 * np.sin(5 * X_new)
+        y_pred = sess.run(outputs, feed_dict={X: X_new})
+    
+    print(X_new.flatten())
+    print('真实结果：', y_true.flatten())
+    print('预测结果：', y_pred.flatten())
+    
+    plt.rcParams['font.sans-serif']=['SimHei']  # 用来正常显示中文标签
+    plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+    fig = plt.figure(dpi=150)
+    plt.plot(X_new.flatten(), y_true.flatten(), 'r', label='y_true')
+    plt.plot(X_new.flatten(), y_pred.flatten(), 'b', label='y_pred')
+    plt.title('深层RNN预测')
+    plt.legend()
+    plt.show()
+    ```
+
+- 应用丢弃机制
+
+  ```python
+  #!/usr/bin/env python
+  # -*- coding: UTF-8 -*-
+  # coding=utf-8 
+  
+  """
+  @author: Li Tian
+  @contact: 694317828@qq.com
+  @software: pycharm
+  @file: rnn_test5.py
+  @time: 2019/6/19 13:44
+  @desc: 应用丢弃机制
+  """
+  
+  
+  import tensorflow as tf
+  import sys
+  import numpy as np
+  from tensorflow.contrib.layers import fully_connected
+  from tensorflow.contrib.rnn import BasicRNNCell
+  from tensorflow.contrib.rnn import MultiRNNCell
+  from tensorflow.contrib.rnn import OutputProjectionWrapper
+  from tensorflow.contrib.rnn import DropoutWrapper
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+  sns.set()
+  
+  
+  is_training = (sys.argv[-1] == "train")
+  keep_prob = 0.5
+  n_steps = 100
+  n_inputs = 1
+  n_neurous = 100
+  n_outputs = 1
+  
+  n_layers = 10
+  
+  learning_rate = 0.00001
+  
+  n_iterations = 10000
+  batch_size = 50
+  
+  
+  def make_rnn_cell():
+      return BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu)
+  
+  
+  def make_drop_cell():
+      return DropoutWrapper(make_rnn_cell(), input_keep_prob=keep_prob)
+  
+  
+  X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+  y = tf.placeholder(tf.float32, [None, n_steps, n_outputs])
+  
+  # 现在在每个时间迭代，有一个大小为100的输出向量，但是实际上我们需要一个单独的输出值。
+  # 最简单的解决方案是将单元格包装在OutputProjectionWrapper中。
+  # cell = OutputProjectionWrapper(BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu), output_size=n_outputs)
+  
+  # 用技巧提高速度
+  layers = [make_rnn_cell() for _ in range(n_layers)]
+  if is_training:
+      layers = [make_drop_cell() for _ in range(n_layers)]
+  
+  multi_layer_cell = MultiRNNCell(layers)
+  rnn_outputs, states = tf.nn.dynamic_rnn(multi_layer_cell, X, dtype=tf.float32)
+  stacked_rnn_outputs = tf.reshape(rnn_outputs, [-1, n_neurous])
+  stacked_outputs = fully_connected(stacked_rnn_outputs, n_outputs, activation_fn=None)
+  outputs = tf.reshape(stacked_outputs, [-1, n_steps, n_outputs])
+  
+  loss = tf.reduce_mean(tf.square(outputs - y))
+  optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+  training_op = optimizer.minimize(loss)
+  
+  init = tf.global_variables_initializer()
+  
+  X_data = np.linspace(0, 15, 101)
+  
+  '''
+  # 应用丢弃机制
+  saver = tf.train.Saver()
+  
+  with tf.Session() as sess:
+      if is_training:
+          init.run()
+          for iteration in range(n_iterations):
+              # train the model
+          save_path = saver.save(sess, "./my_model.ckpt")
+      else:
+          saver.restore(sess, "./my_model.ckpt")
+          # use the model
+  '''
+  
+  with tf.Session() as sess:
+      init.run()
+      for iteration in range(n_iterations):
+          X_batch = X_data[:-1][np.newaxis, :, np.newaxis]
+          y_batch = X_batch * np.sin(X_batch) / 3 + 2 * np.sin(5 * X_batch)
+          sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+          if iteration % 100 == 0:
+              mse = loss.eval(feed_dict={X: X_batch, y: y_batch})
+              print(iteration, "\tMSE", mse)
+  
+      X_new = X_data[1:][np.newaxis, :, np.newaxis]
+      y_true = X_new * np.sin(X_new) / 3 + 2 * np.sin(5 * X_new)
+      y_pred = sess.run(outputs, feed_dict={X: X_new})
+  
+  print(X_new.flatten())
+  print('真实结果：', y_true.flatten())
+  print('预测结果：', y_pred.flatten())
+  
+  plt.rcParams['font.sans-serif']=['SimHei']  # 用来正常显示中文标签
+  plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+  fig = plt.figure(dpi=150)
+  plt.plot(X_new.flatten(), y_true.flatten(), 'r', label='y_true')
+  plt.plot(X_new.flatten(), y_pred.flatten(), 'b', label='y_pred')
+  plt.title('深层RNN预测')
+  plt.legend()
+  plt.show()
+  ```
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/20190619142923555.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- LSTM单元
+  - 四个不同的全连接层：**主层**：tanh，直接输出$y_t和h_t$；**忘记门限**：logitstic，控制着哪些长期状态应该被丢弃；**输入门限**：控制着主层的哪些部分会被加入到长期状态（这就是“部分存储”的原因）；**输出门限**：控制着哪些长期状态应该在这个时间迭代被读取和输出（$h_t和y_t$）。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: lstm_test1.py
+    @time: 2019/6/19 14:51
+    @desc: LSTM单元
+    """
+    
+    import tensorflow as tf
+    import sys
+    import numpy as np
+    from tensorflow.contrib.layers import fully_connected
+    from tensorflow.contrib.rnn import BasicLSTMCell
+    from tensorflow.contrib.rnn import MultiRNNCell
+    from tensorflow.contrib.rnn import OutputProjectionWrapper
+    from tensorflow.contrib.rnn import DropoutWrapper
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    sns.set()
+    
+    
+    is_training = (sys.argv[-1] == "train")
+    keep_prob = 0.5
+    n_steps = 100
+    n_inputs = 1
+    n_neurous = 100
+    n_outputs = 1
+    
+    n_layers = 5
+    
+    learning_rate = 0.00001
+    
+    n_iterations = 10000
+    batch_size = 50
+    
+    
+    def make_rnn_cell():
+        return BasicLSTMCell(num_units=n_neurous, activation=tf.nn.relu)
+    
+    
+    def make_drop_cell():
+        return DropoutWrapper(make_rnn_cell(), input_keep_prob=keep_prob)
+    
+    
+    X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+    y = tf.placeholder(tf.float32, [None, n_steps, n_outputs])
+    
+    # 现在在每个时间迭代，有一个大小为100的输出向量，但是实际上我们需要一个单独的输出值。
+    # 最简单的解决方案是将单元格包装在OutputProjectionWrapper中。
+    # cell = OutputProjectionWrapper(BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu), output_size=n_outputs)
+    
+    # 用技巧提高速度
+    layers = [make_rnn_cell() for _ in range(n_layers)]
+    # if is_training:
+    #     layers = [make_drop_cell() for _ in range(n_layers)]
+    
+    multi_layer_cell = MultiRNNCell(layers)
+    rnn_outputs, states = tf.nn.dynamic_rnn(multi_layer_cell, X, dtype=tf.float32)
+    stacked_rnn_outputs = tf.reshape(rnn_outputs, [-1, n_neurous])
+    stacked_outputs = fully_connected(stacked_rnn_outputs, n_outputs, activation_fn=None)
+    outputs = tf.reshape(stacked_outputs, [-1, n_steps, n_outputs])
+    
+    loss = tf.reduce_mean(tf.square(outputs - y))
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    
+    X_data = np.linspace(0, 15, 101)
+    
+    with tf.Session() as sess:
+        init.run()
+        for iteration in range(n_iterations):
+            X_batch = X_data[:-1][np.newaxis, :, np.newaxis]
+            y_batch = X_batch * np.sin(X_batch) / 3 + 2 * np.sin(5 * X_batch)
+            sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+            if iteration % 100 == 0:
+                mse = loss.eval(feed_dict={X: X_batch, y: y_batch})
+                print(iteration, "\tMSE", mse)
+    
+        X_new = X_data[1:][np.newaxis, :, np.newaxis]
+        y_true = X_new * np.sin(X_new) / 3 + 2 * np.sin(5 * X_new)
+        y_pred = sess.run(outputs, feed_dict={X: X_new})
+    
+    print(X_new.flatten())
+    print('真实结果：', y_true.flatten())
+    print('预测结果：', y_pred.flatten())
+    
+    plt.rcParams['font.sans-serif']=['SimHei']  # 用来正常显示中文标签
+    plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+    fig = plt.figure(dpi=150)
+    plt.plot(X_new.flatten(), y_true.flatten(), 'r', label='y_true')
+    plt.plot(X_new.flatten(), y_pred.flatten(), 'b', label='y_pred')
+    plt.title('深层RNN预测')
+    plt.legend()
+    plt.show()
+    ```
+
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/20190619163150801.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 窥视孔连接
+  - **窥视孔连接（peephole connections）**：LSTM变体，当前一个长期状态$c_{(t-1)}$作为输入传入忘记门限和输入门限，当前的长期状态$c_{(t)}$作为输入传出门限控制器。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: lstm_test2.py
+    @time: 2019/6/19 16:36
+    @desc: 窥视孔连接
+    """
+    
+    import tensorflow as tf
+    import numpy as np
+    from tensorflow.contrib.layers import fully_connected
+    from tensorflow.contrib.rnn import LSTMCell
+    from tensorflow.contrib.rnn import MultiRNNCell
+    from tensorflow.contrib.rnn import OutputProjectionWrapper
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    sns.set()
+    
+    
+    n_steps = 100
+    n_inputs = 1
+    n_neurous = 100
+    n_outputs = 1
+    
+    n_layers = 10
+    
+    learning_rate = 0.00001
+    
+    n_iterations = 10000
+    batch_size = 50
+    
+    X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+    y = tf.placeholder(tf.float32, [None, n_steps, n_outputs])
+    
+    # 现在在每个时间迭代，有一个大小为100的输出向量，但是实际上我们需要一个单独的输出值。
+    # 最简单的解决方案是将单元格包装在OutputProjectionWrapper中。
+    # cell = OutputProjectionWrapper(BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu), output_size=n_outputs)
+    
+    # 用技巧提高速度
+    # cell = BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu)
+    # multi_layer_cell = MultiRNNCell([cell] * n_layers)
+    layers = [LSTMCell(num_units=n_neurous, activation=tf.nn.relu, use_peepholes=True) for _ in range(n_layers)]
+    multi_layer_cell = MultiRNNCell(layers)
+    rnn_outputs, states = tf.nn.dynamic_rnn(multi_layer_cell, X, dtype=tf.float32)
+    stacked_rnn_outputs = tf.reshape(rnn_outputs, [-1, n_neurous])
+    stacked_outputs = fully_connected(stacked_rnn_outputs, n_outputs, activation_fn=None)
+    outputs = tf.reshape(stacked_outputs, [-1, n_steps, n_outputs])
+    
+    loss = tf.reduce_mean(tf.square(outputs - y))
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    
+    X_data = np.linspace(0, 15, 101)
+    with tf.Session() as sess:
+        init.run()
+        for iteration in range(n_iterations):
+            X_batch = X_data[:-1][np.newaxis, :, np.newaxis]
+            y_batch = X_batch * np.sin(X_batch) / 3 + 2 * np.sin(5 * X_batch)
+            sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+            if iteration % 100 == 0:
+                mse = loss.eval(feed_dict={X: X_batch, y: y_batch})
+                print(iteration, "\tMSE", mse)
+    
+        X_new = X_data[1:][np.newaxis, :, np.newaxis]
+        y_true = X_new * np.sin(X_new) / 3 + 2 * np.sin(5 * X_new)
+        y_pred = sess.run(outputs, feed_dict={X: X_new})
+    
+    print(X_new.flatten())
+    print('真实结果：', y_true.flatten())
+    print('预测结果：', y_pred.flatten())
+    
+    plt.rcParams['font.sans-serif']=['SimHei']  # 用来正常显示中文标签
+    plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+    fig = plt.figure(dpi=150)
+    plt.plot(X_new.flatten(), y_true.flatten(), 'r', label='y_true')
+    plt.plot(X_new.flatten(), y_pred.flatten(), 'b', label='y_pred')
+    plt.title('深层RNN预测')
+    plt.legend()
+    plt.show()
+    ```
+
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/20190619170140873.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- GRU单元
+  - GRU单元是LSTM的简化版本，其主要简化了：
+
+    1. 两个状态向量合并为一个向量$h_{(t)}$。
+    2. 一个门限控制器同时控制忘记门限和输入门限。如果门限控制器的输出是1，那么输入门限打开而忘记门限关闭。如果输出是0，则刚好相反。换句话说，**无论何时需要存储一个记忆，它将被存在的位置将首先被擦除**。这实际上是LSTM单元的一个常见变体。
+    3. 没有输出门限。在每个时间迭代，输出向量的全部状态被直接输出。然而，GRU有一个新的门限控制器来控制前一个状态的哪部分将显示给主层。
+
+- GRU 是新一代的循环神经网络，与 LSTM 非常相似。与 LSTM 相比，GRU 去除掉了细胞状态，使用隐藏状态来进行信息的传递。它只包含两个门：**更新门**和**重置门**。
+
+- **更新门**：更新门的作用类似于 LSTM 中的遗忘门和输入门。它决定了要忘记哪些信息以及哪些新信息需要被添加。
+
+- **重置门**：重置门用于决定遗忘先前信息的程度。
+
+- GRU 的张量运算较少，因此它比 LSTM 的训练更快一下。很难去判定这两者到底谁更好，研究人员通常会两者都试一下，然后选择最合适的。
+
+  ```python
+  #!/usr/bin/env python
+  # -*- coding: UTF-8 -*-
+  # coding=utf-8 
+  
+  """
+  @author: Li Tian
+  @contact: 694317828@qq.com
+  @software: pycharm
+  @file: gru_test1.py
+  @time: 2019/6/19 17:07
+  @desc: GRU单元
+  """
+  
+  import tensorflow as tf
+  import numpy as np
+  from tensorflow.contrib.layers import fully_connected
+  from tensorflow.contrib.rnn import GRUCell
+  from tensorflow.contrib.rnn import MultiRNNCell
+  from tensorflow.contrib.rnn import OutputProjectionWrapper
+  import pandas as pd
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+  sns.set()
+  
+  
+  n_steps = 100
+  n_inputs = 1
+  n_neurous = 100
+  n_outputs = 1
+  
+  n_layers = 10
+  
+  learning_rate = 0.00001
+  
+  n_iterations = 10000
+  batch_size = 50
+  
+  X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+  y = tf.placeholder(tf.float32, [None, n_steps, n_outputs])
+  
+  # 现在在每个时间迭代，有一个大小为100的输出向量，但是实际上我们需要一个单独的输出值。
+  # 最简单的解决方案是将单元格包装在OutputProjectionWrapper中。
+  # cell = OutputProjectionWrapper(BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu), output_size=n_outputs)
+  
+  # 用技巧提高速度
+  # cell = BasicRNNCell(num_units=n_neurous, activation=tf.nn.relu)
+  # multi_layer_cell = MultiRNNCell([cell] * n_layers)
+  layers = [GRUCell(num_units=n_neurous, activation=tf.nn.relu) for _ in range(n_layers)]
+  multi_layer_cell = MultiRNNCell(layers)
+  rnn_outputs, states = tf.nn.dynamic_rnn(multi_layer_cell, X, dtype=tf.float32)
+  stacked_rnn_outputs = tf.reshape(rnn_outputs, [-1, n_neurous])
+  stacked_outputs = fully_connected(stacked_rnn_outputs, n_outputs, activation_fn=None)
+  outputs = tf.reshape(stacked_outputs, [-1, n_steps, n_outputs])
+  
+  loss = tf.reduce_mean(tf.square(outputs - y))
+  optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+  training_op = optimizer.minimize(loss)
+  
+  init = tf.global_variables_initializer()
+  
+  X_data = np.linspace(0, 15, 101)
+  with tf.Session() as sess:
+      init.run()
+      for iteration in range(n_iterations):
+          X_batch = X_data[:-1][np.newaxis, :, np.newaxis]
+          y_batch = X_batch * np.sin(X_batch) / 3 + 2 * np.sin(5 * X_batch)
+          sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+          if iteration % 100 == 0:
+              mse = loss.eval(feed_dict={X: X_batch, y: y_batch})
+              print(iteration, "\tMSE", mse)
+  
+      X_new = X_data[1:][np.newaxis, :, np.newaxis]
+      y_true = X_new * np.sin(X_new) / 3 + 2 * np.sin(5 * X_new)
+      y_pred = sess.run(outputs, feed_dict={X: X_new})
+  
+  print(X_new.flatten())
+  print('真实结果：', y_true.flatten())
+  print('预测结果：', y_pred.flatten())
+  
+  plt.rcParams['font.sans-serif']=['SimHei']  # 用来正常显示中文标签
+  plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+  fig = plt.figure(dpi=150)
+  plt.plot(X_new.flatten(), y_true.flatten(), 'r', label='y_true')
+  plt.plot(X_new.flatten(), y_pred.flatten(), 'b', label='y_pred')
+  plt.title('GRU预测')
+  plt.legend()
+  plt.show()
+  ```
+
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/2019062009044675.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+  参考链接：[深入理解LSTM，窥视孔连接，GRU](<https://zhuanlan.zhihu.com/p/34508516>)
+
+  更好的参考链接：[GRU与LSTM总结](<https://blog.csdn.net/lreaderl/article/details/78022724>)
+
+- 其他变形的LSTM网络总结
+
+  参考链接：[直观理解LSTM（长短时记忆网络）](<https://www.jianshu.com/p/8219ca28925e>)
+
+    1. **窥视孔连接LSTM**
+
+       ![img](https://upload-images.jianshu.io/upload_images/5529997-b11828d5962169c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/638/format/webp)
+
+       一种流行的LSTM变种，由Gers和Schmidhuber （2000）提出，加入了“窥视孔连接”（peephole connections）。这意味着门限层也将单元状态作为输入。
+
+    2. **耦合遗忘输入门限的LSTM**
+
+       ![img](https://upload-images.jianshu.io/upload_images/5529997-22ec18136b1a5e05.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/625/format/webp)
+
+       就是使用耦合遗忘和输入门限。我们不单独决定遗忘哪些、添加哪些新信息，而是一起做出决定。在输入的时候才进行遗忘。在遗忘某些旧信息时才将新值添加到状态中。
+
+    3. **门限递归单元（GRU）**
+
+       ![img](https://upload-images.jianshu.io/upload_images/5529997-7080d5c076c2c401.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/623/format/webp)
+
+       它将遗忘和输入门限结合输入到单个“更新门限”中。同样还将单元状态和隐藏状态合并，并做出一些其他变化。所得模型比标准LSTM模型要简单，这种做法越来越流行。
+
+- 部分课后题的摘抄
+  - 在构建RNN时使用dynamic_rnn()而不是static_rnn()的优势是什么？
+
+    1. 它基于while_loop()操作，可以在反向传播期间将GPU内存交互到CPU内存，从而避免了内存溢出。
+    2. 它更加易于使用，因为其采取单张量作为输入和输出（覆盖所有时间步长），而不是一个张量列表（每个时间一个步长）。不需要入栈、出栈，或转置。
+    3. 它产生的图形更小，更容易在TensorBoard中可视化。
+
+  - 如何处理变长输入序列？变长输出序列又会怎么样？
+
+    1. 为了处理可变长度的输入序列，最简单的方法是在调用static_rnn()或dynamic_rnn()方法时传入sequence_length参数。另一个方法是填充长度较小的输入（比如，用0填充）来使其与最大输入长度相同（这可能比第一种方法快，因为所有输入序列具有相同的长度）。
+
+    2. 为了处理可变长度的输出序列，如果事先知道每个输出序列的长度，就可以使用sequence_length参数（例如，序列到序列RNN使用暴力评分标记视频中的每一帧：输出序列和输入序列长度完全一致）。如果事先不知道输出序列的长度，则可以使用填充方法：始终输出相同大小的序列，但是忽略end-of-sequence标记之后的任何输出（在计算成本函数时忽略它们）。
+
+  - 在多个GPU之间分配训练和执行层次RNN的常见方式是什么？
+
+    为了在多个GPU直接分配训练并执行深度RNN，一个常用的简单技术是将每个层放在不同的GPU上。
+
+## 15. 自动编码器
+
+- 使用不完整的线性自动编码器实现PCA
+
+  - 一个自动编码器由两部分组成：编码器（或称为识别网络），解码器（或称为生成网络）。
+
+  - 输出层的神经元数量必须等于输入层的数量。
+
+  - 输出通常被称为重建，因为自动编码器尝试重建输入，并且成本函数包含重建损失，当重建与输入不同时，该损失会惩罚模型。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_1.py
+    @time: 2019/6/20 14:31
+    @desc: 使用不完整的线性自动编码器实现PCA
+    """
+    
+    import tensorflow as tf
+    from tensorflow.contrib.layers import fully_connected
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from mpl_toolkits import mplot3d
+    
+    # 生成数据
+    import numpy.random as rnd
+    
+    rnd.seed(4)
+    m = 200
+    w1, w2 = 0.1, 0.3
+    noise = 0.1
+    
+    angles = rnd.rand(m) * 3 * np.pi / 2 - 0.5
+    data = np.empty((m, 3))
+    data[:, 0] = np.cos(angles) + np.sin(angles) / 2 + noise * rnd.randn(m) / 2
+    data[:, 1] = np.sin(angles) * 0.7 + noise * rnd.randn(m) / 2
+    data[:, 2] = data[:, 0] * w1 + data[:, 1] * w2 + noise * rnd.randn(m)
+    
+    # 数据标准化
+    from sklearn.preprocessing import StandardScaler
+    
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(data[:100])
+    X_test = scaler.transform(data[100:])
+    
+    # 3D inputs
+    n_inputs = 3
+    # 2D codings
+    n_hidden = 2
+    
+    n_outputs = n_inputs
+    
+    learning_rate = 0.01
+    
+    n_iterations = 1000
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    hidden = fully_connected(X, n_hidden, activation_fn=None)
+    outputs = fully_connected(hidden, n_outputs, activation_fn=None)
+    
+    # MSE
+    reconstruction_loss = tf.reduce_mean(tf.square(outputs - X))
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    training_op = optimizer.minimize(reconstruction_loss)
+    
+    init = tf.global_variables_initializer()
+    codings = hidden
+    
+    with tf.Session() as sess:
+        init.run()
+        for n_iterations in range(n_iterations):
+            training_op.run(feed_dict={X: X_train})
+        codings_val = codings.eval(feed_dict={X: X_test})
+    
+    fig = plt.figure(figsize=(4, 3), dpi=300)
+    plt.plot(codings_val[:, 0], codings_val[:, 1], "b.")
+    plt.xlabel("$z_1$", fontsize=18)
+    plt.ylabel("$z_2$", fontsize=18, rotation=0)
+    plt.show()
+    ```
+
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/20190620155013198.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+  - 画出的是中间两个神经元隐藏层。（降维）
+
+- 栈式自动编码器（深度自动编码器）
+
+  - 使用He初始化，ELU激活函数，以及$l_2$正则化构建了一个MNIST栈式自动编码器。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_2.py
+    @time: 2019/6/21 8:48
+    @desc: 使用He初始化，ELU激活函数，以及$l_2$正则化构建了一个MNIST栈式自动编码器
+    """
+    
+    import tensorflow as tf
+    from tensorflow.contrib.layers import fully_connected
+    from tensorflow.examples.tutorials.mnist import input_data
+    import matplotlib.pyplot as plt
+    import sys
+    
+    
+    n_inputs = 28 * 28      # for MNIST
+    n_hidden1 = 300
+    n_hidden2 = 150         # codings
+    n_hidden3 = n_hidden1
+    n_outputs = n_inputs
+    
+    learning_rate = 0.001
+    l2_reg = 0.001
+    
+    n_epochs = 30
+    batch_size = 150
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    with tf.contrib.framework.arg_scope(
+        [fully_connected],
+        activation_fn=tf.nn.elu,
+        weights_initializer=tf.contrib.layers.variance_scaling_initializer(),
+        weights_regularizer=tf.contrib.layers.l2_regularizer(l2_reg)
+    ):
+        hidden1 = fully_connected(X, n_hidden1)
+        hidden2 = fully_connected(hidden1, n_hidden2)   # codings
+        hidden3 = fully_connected(hidden2, n_hidden3)
+        outputs = fully_connected(hidden3, n_outputs, activation_fn=None)
+    
+    reconstruction_loss = tf.reduce_mean(tf.square(outputs - X))    # MSE
+    
+    reg_losses = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)
+    loss = tf.add_n([reconstruction_loss] + reg_losses)
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    with tf.Session() as sess:
+        mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+        init.run()
+        for epoch in range(n_epochs):
+            n_batches = mnist.train.num_examples // batch_size
+            for iteration in range(n_batches):
+                print("\r{}%".format(100 * iteration // n_batches), end="")
+                sys.stdout.flush()
+                X_batch, y_batch = mnist.train.next_batch(batch_size)
+                sess.run(training_op, feed_dict={X: X_batch})
+            loss_train = reconstruction_loss.eval(feed_dict={X: X_batch})
+            print("\r{}".format(epoch), "Train MSE:", loss_train)
+            saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_all_layers.ckpt")
+    
+    
+    # 可视化
+    def plot_image(image, shape=[28, 28]):
+        plt.imshow(image.reshape(shape), cmap="Greys", interpolation="nearest")
+        plt.axis("off")
+    
+    
+    def show_reconstructed_digits(X, outputs, model_path = None, n_test_digits = 2):
+        with tf.Session() as sess:
+            if model_path:
+                saver.restore(sess, model_path)
+            X_test = mnist.test.images[:n_test_digits]
+            outputs_val = outputs.eval(feed_dict={X: X_test})
+    
+        fig = plt.figure(figsize=(8, 3 * n_test_digits))
+        for digit_index in range(n_test_digits):
+            plt.subplot(n_test_digits, 2, digit_index * 2 + 1)
+            plot_image(X_test[digit_index])
+            plt.subplot(n_test_digits, 2, digit_index * 2 + 2)
+            plot_image(outputs_val[digit_index])
+        plt.show()
+    
+    
+    show_reconstructed_digits(X, outputs, "D:/Python3Space/BookStudy/book4/model/my_model_all_layers.ckpt")
+    ```
+
+  - 运行结果
+
+  ![img](https://img-blog.csdnimg.cn/20190621094242787.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 权重绑定
+
+  - 将解码层的权重和编码层的权重联系起来。$W_{N-L+1} = W_L^T$
+
+  - weight3和weights4不是变量，它们分别是weights2和weights1的转置（它们被“绑定”在一起）。
+
+  - 因为它们不是变量，所以没有必要进行正则化，只正则化weights1和weigts2。
+
+  - 偏置项从来不会被绑定，也不会被正则化。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_3.py
+    @time: 2019/6/21 9:48
+    @desc: 权重绑定
+    """
+    
+    import tensorflow as tf
+    from tensorflow.contrib.layers import fully_connected
+    from tensorflow.examples.tutorials.mnist import input_data
+    import matplotlib.pyplot as plt
+    import sys
+    
+    
+    # 在复制一遍可视化代码
+    def plot_image(image, shape=[28, 28]):
+        plt.imshow(image.reshape(shape), cmap="Greys", interpolation="nearest")
+        plt.axis("off")
+    
+    
+    def show_reconstructed_digits(X, outputs, model_path = None, n_test_digits = 2):
+        with tf.Session() as sess:
+            if model_path:
+                saver.restore(sess, model_path)
+            X_test = mnist.test.images[:n_test_digits]
+            outputs_val = outputs.eval(feed_dict={X: X_test})
+    
+        fig = plt.figure(figsize=(8, 3 * n_test_digits))
+        for digit_index in range(n_test_digits):
+            plt.subplot(n_test_digits, 2, digit_index * 2 + 1)
+            plot_image(X_test[digit_index])
+            plt.subplot(n_test_digits, 2, digit_index * 2 + 2)
+            plot_image(outputs_val[digit_index])
+        plt.show()
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 300
+    n_hidden2 = 150  # codings
+    n_hidden3 = n_hidden1
+    n_outputs = n_inputs
+    
+    learning_rate = 0.01
+    l2_reg = 0.001
+    
+    n_epochs = 5
+    batch_size = 150
+    
+    activation = tf.nn.elu
+    regularizer = tf.contrib.layers.l2_regularizer(l2_reg)
+    initializer = tf.contrib.layers.variance_scaling_initializer()
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    
+    weights1_init = initializer([n_inputs, n_hidden1])
+    weights2_init = initializer([n_hidden1, n_hidden2])
+    
+    weights1 = tf.Variable(weights1_init, dtype=tf.float32, name='weights1')
+    weights2 = tf.Variable(weights2_init, dtype=tf.float32, name='weights2')
+    weights3 = tf.transpose(weights2, name='weights3')      # 权重绑定
+    weights4 = tf.transpose(weights1, name='weights4')      # 权重绑定
+    
+    biases1 = tf.Variable(tf.zeros(n_hidden1), name='biases1')
+    biases2 = tf.Variable(tf.zeros(n_hidden2), name='biases2')
+    biases3 = tf.Variable(tf.zeros(n_hidden3), name='biases3')
+    biases4 = tf.Variable(tf.zeros(n_outputs), name='biases4')
+    
+    hidden1 = activation(tf.matmul(X, weights1) + biases1)
+    hidden2 = activation(tf.matmul(hidden1, weights2) + biases2)
+    hidden3 = activation(tf.matmul(hidden2, weights3) + biases3)
+    outputs = tf.matmul(hidden3, weights4) + biases4
+    
+    reconstruction_loss = tf.reduce_mean(tf.square(outputs - X))
+    reg_loss = regularizer(weights1) + regularizer(weights2)
+    loss = reconstruction_loss + reg_loss
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    with tf.Session() as sess:
+        mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+        init.run()
+        for epoch in range(n_epochs):
+            n_batches = mnist.train.num_examples // batch_size
+            for iteration in range(n_batches):
+                print("\r{}%".format(100 * iteration // n_batches), end="")
+                sys.stdout.flush()
+                X_batch, y_batch = mnist.train.next_batch(batch_size)
+                sess.run(training_op, feed_dict={X: X_batch})
+            loss_train = reconstruction_loss.eval(feed_dict={X: X_batch})
+            print("\r{}".format(epoch), "Train MSE:", loss_train)
+            saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_tying_weights.ckpt")
+    
+    show_reconstructed_digits(X, outputs, "D:/Python3Space/BookStudy/book4/model/my_model_tying_weights.ckpt")
+    ```
+
+  - 运行结果
+
+  ![img](https://img-blog.csdnimg.cn/20190621102349430.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 在多个图中一次训练一个自动编码器
+
+  - 有许多方法可以一次训练一个自动编码器。第一种方法是使用不同的图形对每个自动编码器进行训练，然后我们通过简单地初始化它和从这些自动编码器复制的权重和偏差来创建堆叠的自动编码器。
+
+  - 让我们创建一个函数来训练一个自动编码器并返回转换后的训练集(即隐藏层的输出)和模型参数。
+
+  - 现在让我们训练两个自动编码器。第一个是关于训练数据的训练，第二个是关于上一个自动编码器隐藏层输出的训练。
+
+  - 最后，通过简单地重用我们刚刚训练的自动编码器的权重和偏差，我们可以创建一个堆叠的自动编码器。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_6.py
+    @time: 2019/6/24 10:29
+    @desc: 在多个图中一次训练一个自动编码器
+    """
+    
+    import tensorflow as tf
+    from tensorflow.contrib.layers import fully_connected
+    from tensorflow.examples.tutorials.mnist import input_data
+    import matplotlib.pyplot as plt
+    import sys
+    import numpy.random as rnd
+    
+    from functools import partial
+    
+    
+    # 在复制一遍可视化代码
+    def plot_image(image, shape=[28, 28]):
+        plt.imshow(image.reshape(shape), cmap="Greys", interpolation="nearest")
+        plt.axis("off")
+    
+    
+    def show_reconstructed_digits(X, outputs, n_test_digits=2):
+        with tf.Session() as sess:
+            # if model_path:
+            #     saver.restore(sess, model_path)
+            X_test = mnist.test.images[:n_test_digits]
+            outputs_val = outputs.eval(feed_dict={X: X_test})
+    
+        fig = plt.figure(figsize=(8, 3 * n_test_digits))
+        for digit_index in range(n_test_digits):
+            plt.subplot(n_test_digits, 2, digit_index * 2 + 1)
+            plot_image(X_test[digit_index])
+            plt.subplot(n_test_digits, 2, digit_index * 2 + 2)
+            plot_image(outputs_val[digit_index])
+        plt.show()
+    
+    
+    # 有许多方法可以一次训练一个自动编码器。第一种方法是使用不同的图形对每个自动编码器进行训练，
+    # 然后我们通过简单地初始化它和从这些自动编码器复制的权重和偏差来创建堆叠的自动编码器。
+    def train_autoencoder(X_train, n_neurons, n_epochs, batch_size,
+                          learning_rate=0.01, l2_reg=0.0005,
+                          activation=tf.nn.elu, seed=42):
+        graph = tf.Graph()
+        with graph.as_default():
+            tf.set_random_seed(seed)
+    
+            n_inputs = X_train.shape[1]
+    
+            X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    
+            my_dense_layer = partial(
+                tf.layers.dense,
+                activation=activation,
+                kernel_initializer=tf.contrib.layers.variance_scaling_initializer(),
+                kernel_regularizer=tf.contrib.layers.l2_regularizer(l2_reg))
+    
+            hidden = my_dense_layer(X, n_neurons, name="hidden")
+            outputs = my_dense_layer(hidden, n_inputs, activation=None, name="outputs")
+    
+            reconstruction_loss = tf.reduce_mean(tf.square(outputs - X))
+    
+            reg_losses = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)
+            loss = tf.add_n([reconstruction_loss] + reg_losses)
+    
+            optimizer = tf.train.AdamOptimizer(learning_rate)
+            training_op = optimizer.minimize(loss)
+    
+            init = tf.global_variables_initializer()
+    
+        with tf.Session(graph=graph) as sess:
+            init.run()
+            for epoch in range(n_epochs):
+                n_batches = len(X_train) // batch_size
+                for iteration in range(n_batches):
+                    print("\r{}%".format(100 * iteration // n_batches), end="")
+                    sys.stdout.flush()
+                    indices = rnd.permutation(len(X_train))[:batch_size]
+                    X_batch = X_train[indices]
+                    sess.run(training_op, feed_dict={X: X_batch})
+                loss_train = reconstruction_loss.eval(feed_dict={X: X_batch})
+                print("\r{}".format(epoch), "Train MSE:", loss_train)
+            params = dict([(var.name, var.eval()) for var in tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)])
+            hidden_val = hidden.eval(feed_dict={X: X_train})
+            return hidden_val, params["hidden/kernel:0"], params["hidden/bias:0"], params["outputs/kernel:0"], params["outputs/bias:0"]
+    
+    
+    mnist = input_data.read_data_sets('F:/JupyterWorkspace/MNIST_data/')
+    hidden_output, W1, b1, W4, b4 = train_autoencoder(mnist.train.images, n_neurons=300, n_epochs=4, batch_size=150)
+    _, W2, b2, W3, b3 = train_autoencoder(hidden_output, n_neurons=150, n_epochs=4, batch_size=150)
+    
+    # 最后，通过简单地重用我们刚刚训练的自动编码器的权重和偏差，我们可以创建一个堆叠的自动编码器。
+    n_inputs = 28*28
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    hidden1 = tf.nn.elu(tf.matmul(X, W1) + b1)
+    hidden2 = tf.nn.elu(tf.matmul(hidden1, W2) + b2)
+    hidden3 = tf.nn.elu(tf.matmul(hidden2, W3) + b3)
+    outputs = tf.matmul(hidden3, W4) + b4
+    
+    show_reconstructed_digits(X, outputs)
+    ```
+
+  - 运行结果
+
+  ![img](https://img-blog.csdnimg.cn/2019062423022767.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 在一个图中一次训练一个自动编码器
+
+  - 另一种方法是使用单个图。为此，我们为完整的堆叠式自动编码器创建了图形，但是我们还添加了独立训练每个自动编码器的操作：第一阶段训练底层和顶层(即。第一个自动编码器和第二阶段训练两个中间层(即。第二个自动编码器)。
+
+  - 通过设置`optimizer.minimize`参数中的`var_list`，达到freeze其他权重的目的。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_7.py
+    @time: 2019/7/2 9:02
+    @desc: 在一个图中一次训练一个自动编码器
+    """
+    
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import matplotlib.pyplot as plt
+    import sys
+    import numpy.random as rnd
+    
+    from functools import partial
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 300
+    n_hidden2 = 150  # codings
+    n_hidden3 = n_hidden1
+    n_outputs = n_inputs
+    
+    learning_rate = 0.01
+    l2_reg = 0.0001
+    
+    activation = tf.nn.elu
+    regularizer = tf.contrib.layers.l2_regularizer(l2_reg)
+    initializer = tf.contrib.layers.variance_scaling_initializer()
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    
+    weights1_init = initializer([n_inputs, n_hidden1])
+    weights2_init = initializer([n_hidden1, n_hidden2])
+    weights3_init = initializer([n_hidden2, n_hidden3])
+    weights4_init = initializer([n_hidden3, n_outputs])
+    
+    weights1 = tf.Variable(weights1_init, dtype=tf.float32, name="weights1")
+    weights2 = tf.Variable(weights2_init, dtype=tf.float32, name="weights2")
+    weights3 = tf.Variable(weights3_init, dtype=tf.float32, name="weights3")
+    weights4 = tf.Variable(weights4_init, dtype=tf.float32, name="weights4")
+    
+    biases1 = tf.Variable(tf.zeros(n_hidden1), name="biases1")
+    biases2 = tf.Variable(tf.zeros(n_hidden2), name="biases2")
+    biases3 = tf.Variable(tf.zeros(n_hidden3), name="biases3")
+    biases4 = tf.Variable(tf.zeros(n_outputs), name="biases4")
+    
+    hidden1 = activation(tf.matmul(X, weights1) + biases1)
+    hidden2 = activation(tf.matmul(hidden1, weights2) + biases2)
+    hidden3 = activation(tf.matmul(hidden2, weights3) + biases3)
+    outputs = tf.matmul(hidden3, weights4) + biases4
+    
+    reconstruction_loss = tf.reduce_mean(tf.square(outputs - X))
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    
+    
+    # 第一阶段
+    with tf.name_scope("phase1"):
+        phase1_outputs = tf.matmul(hidden1, weights4) + biases4  # bypass hidden2 and hidden3
+        phase1_reconstruction_loss = tf.reduce_mean(tf.square(phase1_outputs - X))
+        phase1_reg_loss = regularizer(weights1) + regularizer(weights4)
+        phase1_loss = phase1_reconstruction_loss + phase1_reg_loss
+        phase1_training_op = optimizer.minimize(phase1_loss)
+    
+    
+    # 第二阶段
+    with tf.name_scope("phase2"):
+        phase2_reconstruction_loss = tf.reduce_mean(tf.square(hidden3 - hidden1))
+        phase2_reg_loss = regularizer(weights2) + regularizer(weights3)
+        phase2_loss = phase2_reconstruction_loss + phase2_reg_loss
+        train_vars = [weights2, biases2, weights3, biases3]
+        phase2_training_op = optimizer.minimize(phase2_loss, var_list=train_vars)   # freeze hidden1
+    
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    training_ops = [phase1_training_op, phase2_training_op]
+    reconstruction_losses = [phase1_reconstruction_loss, phase2_reconstruction_loss]
+    n_epochs = [4, 4]
+    batch_sizes = [150, 150]
+    
+    
+    with tf.Session() as sess:
+        mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+        init.run()
+        for phase in range(2):
+            print("Training phase #{}".format(phase + 1))
+            for epoch in range(n_epochs[phase]):
+                n_batches = mnist.train.num_examples // batch_sizes[phase]
+                for iteration in range(n_batches):
+                    print("\r{}%".format(100 * iteration // n_batches), end="")
+                    sys.stdout.flush()
+                    X_batch, y_batch = mnist.train.next_batch(batch_sizes[phase])
+                    sess.run(training_ops[phase], feed_dict={X: X_batch})
+                loss_train = reconstruction_losses[phase].eval(feed_dict={X: X_batch})
+                print("\r{}".format(epoch), "Train MSE:", loss_train)
+                saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_one_at_a_time.ckpt")
+        loss_test = reconstruction_loss.eval(feed_dict={X: mnist.test.images})
+        print("Test MSE:", loss_test)
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/20190702092341170.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 馈送冻结层输出缓存
+
+  - 由于隐藏层 1 在阶段 2 期间被冻结，所以对于任何给定的训练实例其输出将总是相同的。为了避免在每个时期重新计算隐藏层1的输出，可以在阶段 1 结束时为整个训练集计算它，然后直接在阶段 2 中输入隐藏层 1 的缓存输出。这可以得到一个不错的性能上的提升。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_8.py
+    @time: 2019/7/2 9:32
+    @desc: 馈送冻结层输出缓存
+    """
+    
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import numpy.random as rnd
+    import sys
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 300
+    n_hidden2 = 150  # codings
+    n_hidden3 = n_hidden1
+    n_outputs = n_inputs
+    
+    learning_rate = 0.01
+    l2_reg = 0.0001
+    
+    activation = tf.nn.elu
+    regularizer = tf.contrib.layers.l2_regularizer(l2_reg)
+    initializer = tf.contrib.layers.variance_scaling_initializer()
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    
+    weights1_init = initializer([n_inputs, n_hidden1])
+    weights2_init = initializer([n_hidden1, n_hidden2])
+    weights3_init = initializer([n_hidden2, n_hidden3])
+    weights4_init = initializer([n_hidden3, n_outputs])
+    
+    weights1 = tf.Variable(weights1_init, dtype=tf.float32, name="weights1")
+    weights2 = tf.Variable(weights2_init, dtype=tf.float32, name="weights2")
+    weights3 = tf.Variable(weights3_init, dtype=tf.float32, name="weights3")
+    weights4 = tf.Variable(weights4_init, dtype=tf.float32, name="weights4")
+    
+    biases1 = tf.Variable(tf.zeros(n_hidden1), name="biases1")
+    biases2 = tf.Variable(tf.zeros(n_hidden2), name="biases2")
+    biases3 = tf.Variable(tf.zeros(n_hidden3), name="biases3")
+    biases4 = tf.Variable(tf.zeros(n_outputs), name="biases4")
+    
+    hidden1 = activation(tf.matmul(X, weights1) + biases1)
+    hidden2 = activation(tf.matmul(hidden1, weights2) + biases2)
+    hidden3 = activation(tf.matmul(hidden2, weights3) + biases3)
+    outputs = tf.matmul(hidden3, weights4) + biases4
+    
+    reconstruction_loss = tf.reduce_mean(tf.square(outputs - X))
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    
+    
+    # 第一阶段
+    with tf.name_scope("phase1"):
+        phase1_outputs = tf.matmul(hidden1, weights4) + biases4  # bypass hidden2 and hidden3
+        phase1_reconstruction_loss = tf.reduce_mean(tf.square(phase1_outputs - X))
+        phase1_reg_loss = regularizer(weights1) + regularizer(weights4)
+        phase1_loss = phase1_reconstruction_loss + phase1_reg_loss
+        phase1_training_op = optimizer.minimize(phase1_loss)
+    
+    
+    # 第二阶段
+    with tf.name_scope("phase2"):
+        phase2_reconstruction_loss = tf.reduce_mean(tf.square(hidden3 - hidden1))
+        phase2_reg_loss = regularizer(weights2) + regularizer(weights3)
+        phase2_loss = phase2_reconstruction_loss + phase2_reg_loss
+        train_vars = [weights2, biases2, weights3, biases3]
+        phase2_training_op = optimizer.minimize(phase2_loss, var_list=train_vars)   # freeze hidden1
+    
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    training_ops = [phase1_training_op, phase2_training_op]
+    reconstruction_losses = [phase1_reconstruction_loss, phase2_reconstruction_loss]
+    n_epochs = [4, 4]
+    batch_sizes = [150, 150]
+    
+    with tf.Session() as sess:
+        mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+        init.run()
+        for phase in range(2):
+            print("Training phase #{}".format(phase + 1))
+            if phase == 1:
+                hidden1_cache = hidden1.eval(feed_dict={X: mnist.train.images})
+            for epoch in range(n_epochs[phase]):
+                n_batches = mnist.train.num_examples // batch_sizes[phase]
+                for iteration in range(n_batches):
+                    print("\r{}%".format(100 * iteration // n_batches), end="")
+                    sys.stdout.flush()
+                    if phase == 1:
+                        indices = rnd.permutation(mnist.train.num_examples)
+                        hidden1_batch = hidden1_cache[indices[:batch_sizes[phase]]]
+                        feed_dict = {hidden1: hidden1_batch}
+                        sess.run(training_ops[phase], feed_dict=feed_dict)
+                    else:
+                        X_batch, y_batch = mnist.train.next_batch(batch_sizes[phase])
+                        feed_dict = {X: X_batch}
+                        sess.run(training_ops[phase], feed_dict=feed_dict)
+                loss_train = reconstruction_losses[phase].eval(feed_dict=feed_dict)
+                print("\r{}".format(epoch), "Train MSE:", loss_train)
+                saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_cache_frozen.ckpt")
+        loss_test = reconstruction_loss.eval(feed_dict={X: mnist.test.images})
+        print("Test MSE:", loss_test)
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/20190702093720523.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 重建可视化
+
+  - 确保自编码器得到适当训练的一种方法是比较输入和输出。 它们必须非常相似，差异应该是不重要的细节。 我们来绘制两个随机数字及其重建：
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_9.py
+    @time: 2019/7/2 9:38
+    @desc: 重建可视化
+    """
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import matplotlib.pyplot as plt
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 300
+    n_hidden2 = 150  # codings
+    n_hidden3 = n_hidden1
+    n_outputs = n_inputs
+    
+    learning_rate = 0.01
+    l2_reg = 0.0001
+    
+    activation = tf.nn.elu
+    regularizer = tf.contrib.layers.l2_regularizer(l2_reg)
+    initializer = tf.contrib.layers.variance_scaling_initializer()
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    
+    weights1_init = initializer([n_inputs, n_hidden1])
+    weights2_init = initializer([n_hidden1, n_hidden2])
+    weights3_init = initializer([n_hidden2, n_hidden3])
+    weights4_init = initializer([n_hidden3, n_outputs])
+    
+    weights1 = tf.Variable(weights1_init, dtype=tf.float32, name="weights1")
+    weights2 = tf.Variable(weights2_init, dtype=tf.float32, name="weights2")
+    weights3 = tf.Variable(weights3_init, dtype=tf.float32, name="weights3")
+    weights4 = tf.Variable(weights4_init, dtype=tf.float32, name="weights4")
+    
+    biases1 = tf.Variable(tf.zeros(n_hidden1), name="biases1")
+    biases2 = tf.Variable(tf.zeros(n_hidden2), name="biases2")
+    biases3 = tf.Variable(tf.zeros(n_hidden3), name="biases3")
+    biases4 = tf.Variable(tf.zeros(n_outputs), name="biases4")
+    
+    hidden1 = activation(tf.matmul(X, weights1) + biases1)
+    hidden2 = activation(tf.matmul(hidden1, weights2) + biases2)
+    hidden3 = activation(tf.matmul(hidden2, weights3) + biases3)
+    outputs = tf.matmul(hidden3, weights4) + biases4
+    
+    
+    mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+    n_test_digits = 2
+    X_test = mnist.test.images[:n_test_digits]
+    
+    saver = tf.train.Saver()
+    
+    with tf.Session() as sess:
+        saver.restore(sess, "D:/Python3Space/BookStudy/book4/model/my_model_one_at_a_time.ckpt") # not shown in the book
+        outputs_val = outputs.eval(feed_dict={X: X_test})
+    
+    
+    def plot_image(image, shape=[28, 28]):
+        plt.imshow(image.reshape(shape), cmap="Greys", interpolation="nearest")
+        plt.axis("off")
+    
+    
+    for digit_index in range(n_test_digits):
+        plt.subplot(n_test_digits, 2, digit_index * 2 + 1)
+        plot_image(X_test[digit_index])
+        plt.subplot(n_test_digits, 2, digit_index * 2 + 2)
+        plot_image(outputs_val[digit_index])
+    
+    plt.show()
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/20190702094248236.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 特征可视化
+
+  - 一旦你的自编码器学习了一些功能，你可能想看看它们。 有各种各样的技术。 可以说最简单的技术是在每个隐藏层中考虑每个神经元，并找到最能激活它的训练实例。
+
+  - 对于第一个隐藏层中的每个神经元，您可以创建一个图像，其中像素的强度对应于给定神经元的连接权重。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_10.py
+    @time: 2019/7/2 9:49
+    @desc:  特征可视化
+    """
+    
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import matplotlib.pyplot as plt
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 300
+    n_hidden2 = 150  # codings
+    n_hidden3 = n_hidden1
+    n_outputs = n_inputs
+    
+    learning_rate = 0.01
+    l2_reg = 0.0001
+    
+    activation = tf.nn.elu
+    regularizer = tf.contrib.layers.l2_regularizer(l2_reg)
+    initializer = tf.contrib.layers.variance_scaling_initializer()
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    
+    weights1_init = initializer([n_inputs, n_hidden1])
+    weights2_init = initializer([n_hidden1, n_hidden2])
+    weights3_init = initializer([n_hidden2, n_hidden3])
+    weights4_init = initializer([n_hidden3, n_outputs])
+    
+    weights1 = tf.Variable(weights1_init, dtype=tf.float32, name="weights1")
+    weights2 = tf.Variable(weights2_init, dtype=tf.float32, name="weights2")
+    weights3 = tf.Variable(weights3_init, dtype=tf.float32, name="weights3")
+    weights4 = tf.Variable(weights4_init, dtype=tf.float32, name="weights4")
+    
+    biases1 = tf.Variable(tf.zeros(n_hidden1), name="biases1")
+    biases2 = tf.Variable(tf.zeros(n_hidden2), name="biases2")
+    biases3 = tf.Variable(tf.zeros(n_hidden3), name="biases3")
+    biases4 = tf.Variable(tf.zeros(n_outputs), name="biases4")
+    
+    hidden1 = activation(tf.matmul(X, weights1) + biases1)
+    hidden2 = activation(tf.matmul(hidden1, weights2) + biases2)
+    hidden3 = activation(tf.matmul(hidden2, weights3) + biases3)
+    outputs = tf.matmul(hidden3, weights4) + biases4
+    
+    saver = tf.train.Saver()
+    
+    
+    # 在复制一遍可视化代码
+    def plot_image(image, shape=[28, 28]):
+        plt.imshow(image.reshape(shape), cmap="Greys", interpolation="nearest")
+        plt.axis("off")
+    
+    
+    with tf.Session() as sess:
+        saver.restore(sess, "D:/Python3Space/BookStudy/book4/model/my_model_one_at_a_time.ckpt") # not shown in the book
+        weights1_val = weights1.eval()
+    
+    for i in range(5):
+        plt.subplot(1, 5, i + 1)
+        plot_image(weights1_val.T[i])
+    
+    plt.show()
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/2019070209522257.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+  - 第一层隐藏层为300个神经元，权重为[28*28, 300]。
+
+  - 图中为可视化前五个神经元。
+
+- 使用堆叠的自动编码器进行无监督的预训练
+
+  - 参考链接：[Numpy.random中shuffle与permutation的区别](https://blog.csdn.net/lyy14011305/article/details/76207327)
+
+  - 函数shuffle与permutation都是对原来的数组进行重新洗牌（即随机打乱原来的元素顺序）；区别在于shuffle直接在原来的数组上进行操作，改变原来数组的顺序，无返回值。而permutation不直接在原来的数组上进行操作，而是返回一个新的打乱顺序的数组，并不改变原来的数组。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_4.py
+    @time: 2019/6/23 16:50
+    @desc: 使用堆叠的自动编码器进行无监督的预训练
+    """
+    
+    import tensorflow as tf
+    from tensorflow.contrib.layers import fully_connected
+    from tensorflow.examples.tutorials.mnist import input_data
+    import matplotlib.pyplot as plt
+    import sys
+    import numpy.random as rnd
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 300
+    n_hidden2 = 150
+    n_outputs = 10
+    
+    learning_rate = 0.01
+    l2_reg = 0.0005
+    
+    activation = tf.nn.elu
+    regularizer = tf.contrib.layers.l2_regularizer(l2_reg)
+    initializer = tf.contrib.layers.variance_scaling_initializer()
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    y = tf.placeholder(tf.int32, shape=[None])
+    
+    weights1_init = initializer([n_inputs, n_hidden1])
+    weights2_init = initializer([n_hidden1, n_hidden2])
+    weights3_init = initializer([n_hidden2, n_outputs])
+    
+    weights1 = tf.Variable(weights1_init, dtype=tf.float32, name="weights1")
+    weights2 = tf.Variable(weights2_init, dtype=tf.float32, name="weights2")
+    weights3 = tf.Variable(weights3_init, dtype=tf.float32, name="weights3")
+    
+    biases1 = tf.Variable(tf.zeros(n_hidden1), name="biases1")
+    biases2 = tf.Variable(tf.zeros(n_hidden2), name="biases2")
+    biases3 = tf.Variable(tf.zeros(n_outputs), name="biases3")
+    
+    hidden1 = activation(tf.matmul(X, weights1) + biases1)
+    hidden2 = activation(tf.matmul(hidden1, weights2) + biases2)
+    logits = tf.matmul(hidden2, weights3) + biases3
+    
+    cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y, logits=logits)
+    reg_loss = regularizer(weights1) + regularizer(weights2) + regularizer(weights3)
+    loss = cross_entropy + reg_loss
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    correct = tf.nn.in_top_k(logits, y, 1)
+    accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+    
+    init = tf.global_variables_initializer()
+    pretrain_saver = tf.train.Saver([weights1, weights2, biases1, biases2])
+    saver = tf.train.Saver()
+    
+    n_epochs = 4
+    batch_size = 150
+    n_labeled_instances = 20000
+    
+    with tf.Session() as sess:
+        mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+        init.run()
+        for epoch in range(n_epochs):
+            n_batches = n_labeled_instances // batch_size
+            for iteration in range(n_batches):
+                print("\r{}%".format(100 * iteration // n_batches), end="")
+                sys.stdout.flush()
+                indices = rnd.permutation(n_labeled_instances)[:batch_size]
+                X_batch, y_batch = mnist.train.images[indices], mnist.train.labels[indices]
+                sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+            accuracy_val = accuracy.eval(feed_dict={X: X_batch, y: y_batch})
+            print("\r{}".format(epoch), "Train accuracy:", accuracy_val, end=" ")
+            saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_supervised.ckpt")
+            accuracy_val = accuracy.eval(feed_dict={X: mnist.test.images, y: mnist.test.labels})
+            print("Test accuracy:", accuracy_val)
+    ```
+
+  - 运行结果
+
+    ![img](https://img-blog.csdnimg.cn/20190624082436551.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 去噪自动编码器
+
+  - 另一种强制自动编码器学习有用特征的方法是在输入中增加噪音，训练它以恢复原始的无噪音输入。这种方法阻止了自动编码器简单的复制其输入到输出，最终必须找到数据中的模式。
+  - 自动编码器可以用于特征提取。
+  - 这里要用`tf.shape(X)`来获取图片的size，它创建了一个在运行时返回该点完全定义的X向量的操作；而不能用`X.get_shape()`，因为这将只返回部分定义的`X([None], n_inputs)`向量。
+
+  - **使用高斯噪音**
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_11.py
+    @time: 2019/7/2 10:02
+    @desc: 去噪自动编码器：使用高斯噪音
+    """
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import sys
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 300
+    n_hidden2 = 150  # codings
+    n_hidden3 = n_hidden1
+    n_outputs = n_inputs
+    
+    learning_rate = 0.01
+    
+    noise_level = 1.0
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    X_noisy = X + noise_level * tf.random_normal(tf.shape(X))
+    
+    hidden1 = tf.layers.dense(X_noisy, n_hidden1, activation=tf.nn.relu,
+                              name="hidden1")
+    hidden2 = tf.layers.dense(hidden1, n_hidden2, activation=tf.nn.relu, # not shown in the book
+                              name="hidden2")                            # not shown
+    hidden3 = tf.layers.dense(hidden2, n_hidden3, activation=tf.nn.relu, # not shown
+                              name="hidden3")                            # not shown
+    outputs = tf.layers.dense(hidden3, n_outputs, name="outputs")        # not shown
+    
+    reconstruction_loss = tf.reduce_mean(tf.square(outputs - X)) # MSE
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    training_op = optimizer.minimize(reconstruction_loss)
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    n_epochs = 10
+    batch_size = 150
+    mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+    
+    
+    with tf.Session() as sess:
+        init.run()
+        for epoch in range(n_epochs):
+            n_batches = mnist.train.num_examples // batch_size
+            for iteration in range(n_batches):
+                print("\r{}%".format(100 * iteration // n_batches), end="")
+                sys.stdout.flush()
+                X_batch, y_batch = mnist.train.next_batch(batch_size)
+                sess.run(training_op, feed_dict={X: X_batch})
+            loss_train = reconstruction_loss.eval(feed_dict={X: X_batch})
+            print("\r{}".format(epoch), "Train MSE:", loss_train)
+            saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_stacked_denoising_gaussian.ckpt")
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/20190702101018119.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+  - **使用dropout**
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_12.py
+    @time: 2019/7/2 10:11
+    @desc: 去噪自动编码器：使用dropout
+    """
+    
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import sys
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 300
+    n_hidden2 = 150  # codings
+    n_hidden3 = n_hidden1
+    n_outputs = n_inputs
+    
+    learning_rate = 0.01
+    
+    dropout_rate = 0.3
+    training = tf.placeholder_with_default(False, shape=(), name='training')
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+    X_drop = tf.layers.dropout(X, dropout_rate, training=training)
+    
+    hidden1 = tf.layers.dense(X_drop, n_hidden1, activation=tf.nn.relu,
+                              name="hidden1")
+    hidden2 = tf.layers.dense(hidden1, n_hidden2, activation=tf.nn.relu, # not shown in the book
+                              name="hidden2")                            # not shown
+    hidden3 = tf.layers.dense(hidden2, n_hidden3, activation=tf.nn.relu, # not shown
+                              name="hidden3")                            # not shown
+    outputs = tf.layers.dense(hidden3, n_outputs, name="outputs")        # not shown
+    
+    reconstruction_loss = tf.reduce_mean(tf.square(outputs - X)) # MSE
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    training_op = optimizer.minimize(reconstruction_loss)
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    n_epochs = 10
+    batch_size = 150
+    mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+    
+    
+    with tf.Session() as sess:
+        init.run()
+        for epoch in range(n_epochs):
+            n_batches = mnist.train.num_examples // batch_size
+            for iteration in range(n_batches):
+                print("\r{}%".format(100 * iteration // n_batches), end="")
+                sys.stdout.flush()
+                X_batch, y_batch = mnist.train.next_batch(batch_size)
+                sess.run(training_op, feed_dict={X: X_batch, training: True})
+            loss_train = reconstruction_loss.eval(feed_dict={X: X_batch})
+            print("\r{}".format(epoch), "Train MSE:", loss_train)
+            saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_stacked_denoising_dropout.ckpt")
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/20190702102048346.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+  - 在测试期间没有必要设置`is_training`为`False`，因为调用`placeholder_with_default()`函数时我们设置其为默认值。
+
+- 稀疏自动编码器
+
+  - 通常良好特征提取的另一种约束是稀疏性：通过向损失函数添加适当的项，自编码器被推动以减少编码层中活动神经元的数量。
+
+  - 一种方法可以简单地将平方误差添加到损失函数中，但实际上更好的方法是使用 **Kullback-Leibler 散度（相对熵）**，其具有比均方误差更强的梯度。<u>它表示2个函数或概率分布的差异性：差异越大则相对熵越大，差异越小则相对熵越小，特别地，若2者相同则熵为0。注意，KL散度的非对称性。</u>
+
+  - 一旦我们已经计算了编码层中每个神经元的稀疏损失，我们就总结这些损失，并将结果添加到损失函数中。 为了控制稀疏损失和重构损失的相对重要性，我们可以用稀疏权重超参数乘以稀疏损失。 如果这个权重太高，模型会紧贴目标稀疏度，但它可能无法正确重建输入，导致模型无用。 相反，如果它太低，模型将大多忽略稀疏目标，它不会学习任何有用的功能。
+
+    - 参考链接：[KL散度(相对熵)、交叉熵的解析](https://blog.csdn.net/witnessai1/article/details/79574812)
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_13.py
+    @time: 2019/7/2 10:32
+    @desc: 稀疏自动编码器
+    """
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import sys
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 1000  # sparse codings
+    n_outputs = n_inputs
+    
+    
+    def kl_divergence(p, q):
+        # Kullback Leibler divergence
+        return p * tf.log(p / q) + (1 - p) * tf.log((1 - p) / (1 - q))
+    
+    
+    learning_rate = 0.01
+    sparsity_target = 0.1
+    sparsity_weight = 0.2
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])            # not shown in the book
+    
+    hidden1 = tf.layers.dense(X, n_hidden1, activation=tf.nn.sigmoid) # not shown
+    outputs = tf.layers.dense(hidden1, n_outputs)                     # not shown
+    
+    hidden1_mean = tf.reduce_mean(hidden1, axis=0)  # batch mean
+    sparsity_loss = tf.reduce_sum(kl_divergence(sparsity_target, hidden1_mean))
+    reconstruction_loss = tf.reduce_mean(tf.square(outputs - X)) # MSE
+    loss = reconstruction_loss + sparsity_weight * sparsity_loss
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    # 训练过程
+    n_epochs = 100
+    batch_size = 1000
+    mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+    
+    
+    with tf.Session() as sess:
+        init.run()
+        for epoch in range(n_epochs):
+            n_batches = mnist.train.num_examples // batch_size
+            for iteration in range(n_batches):
+                print("\r{}%".format(100 * iteration // n_batches), end="")
+                sys.stdout.flush()
+                X_batch, y_batch = mnist.train.next_batch(batch_size)
+                sess.run(training_op, feed_dict={X: X_batch})
+            reconstruction_loss_val, sparsity_loss_val, loss_val = sess.run([reconstruction_loss, sparsity_loss, loss], feed_dict={X: X_batch})
+            print("\r{}".format(epoch), "Train MSE:", reconstruction_loss_val, "\tSparsity loss:", sparsity_loss_val, "\tTotal loss:", loss_val)
+            saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_sparse.ckpt")
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/20190702104509324.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+  - 一个重要的细节是，编码器激活度的值是在0-1之间（但是不等于0或1），否则KL散度将返回NaN。一个简单的解决方案是为编码层使用逻辑激活函数：`hidden1 = tf.layers.dense(X, n_hidden1, activation=tf.nn.sigmoid)`
+
+  - 一个简单的技巧可以加速收敛：不是使用 MSE，我们可以选择一个具有较大梯度的重建损失。 交叉熵通常是一个不错的选择。 要使用它，我们必须对输入进行规范化处理，使它们的取值范围为 0 到 1，**并在输出层中使用逻辑激活函数，以便输出也取值为 0 到 1**。TensorFlow 的`sigmoid_cross_entropy_with_logits()`函数负责有效地将logistic（sigmoid）激活函数应用于输出并计算**交叉熵**。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_14.py
+    @time: 2019/7/2 10:53
+    @desc: 稀疏自动编码器：加速收敛方法
+    """
+    
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import sys
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 1000  # sparse codings
+    n_outputs = n_inputs
+    
+    
+    def kl_divergence(p, q):
+        # Kullback Leibler divergence
+        return p * tf.log(p / q) + (1 - p) * tf.log((1 - p) / (1 - q))
+    
+    
+    learning_rate = 0.01
+    sparsity_target = 0.1
+    sparsity_weight = 0.2
+    
+    X = tf.placeholder(tf.float32, shape=[None, n_inputs])            # not shown in the book
+    
+    hidden1 = tf.layers.dense(X, n_hidden1, activation=tf.nn.sigmoid) # not shown
+    logits = tf.layers.dense(hidden1, n_outputs)                     # not shown
+    outputs = tf.nn.sigmoid(logits)
+    
+    hidden1_mean = tf.reduce_mean(hidden1, axis=0)  # batch mean
+    sparsity_loss = tf.reduce_sum(kl_divergence(sparsity_target, hidden1_mean))
+    
+    xentropy = tf.nn.sigmoid_cross_entropy_with_logits(labels=X, logits=logits)
+    reconstruction_loss = tf.reduce_mean(xentropy)
+    loss = reconstruction_loss + sparsity_weight * sparsity_loss
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    # 训练过程
+    n_epochs = 100
+    batch_size = 1000
+    mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+    
+    
+    with tf.Session() as sess:
+        init.run()
+        for epoch in range(n_epochs):
+            n_batches = mnist.train.num_examples // batch_size
+            for iteration in range(n_batches):
+                print("\r{}%".format(100 * iteration // n_batches), end="")
+                sys.stdout.flush()
+                X_batch, y_batch = mnist.train.next_batch(batch_size)
+                sess.run(training_op, feed_dict={X: X_batch})
+            reconstruction_loss_val, sparsity_loss_val, loss_val = sess.run([reconstruction_loss, sparsity_loss, loss], feed_dict={X: X_batch})
+            print("\r{}".format(epoch), "Train MSE:", reconstruction_loss_val, "\tSparsity loss:", sparsity_loss_val, "\tTotal loss:", loss_val)
+            saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_sparse_speedup.ckpt")
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/20190702145607951.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 变分自动编码器
+
+  - 它和前面所讨论的所有编码器都不同，特别之处在于：
+
+    - 它们是**概率自动编码器**，这就意味着即使经过训练，其输出也部分程度上决定于运气（不同于仅在训练期间使用随机性的去噪自动编码器）。
+
+    - 更重要的是，它们是**生成自动编码器**，意味着它们可以生成看起来像是从训练样本采样的新实例。
+
+    - 参考文献：[ 变分自编码器（一）：原来是这么一回事](https://spaces.ac.cn/archives/5253)
+
+    - VAE的名字中“**变分**”，是因为它的推导过程用到了KL散度及其性质。
+
+      ```python
+      #!/usr/bin/env python
+      # -*- coding: UTF-8 -*-
+      # coding=utf-8 
+      
+      """
+      @author: Li Tian
+      @contact: 694317828@qq.com
+      @software: pycharm
+      @file: autoencoder_15.py
+      @time: 2019/7/3 9:42
+      @desc: 变分自动编码器
+      """
+      
+      import tensorflow as tf
+      from tensorflow.examples.tutorials.mnist import input_data
+      import sys
+      from functools import partial
+      
+      
+      n_inputs = 28 * 28
+      n_hidden1 = 500
+      n_hidden2 = 500
+      n_hidden3 = 20  # codings
+      n_hidden4 = n_hidden2
+      n_hidden5 = n_hidden1
+      n_outputs = n_inputs
+      learning_rate = 0.001
+      
+      initializer = tf.contrib.layers.variance_scaling_initializer()
+      
+      my_dense_layer = partial(
+          tf.layers.dense,
+          activation=tf.nn.elu,
+          kernel_initializer=initializer)
+      
+      X = tf.placeholder(tf.float32, [None, n_inputs])
+      hidden1 = my_dense_layer(X, n_hidden1)
+      hidden2 = my_dense_layer(hidden1, n_hidden2)
+      hidden3_mean = my_dense_layer(hidden2, n_hidden3, activation=None)
+      hidden3_sigma = my_dense_layer(hidden2, n_hidden3, activation=None)
+      hidden3_gamma = my_dense_layer(hidden2, n_hidden3, activation=None)
+      noise = tf.random_normal(tf.shape(hidden3_sigma), dtype=tf.float32)
+      hidden3 = hidden3_mean + hidden3_sigma * noise
+      hidden4 = my_dense_layer(hidden3, n_hidden4)
+      hidden5 = my_dense_layer(hidden4, n_hidden5)
+      logits = my_dense_layer(hidden5, n_outputs, activation=None)
+      outputs = tf.sigmoid(logits)
+      
+      xentropy = tf.nn.sigmoid_cross_entropy_with_logits(labels=X, logits=logits)
+      reconstruction_loss = tf.reduce_sum(xentropy)
+      
+      eps = 1e-10 # smoothing term to avoid computing log(0) which is NaN
+      latent_loss = 0.5 * tf.reduce_sum(
+          tf.square(hidden3_sigma) + tf.square(hidden3_mean)
+          - 1 - tf.log(eps + tf.square(hidden3_sigma)))
+      
+      # 一个常见的变体
+      # latent_loss = 0.5 * tf.reduce_sum(
+      #     tf.exp(hidden3_gamma) + tf.square(hidden3_mean) - 1 - hidden3_gamma)
+      loss = reconstruction_loss + latent_loss
+      
+      optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+      training_op = optimizer.minimize(loss)
+      
+      init = tf.global_variables_initializer()
+      saver = tf.train.Saver()
+      
+      n_epochs = 50
+      batch_size = 150
+      mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+      
+      
+      with tf.Session() as sess:
+          init.run()
+          for epoch in range(n_epochs):
+              n_batches = mnist.train.num_examples // batch_size
+              for iteration in range(n_batches):
+                  print("\r{}%".format(100 * iteration // n_batches), end="")
+                  sys.stdout.flush()
+                  X_batch, y_batch = mnist.train.next_batch(batch_size)
+                  sess.run(training_op, feed_dict={X: X_batch})
+              loss_val, reconstruction_loss_val, latent_loss_val = sess.run([loss, reconstruction_loss, latent_loss], feed_dict={X: X_batch})
+              print("\r{}".format(epoch), "Train total loss:", loss_val, "\tReconstruction loss:", reconstruction_loss_val, "\tLatent loss:", latent_loss_val)
+              saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_variational.ckpt")
+      ```
+
+    - 运行结果
+
+      ![img](https://img-blog.csdnimg.cn/20190703100901419.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 生成数字
+
+  - 用上述变分自动编码器生成一些看起来像手写数字的图片。我们需要做的是训练模型，然后从高斯分布中随机采样编码并对其进行解码。
+
+    ```python
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    # coding=utf-8 
+    
+    """
+    @author: Li Tian
+    @contact: 694317828@qq.com
+    @software: pycharm
+    @file: autoencoder_16.py
+    @time: 2019/7/3 10:12
+    @desc: 生成数字
+    """
+    
+    import numpy as np
+    import tensorflow as tf
+    from tensorflow.examples.tutorials.mnist import input_data
+    import sys
+    from functools import partial
+    import matplotlib.pyplot as plt
+    
+    
+    n_inputs = 28 * 28
+    n_hidden1 = 500
+    n_hidden2 = 500
+    n_hidden3 = 20  # codings
+    n_hidden4 = n_hidden2
+    n_hidden5 = n_hidden1
+    n_outputs = n_inputs
+    learning_rate = 0.001
+    
+    initializer = tf.contrib.layers.variance_scaling_initializer()
+    
+    my_dense_layer = partial(
+        tf.layers.dense,
+        activation=tf.nn.elu,
+        kernel_initializer=initializer)
+    
+    X = tf.placeholder(tf.float32, [None, n_inputs])
+    hidden1 = my_dense_layer(X, n_hidden1)
+    hidden2 = my_dense_layer(hidden1, n_hidden2)
+    hidden3_mean = my_dense_layer(hidden2, n_hidden3, activation=None)
+    hidden3_sigma = my_dense_layer(hidden2, n_hidden3, activation=None)
+    hidden3_gamma = my_dense_layer(hidden2, n_hidden3, activation=None)
+    noise = tf.random_normal(tf.shape(hidden3_sigma), dtype=tf.float32)
+    hidden3 = hidden3_mean + hidden3_sigma * noise
+    hidden4 = my_dense_layer(hidden3, n_hidden4)
+    hidden5 = my_dense_layer(hidden4, n_hidden5)
+    logits = my_dense_layer(hidden5, n_outputs, activation=None)
+    outputs = tf.sigmoid(logits)
+    
+    xentropy = tf.nn.sigmoid_cross_entropy_with_logits(labels=X, logits=logits)
+    reconstruction_loss = tf.reduce_sum(xentropy)
+    
+    eps = 1e-10 # smoothing term to avoid computing log(0) which is NaN
+    latent_loss = 0.5 * tf.reduce_sum(
+        tf.square(hidden3_sigma) + tf.square(hidden3_mean)
+        - 1 - tf.log(eps + tf.square(hidden3_sigma)))
+    
+    # 一个常见的变体
+    # latent_loss = 0.5 * tf.reduce_sum(
+    #     tf.exp(hidden3_gamma) + tf.square(hidden3_mean) - 1 - hidden3_gamma)
+    loss = reconstruction_loss + latent_loss
+    
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+    training_op = optimizer.minimize(loss)
+    
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+    
+    
+    n_digits = 60
+    n_epochs = 50
+    batch_size = 150
+    mnist = input_data.read_data_sets('D:/Python3Space/BookStudy/book2/MNIST_data/')
+    
+    
+    with tf.Session() as sess:
+        init.run()
+        for epoch in range(n_epochs):
+            n_batches = mnist.train.num_examples // batch_size
+            for iteration in range(n_batches):
+                print("\r{}%".format(100 * iteration // n_batches), end="")  # not shown in the book
+                sys.stdout.flush()  # not shown
+                X_batch, y_batch = mnist.train.next_batch(batch_size)
+                sess.run(training_op, feed_dict={X: X_batch})
+            loss_val, reconstruction_loss_val, latent_loss_val = sess.run([loss, reconstruction_loss, latent_loss],
+                                                                          feed_dict={X: X_batch})  # not shown
+            print("\r{}".format(epoch), "Train total loss:", loss_val, "\tReconstruction loss:", reconstruction_loss_val,
+                  "\tLatent loss:", latent_loss_val)  # not shown
+            saver.save(sess, "D:/Python3Space/BookStudy/book4/model/my_model_variational2.ckpt")  # not shown
+    
+        codings_rnd = np.random.normal(size=[n_digits, n_hidden3])
+        outputs_val = outputs.eval(feed_dict={hidden3: codings_rnd})
+    
+    
+    def plot_image(image, shape=[28, 28]):
+        plt.imshow(image.reshape(shape), cmap="Greys", interpolation="nearest")
+        plt.axis("off")
+    
+    
+    def plot_multiple_images(images, n_rows, n_cols, pad=2):
+        images = images - images.min()  # make the minimum == 0, so the padding looks white
+        w,h = images.shape[1:]
+        image = np.zeros(((w+pad)*n_rows+pad, (h+pad)*n_cols+pad))
+        for y in range(n_rows):
+            for x in range(n_cols):
+                image[(y*(h+pad)+pad):(y*(h+pad)+pad+h),(x*(w+pad)+pad):(x*(w+pad)+pad+w)] = images[y*n_cols+x]
+        plt.imshow(image, cmap="Greys", interpolation="nearest")
+        plt.axis("off")
+    
+    
+    plt.figure(figsize=(8,50)) # not shown in the book
+    for iteration in range(n_digits):
+        plt.subplot(n_digits, 10, iteration + 1)
+        plot_image(outputs_val[iteration])
+    plt.show()
+    
+    n_rows = 6
+    n_cols = 10
+    plot_multiple_images(outputs_val.reshape(-1, 28, 28), n_rows, n_cols)
+    plt.show()
+    ```
+
+  - 运行结果：
+
+    ![img](https://img-blog.csdnimg.cn/20190703102644812.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 其他自动编码器
+
+  - **收缩自动编码器（CAE）**：该自动编码器在训练期间加入限制，使得关于输入编码的衍生物比较小。换句话说，相似的输入会得到相似的编码。
+  - **栈式卷积自动编码器**：该自动编码器通过卷积层重构图像来学习提取视觉特征。
+  - **随机生成网络（GSN）**：去噪自动编码器的推广，增加了生成数据的能力。
+  - **获胜者（WTA）自动编码器**：训练期间，在计算了编码层所有神经元的激活度之后，只保留训练批次中前k%的激活度，其余都置为0。自然的，这将导致稀疏编码。此外，类似的WTA方法可以用于产生稀疏卷积自动编码器。
+  - **对抗自动编码器**：一个网络被训练来重现输入，同时另一个网络被训练来找到不能正确重建第一个网络的输入。这促使第一个自动编码器学习鲁棒编码。
+
+- 部分课后题的摘抄
+
+  1. 自动编码器的主要任务是什么？
+
+     - 特征提取
+     - 无监督的预训练
+     - 降低维度
+     - 生成模型
+     - 异常检测（自动编码器在重建异常点时通常表现得不太好）
+
+  2. 加入想训练一个分类器，而且有大量未训练的数据，但是只有几千个已经标记的实例。自动编码器可以如何帮助你？你会如何实现？
+
+     首先可以在完整的数据集（已标记和未标记）上训练一个深度自动编码器，然后重用其下半部分作为分类器（即重用上半部分作为编码层）并使用已标记的数据训练分类器。如果已标记的数据集比较小，你可能希望在训练分类器时冻结复用层。
+
+  3. 如果自动编码器可以完美的重现输入，它就是一个好的自动编码器吗？如何评估自动编码器的性能？
+
+     完美的重建并不能保证自动编码器学习到有用的东西。然而，如果产生非常差的重建，它几乎必然是一个糟糕的自动编码器。
+
+     为了评估编码器的性能，一种方法是测量重建损失（例如，计算MSE，用输入的均方值减去输入）。同样，重建损失高意味着这是一个不好的编码器，但是重建损失低并不能保证这是一个好的自动编码器。你应该根据它的用途来评估自动编码器。例如，如果它用于无监督分类器的预训练，同样应该评估分类器的性能。
+
+  4. 什么是不完整和完整自动编码器？不啊完整自动编码器的主要风险是什么？完整的意义是什么？
+
+     **不完整的自动编码器**是**编码层比输入和输出层==小==**的自动编码器。如果比其大，那就是一个完整的自动编码器。一个过度不完整的自动编码器的主要风险是：不能重建其输入。完整的自动编码器的主要风险是：它可能只是将输入复制到输出，不学习任何有用的特征。
+
+  5. 如何在栈式自动编码器上绑定权重？为什么要这样做？
+
+     要将自动编码器的权重与其相应的解码层相关联，你可以简单的使得解码权重等于编码权重的转置。这将使得模型参数数量减少一半，通常使得训练在数据较少时快速收敛，减少过度拟合的危险。
+
+  6. 栈式自动编码器低层学习可视化特征的常用技术是什么？高层又是什么？
+
+     为了可视化栈式自动编码器低层学习到的特征，一个常用的技术是通过将每个权重向量重建为输入图像的大小来绘制每个神经元的权重（例如，对MNIST，将权重向量形状[784]重建为[28, 28]）。为了可视化高层学习到的特征，一种技术是显示最能激活每个神经元的训练实例。
+
+  7. 什么是生成模型？你能列举一种生成自动编码器吗？
+
+     生成模型是一种可以随机生成类似于训练实例的输出的模型。
+
+     例如，一旦在MNIST数据集上训练成功，生成模型就可以用于随机生成逼真的数字图像。输出分布大致和训练数据类似。例如，因为MNIST包含了每个数字的多个图像，生成模型可以输出与每个数字大致数量相同的图像。有些生成模型可以进行参数化，例如，生成某种类型的输出。生成自动编码器的一个例子是变分自动编码器。
+
+## 16. 强化学习
+
+- [如代码所示](强化学习.ipynb)
 
 ------
 
