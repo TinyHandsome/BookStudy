@@ -4582,7 +4582,7 @@
 
 ## 16. 强化学习
 
-- [如代码所示](强化学习.ipynb)
+- [如代码所示](https://github.com/TinyHandsome/BookStudy/blob/master/books/book4_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8EScikit-Learn%E5%92%8CTensorFlow/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0.ipynb)
 
 ------
 
