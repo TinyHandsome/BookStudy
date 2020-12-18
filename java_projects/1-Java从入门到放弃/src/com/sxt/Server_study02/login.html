@@ -1,0 +1,21 @@
+<html>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <head>
+        <title>第一个html登陆</title>
+    </head>
+    <body>
+        <h1>表单的使用</h1>
+        <pre>
+            post: 提交，基于http协议不同  量大  请求参数url不可见  安全<br/>
+            get: 默认，获取，基于http协议不同  量小  请求参数url可见  不安全<br/>
+            action: 请求web服务器的资源 URL<br/>
+            name: 作为后端使用，区分唯一，请求服务器，必须存在，数据不能提交<br/>
+            id: 作为前端使用，区分唯一<br/>
+        </pre>
+        <form method="post" action="http://localhost:8888/index.html">
+            用户名: <input type="text" name="uname" id="uname"/>
+            密码: <input type="password" name="pwd" id="pwd"/>
+            <input type="submit" value="登陆"/>
+        </form>
+    </body>
+</html>

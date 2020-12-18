@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - Page Not Found{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello World!</h1>
+    <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+    {% if not known %}
+    <p>很高兴见到你！</p>
+    {% else %}
+    <p>很高兴再次见到你！</p>
+    {% endif %}
+</div>
+<p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
+<p>That was {{ moment(current_time).fromNow(refresh=True) }}.</p>
+
+{{ wtf.quick_form(form) }}
+{% endblock %}

@@ -1,0 +1,8 @@
+create table if not exists ods_fico.`zftls`(
+mandt string comment '集团',
+bukrs string comment '公司代码',
+posid string comment '工作分解结构元素 (WBS 元素)',
+dmbtr string comment '按本位币计的金额',
+zposid string comment 'WBS展示'
+)
+comment  '分摊历史表'
