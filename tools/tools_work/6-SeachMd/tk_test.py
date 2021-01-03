@@ -182,7 +182,7 @@ class Visualize:
 
         # 要在启动时最大化，可以调用TK.state("zoomed")。要最小化可以调用TK.iconify方法。要还原最小化可以调用TK.deiconify方法。
 
-        default_path = 'E:\\【冲鸭】\\【工作】2. 工作记录、笔记和总结'
+        default_path = 'E:\\1-工作\\2-记录'
         self.path.set(default_path)
 
         f1 = tk.Frame(self.root)

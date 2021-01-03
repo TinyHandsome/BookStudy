@@ -345,7 +345,7 @@
 - 有两种类型的套接字：**基于文件**的和**面向网络**的。
 - 如果一个套接字像一个电话插孔——允许通信的一些基础设施，那么主机名和端口号就像区号和电话号码的组合
 
-### 2.1 socket（套接字）
+### 2.1 socket（套接字）网络编程
 
 - `socket(socket_family, socket_type, protocol=0)`：`socket_family`是AF_UNIX或AF_INET，`socket_type`是SOCK_STREAM或SOCK_DGRAM，`protocol`通常省略，默认为0。
 
@@ -388,6 +388,149 @@
 
 - 创建TCP客户端
 
+  ```python
+  from socket import *
+  
+  HOST = 'localhost'
+  PORT = 21567
+  BUFSIZ = 1024
+  ADDR = (HOST, PORT)
+  
+  tcpCliSock = socket(AF_INET, SOCK_STREAM)
+  tcpCliSock.connect(ADDR)
+  
+  while True:
+      data = input('> ')
+      if not data:
+          break
+      tcpCliSock.send(bytes(data, encoding="utf-8"))
+      data = tcpCliSock.recv(BUFSIZ)
+      if not data:
+          break
+      print(str(data, encoding="utf-8"))
+  
+  tcpCliSock.close()
+  ```
+
+- UDP 和TCP 服务器之间的另一个显著差异是，因为数据报套接字是无连接的，所以就没有为了成功通信而使一个客户端连接到一个独立的套接字“转换”的操作。这些服务器仅仅接受消息并有可能回复数据。
+
+- UDP 客户端循环工作方式几乎和TCP 客户端完全一样。唯一的区别是，事先不需要建立与UDP 服务器的连接，只是简单地发送一条消息并等待服务器的回复。
+
+- socket模块属性
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20201226160257398.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)![在这里插入图片描述](https://img-blog.csdnimg.cn/20201226160322578.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+### 2.2 SocketServer 模块
+
+1. 创建SocketServer TCP服务器
+
+   ```python
+   from socketserver import (TCPServer as TCP, StreamRequestHandler as SRH)
+   from time import ctime
+   
+   HOST = ''
+   PORT = 21567
+   ADDR = (HOST, PORT)
+   
+   
+   class MyRequestHandler(SRH):
+       def handle(self):
+           print('...连自：', self.client_address)
+           self.wfile.write('[%s] %s' % (ctime(), self.rfile.readline()))
+   
+   
+   tcpServ = TCP(ADDR, MyRequestHandler)
+   print('等待连接...')
+   tcpServ.serve_forever()
+   ```
+
+2. 创建SocketServer TCP 客户端
+
+   ```python
+   from socket import *
+   
+   HOST = 'localhost'
+   PORT = 21567
+   BUFSIZ = 1024
+   ADDR = (HOST, PORT)
+   
+   while True:
+       tcpCliSock = socket(AF_INET, SOCK_STREAM)
+       tcpCliSock.connect(ADDR)
+       data = input('> ')
+       if not data:
+           break
+       tcpCliSock.send(bytes('%s\r\n' % data, encoding='utf-8'))
+       data = tcpCliSock.recv(BUFSIZ)
+       if not data:
+           break
+       print(str(data, encoding='utf-8').strip())
+       tcpCliSock.close()
+   ```
+
+### 2.3 Twisted框架介绍
+
+- 创建Twisted Reactor TCP 服务器
+
+  ```python
+  from twisted.internet import protocol, reactor
+  from time import ctime
+  
+  PORT = 21567
+  
+  
+  class TSServProtocol(protocol.Protocol):
+      def connectionMade(self):
+          clnt = self.clnt = self.transport.getPeer().host
+          print('...连接自：', clnt)
+  
+      def dataReceived(self, data):
+          self.transport.write(bytes('[%s] %s' % (ctime(), str(data, encoding='utf-8')), encoding='utf-8'))
+  
+  
+  factory = protocol.Factory()
+  factory.protocol = TSServProtocol
+  print('等待连接...')
+  reactor.listenTCP(PORT, factory)
+  reactor.run()
+  ```
+
+- 创建Twisted Reactor TCP 客户端
+
+  ```python
+  from twisted.internet import protocol, reactor
+  
+  HOST = 'localhost'
+  PORT = 21567
+  
+  
+  class TSClntProtocol(protocol.Protocol):
+      def sendData(self):
+          data = input('> ')
+          if data:
+              print('...发送： %s...' % data)
+              self.transport.write(bytes(data, encoding='utf-8'))
+          else:
+              self.transport.loseConnection()
+  
+      def connectionMade(self):
+          self.sendData()
+  
+      def dataReceived(self, data):
+          print(str(data, encoding='utf-8'))
+          self.sendData()
+  
+  
+  class TSClntFactory(protocol.ClientFactory):
+      protocol = TSClntProtocol
+      clientConnectionLost = clientConnectionFailed = lambda self, connector, reason: reactor.stop()
+  
+  
+  reactor.connectTCP(HOST, PORT, TSClntFactory())
+  reactor.run()
+  ```
+
+## 3. 因特网客户端编程
 
 
 
@@ -395,6 +538,33 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+python魔法
+
+核心编程
+
+python从入门到放弃视频教程
+
+flask书
+
+flask视频教程
 
 
 
