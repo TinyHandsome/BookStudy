@@ -532,13 +532,42 @@
 
 ## 3. 因特网客户端编程
 
+### 3.1 文件传输
+
+1. 常见的文件传输协议：
+
+   - HTTP
+   - FTP
+   - scp/rsync
+
+2. FTP，File Transfer Protocol，文件传输协议
+
+   - FTP只使用TCP，而不是UDP
+   - FTP可以看作客户端/服务器编程中的特殊情况，因这里的客户端和服务器都使用两个套接字来通信：
+     - 一个是控制和命令端口，21
+     - 一个是数据端口，20
+   - FTP有两种模式：主动和被动，只有在主动模式下服务器才使用数据端口。
+
+3. 使用Python编写FTP客户端程序：
+
+   - 流程：
+
+       1. 连接到服务器
+       2. 登录
+       3. 发出服务请求
+       4. 退出
+       
+   -  ftplib.FTP对象的方法：
+   
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210104170327777.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)![在这里插入图片描述](https://img-blog.csdnimg.cn/20210104170352144.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+   
+   - 客户端FTP程序示例
 
 
 
 
 
-
-
+学到Page81
 
 
 
