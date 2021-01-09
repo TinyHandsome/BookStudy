@@ -4,6 +4,11 @@
 
 ## 写在前面
 
+- 读后感：
+  - 真本书写的真的八行，外国人写的书，好的是真的好，烂的是真的烂，这本书不知道为什么吹的人那么多，烂的扣jio，有的例子真的不想抄一遍了，神神叨叨的，跑也跑不通，让自己填自己连接，我特么我知道怎么填，读你干嘛啊。
+  - 最严重的问题，也就是上面说的，很多例子对应的链接已经不行了，连也连不上，特别是**在第二章、第三章学网络的时候**，特别明显，就是学了个寂寞。
+  - 怎么说呢，这本书无论是对初学者还是对已经有了一定基础的python学习者，**都十分的不友好**，我的评价是：**生硬且古板**。很多已经淘汰的技术，着墨太多，并且案例无法复现。很有很多错误的地方，比如英文打错了。。。我人都傻了，[点我查看打错的地方](#error1)
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20201110153410970.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
 
 ## 1. 正则表达式
@@ -562,12 +567,212 @@
        ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210104170327777.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)![在这里插入图片描述](https://img-blog.csdnimg.cn/20210104170352144.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
    
    - 客户端FTP程序示例
+   
+       ```python
+       import ftplib
+       import os
+       import socket
+       
+       HOST = 'ftp.mozilla.org'
+       DIRN = 'pub/mozilla.org/webtools'
+       FILE = 'bugzilla-LATEST.tar.gz'
+       
+       
+       def main():
+           # 创建一个FTP对象，尝试连接到FTP服务器
+           try:
+               f = ftplib.FTP(HOST)
+           except (socket.error, socket.gaierror) as e:
+               print('error: cannot reach "%s"' % HOST)
+               return
+           print('*** Connected to host "%s"' % HOST)
+       
+           # 尝试用anonymous登录
+           try:
+               f.login()
+           except ftplib.error_perm:
+               print('ERROR: cannot login anonymously')
+               f.quit()
+               return
+           print('*** Logged in as "anonymous"')
+           # 转到发布目录
+           try:
+               f.cwd(DIRN)
+           except ftplib.error_perm:
+               print('ERROR: cannot CD to "%s"' % DIRN)
+               f.quit()
+               return
+           print('*** Changed to "%s" folder' % DIRN)
+           # 下载文件
+           try:
+               f.retrbinary('RETR %s' % FILE, open(FILE, 'wb').write)
+           except ftplib.error_perm:
+               print('ERROR: cannot read file "%s"' % FILE)
+               os.unlink(FILE)
+           else:
+               print('*** Downloaded "%s" to CWD' % FILE)
+           f.quit()
+       
+       
+       if __name__ == '__main__':
+           main()
+       ```
+
+### 3.2 网络新闻
+
+- NNTP对象的方法
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210106175954253.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210106180036639.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 真本书的网络编程写的真的八行，外国人写的书，好的是真的好，烂的是真的烂，这本书不知道为什么吹的人那么多，烂的扣jio，这里的例子真的不想抄一遍了，神神叨叨的，跑也跑不通，学网络建议直接去看flask和django的书。
+
+### 3.3 电子邮件
+
+- MTA：传送代理，Mail Transfer Agent
+
+- MTS：消息传输系统
+
+- 为了发送电子邮件，邮件客户端必须要连接到一个MTA，MTA 靠某种协议进行通信。MTA之间通过消息传输系统（MTS）互相通信。只有两个MTA 都使用这个协议时，才能进行通信。
+
+- SMTP：简单邮件传输协议，Simple Mail Transfer Protocol
+
+- ESMTP：扩展 SMTP，Extended SMTP，对标准 SMTP 协议进行的扩展。它与 SMTP 服务的区别仅仅是，使用 SMTP 发信不需要验证用户帐户，而用 ESMTP 发信时，服务器会要求用户提供用户名和密码以便验证身份。在所有的验证机制中，信息全部采用Base64编码。验证之后的邮件发送过程与 SMTP 方式没有两样。
+
+- LMTP：本地邮件传输协议，Local Mail Transfer Protocol。SMTP和SMTP服务扩展（ESMTP）提供了一种高效安全传送电子邮件的方法，而在实现SMTP时需要管理一个邮件传送队列，在有些时候这样做可能有麻烦，需要一种没有队列的邮件传送系统，而LMTP就是这样的一个系统，它使用ESMTP的语法，而它和ESMTP可不是一回事，而LMTP也不能用于TCP端口25。
+
+- SMTP 是在因特网上的MTA 之间消息交换的最常用MTSMTA。用SMTP 把电子邮件从一台（MTA）主机传送到另一台（MTA）主机。发电子邮件时，必须要连接到一个外部SMTP服务器，此时邮件程序是一个SMTP 客户端。而SMTP 服务器也因此成为消息的第一站。
+
+- MUA：Mail User Agent，邮件用户代理，在家用电脑中运行的应用程序。
+
+- POP：Post Office Protocal，邮局协议，第一个用于下载邮件的协议。
+
+- IMAP：Internet Message Access Protocol，因特网消息访问协议。
+
+  > POP无法很好地应对多邮件客户端，因此现在被废弃了，IMAP4rev1现在广泛使用。
+
+- MIME，Mail Interchange Message Extension，邮件呼唤消息扩展（这啥呀，百度都搜不到，搜到的是Multipurpose Internet Mail Extensions，**多用途互联网邮件扩展类型**，这本书真的没有瞎编吗，还是译者瞎翻译？）
+
+### 3.4 实战
+
+- 憋实战了叭，根本跑不通
+
+  ```python
+  from email.mime.image import MIMEImage
+  from email.mime.multipart import MIMEMultipart
+  from email.mime.text import MIMEText
+  from smtplib import SMTP
+  
+  
+  def make_mpa_msg():
+      email = MIMEMultipart('alternative')
+      text = MIMEText('Hello World!\r\n', 'plain')
+      email.attach(text)
+      html = MIMEText('<html><body><h4>Hello World!</h4></body></html>', 'html')
+      email.attach(html)
+      return email
+  
+  
+  def make_img_msg(fn):
+      f = open(fn, 'r')
+      data = f.read()
+      f.close()
+      email = MIMEImage(data, name=fn)
+      email.add_header('Content-Dispostion', 'attachment; filename="%s"' % fn)
+      return email
+  
+  
+  def sendMsg(fr, to, msg):
+      s = SMTP('localhost')
+      errs = s.sendmail(fr, to, msg)
+      s.quit()
+  
+  
+  if __name__ == '__main__':
+      print('Sending multipart alternative msg...')
+      msg = make_mpa_msg()
+  
+      SENDER = ''
+      RECIPS = ''
+      SOME_IMG_FILE = r''
+  
+      msg['From'] = SENDER
+      msg['To'] = ', '.join(RECIPS)
+      msg['Subject'] = 'multipart alternative test'
+      sendMsg(SENDER, RECIPS, msg.as_string())
+  
+      print(('Sending image msg...'))
+      msg = make_img_msg(SOME_IMG_FILE)
+      msg['From'] = SENDER
+      msg['To'] = ', '.join(RECIPS)
+      msg['Subject'] = 'Image file test'
+      sendMsg(SENDER, RECIPS, msg.as_string())
+  ```
+
+- <a name = 'error1'>SaaS：Software as a Service，软件即服务（这里的Service书中还打错了。。。我佛了）</a>
+
+- 使用`timeit`查看代码运行时长
+
+- TLS：Transport Layer Security，传输层安全
+
+## 4. 多线程编程
+
+### 4.1 线程和进程
+
+1. 多线程：multithreaded，MT
+
+2. IPC：Inter-Process Communication，进程间通信
+
+3. 线程包括开始、执行顺序和结束三部分。它有一个指令指针，用于记录当前运行的上下文。当其他线程运行时，它可以被抢占（中断）和临时挂起（也称为睡眠）——这种做法叫做让步（yielding）。
+
+4. GIL：Global Interpreter Lock，全局解释器锁
+
+5. **不建议使用thread模块**：，其中最明显的一个原因是在主线程退出之后，所有其他线程都会在没有清理的情况下直接退出。而另一个模块threading 会确保在所有“重要的”子线程退出前，保持整个进程的存活。
+
+6. 下面的脚本在一个单线程程序里连续执行两个循环。一个循环必须在另一个开始前完成。总共消耗的时间是每个循环所用时间之和。
+
+   ```python
+   from time import sleep, ctime
+   
+   
+   def loop0():
+       print('start loop 0 at: ', ctime())
+       sleep(4)
+       print('loop 0 done at: ', ctime())
+   
+   
+   def loop1():
+       print('start loop 1 at: ', ctime())
+       sleep(2)
+       print('loop 1 done at:', ctime())
+   
+   
+   def main():
+       print('starting at: ', ctime())
+       loop0()
+       loop1()
+       print('all Done at: ', ctime())
+   
+   
+   if __name__ == '__main__':
+       main()
+   ```
+
+### 4.2 thread、threading和Queue
 
 
 
 
 
-学到Page81
+
+
+
+
+
+
+
+
+学到Page92
 
 
 

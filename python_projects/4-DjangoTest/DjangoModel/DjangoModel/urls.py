@@ -1,4 +1,4 @@
-"""litian_django URL Configuration
+"""DjangoModel URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -15,17 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from litian_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', views.hello),
-    path('hh/', views.hh),
-    path('haha/', views.haha),
-    path('index/', views.index),
-    path('wengui/', views.wengui),
-    path('home/', views.home),
-    path('', views.home),
-    path('two/', include('Two.urls')),
-    path('three/', include('Three.urls')),
+    path('app/', include('App.urls')),
 ]
