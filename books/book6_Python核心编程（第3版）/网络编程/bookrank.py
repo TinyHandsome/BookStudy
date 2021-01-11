@@ -5,7 +5,7 @@ from time import ctime
 from urllib.request import urlopen
 
 
-REGEX = compile(b'#([\d,]+) in Books ')
+REGEX = compile(br'#([\d,]+) in Books ')
 AMZN = 'http://amazon.cn/dp/'
 ISBNs = {
     '0132269937': 'Core Python Programming',
