@@ -5,7 +5,7 @@
 ## 写在前面
 
 - 读后感：
-  - 真本书写的真的八行，外国人写的书，好的是真的好，烂的是真的烂，这本书不知道为什么吹的人那么多，烂的扣jio，有的例子真的不想抄一遍了，神神叨叨的，跑也跑不通，让自己填自己连接，我特么我知道怎么填，读你干嘛啊。
+  - 真本书写的真的八行，外国人写的书，好的是真的好，烂的是真的烂，这本书不知道为什么吹的人那么多，烂的扣jio，有的例子真的不想抄一遍了，神神叨叨的，跑也跑不通，让自己填自己连接，我特么我知道怎么填，读你干嘛啊。还有啊，翻译得真跟shi一样，直接谷歌机翻也比这翻译的好吧。
   - 最严重的问题，也就是上面说的，很多例子对应的链接已经不行了，连也连不上，特别是**在第二章、第三章学网络的时候**，特别明显，就是学了个寂寞。
   - 怎么说呢，这本书无论是对初学者还是对已经有了一定基础的python学习者，**都十分的不友好**，我的评价是：**生硬且古板**。很多已经淘汰的技术，着墨太多，并且案例无法复现。很有很多错误的地方，比如英文打错了。。。我人都傻了，[点我查看打错的地方](#error1)
 
@@ -350,7 +350,9 @@
 - 有两种类型的套接字：**基于文件**的和**面向网络**的。
 - 如果一个套接字像一个电话插孔——允许通信的一些基础设施，那么主机名和端口号就像区号和电话号码的组合
 
-### 2.1 socket（套接字）网络编程
+### 2.1 socket网络编程
+
+- socket：套接字
 
 - `socket(socket_family, socket_type, protocol=0)`：`socket_family`是AF_UNIX或AF_INET，`socket_type`是SOCK_STREAM或SOCK_DGRAM，`protocol`通常省略，默认为0。
 
@@ -758,7 +760,348 @@
        main()
    ```
 
-### 4.2 thread、threading和Queue
+### 4.2 thread
+
+1. thread模块和锁对象
+
+   - 锁对象：lock object，原语锁、简单锁、互斥锁、互斥和二进制信号锁。
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210111103654255.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+2. `thread.start_new_thread()`必须包含开始的两个参数，于是即使要执行的函数不需要参数，也需要传递一个空元组。这里需要注意的是，在python3中想要使用thread，导入的是`_thread`
+
+   ```python
+   import _thread as thread
+   from time import sleep, ctime
+   
+   
+   def loop0():
+       print('start loop 0 at: ', ctime())
+       sleep(4)
+       print('loop 0 done at: ', ctime())
+   
+   
+   def loop1():
+       print('start loop 1 at: ', ctime())
+       sleep(2)
+       print('loop 1 done at: ', ctime())
+   
+   
+   def main():
+       print('starting at: ', ctime())
+       thread.start_new_thread(loop0, ())
+       thread.start_new_thread(loop1, ())
+       sleep(6)
+       print('all DONE at: ', ctime())
+   
+   
+   if __name__ == '__main__':
+       main()
+   ```
+
+3. 引入锁，并去除单独的循环函数
+
+   ```python
+   import _thread as thread
+   from time import sleep, ctime
+   
+   loops = [4, 2]
+   
+   
+   def loop(nloop, nsec, lock):
+       print('start loop', nloop, 'at: ', ctime())
+       sleep(nsec)
+       print('loop', nloop, 'done at:', ctime())
+       lock.release()
+   
+   
+   def main():
+       print('starting at: ', ctime())
+       locks = []
+       nloops = range(len(loops))
+   
+       # 首先创建一个锁列表
+       for i in nloops:
+           # 得到锁对象，获取锁需要花费一些时间
+           lock = thread.allocate_lock()
+           # 获得每个锁，把锁锁上
+           lock.acquire()
+           locks.append(lock)
+   
+       for i in nloops:
+           thread.start_new_thread(loop, (i, loops[i], locks[i]))
+   
+       # 等待/暂停主线程，直到所有锁都被释放之后才会继续执行。
+       for i in nloops:
+           while locks[i].locked():
+               pass
+   
+       print('all Done at: ', ctime())
+   
+   
+   if __name__ == '__main__':
+       main()
+   ```
+
+### 4.3 threading
+
+1. thread仅供学习用，正常用的话，都选threading。除了Thread 类以外，该模块还包括许多非常好用的同步机制。
+
+   > 避免使用thread 模块的另一个原因是该模块不支持守护线程这个概念。当主线程退出时，所有子线程都将终止，不管它们是否仍在工作。如果你不希望发生这种行为，就要引入守护线程的概念了。
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210111111802159.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+2. 守护线程：进程退出时不需要等待这个线程执行完成。
+
+3. threading 模块的Thread 类是主要的执行对象
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210111151123952.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210111151153636.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+4. 使用Thread的方法：
+
+   1. 创建Thread 的实例，传给它一个函数。
+
+      ```python
+      import threading
+      from time import sleep, ctime
+      
+      loops = [4, 2]
+      
+      
+      def loop(nloop, nsec):
+          print('start loop', nloop, 'at: ', ctime())
+          sleep(nsec)
+          print('loop', nloop, 'done at:', ctime())
+      
+      
+      def main():
+          print('starting at: ', ctime())
+          threads = []
+          nloops = range(len(loops))
+      
+          for i in nloops:
+              t = threading.Thread(target=loop, args=(i, loops[i]))
+              threads.append(t)
+      
+          for i in nloops:
+              threads[i].start()
+      
+          for i in nloops:
+              threads[i].join()
+      
+          print('all Done at: ', ctime())
+      
+      
+      if __name__ == '__main__':
+          main()
+      ```
+
+   2. 创建Thread 的实例，传给它一个可调用的类实例。
+
+      ```python
+      import threading
+      from time import sleep, ctime
+      
+      loops = [4, 2]
+      
+      
+      class ThreadFunc(object):
+          def __init__(self, f, args, name=''):
+              self.name = name
+              self.f = f
+              self.args = args
+      
+          def __call__(self):
+              self.f(*self.args)
+      
+      
+      def loop(nloop, nsec):
+          print('start loop', nloop, 'at: ', ctime())
+          sleep(nsec)
+          print('loop', nloop, 'done at:', ctime())
+      
+      
+      def main():
+          print('starting at: ', ctime())
+          threads = []
+          nloops = range(len(loops))
+      
+          for i in nloops:
+              t = threading.Thread(target=ThreadFunc(loop, (i, loops[i]), loop.__name__))
+              threads.append(t)
+      
+          for i in nloops:
+              threads[i].start()
+      
+          for i in nloops:
+              threads[i].join()
+      
+          print('all Done at: ', ctime())
+      
+      
+      if __name__ == '__main__':
+          main()
+      ```
+
+   3. 派生Thread 的子类，并创建子类的实例。
+
+      对Thread 子类化，而不是直接对其实例化。这将使我们在定制线程对象时拥有更多的灵活性，也能够简化线程创建的调用过程。
+
+      运行时**报错**：`AssertionError: Thread.__init__() not called`
+
+      解决方案：这是因为在子类的初始化函数中没有初始化父类初始化函数，所以需要加上：`super().__init__()`
+
+      ```python
+      import threading
+      from time import sleep, ctime
+      
+      loops = [4, 2]
+      
+      
+      class MyThread(threading.Thread):
+          def __init__(self, f, args, name=''):
+              super().__init__()
+              self.name = name
+              self.f = f
+              self.args = args
+      
+          def run(self):
+              self.f(*self.args)
+      
+      
+      def loop(nloop, nsec):
+          print('start loop', nloop, 'at: ', ctime())
+          sleep(nsec)
+          print('loop', nloop, 'done at:', ctime())
+      
+      
+      def main():
+          print('starting at: ', ctime())
+          threads = []
+          nloops = range(len(loops))
+      
+          for i in nloops:
+              t = MyThread(loop, (i, loops[i]), loop.__name__)
+              threads.append(t)
+      
+          for i in nloops:
+              threads[i].start()
+      
+          for i in nloops:
+              threads[i].join()
+      
+          print('all Done at: ', ctime())
+      
+      
+      if __name__ == '__main__':
+          main()
+      ```
+
+5. 实例化`Thread（调用Thread()）`和调用`thread.start_new_thread()`的最大区别是新线程**不会立即开始执行**。
+
+6. `join()`方法将**等待线程结束**，或者在提供了超时时间的情况下，达到超时时间。使用`join()`方法要比等待锁释放的无限循环更加清晰（这也是这种锁又称为**自旋锁**的原因）。
+
+7. `__call__()`方法：主要实现的是将类的对象当作函数直接调用。
+
+8. 之前的特殊方法`__call__()`在这个子类中必须要写为`run()`。
+
+9. `threading` 模块的其他函数
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210111162054771.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+### 4.4 单线程和多线程执行对比
+
+1. 为了让`Thread` 的子类更加通用，将这个子类移到一个专门的模块中，并添加了可调用的`getResult()`方法来取得返回值。
+
+   ```python
+   import threading
+   from time import ctime
+   
+   
+   class MyThread(threading.Thread):
+       def __init__(self, func, args, name=''):
+           super().__init__()
+           self.name = name
+           self.func = func
+           self.args = args
+           self.res = None
+   
+       def __post_init__(self):
+           super().__init__()
+   
+       def getResult(self):
+           return self.res
+   
+       def run(self):
+           print('starting', self.name, 'at: ', ctime())
+           self.res = self.func(*self.args)
+           print(self.name, 'finished at: ', ctime())
+   ```
+
+2. 单线程执行斐波那契、阶乘和累加
+
+   ```python
+   from myThread import MyThread
+   from time import ctime, sleep
+   
+   
+   def fib(x):
+       sleep(0.005)
+       if x < 2:
+           return 1
+       return (fib(x-2) + fib(x-1))
+   
+   
+   def fac(x):
+       sleep(0.1)
+       if x < 2:
+           return 1
+       return (x * fac(x-1))
+   
+   
+   def sums(x):
+       sleep(0.1)
+       if x < 2:
+           return 1
+       return (x + sums(x-1))
+   
+   
+   funcs = [fib, fac, sums]
+   n = 12
+   
+   
+   def main():
+       nfuncs = range(len(funcs))
+   
+       print('*** SINGLE THREAD')
+       for i in nfuncs:
+           print('starting', funcs[i].__name__, 'at: ', ctime())
+           print(funcs[i](n))
+           print(funcs[i].__name__, 'finished at: ', ctime())
+   
+       print('\n*** MULTIPLE THREADS')
+       threads = []
+       for i in nfuncs:
+           t = MyThread(funcs[i], (n, ), funcs[i].__name__)
+           threads.append(t)
+   
+       for i in nfuncs:
+           threads[i].start()
+   
+       for i in nfuncs:
+           threads[i].getResult()
+   
+       print('all DONE')
+   
+   
+   if __name__ == '__main__':
+       main()
+   ```
+
+### 4.5 多线程实践
+
+- 函数名最前面的单下划线表示这是一个特殊函数，只能被本模块的代码使用，不能被其他使用本文件作为库或者工具模块的应用导入。
 
 
 
@@ -772,7 +1115,15 @@
 
 
 
-学到Page92
+
+
+
+
+
+
+
+
+学到Page149
 
 
 
