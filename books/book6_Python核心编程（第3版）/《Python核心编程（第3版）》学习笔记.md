@@ -21,7 +21,7 @@
 
 - 特殊字符
 
-  ![image-20201110153547114](E:\typora_pics_savepath\image-20201110153547114.png)
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210112153401819.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
 - 择一匹配（或）：`|`
 
@@ -1103,6 +1103,365 @@
 
 - 函数名最前面的单下划线表示这是一个特殊函数，只能被本模块的代码使用，不能被其他使用本文件作为库或者工具模块的应用导入。
 
+- 同步：
+
+  - 需求背景：如果两个线程运行的顺序发生变化，就有可能造成代码的执行轨迹或行为不相同，或者产生不一致的数据。（比如数据库写入内容，读取内容）
+  - 含义：当任意数量的线程可以访问临界区的代码，但在给定的时刻只有一个线程可以通过时，就是使用同步的时候了。
+
+- 当多线程争夺锁时，允许第一个获得锁的线程进入临界区，并执行代码。所有之后到达的线程将被阻塞，直到第一个线程执行结束，退出临界区，并释放锁。
+
+  ```python
+  from atexit import register
+  from random import randrange
+  from threading import Thread, Lock, currentThread
+  from time import sleep, ctime
+  
+  
+  class CleanOutputSet(set):
+      def __str__(self):
+          return ', '.join(x for x in self)
+  
+  
+  lock = Lock()
+  loops = (randrange(2, 5) for x in range(randrange(3, 7)))
+  remaining = CleanOutputSet()
+  
+  
+  def loop(nsec):
+      myname = currentThread().name
+      lock.acquire()
+      remaining.add(myname)
+      print('[%s] Started %s' % (ctime(), myname))
+      lock.release()
+      sleep(nsec)
+      lock.acquire()
+      remaining.remove(myname)
+      print('[%s] Completed %s (%d secs)' % (ctime(), myname, nsec))
+      print('(remaining: %s)' % (remaining or 'None'))
+      lock.release()
+  
+  
+  def _main():
+      for pause in loops:
+          Thread(target=loop, args=(pause, )).start()
+  
+  
+  @register
+  def _atexit():
+      print('all DONE at: ', ctime())
+  
+  
+  if __name__ == '__main__':
+      _main()
+  ```
+
+- 使用上下文管理：还有一种方案可以不再调用锁的acquire()和release()方法，从而更进一步简化代码。这就是使用`with 语句`，此时每个对象的上下文管理器负责在进入该套件之前调用acquire()并在完成执行之后调用release()。
+
+- 信号量：信号量是最古老的同步原语之一。它是一个计数器，当资源消耗时递减，当资源释放时递增。信号量代表资源是否可用。信号量比锁更加灵活，因为可以有多个线程，每个线程拥有有限资源的一个实例。
+
+  ```python
+  from atexit import register
+  from random import randrange
+  from threading import BoundedSemaphore, Lock, Thread
+  from time import sleep, ctime
+  
+  
+  lock = Lock()
+  MAX = 5
+  candytray = BoundedSemaphore(MAX)
+  
+  
+  def refill():
+      lock.acquire()
+      print('Refilling candy...')
+      try:
+          candytray.release()
+      except ValueError:
+          print('full, skipping')
+      else:
+          print('OK')
+      lock.release()
+  
+  
+  def buy():
+      lock.acquire()
+      print('Buy candy...')
+      if candytray.acquire(False):
+          print('OK')
+      else:
+          print('empty, skipping')
+      lock.release()
+  
+  
+  def producer(loops):
+      for i in range(loops):
+          refill()
+          sleep(randrange(3))
+  
+  
+  def consumer(loops):
+      for i in range(loops):
+          buy()
+          sleep(randrange(3))
+  
+  def _main():
+      print('starting at:', ctime())
+      nloops=randrange(2, 6)
+      print('THE CANDY MACHINE (full with %d bars)' % MAX)
+      Thread(target=consumer, args=(randrange(nloops, nloops+MAX+2),)).start()
+      Thread(target=producer, args=(nloops,)).start()
+  
+  @register
+  def _atexit():
+      print('all Done at: ', ctime())
+  
+  if __name__ == '__main__':
+      _main()
+  ```
+
+### 4.6 Queue模块
+
+- Queue/queue模块常用属性
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210112140654921.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021011214081143.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 生产消费者问题
+
+  ```python
+  from random import randint
+  from time import sleep
+  from queue import Queue
+  from myThread import MyThread
+  
+  def writeQ(queue):
+      print('producing object for Q...', end='')
+      queue.put('xxx', 1)
+      print('size now', queue.qsize())
+  
+  def readQ(queue):
+      val = queue.get(1)
+      print('consumed object from Q...size now', queue.qsize())
+  
+  def writer(queue, loops):
+      for i in range(loops):
+          writeQ(queue)
+          sleep(randint(1, 3))
+  
+  def reader(queue, loops):
+      for i in range(loops):
+          readQ(queue)
+          sleep(randint(3, 5))
+  
+  funcs = [writer, reader]
+  nfuncs = range(len(funcs))
+  
+  def main():
+      nloops = randint(2, 5)
+      q = Queue(maxsize=32)
+  
+      threads = []
+      for i in nfuncs:
+          t = MyThread(funcs[i], [q, nloops], funcs[i].__name__)
+          threads.append(t)
+  
+      for i in nfuncs:
+          threads[i].start()
+  
+      for i in nfuncs:
+          threads[i].join()
+  
+      print('all DONE')
+  
+  if __name__ == '__main__':
+      main()
+  ```
+
+### 4.7 线程的替代方案
+
+- 由于Python 的GIL 的限制，多线程更适合于I/O 密集型应用（I/O 释放了GIL，可以允许更多的并发），而不是计算密集型应用。对于后一种情况而言，为了实现更好的并行性，你需要使用多进程，以便让CPU 的其他内核来执行。
+
+- 对于多线程或多进程而言，threading模块的主要替代品包括以下几个：
+
+  1. subprocess
+  2. multiprocessing
+  3. concurrent.futures
+     - I/O密集型应用：concurrent.futures.ThreadPoolExecutor
+     - 计算密集型应用：concurrent.futures.ProcessPoolExecutor
+
+- 使用`concurrent.futures`模块的图书排名
+
+  ```python
+  from concurrent.futures import ThreadPoolExecutor
+  from re import compile
+  from time import ctime
+  from urllib.request import urlopen as uopen
+  
+  REGEX = compile(b'#([\d,]+) in Books ')
+  AMZN = 'http://amazon.com/dp/'
+  ISBNs = {
+      '0132269937': 'Core Python Programming',
+      '0132356139': 'Python Web Development with Django',
+      '0137143419': 'Python Fundamentals'
+  }
+  
+  def getRanking(isbn):
+      with uopen('{0}{1}'.format(AMZN, isbn)) as page:
+          return str(REGEX.findall(page.read())[0], 'utf-8')
+  
+  def _main():
+      print('At', ctime(), 'on Amazon...')
+      with ThreadPoolExecutor(3) as executor:
+          for isbn, ranking in zip(ISBNs, executor.map(getRanking, ISBNs)):
+              print('- %r ranked %s' % (ISBNs[isbn], ranking))
+  
+      print('all DONE at: ', ctime())
+  
+  if __name__ == '__main__':
+      _main()
+  ```
+
+- 相关模块总结
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210113135321464.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+- 一些问题：
+
+  1. [进程和线程的区别是什么？](https://blog.csdn.net/kuangsonghan/article/details/80674777)
+
+     根本区别：进程是操作系统资源分配的基本单位，而线程是任务调度和执行的基本单位。
+
+     在开销方面：每个进程都有独立的代码和数据空间（程序上下文），程序之间的切换会有较大的开销；线程可以看做轻量级的进程，同一类线程共享代码和数据空间，每个线程都有自己独立的运行栈和程序计数器（PC），线程之间切换的开销小。
+
+     所处环境：在操作系统中能同时运行多个进程（程序）；而在同一个进程（程序）中有多个线程同时执行（通过CPU调度，在每个时间片中只有一个线程执行）
+
+     内存分配方面：系统在运行的时候会为每个进程分配不同的内存空间；而对线程而言，除了CPU外，系统不会为线程分配内存（线程所使用的资源来自其所属进程的资源），线程组之间只能共享资源。
+
+     包含关系：没有线程的进程可以看做是单线程的，如果一个进程内有多个线程，则执行过程不是一条线的，而是多条线（线程）共同完成的；线程是进程的一部分，所以线程也被称为轻权进程或者轻量级进程。
+
+  2. 在Python 中，哪种类型的多线程应用表现得更好，I/O 密集型还是计算密集型？
+
+     由于Python 的GIL 的限制，多线程更适合于I/O 密集型应用（I/O 释放了GIL，可以允许更多的并发），而不是计算密集型应用。对于后一种情况而言，为了实现更好的并行性，你需要使用多进程，以便让CPU 的其他内核来执行。
+
+## 5. GUI编程
+
+### 5.1 概述
+
+- GUI：图形用户界面，Graphical User Interface。
+
+- Tkinter是python默认的GUI库，基于Tk工具包，该工具包最初是为 **工具命令语言** （Tool Command Language，Tcl）设计的。
+
+- Tk控件：
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210113143322245.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+### 5.2 示例
+
+1. Label控件
+
+   ```python
+   import tkinter as tk
+   
+   top = tk.Tk()
+   label = tk.Label(top, text='Hello World')
+   label.pack()
+   tk.mainloop()
+   ```
+
+2. Button控件
+
+   ```python
+   import tkinter as tk
+   
+   top = tk.Tk()
+   quit = tk.Button(top, text='Hello World', command=top.quit)
+   quit.pack()
+   tk.mainloop()
+   ```
+
+3. label和button控件演示
+
+   ```python
+   import tkinter as tk
+   top = tk.Tk()
+   
+   hello = tk.Label(top, text='Hello World!')
+   hello.pack()
+   
+   quit = tk.Button(top, text='QUIT', command=top.quit, bg='red', fg='white')
+   quit.pack(fill=tk.X, expand=1)
+   tk.mainloop()
+   ```
+
+4. label、button和scale控件
+
+   ```python
+   import tkinter as tk
+   
+   def resize(ev=None):
+       label.config(font='Helvetica -%d bold' % scale.get())
+   
+   top = tk.Tk()
+   top.geometry('250x150')
+   
+   label = tk.Label(top, text='Hello World!', font='Helvetica -12 bold')
+   label.pack()
+   
+   scale = tk.Scale(top, from_=10, to=40, orient=tk.HORIZONTAL, command=resize)
+   scale.set(12)
+   scale.pack(fill=tk.X, expand=1)
+   
+   quit = tk.Button(top, text='QUIT', command=top.quit, activeforeground='white', activebackground='red')
+   quit.pack()
+   
+   tk.mainloop()
+   ```
+
+### 5.3 偏函数
+
+- 根据标志类型创建拥有合适前景色和背景色的路标。使用偏函数可以帮助你“模板化”通用的GUI 参数。
+
+  ```python
+  from functools import partial as pto
+  from tkinter import Tk, Button, X
+  from tkinter.messagebox import showinfo, showwarning, showerror
+  
+  WARN = 'warn'
+  CRIT = 'crit'
+  REGU = 'regu'
+  
+  SIGNS = {
+      'do not enter': CRIT,
+      'railroad crossing': WARN,
+      '55\nspeed limit': REGU,
+      'wrong way': CRIT,
+      'merging traffic': WARN,
+      'one way': REGU,
+  }
+  
+  critCB = lambda: showerror('Error', 'Error Button Pressed!')
+  warnCB = lambda: showwarning('Warning', 'Warning Button Pressed!')
+  infoCB = lambda: showinfo('Info', 'Info Button Pressed!')
+  
+  top = Tk()
+  top.title('Road Signs')
+  Button(top, text='Quit', command=top.quit, bg='red', fg='white').pack()
+  MyButton = pto(Button, top)
+  CritButton = pto(MyButton, command=critCB, bg='white', fg='red')
+  WarnButton = pto(MyButton, command=warnCB, bg='goldenrod1')
+  ReguButton = pto(MyButton, command=infoCB, bg='white')
+  
+  for eachSign in SIGNS:
+      # 获取每个字典的值
+      signType = SIGNS[eachSign]
+      # 获取值的.title()也就是第一个字母大写，对应了不同的Button
+      cmd = '%sButton(text=%r%s).pack(fill=X, expand=True)' % (signType.title(), eachSign, '.upper()' if signType == CRIT else '.title()')
+      eval(cmd)
+  
+  top.mainloop()
+  ```
+
+- [`functools`详解](https://blog.csdn.net/qq_1290259791/article/details/84930850)
 
 
 
@@ -1120,10 +1479,7 @@
 
 
 
-
-
-
-学到Page149
+学到Page180
 
 
 
