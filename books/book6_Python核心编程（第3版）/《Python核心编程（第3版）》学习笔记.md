@@ -1463,6 +1463,277 @@
 
 - [`functools`详解](https://blog.csdn.net/qq_1290259791/article/details/84930850)
 
+  1. patial
+
+     > 用于创建一个偏函数，将默认参数包装一个可调用对象，返回结果也是可调用对象。
+     > 偏函数可以固定住原函数的部分参数，从而在调用时更简单。
+
+     ```python
+     from functools import partial
+     
+     def add(a, b):
+         return a+b
+     
+     addOne = partial(add, 10)
+     print(add(1, 2))
+     # 3
+     print(addOne(1))
+     # 11
+     ```
+
+  2. update_wrapper
+
+     > 使用 `partial` 包装的函数是没有`__name__`和`__doc__`属性的。
+     > `update_wrapper` 作用：将被包装函数的`__name__`等属性，拷贝到新的函数中去。	
+
+     ```python
+     from functools import update_wrapper
+     def wrapper(f):
+         def wrapper_function(*args, **kwargs):
+             """这个是修饰函数"""
+             return f(*args, **kwargs)
+         return wrapper_function
+     
+     @wrapper
+     def wrapped():
+         """这个是被修饰的函数"""
+         print('wrapped')
+     
+     print(wrapped.__doc__)      # 这个是修饰函数
+     print(wrapped.__name__)     # wrapper_function
+     
+     def wrapper2(f):
+         def wrapper_function2(*args, **kwargs):
+             """这个是修饰函数"""
+             return f(*args, **kwargs)
+         update_wrapper(wrapper_function2, f)
+         return wrapper_function2
+     
+     @wrapper2
+     def wrapped2():
+         """这个是被修饰的函数"""
+         print('wrapped')
+     
+     print(wrapped2.__doc__)      # 这个是被修饰的函数
+     print(wrapped2.__name__)     # wrapped2
+     ```
+
+  3. wraps
+
+     > `warps` 函数是为了在装饰器拷贝被装饰函数的`__name__`。
+     > 就是在`update_wrapper`上进行一个包装
+
+     ```python
+     from functools import wraps
+     
+     def wrap1(func):
+         # 去掉就会返回inner
+         @wraps(func)
+         def inner(*args):
+             print(func.__name__)
+             return func(*args)
+         return inner
+     
+     
+     @wrap1
+     def demo():
+         print('Hello World!')
+     
+     print(demo.__name__)        # demo
+     ```
+
+  4. reduce
+
+     > 在 Python2 中等同于内建函数 reduce
+     > 函数的作用是将一个序列归纳为一个输出
+     > reduce(function, sequence, startValue)
+
+     ```python
+     在 Python2 中等同于内建函数 reduce
+     函数的作用是将一个序列归纳为一个输出
+     reduce(function, sequence, startValue)
+     ```
+
+  5. cmp_to_key
+
+     > 在 list.sort 和 内建函数 sorted 中都有一个 key 参数
+
+     ```python
+     x = ['hello', 'world', 'ni']
+     x.sort(key=len)
+     print(x)
+     
+     from functools import cmp_to_key
+     ll = [9, 2, 23, 1, 2]
+     print(sorted(ll, key=cmp_to_key(lambda x, y: y - x)))
+     print(sorted(ll, key=cmp_to_key(lambda x, y: x - y)))
+     ```
+
+  6. lru_cache
+
+     > 允许我们将一个函数的返回值快速地缓存或取消缓存。
+     > 该装饰器用于缓存函数的调用结果，对于需要多次调用的函数，而且每次调用参数都相同，则可以用该装饰器缓存调用结果，从而加快程序运行。
+     > 该装饰器会将不同的调用结果缓存在内存中，因此需要注意内存占用问题。
+
+     ```python
+     from functools import lru_cache
+     
+     # maxsize参数告诉lru_cache混村最近多少个返回值
+     @lru_cache(maxsize=30)
+     def fib(n):
+         if n < 2:
+             return n
+         return fib(n-1) + fib(n-2)
+     
+     print([fib(n) for n in range(10)])
+     fib.cache_clear()
+     ```
+
+  7. singledispatch
+
+     > 单分发器， Python3.4新增，用于实现泛型函数。
+     > 根据单一参数的类型来判断调用哪个函数。
+
+     ```python
+     from functools import singledispatch
+     
+     @singledispatch
+     def fun(text):
+         print('String: ' + text)
+     
+     @fun.register(int)
+     def _(text):
+         print(text)
+     
+     @fun.register(list)
+     def _(text):
+         for k, v in enumerate(text):
+             print(k, v)
+     
+     @fun.register(float)
+     @fun.register(tuple)
+     def _(text):
+         print('float, tuple')
+     
+     fun('i am is gouzei')
+     fun(123)
+     fun(['a', 'b', 'c', 'd'])
+     fun(1.243)
+     print(fun.registry)
+     print(fun.registry[int])
+     ```
+
+### 5.4 中级Tkinter
+
+- 这个应用是一个目录树遍历工具。它会从当前目录开始，提供一个文件列表。双击列表中任意其他目录，就会使得工具切换到新目录中，用新目录中的文件列表代替旧文件列表。
+
+- `hasattr()`：[该函数用于判断对象是否包含对应的属性。](https://blog.csdn.net/brucewong0516/article/details/82813219)
+
+- `os.chdir() `：[用于改变当前工作目录到指定的路径。](https://www.runoob.com/python/os-chdir.html)
+
+- 实现代码：
+
+  ```python
+  import os
+  from time import sleep
+  from tkinter import *
+  
+  class DirList(object):
+      def __init__(self, initdir=None):
+          self.top = Tk()
+          self.label = Label(self.top, text='Directory Lister v1.1')
+          self.label.pack()
+  
+          self.cwd = StringVar(self.top)
+  
+          self.dirl = Label(self.top, fg='blue', font=('Helvetica', 12, 'bold'))
+          self.dirl.pack()
+  
+          self.dirfm = Frame(self.top)
+          self.dirsb = Scrollbar(self.dirfm)
+          self.dirsb.pack(side=RIGHT, fill=Y)
+          self.dirs = Listbox(self.dirfm, height=15, width=50, yscrollcommand=self.dirsb.set)
+          self.dirs.bind('<Double-1>', self.setDirAndGo)
+          self.dirsb.config(command=self.dirs.yview)
+          self.dirs.pack(side=LEFT, fill=BOTH)
+          self.dirfm.pack()
+  
+          self.dirn = Entry(self.top, width=50, textvariable=self.cwd)
+          self.dirn.bind('<Return>', self.doLS)
+          self.dirn.pack()
+  
+          self.bfm = Frame(self.top)
+          self.clr = Button(self.bfm, text='Clear', command=self.clrDir, activeforeground='white', activebackground='blue')
+          self.ls = Button(self.bfm, text='List Directory', command=self.doLS, activeforeground='white', activebackground='green')
+          self.quit = Button(self.bfm, text='Quit', command=self.top.quit, activeforeground='white', activebackground='red')
+          self.clr.pack(side=LEFT)
+          self.ls.pack(side=LEFT)
+          self.quit.pack(side=LEFT)
+          self.bfm.pack()
+  
+          if initdir:
+              self.cwd.set(os.curdir)
+              self.doLS()
+  
+      def clrDir(self, ev=None):
+          self.cwd.set("")
+  
+      def setDirAndGo(self, ev=None):
+          self.last = self.cwd.get()
+          self.dirs.config(selectbackground='red')
+          check = self.dirs.get(self.dirs.curselection())
+          if not check:
+              check = os.curdir
+          self.cwd.set(check)
+          self.doLS()
+  
+      def doLS(self, ev=None):
+          error = ''
+          tdir = self.cwd.get()
+          if not tdir:
+              tdir = os.curdir
+  
+          if not os.path.exists(tdir):
+              error = tdir + ': no such file'
+          elif not os.path.isdir(tdir):
+              error = tdir + ': not a directory'
+  
+          if error:
+              self.cwd.set(error)
+              self.top.update()
+              sleep(2)
+              if not (hasattr(self, 'last') and self.last):
+                  self.last = os.curdir
+              self.cwd.set(self.last)
+              self.dirs.config(selectbackground='LightSkyBlue')
+              self.top.update()
+              return
+  
+          self.cwd.set('FETCHING DIRECTORY CONTENTS...')
+          self.top.update()
+          dirlist = os.listdir(tdir)
+          dirlist.sort()
+          os.chdir(tdir)
+  
+          self.dirl.config(text=os.getcwd())
+          self.dirs.delete(0, END)
+          self.dirs.insert(END, os.curdir)
+          self.dirs.insert(END, os.pardir)
+          for eachFile in dirlist:
+              self.dirs.insert(END, eachFile)
+  
+          self.cwd.set(os.curdir)
+          self.dirs.config(selectbackground='LightSkyBlue')
+  
+  def main():
+      d = DirList(os.curdir)
+      mainloop()
+  
+  if __name__ == '__main__':
+      main()
+  ```
+
+- 
 
 
 
@@ -1479,23 +1750,8 @@
 
 
 
-学到Page180
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+学到Page185  其他GUI简介
 
 python魔法
 
