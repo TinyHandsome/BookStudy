@@ -19,7 +19,4 @@
 *.spec
 *.pyc
 
-/tools/tools_software/idea_active
-/tools/tools_software/XMindCrack
-
 !.gitignore
