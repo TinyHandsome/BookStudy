@@ -35,17 +35,20 @@ class Base:
     distinctDatasetIds: list
     childTopic: list
 
+    # 表信息数据的列表
+    table_info_list = None
+
 
 @dataclass
-class One(Base):
+class A(Base):
     ...
 
 
 @dataclass
-class Two(Base):
+class B(Base):
     ...
 
 
 @dataclass
-class Three(Base):
+class C(Base):
     ...
