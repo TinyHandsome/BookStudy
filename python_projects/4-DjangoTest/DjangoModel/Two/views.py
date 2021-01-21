@@ -22,3 +22,13 @@ def get_user(request):
         print("用户不存在！")
 
     return HttpResponse('获取成功')
+
+
+def get_users(request):
+    # 左闭右开
+    users = User.objects.all()[1:3]
+    context = {
+        'users': users
+    }
+
+    return render(request, 'user_list.html', context=context)

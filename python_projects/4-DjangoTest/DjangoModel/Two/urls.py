@@ -16,5 +16,6 @@ from Two import views
 
 
 urlpatterns = [
-    url('getuser', views.get_user)
+    url('getuser/', views.get_user),
+    url('getusers/', views.get_users),
 ]
