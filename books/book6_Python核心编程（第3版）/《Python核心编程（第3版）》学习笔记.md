@@ -1738,7 +1738,161 @@
 
 1. Tk接口扩展（Tix）
 
+   ```python
+   from functools import partial as pto
+   from tkinter import Tk, Button, X
+   from tkinter.messagebox import showinfo, showwarning, showerror
    
+   WARN = 'warn'
+   CRIT = 'crit'
+   REGU = 'regu'
+   
+   SIGNS = {
+       'do not enter': CRIT,
+       'railroad crossing': WARN,
+       '55\nspeed limit': REGU,
+       'wrong way': CRIT,
+       'merging traffic': WARN,
+       'one way': REGU,
+   }
+   
+   critCB = lambda: showerror('Error', 'Error Button Pressed!')
+   warnCB = lambda: showwarning('Warning', 'Warning Button Pressed!')
+   infoCB = lambda: showinfo('Info', 'Info Button Pressed!')
+   
+   top = Tk()
+   top.title('Road Signs')
+   Button(top, text='Quit', command=top.quit, bg='red', fg='white').pack()
+   MyButton = pto(Button, top)
+   CritButton = pto(MyButton, command=critCB, bg='white', fg='red')
+   WarnButton = pto(MyButton, command=warnCB, bg='goldenrod1')
+   ReguButton = pto(MyButton, command=infoCB, bg='white')
+   
+   for eachSign in SIGNS:
+       # 获取每个字典的值
+       signType = SIGNS[eachSign]
+       # 获取值的.title()也就是第一个字母大写，对应了不同的Button
+       cmd = '%sButton(text=%r%s).pack(fill=X, expand=True)' % (signType.title(), eachSign, '.upper()' if signType == CRIT else '.title()')
+       eval(cmd)
+   
+   top.mainloop()
+   ```
+   
+2. Python MegaWidgets（PMW）
+
+   ```python
+   from tkinter import Button, END, Label, W
+   from Pmw import initialise, ComboBox, Counter
+   
+   top = initialise()
+   lb = Label(top, text='Animals (in pairs; min: pair, max: dozen)')
+   lb.pack()
+   
+   ct = Counter(top, labelpos=W, label_text='Number: ', datatype='integer', entryfield_value=2, increment=2, entryfield_validate={'validator': 'integer', 'min': 2, 'max': 12})
+   ct.pack()
+   
+   cb = ComboBox(top, labelpos=W, label_text='Type: ')
+   for animal in ('dog', 'cat', 'hamster', 'python'):
+       cb.insert(END, animal)
+   cb.pack()
+   
+   qb = Button(top, text='QUIT', command=top.quit, bg='red', fg='white')
+   qb.pack()
+   
+   top.mainloop()
+   ```
+
+3. wxWidgets和wxPython
+
+   ```python
+   import wx
+   class MyFrame(wx.Frame):
+       def __init__(self, parent=None, id=-1, title=""):
+           wx.Frame.__init__(self, parent, id, title, size=(200, 140))
+           top = wx.Panel(self)
+           sizer = wx.BoxSizer(wx.VERTICAL)
+           font = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD)
+           lb = wx.StaticText(top, -1, 'Animals (in pairs; min: pair, max: dozen)')
+           sizer.Add(lb)
+   
+           c1 = wx.StaticText(top, -1, 'Number: ')
+           c1.SetFont(font)
+           ct = wx.SpinCtrl(top, -1, '2', min=2, max=12)
+           sizer.Add(c1)
+           sizer.Add(ct)
+   
+           c2 = wx.StaticText(top, -1, 'Type: ')
+           c2.SetFont(font)
+           cb = wx.ComboBox(top, -1, '', choices=('dog', 'cat', 'hamster', 'python'))
+           sizer.Add(c2)
+           sizer.Add(cb)
+   
+           top.SetSizer(sizer)
+           self.Layout()
+   
+   class MyApp(wx.App):
+       def OnInit(self):
+           frame = MyFrame(title='wxWidgets')
+           frame.Show(True)
+           self.SetTopWindow(frame)
+           return True
+   
+   def main():
+       app = MyApp()
+       app.MainLoop()
+   
+   if __name__ == '__main__':
+       main()
+   ```
+
+4. GTK+和PyGTK
+
+   很离谱，这个包因为编码的原因，竟然安装不了，直接跳过吧。。。
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021012515370080.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+5. Tile/Ttk
+
+   ```python
+   from tkinter import Tk, Spinbox
+   from tkinter.ttk import Style, Label, Button, Combobox
+   
+   top = Tk()
+   Style().configure("TButton", foreground='white', background='red')
+   
+   Label(top, text='Animals (in pairs; min: pair, max: dozen)').pack()
+   Spinbox(top, from_=2, to=12, increment=2, font='Helvetica -14 bold').pack()
+   Label(top, text='Type: ').pack()
+   Combobox(top, values=('dog', 'cat', 'hamster', 'python')).pack()
+   Button(top, text='QUIT', command=top.quit, style='TButton').pack()
+   
+   top.mainloop()
+   ```
+
+### 5.6 相关模块和其他GUI
+
+- Python中可用的GUI系统
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210125155352149.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210125155421943.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210125155539815.png)
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210125155509243.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+## 6. 数据库编程
+
+### 6.1 概述
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
