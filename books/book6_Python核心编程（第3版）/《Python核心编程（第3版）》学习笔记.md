@@ -1880,7 +1880,35 @@
 
 ## 6. 数据库编程
 
-### 6.1 概述
+### 6.1 python的DB-API
+
+1. DB-API模块属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210126111217465.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+2. `connect()`函数属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210126111432192.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+3. `Connect`对象方法
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021012613332111.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+4. `Cursor`对象属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021012613553152.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+5. 类型对象和构造函数
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210126141921403.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+6. RDBMS：关系数据库管理系统，Relational DataBase Management System
+
+### 6.2 ORM
+
+
+
+
 
 
 

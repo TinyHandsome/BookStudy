@@ -33,10 +33,10 @@ class Line:
     def __post_init__(self):
         # 表名：全部转换为小写
         self.table_name = self.table_name.lower()
+        # 去除中文名中的斜杠
+        # self.table_bussiness = self.table_bussiness.replace('/', '')
         # 去除中文名中的空格
-        self.table_bussiness = self.table_bussiness.replace('/', '')
-        # 去除中文名中的空额
-        self.table_bussiness = self.table_bussiness.replace(' ', '')
+        # self.table_bussiness = self.table_bussiness.replace(' ', '')
 
     def cc(self, v1, v2, name):
         if v1 != v2:

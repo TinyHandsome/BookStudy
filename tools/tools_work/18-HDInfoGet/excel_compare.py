@@ -77,7 +77,7 @@ class ExcelCompare:
 
 
 if __name__ == '__main__':
-    ec = ExcelCompare(r'E:\1-工作\1-工作\20210120-数据目录新\aim_data.xls')
+    ec = ExcelCompare(r'E:\1-工作\1-工作\20210125-新双周\new_data.xls')
     ec.set_using_df(1, -1)
     ec.walk_aim_dfs()
     ec.walk_lines()
