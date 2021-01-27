@@ -3,17 +3,17 @@ from tkinter import *
 window=Tk()
 def callbackw(*args): #
 	print("variable was written!")
- 
+
 def callbackr(*args):
 	print("variable was read !")
- 
+
 def processButton1():
 	var.set("hello,world!")
 def processButton2():
 	var.get()
 def processButton3():
 	var.trace_vdelete("r",vr)
- 
+
 var=StringVar()
 # 追踪变量var的变化
 vw=var.trace("w", callbackw) #当变量var被重设时提示

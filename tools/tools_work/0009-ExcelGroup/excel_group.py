@@ -39,6 +39,7 @@ class ExcelGroup:
             self.shuffle_dict()
 
     def shuffle_dict(self, loc_index=-1):
+        """把目标位置放在 loc_index"""
         # 默认为最后的位置
         if loc_index == -1:
             loc_index = len(self.default_groups) - 1
@@ -78,8 +79,8 @@ class ExcelGroup:
 
 
 if __name__ == '__main__':
-    path = r'E:\1-工作\1-工作\20210106-AutoCV回归\万华数据中台(DMP)-PMO-TCK-ods任务统计-20201225-V1.3.xlsx'
-    # 是否打乱顺序
+    path = r'E:\1-工作\1-工作\20210125-新双周\流程导入任务分配.xlsx'
+    # 根据是否是整除自己输入，是否打乱顺序
     eg = ExcelGroup(path, True)
     # 是否保存结果
     eg.group_task(True)
