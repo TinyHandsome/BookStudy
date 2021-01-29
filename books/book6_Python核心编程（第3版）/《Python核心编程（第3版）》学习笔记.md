@@ -9,6 +9,8 @@
   - 最严重的问题，也就是上面说的，很多例子对应的链接已经不行了，连也连不上，特别是**在第二章、第三章学网络的时候**，特别明显，就是学了个寂寞。
   - 怎么说呢，这本书无论是对初学者还是对已经有了一定基础的python学习者，**都十分的不友好**，我的评价是：**生硬且古板**。很多已经淘汰的技术，着墨太多，并且案例无法复现。很有很多错误的地方，比如英文打错了。。。我人都傻了，[点我查看打错的地方](#error1)
   - 数据库编程这一张是真的学的头痛，代码我一行都没敲，是真的跟不下去。就看了下逻辑和包，用的时候再去参考API吧，[特别是ORM](#2)
+  - 讲道理，这本书最大的作用，就是见证历史，看看远古操作是什么样的，**我们现在用python编程门槛这么低，都是站在巨人的肩膀上。**
+  - 重在参与吧
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20201110153410970.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
 
@@ -1931,7 +1933,187 @@
 
 ## 7. Microsoft Office 编程
 
+### 7.1 Excel
 
+1. 这里用tkinter和win32com的包，可以显式操作Excel
+
+2. `Tk().withdraw()`：不让Tk顶级窗口出现
+
+3. 这里用的是`win32.gencache.EnsureDispatch('%s.Application' % app)`
+
+   这个是静态调度，对象和属性经过了缓存，如果需要运行时构建，那就是动态调度：`win32com.client.Dispatch('%s.Application' % app)`
+
+4. `Visible`必须设置为True，这样才能够在桌面上看见应用
+
+5. 这里的`ss.Close(False)`，意思时关闭时不保存。
+
+   ```python
+   from tkinter import Tk
+   from time import sleep
+   from tkinter.messagebox import showwarning
+   import win32com.client as win32
+   
+   warn = lambda app: showwarning(app, 'Exit?')
+   RANGE = range(3, 8)
+   
+   
+   def excel():
+       app = 'Excel'
+       xl = win32.gencache.EnsureDispatch('%s.Application' % app)
+       ss = xl.Workbooks.Add()
+       sh = ss.ActiveSheet
+       xl.Visible = True
+       sleep(1)
+   
+       sh.Cells(1, 1).Value = 'Python-to-%s Demo' % app
+       sleep(1)
+       for i in RANGE:
+           sh.Cells(i, 1).Value = 'Line %d' % i
+           sleep(1)
+   
+       sh.Cells(i+2, 1).Value = "Th-th-th-that's all folks!"
+   
+       warn(app)
+       ss.Close(False)
+       xl.Application.Quit()
+   
+   if __name__ == '__main__':
+       Tk().withdraw()
+       excel()
+   ```
+
+6. 中级就是获取网页的数据，然后写入excel，讲道理，现在用的时候，根本不会这么麻烦。
+
+### 7.2 Word
+
+1. Word中的代码，几乎跟excel一毛一样
+
+   ```python
+   from tkinter import Tk
+   from time import sleep
+   from tkinter.messagebox import showwarning
+   import win32com.client as win32
+   
+   warn = lambda app: showwarning(app, 'Exit?')
+   RANGE = range(3, 8)
+   
+   def word():
+       app = 'Word'
+       word = win32.gencache.EnsureDispatch('%s.Application' % app)
+       doc = word.Documents.Add()
+       word.Visible = True
+       sleep(1)
+   
+       rng = doc.Range(0, 0)
+       rng.InsertAfter('Python-to-%s Test\r\n\r\n' % app)
+       sleep(1)
+   
+       for i in RANGE:
+           rng.InsertAfter('Line %d\r\n' % i)
+           sleep(1)
+   
+       rng.InsertAfter("\r\nTh-th-th-that's all folks!\r\n")
+   
+       warn(app)
+       doc.Close(False)
+       word.Application.Quit()
+   
+   if __name__ == '__main__':
+       Tk().withdraw()
+       word()
+   ```
+
+### 7.3 PowerPoint
+
+1. 讲道理，都什么年代了，用python操作ppt就很扯。
+
+2. 代码我是敲完了，但是这都啥啊，各种报错，也没法解决。
+
+   `TypeError: 'Shapes' object is not subscriptable`
+
+   脑阔疼
+
+   ```python
+   from tkinter import Tk
+   from time import sleep
+   from tkinter.messagebox import showwarning
+   import win32com.client as win32
+   
+   warn = lambda app: showwarning(app, "Exit?")
+   RANGE = range(3, 8)
+   
+   def ppoint():
+       app = 'PowerPoint'
+       ppoint = win32.gencache.EnsureDispatch('%s.Application' % app)
+       pres = ppoint.Presentations.Add()
+       ppoint.Visible = True
+   
+       sl = pres.Slides.Add(1, win32.constants.ppLayoutText)
+       sleep(1)
+       sla = sl.Shapes[0].TextFrame.TextRange
+       sla.Text = 'Python-to-%s Demo' % app
+       sleep(1)
+       slb = sl.Shapes[1].TextFrame.TextRange
+       for i in RANGE:
+           slb.InsertAfter("Line %d\r\n" % i)
+           sleep(1)
+       slb.InsertAfter("\r\nTh-th-th-that's all folks!")
+   
+       warn(app)
+       pres.Close()
+       ppoint.Quit()
+   
+   if __name__ == '__main__':
+       Tk().withdraw()
+       ppoint()
+   ```
+
+### 7.4 Outlook
+
+1. 不会吧不会吧不会吧，不会还有人用Outlook吧（狗头）
+
+2. 特别是中级示例，我一看用的outlook2003，我就想关闭退出一起合成了。
+
+   ```python
+   from tkinter import Tk
+   from tkinter.messagebox import showwarning
+   import win32com.client as win32
+   
+   
+   def warn(app): return showwarning(app, 'Exit?')
+   
+   
+   RANGE = range(3, 8)
+   
+   
+   def outlook():
+       app = 'Outlook'
+       olook = win32.gencache.EnsureDispatch('%s.Application' % app)
+   
+       mail = olook.CreateItem(win32.constants.olMailItem)
+       recip = mail.Recipients.Add('you@127.0.0.1')
+       subj = mail.Subject = 'Python-to-%s Demo' % app
+       body = ["Line %d" % i for i in RANGE]
+       body.insert(0, '%s\r\n' % subj)
+       body.append("\r\nTh-th-th-that's all folks!")
+       mail.Body = '\r\n'.join(body)
+       mail.send()
+   
+       ns = olook.GetNamespace("MAPI")
+       obox = ns.GetDefaultFolder(win32.constants.olFolderOutbox)
+       obox.Display()
+   
+       warn(app)
+       olook.Quit()
+   
+   if __name__ == '__main__':
+       Tk().withdraw()
+       outlook()
+   ```
+
+## 8. 扩展Python
+
+### 8.1 
 
 
 

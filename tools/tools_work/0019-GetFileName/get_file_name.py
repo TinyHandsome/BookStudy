@@ -43,7 +43,7 @@ class GetFileName:
 
 
 if __name__ == '__main__':
-    path = r'E:\1-工作\3-代码\tools\tools_work\0010-TaskScheduleInfo'
+    path = r'E:\1-工作\1-工作\20210129-脚本整理\脚本相关'
     gf = GetFileName(path)
-    result = gf.get_file_names('py')
-    gf.save_files_name2excel(result, './test.xlsx')
+    result = gf.get_file_names('jmx')
+    gf.save_files_name2excel(result, r'E:\1-工作\1-工作\20210129-脚本整理\test.xlsx')

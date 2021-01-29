@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-# coding=utf-8 
+# coding=utf-8
 
 """
 @author: Li Tian
@@ -36,7 +36,8 @@ class XiaoshuoLocation:
         """获取小说的显示页数"""
         with open(self.file_path, 'r', encoding='utf-8') as f:
             result = f.read()
-            temp = result.replace('\n', " ").replace('\r', " ").replace('　　', " ").replace(' ', " ")
+            temp = result.replace('\n', " ").replace(
+                '\r', " ").replace('　　', " ").replace(' ', " ")
 
             return ceil(len(temp) / self.line_length), self.depart_line(temp)
 
@@ -51,5 +52,5 @@ class XiaoshuoLocation:
 
 if __name__ == '__main__':
     info = input('请输入要查找的内容：\n')
-    XiaoshuoLocation(30, 'E:\study_books\《明朝那些事》(全集).txt').search_words(info)
+    XiaoshuoLocation(30, 'E:\study_books\斗罗大陆.txt').search_words(info)
     print('\n\n')
