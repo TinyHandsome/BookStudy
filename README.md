@@ -6,6 +6,11 @@
 
 [TOC]
 
+## 写在前面
+
+- 郑大姨儿（w_clzheng）专用指路牌
+  1. 正则表达式英俊专用手册：[点我传送](https://github.com/TinyHandsome/BookStudy/blob/master/books/book6_Python%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%EF%BC%88%E7%AC%AC3%E7%89%88%EF%BC%89/%E3%80%8APython%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%EF%BC%88%E7%AC%AC3%E7%89%88%EF%BC%89%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.md)
+
 ## 读书笔记
 
 1. [《Python编程从入门到实践》]()
