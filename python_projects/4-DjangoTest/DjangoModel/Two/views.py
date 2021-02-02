@@ -1,4 +1,4 @@
-from django.db.models import Max, Avg, F
+from django.db.models import Max, Avg, F, Q
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 
@@ -63,7 +63,12 @@ def get_company(request):
     # companies = Company.objects.filter(c_boy_num__lt=F('c_girl_num'))
 
     # 获取女生比男生多15以上的公司
-    companies = Company.objects.filter(c_boy_num__lt=F('c_girl_num')-15)
+    # companies = Company.objects.filter(c_boy_num__lt=F('c_girl_num')-15)
+
+    # 公司男生人数多于1个，同时女生人数多于5个
+    # companies = Company.objects.filter(c_boy_num__gt=1).filter(c_girl_num__gt=10)
+    companies = Company.objects.filter(Q(c_boy_num__gt=1) & Q(c_girl_num__gt=10))
+
     for company in companies:
         print(company.c_name)
     return HttpResponse('获取公司成功')
