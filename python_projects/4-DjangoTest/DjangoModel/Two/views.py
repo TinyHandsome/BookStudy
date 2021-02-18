@@ -72,3 +72,22 @@ def get_company(request):
     for company in companies:
         print(company.c_name)
     return HttpResponse('获取公司成功')
+
+
+def get_animals(request):
+    # animals = Animal.a_m.filter(is_delete=False)
+    animals = Animal.objects.all()
+
+    for animal in animals:
+        print(animal.a_name)
+
+    a = Animal.objects.create_animal("狗子")
+    print('aaa', type(a))
+
+    b = Animal()
+    b.a_name = 'qq'
+    print('bbb', type(b))
+    b.save()
+    a.save()
+
+    return HttpResponse("动物获取成功")

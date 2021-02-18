@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生列表</title>
+</head>
+<body>
+
+<ul>
+    {% for student in students %}
+        <li>{{ student.s_name }}</li>
+    {% empty %}
+        <h1>sunck辍学了</h1>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<ul>
+    {% for student in students %}
+        <li>{{ forloop.first }}:{{ student.get_name }}</li>
+    {% endfor %}
+
+</ul>
+
+<hr>
+
+<h3>{{ students.0.s_name }}</h3>
+
+<hr>
+
+<h3>{{ student_dict.hobby }}</h3>
+
+<hr>
+
+<ul>
+    {% for student in students %}
+        {% if forloop.first %}
+            <li style="color: red">{{ student.s_name }}</li>
+        {% elif forloop.last %}
+            <li style="color: green">{{ student.s_name }}</li>
+        {% else %}
+            <li>{{ student.s_name }}</li>
+        {% endif %}
+    {% endfor %}
+
+</ul>
+
+<!-- 像我这种html原生注释很容易暴露，用下面的注释比较好 -->
+
+{# 我是单行注释 #}
+
+{% comment %}
+    我是多行注释
+{% endcomment %}
+
+<hr>
+
+<h4>{{ count }}</h4>
+
+{# 乘除法，下面输出值 count * 5 / 1 #}
+<h4>{% widthratio count 1 5 %}</h4>
+{# 同理，除以5的话 #}
+<h4>{% widthratio count 5 1 %}</h4>
+
+</body>
+</html>

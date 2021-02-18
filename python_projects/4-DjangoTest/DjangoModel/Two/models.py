@@ -29,3 +29,20 @@ class Company(models.Model):
     c_name = models.CharField(max_length=16)
     c_girl_num = models.IntegerField(default=5)
     c_boy_num = models.IntegerField(default=3)
+
+
+class AnimalManager(models.Manager):
+    def get_queryset(self):
+        return super(AnimalManager, self).get_queryset().filter(is_delete=False)
+
+    def create_animal(self, a_name='Chicken'):
+        a = self.model
+        a.a_name = a_name
+        return a
+
+
+class Animal(models.Model):
+    a_name = models.CharField(max_length=16)
+    is_delete = models.BooleanField(default=False)
+
+    objects = AnimalManager()

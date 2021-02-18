@@ -22,4 +22,5 @@ urlpatterns = [
     url('getgrades/', views.get_grades),
     url('getcustomer', views.get_customer),
     url('getcompany/', views.get_company),
+    url('getanimals/', views.get_animals),
 ]
