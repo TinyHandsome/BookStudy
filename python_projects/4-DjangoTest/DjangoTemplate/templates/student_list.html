@@ -30,6 +30,10 @@
 <hr>
 
 <h3>{{ student_dict.hobby }}</h3>
+{# 转大写小写 #}
+<h3>{{ student_dict.hobby|lower }}</h3>
+<h3>{{ student_dict.hobby|upper }}</h3>
+
 
 <hr>
 
@@ -62,6 +66,45 @@
 <h4>{% widthratio count 1 5 %}</h4>
 {# 同理，除以5的话 #}
 <h4>{% widthratio count 5 1 %}</h4>
+{# 加法运算 #}
+<h4>{{ count|add:2 }}</h4>
+{# 减法运算，没有减法过滤器 #}
+<h4>{{ count|add:-2 }}</h4>
+
+<hr>
+
+<ul>
+    {% for student in students %}
+        {# 注意：这里的|和:左右都不能有空格 #}
+        {% if forloop.counter|divisibleby:2 %}
+            <li style="color: orangered">{{ student.s_name }}</li>
+        {% else %}
+            <li style="color: cornflowerblue">{{ student.s_name }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+
+<hr>
+
+<ul>
+    {% for student in students %}
+        {% ifequal forloop.counter0 5 %}
+            <li style="color: orange">{{ student.s_name }}</li>
+        {% else %}
+            <li style="color: darkslateblue">{{ student.s_name }}</li>
+        {% endifequal %}
+    {% endfor %}
+
+</ul>
+
+<hr>
+{# 谨慎使用 #}
+{#<p>{{ code|safe }}</p>#}
+
+{% autoescape on %}
+    {{ code }}
+{% endautoescape %}
+
 
 </body>
 </html>

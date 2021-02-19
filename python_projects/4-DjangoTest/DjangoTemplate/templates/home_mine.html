@@ -1,0 +1,23 @@
+{% extends 'home.html' %}
+{% load static %}
+
+<h3>今天是个适合睡觉的日子！</h3>
+
+{% block content %}
+    <h3>哈哈哈，你就是这么强大</h3>
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+    <h4>听说你很精神</h4>
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'footer.html' %}
+{% endblock %}
+
+{% block ext_css %}
+{#    <link rel="stylesheet" href="/static/css/home_mine.css">#}
+    <link rel="stylesheet" href="{% static 'css/home_mine.css' %}">
+{% endblock %}
