@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分数列表</title>
+</head>
+<body>
+
+<ul>
+    {% for grade in grade_list %}
+        <li><a href="/two/students/{{ grade.id }}/">{{ grade.g_name }}</a></li>
+    {% endfor %}
+
+</ul>
+
+<hr>
+{# 这样写死了，以后two要迁移、要改名，就找不到了 #}
+<a href="/two/learn/">快滚去学习!</a>
+
+<hr>
+
+<a href="{% url 'second:learn' %}">冲冲冲</a>
+
+<hr>
+
+<a href="{% url 'second:get_time' 15 31 48 %}">获取时间</a>
+
+<hr>
+
+<a href="{% url 'second:get_date' year=2018 month=9 day=19 %}">获取日期</a>
+
+</body>
+</html>

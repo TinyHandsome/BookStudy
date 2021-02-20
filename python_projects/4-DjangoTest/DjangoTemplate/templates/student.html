@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生</title>
+</head>
+<body>
+<form action="{% url 'second:do_create_student' %}" method="post">
+    <span>用户名：</span> <input type="text" name="username" placeholder="请输入用户名">
+    <button>提交</button>
+</form>
+</body>
+</html>
