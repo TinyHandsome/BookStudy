@@ -22,6 +22,7 @@ from selenium.webdriver.common.by import By
 from dataclasses import dataclass
 import time
 import requests
+from info_py_ini import info
 
 
 @dataclass
@@ -31,12 +32,12 @@ class UrlAnalyze:
         self.cookie = None
         self.driver_path = 'driver/chromedriver.exe'
 
-    def login(self, login_path, info_py=False):
+    def login(self, login_path, info_py=True):
         self.browser = webdriver.Chrome(executable_path=self.driver_path)
 
         if info_py:
-            username = ''
-            password = ''
+            username = info['username']
+            password = info['password']
         else:
             username = input('请输入用户名：')
             password = input("请输入密码：")

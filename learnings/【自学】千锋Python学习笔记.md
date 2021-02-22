@@ -1,10 +1,10 @@
-# Python从入门到放弃
+# 千锋Python学习笔记
 
 [TOC]
 
 ## 写在前面
 
-学习链接：[千锋python全套视频教程](https://www.bilibili.com/video/BV1jZ4y1p7zQ)
+- 学习链接：[Python 900集（学完可就业/2019版）](https://www.bilibili.com/video/BV15J411T7WQ)：`[1集: 200集]`
 
 ## 1. 前言
 
@@ -46,3 +46,16 @@
 
 学到：P24
 
+------
+
+我的CSDN：https://blog.csdn.net/qq_21579045
+
+我的博客园：https://www.cnblogs.com/lyjun/
+
+我的Github：https://github.com/TinyHandsome
+
+纸上得来终觉浅，绝知此事要躬行~
+
+欢迎大家过来OB~
+
+by 李英俊小朋友

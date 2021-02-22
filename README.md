@@ -6,19 +6,19 @@
 
 [TOC]
 
-## 写在前面
+## 写在前面 | Head Info
 
 - 郑大姨儿（w_clzheng）专用指路牌
   1. 正则表达式英俊专用手册：[点我传送](https://github.com/TinyHandsome/BookStudy/blob/master/books/book6_Python%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%EF%BC%88%E7%AC%AC3%E7%89%88%EF%BC%89/%E3%80%8APython%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%EF%BC%88%E7%AC%AC3%E7%89%88%EF%BC%89%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.md)
 
-## 读书笔记
+## 读书笔记 | Books
 
 1. [《Python编程从入门到实践》]()
 2. [《TensorFlow实战Google深度学习框架（第二版）》](https://blog.csdn.net/qq_21579045/category_10672814.html)
 3. [《Python数据科学手册》](https://blog.csdn.net/qq_21579045/category_10672841.html)
 4. [《机器学习实战——基于Scikit-Learn和TensorFlow》](https://blog.csdn.net/qq_21579045/category_10672881.html)
 
-## 视频学习笔记
+## 视频学习笔记 | Learnings
 
 1. [ Linux学习笔记](https://blog.csdn.net/qq_21579045/article/details/95605401)
 2. [MySQL基础学习笔记](https://blog.csdn.net/qq_21579045/article/details/98111827)
@@ -28,24 +28,7 @@
 6. [JDBC学习笔记](https://blog.csdn.net/qq_21579045/article/details/105386353)
 7. [JSON学习笔记](https://blog.csdn.net/qq_21579045/article/details/108577716)
 
-## 自己写的小工具以及一些教程
-
-- **AlterFilename**：批量更改文件名的后缀（包括遍历内部文件夹）
-- **MLtools**：机器学习（分类）小工具
-- **idea_active**：idea永久激活方式和教程，pycharm一样
-- **ArticleSeperate**：根据章节名把文章分成两部分
-- **plugins for qBittorrent**：[小孩子不可以看哦](https://www.52pojie.cn/forum.php?mod=viewthread&tid=952711&page=1)
-- **Caltools**：小学生作业专用程序，如求20以内的加减运算
-- **ImporvedAdaboost**：改进Adaboost算法，利用minist（改成二分类）测试改进效果
-- **PsychologicalTest**：心理测验小程序
-- **SeachMd**：寻找目标文件夹中所有md文件中是否有目标关键字。
-- **MouseKeyboardTest**：模拟鼠标、键盘宏的工具
-
-## ToolsTool
-
-一些普通工具
-
-## ToolsWork
+## 工作时的工具 | Tools.ToolsWork
 
 工作写的各种工具：
 

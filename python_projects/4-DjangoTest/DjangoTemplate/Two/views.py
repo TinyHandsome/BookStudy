@@ -44,6 +44,10 @@ def have_request(request):
     print(hobbies)
 
     print(request.POST)
+    # print(request.META)
+    # for key, value in request.META.items():
+    #     print(key, value)
+    print('访问的ip：', request.META.get('REMOTE_ADDR'))
     return HttpResponse("获取成功")
 
 

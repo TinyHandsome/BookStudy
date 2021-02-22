@@ -1,4 +1,4 @@
-# Django从入门到放弃
+# 千锋Django学习笔记
 
 [TOC]
 
@@ -513,6 +513,30 @@
 6. 双R
 
    1. Request
+
+      1. 内置属性
+
+         - method
+
+         - path
+
+         - GET
+
+           - 类字典结构
+
+           - 一个key允许对应多个值
+
+           - get
+
+           - ###### getlist
+
+         - POST
+
+         - META：
+
+           - 各种客户端的元信息
+           - REMOTE_ADDR：远端访问IP
+
    2. Response
 
 7. 知识点
@@ -522,6 +546,10 @@
    - key是变量名，value是变量中存储的数据
    - 如果关闭调试模式可能会报错：`CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False.`
      - [解决方案](https://blog.csdn.net/kan2016/article/details/82838509)：设置任何用户均可以访问：`ALLOWED_HOSTS = ['*']`
+   
+8. 视图总结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210222171658875.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
 
 
@@ -531,6 +559,18 @@
 
 
 
+学到（要学）：P232
 
+------
 
-学到（要学）：P230
+我的CSDN：https://blog.csdn.net/qq_21579045
+
+我的博客园：https://www.cnblogs.com/lyjun/
+
+我的Github：https://github.com/TinyHandsome
+
+纸上得来终觉浅，绝知此事要躬行~
+
+欢迎大家过来OB~
+
+by 李英俊小朋友
