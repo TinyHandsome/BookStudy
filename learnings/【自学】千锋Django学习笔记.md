@@ -551,6 +551,22 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210222171658875.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
+## 8. 会话
+
+1. 爬虫
+   - 模拟人去请求数据
+   - 提取数据
+   - 存储数据
+   - 核心内容
+     - 数据爬取
+     - 数据提取
+     - 数据存储
+     - 提升效率：进程、线程、协程
+   - MIME：
+     - 作用：指定传输数据使用哪种形式打开
+     - 格式：大类型/小类型 
+       - image/png
+       - image/jpg
 
 
 
@@ -559,7 +575,8 @@
 
 
 
-学到（要学）：P232
+
+学到（要学）：P233
 
 ------
 
