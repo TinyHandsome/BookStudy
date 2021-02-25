@@ -567,6 +567,48 @@
      - 格式：大类型/小类型 
        - image/png
        - image/jpg
+2. Json
+   1. JsonObject
+      - {}
+      - key-value
+   2. JsonArray
+      - []
+      - 列表中可以是普通数据类型，也可以是jsonObject
+   3. JsonObject和JsonArray可以嵌套
+   4. 给移动端/Ajax的时候用JsonResponse
+      - 前后端分离
+      - DRF
+   5. Google Chrome插件名：JsonFomatter、JsonView
+3. HttpResponse
+   1. HttpResponseRedirect
+      - 重定向，暂时
+      - 302
+      - 简写 redirect
+   2. JsonResponse
+      - 以Json格式返回数据
+      - 重写了`__init__`，序列化Json数据，指定content_type为application/json
+   3. HttpResponsePermanentRedirect
+      - 重定向，永久性
+      - 302
+   4. HttpResponseBadRequest
+      - 400
+   5. HttpResponseNotFound
+      - 404
+   6. Http404
+      - Exception
+      - raise 主动抛出异常
+4. 会话技术
+   1. 出现场景
+      - 服务器如何识别客户端
+      - Http在WEB开发中基本都是短连接
+   2. 请求的生命周期
+      - requetst开始
+      - response结束
+   3. 种类s
+      - cookie
+      - session
+      - token
+5. 
 
 
 
@@ -576,7 +618,7 @@
 
 
 
-学到（要学）：P233
+学到（要学）：P234
 
 ------
 
