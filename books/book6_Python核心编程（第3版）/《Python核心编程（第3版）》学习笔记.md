@@ -2113,7 +2113,9 @@
 
 ## 8. 扩展Python
 
-### 8.1 
+### 8.1 简介
+
+1. 配置vscode运行c代码，[参考链接](https://blog.csdn.net/qq_43067190/article/details/82117149?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control&dist_request_id=959377f5-4aa7-44d4-8e58-7d7a8d9a4255&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control)
 
 
 
