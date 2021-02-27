@@ -2115,11 +2115,20 @@
 
 ### 8.1 简介
 
-1. 配置vscode运行c代码，[参考链接](https://blog.csdn.net/qq_43067190/article/details/82117149?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control&dist_request_id=959377f5-4aa7-44d4-8e58-7d7a8d9a4255&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control)
+1. 配置vscode运行c代码，[参考链接](https://blog.csdn.net/qq_43067190/article/details/82117149?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control&dist_request_id=959377f5-4aa7-44d4-8e58-7d7a8d9a4255&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control)，[参考连接2](https://blog.csdn.net/qq_28581077/article/details/81380341?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.control&dist_request_id=a426fbc9-fb15-48cc-9efa-8f3fe57b736a&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.control)
 
+2. 一键配置环境的工具：[VSCodeConfigHelper](https://guyutongxue.github.io/VSCodeConfigHelper/)
 
+3. C程序调试时报错：`Unable to start debugging. Unexpected GDB output from command "-environment -cd xxx"`，这是因为路径中有中文的原因，所以调试报错。并不影响编译和运行：[参考链接](https://blog.csdn.net/weixin_43280025/article/details/102536941)
 
+   1. 编译：`gcc -g test.c -o test.exe`
+   2. 运行：`./test.exe`
+   
+   > 这里配置真的是太难了，好歹是配好了
 
+4. 成功：
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210227094108509.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
 
 

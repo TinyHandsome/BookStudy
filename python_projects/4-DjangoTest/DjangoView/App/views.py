@@ -29,3 +29,33 @@ def get_info(request):
         "msg": "ok"
     }
     return JsonResponse(data=data)
+
+
+def set_cookie(request):
+    response = HttpResponse("设置Cookie")
+    response.set_cookie('username', 'Rock')
+    return response
+
+
+def get_cookie(request):
+    username = request.COOKIES.get("username")
+    return HttpResponse(username)
+
+
+def login(request):
+    return render(request, 'login.html')
+
+
+def dologin(request):
+    uname = request.POST.get('uname')
+    response = HttpResponseRedirect(reverse('app:mine'))
+    response.set_cookie('uname', uname)
+    return response
+
+
+def mine(request):
+    uname = request.COOKIES.get('uname')
+    if uname:
+        return HttpResponse(uname)
+    else:
+        return redirect(reverse('app:login'))

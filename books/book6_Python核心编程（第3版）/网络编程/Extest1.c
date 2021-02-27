@@ -4,16 +4,17 @@
 
 int fac(int n)
 {
-    if (n<2) return(1);
-    return (n)*fac(n-1);
+    if (n < 2)
+        return (1);
+    return (n)*fac(n - 1);
 }
 
 char *reverse(char *s)
 {
     register char t,
-    *p = s,
-    *q = (s + (strlen(s) - 1));
-    while(p<q)
+        *p = s,
+        *q = (s + (strlen(s) - 1));
+    while (p < q)
     {
         t = *p;
         *p++ = *q;
@@ -24,7 +25,7 @@ char *reverse(char *s)
 
 int main()
 {
-    char s[BUFSIZE];
+    char s[10];
     printf("4! == %d\n", fac(4));
     printf("8! == %d\n", fac(8));
     printf("12! == %d\n", fac(12));
