@@ -9,8 +9,9 @@
   - 最严重的问题，也就是上面说的，很多例子对应的链接已经不行了，连也连不上，特别是**在第二章、第三章学网络的时候**，特别明显，就是学了个寂寞。
   - 怎么说呢，这本书无论是对初学者还是对已经有了一定基础的python学习者，**都十分的不友好**，我的评价是：**生硬且古板**。很多已经淘汰的技术，着墨太多，并且案例无法复现。很有很多错误的地方，比如英文打错了。。。我人都傻了，[点我查看打错的地方](#error1)
   - 数据库编程这一张是真的学的头痛，代码我一行都没敲，是真的跟不下去。就看了下逻辑和包，用的时候再去参考API吧，[特别是ORM](#2)
+  - [扩展Python](#extension_python)这一章，本来我是真的很感兴趣的，可能是我水平不够叭，每个字我都认识，连在一起不知道在说什么，真的很痛苦，也没学到东西。（同样这章的吐槽，可以直达，[点我](#horse)）
   - 讲道理，这本书最大的作用，就是见证历史，看看远古操作是什么样的，**我们现在用python编程门槛这么低，都是站在巨人的肩膀上。**
-  - 重在参与吧
+  - 很累，真心累，学了个寂寞，重在参与吧
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20201110153410970.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
 
@@ -2111,9 +2112,7 @@
        outlook()
    ```
 
-## 8. 扩展Python
-
-### 8.1 简介
+## 8. 扩展Python<a name='extension_python'> </a>
 
 1. 配置vscode运行c代码，[参考链接](https://blog.csdn.net/qq_43067190/article/details/82117149?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control&dist_request_id=959377f5-4aa7-44d4-8e58-7d7a8d9a4255&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control)，[参考连接2](https://blog.csdn.net/qq_28581077/article/details/81380341?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.control&dist_request_id=a426fbc9-fb15-48cc-9efa-8f3fe57b736a&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.control)
 
@@ -2129,6 +2128,40 @@
 4. 成功：
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210227094108509.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+   
+5. 我真的不懂这里的`bufsiz`是要干嘛，也没定义这个值，我就奇了怪了，不就是定义数组的长度么，你也没传参，也没定义，你传你:horse:呢？ <a name='horse'> </a>
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210301101719513.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+6. 你这个大括号又是从哪里来的，是我瞎了吗？
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210301102257408.png)
+
+7. 上面都是我抄代码的经过，遇到这些问题，实在是觉得抄一遍也没用，也没法运行，浪费我的时间，但凡有一点用，我都会抄一遍来着。哎，真心累。
+
+8. 常用的编写扩展的工具
+
+   1. SWIG
+   2. Pyrex
+   3. Cython
+   4. Psyco
+   5. PyPy
+   6. 嵌入Python
+
+## 9. Web客户端和服务器
+
+### 9.1 概述
+
+1. SSL：安全套接字层，Secure Socket Layer。为了对传输数据进行加密，需要在普通的套接字（Socket）上添加一个额外的安全层，加密通过该套接字传输的数据。
+2. 正向代理：通过代理服务器，网络管理员可以只让一部分计算机访问网络，也可以更好地监控网络的数据传输。另一个有用的特征是可以缓存数据，再次访问时，网页的加载速度会快很多。
+3. 反向代理：反向代理的行为像是有一个服务器，客户端可以连接这个服务器。客户端访问这个后端服务器，接着后端服务器在网上进行真正的操作，获得客户端请求的数据。
+4. 正向代理用来处理缓存数据，更接近客户端。反向代理更接近后端服务器，扮演服务器端角色，如缓存服务器的数据，、负载平衡等。反向代理服务器还可以用来作为防火墙或加密数据（通过SSL、HTTPS、安全FTP（SFTP）等）。
+
+
+
+
+
+
 
 
 

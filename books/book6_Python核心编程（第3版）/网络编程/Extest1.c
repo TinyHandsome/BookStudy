@@ -23,7 +23,7 @@ char *reverse(char *s)
     return s;
 }
 
-int main()
+int test()
 {
     char s[10];
     printf("4! == %d\n", fac(4));
