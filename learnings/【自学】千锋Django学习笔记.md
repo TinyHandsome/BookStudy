@@ -4,14 +4,18 @@
 
 ## 写在前面
 
-- 学习链接：[Python 900集（学完可就业/2019版）](https://www.bilibili.com/video/BV15J411T7WQ)：`[200集: ]`
+- 学习链接：[Python 900集（学完可就业/2019版）](https://www.bilibili.com/video/BV15J411T7WQ)：`[200集: )`
+- 感想|摘抄：
+  1. 优秀的程序员：
+     - 松耦合、解耦合
+     - 高内聚
 - 学习的时候遇到的问题：
   1. [PyCharm右键SQLite找不到As Data Source选项](#anchor)
   2. [如何让其他电脑访问到自己的Django项目](#anchor2)
 
 ## 1. MVC和MTV
 
-- 虚拟化技术u
+- 虚拟化技术
 
   - 虚拟机
   - 虚拟容器
@@ -613,7 +617,18 @@
         - 默认Cookie会自动携带，本网站所有Cookie
         - Cookie跨域名、跨网站
         - 通过HttpResponse
+        - Cookie默认不支持中文
+        - 可以加盐（加密），获取时还需要解密
       - session
+        - 服务端会话技术
+        - 数据存储在服务器中
+        - 默认Session存储在内存中
+        - Django中默认会把Session持久化到数据库中
+        - Django中Session的默认过期时间是14天
+        - 主键是字符串
+        - 数据是使用了数据安全
+          - 使用了base64
+          - 在前部添加了一个混淆串
       - token
 5. 登录
    - 首先要有一个页面
@@ -621,6 +636,9 @@
      - 有登录按钮
    - 点完登录，默认进入个人中心
    - 个人中心可以显示用户名
+6. 编码
+   - ASCII
+   - Unicode
 
 
 

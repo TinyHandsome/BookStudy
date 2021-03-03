@@ -49,13 +49,25 @@ def login(request):
 def dologin(request):
     uname = request.POST.get('uname')
     response = HttpResponseRedirect(reverse('app:mine'))
-    response.set_cookie('uname', uname)
+    # response.set_cookie('uname', uname, max_age=60)
+    response.set_signed_cookie('content', uname, "Rock")
     return response
 
 
 def mine(request):
-    uname = request.COOKIES.get('uname')
-    if uname:
-        return HttpResponse(uname)
-    else:
-        return redirect(reverse('app:login'))
+    # uname = request.COOKIES.get('content')
+    try:
+        uname = request.get_signed_cookie('content', salt="Rock")
+        if uname:
+            # return HttpResponse(uname)
+            return render(request, "mine.html", context={"uname": uname})
+    except Exception as e:
+        print("获取失败")
+
+    return redirect(reverse('app:login'))
+
+
+def logout(request):
+    response = redirect(reverse("app:login"))
+    response.delete_cookie("content")
+    return response
