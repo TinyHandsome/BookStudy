@@ -2187,7 +2187,78 @@
     | host     | 运行Web服务器的计算机名称或地址（必须的） |
     | port     | 端口号（如果不是默认的80）                |
 
-11. 
+### 9.2 Web客户端工具
+
+1. `from urllib.parse import urlparse, urlunparse, urljoin`
+
+   1. `urlparse`将urlstr字符串拆分成6个元组
+
+      `urlparse (urlstr, defProtSch=None, allowFrag=None)`
+
+   2. `urlunparse`的功能与`urlparse`相反，其将敬`urlparse`处理的URL生成urltup这个6元组：`(prot_sch, net_loc, path, params, query, frag)`，拼接成URL并返回
+
+      `urlunparse(urltup)`
+
+   3. `urljoin`取得根域名，并将其根路径与newurl连接起来
+
+      `urljoin (baseurl, newurl, allowFrag=None)`
+
+   4. 总结：
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305102007428.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+   5. 测试：
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305102130429.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+2. `from urllib.request import urlopen`
+
+   1. `urlopen (urlstr, postQueryData=None)`
+
+   2. `urlopen`打开urlstr所指向的URL。如果没有给定协议或者下载方案（Scheme），或者传入了file方案，urlopen会打开一个本地文件
+
+   3. MIME：多目标因特网邮件扩展，Multipurpose Internet Mail Extension，`f.info()`方法可以返回MIME头文件，这个头文件通知浏览器返回的文件类型，以及可以用哪些应用程序打开
+
+   4. urlopen文件类型对象的方法
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305105431649.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+3. `from urllib.request import urlretrieve`
+
+   1. `urlretrieve(url, filename=None, reporthook=None, data=None)`
+   2. `urlretrieve`不是用来以文件的形式访问并打开URL，而是用于下载完整的HTML，把另存为文件
+   3. `urlretrieve`返回一个二元组`(filename, mime_hdrs)`，filename是含有下载数据的本地文件名，mime_hdrs是Web服务器响应后返回的一系列MIME文件头，对本地文件来说，mime_hdrs是空的
+
+4. `from urllib.parse import quote, quote_plus`
+
+   1. `quote(urldata, safe='/')`
+
+   2. `quote`函数用来获取URL数据，并将其编码，使其可以用于URL字符串中。
+
+   3. `quote_plus`与`quote`很像，只是它还可以将空格编码成`+`号
+
+   4. 测试：
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305144711872.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+5. `from urllib.parse import unquote, unquote_plus`
+
+   1. `unquote`与`quote`函数的功能完全相反，前者将所有编码为`%xx`式的字符转换成等价的ASCII码值
+   2. `unquote(urldate)`
+
+6. `from urllib.parse import urlencode`
+
+   1. 将字典的键值对通过`quote_plus`编译成有效的CGI查询字符串，用`quote_plus`对这个字符串进行编码
+
+   2. 测试：
+
+      ![image-20210305145335998](E:\typora_pics_savepath\image-20210305145335998.png)
+
+7. `urllib.parse`和`urllib.request`函数总结：
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305145435610.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+8. 
 
 
 
@@ -2205,11 +2276,9 @@
 
 
 
-学到Page185  其他GUI简介
+核心编程：学到 9.2.4
 
 python魔法
-
-核心编程
 
 python从入门到放弃视频教程
 
