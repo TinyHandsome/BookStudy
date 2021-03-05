@@ -571,6 +571,7 @@
      - 格式：大类型/小类型 
        - image/png
        - image/jpg
+   
 2. Json
    1. JsonObject
       - {}
@@ -583,6 +584,7 @@
       - 前后端分离
       - DRF
    5. Google Chrome插件名：JsonFomatter、JsonView
+   
 3. HttpResponse
    1. HttpResponseRedirect
       - 重定向，暂时
@@ -601,6 +603,7 @@
    6. Http404
       - Exception
       - raise 主动抛出异常
+   
 4. 会话技术
    1. 出现场景
       - 服务器如何识别客户端
@@ -631,15 +634,28 @@
           - 在前部添加了一个混淆串
         - Session依赖于Cookie
       - token
+        - 服务端会话技术
+        - 自定义的Session
+        - 
+   
 5. 登录
+
    - 首先要有一个页面
      - 页面中有输入框
      - 有登录按钮
    - 点完登录，默认进入个人中心
    - 个人中心可以显示用户名
+
 6. 编码
+
    - ASCII
    - Unicode
+
+7. Session交互图
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305160614371.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+8. 
 
 
 
