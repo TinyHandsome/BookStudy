@@ -636,9 +636,76 @@
       - token
         - 服务端会话技术
         - 自定义的Session
-        - 
+        - 如果Web页面开发中，使用起来和Session基本一致
+        - 如果使用在移动端或者客户端开发中，通常以Json形式传输，需要移动端自己存储Token，需要获取Token关联数据的时候，主动传递Token。
+      - Cookie、Session和Token对比
+        - cookie使用起来更简洁，服务器的压力更小；数据不是很安全
+        - session服务器要维护session，相对安全
+        - token自定义的session，拥有session的所有优点，自己维护略微麻烦，支持更多的终端
    
-5. 登录
+5. CSRF
+
+   - 防跨站攻击
+   - 防止恶意注册，确保客户端是我们自己的客户端
+   - 使用了cookie中的csrftoken进行验证，传输
+   - 服务器发送给客户端，客户端将cookie获取过来，还要进行编码转换（数据安全）
+   - 如何实现的
+     - 在我们中存在csrf_token标签的页面中，响应会自动设置一个cookie，csrftoken
+     - 当我们提交的时候，会自动验证csrftoken
+     - 验证通过，正常执行以后流程，验证不通过，直接403
+
+6. 目前状态
+
+   - MTV
+     - 基本完成
+     - Template不会再讲了
+     - Views也不会再讲了
+     - Model
+       - Model关系
+       - Model继承
+   - 高级
+     - 第三方插件
+     - 底层的部分原理
+       - AOP 面向切面编程
+         - 反扒
+         - 安全
+     - 文件上传
+     - 前后端分离
+       - RESTful
+     - 日志
+     - 后台管理
+     - 用户角色、用户权限
+     - 部署
+     - 支付宝支付
+
+7. 算法
+
+   1. 编码解码
+      - Base64
+      - urlencode
+   2. 摘要算法、指纹算法、杂凑算法
+      - MD5、SHA
+        - MD5默认是128位的二进制
+        - 32位的二进制
+        - 32位的Unicode
+      - 单向不可逆的
+      - 不管输入多长，输出都是固定长度
+      - 只要输入有任意的变更，输出都会发生巨大的变化
+   3. 加密
+      - 对称加密
+        - 一把钥匙
+        - DES、AES
+        - 加密解密效率高
+        - 钥匙一旦丢失，所有数据全GG
+      - 非对称加密
+        - 两把钥匙，成对的
+        - 公钥和私钥
+        - RSA、PGP
+        - 安全性最高
+        - 算法复杂，需要时间长
+        - 支付宝、微信都是RSA
+
+8. 登录
 
    - 首先要有一个页面
      - 页面中有输入框
@@ -646,16 +713,16 @@
    - 点完登录，默认进入个人中心
    - 个人中心可以显示用户名
 
-6. 编码
+9. 编码
 
    - ASCII
    - Unicode
 
-7. Session交互图
+10. Session交互图
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305160614371.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
-8. 
+## 9. 迁移原理
 
 
 
@@ -665,7 +732,7 @@
 
 
 
-学到（要学）：P237 1105
+学到（要学）：P239
 
 ------
 

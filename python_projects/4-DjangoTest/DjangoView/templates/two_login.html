@@ -6,6 +6,7 @@
 </head>
 <body>
 <form action="{% url 'two:login' %}", method="post">
+    {% csrf_token %}
     <span>用户名：</span><input type="text" placeholder="请输入用户名" name="username">
     <br>
     <button>登录</button>

@@ -2,7 +2,7 @@ import hashlib
 import time
 from random import random
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -71,10 +71,37 @@ def student_login(request):
             student = students.first()
 
             ip = request.META.get("REMOTE_ADDR")
-            token = generate_token(ip)
+            token = generate_token(ip, username)
+            student.s_token = token
+
+            student.save()
+            response = HttpResponse("用户登录成功")
+            response.set_cookie("token", token)
+
+            ''' 移动端用JsonResponse返回
+            data = {
+                "status": 200,
+                "msg": "login success",
+                "token": token
+            }
+            return JsonResponse(data=data)
+
+            '''
+            return response
+
+        return redirect(reverse("two:student_login"))
 
 
 def generate_token(ip, username):
-    c_time = time.time() * 1000
+    c_time = time.ctime()
     r = username
-    hashlib.new('md5', ip + str(c_time) + r).encode('utf-8').hexdigest()
+    return hashlib.new('md5', (ip + c_time + r).encode('utf-8')).hexdigest()
+
+
+def student_mine(request):
+    token = request.COOKIES.get('token')
+    try:
+        student = Student.objects.get(s_token=token)
+    except Exception as e:
+        return redirect(reverse('two:student_login'))
+    return HttpResponse(student.s_name)
