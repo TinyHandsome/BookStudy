@@ -718,9 +718,13 @@
    - ASCII
    - Unicode
 
-10. Session交互图
+10. Session交互图  
 
-   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305160614371.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210305160614371.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+11. 会话总结
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210317170317755.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
 ## 9. 迁移原理
 
@@ -732,7 +736,7 @@
 
 
 
-学到（要学）：P239
+学到（要学）：P240
 
 ------
 
