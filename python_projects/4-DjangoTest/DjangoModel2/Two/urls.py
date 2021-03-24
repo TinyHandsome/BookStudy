@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from Two import views
 
@@ -13,4 +13,12 @@ urlpatterns = [
     path('removeidcard/', views.remove_id_card, name='remove_id_card'),
     path('getperson/', views.get_person, name='get_person'),
     path('getidcard/', views.get_id_card, name='get_id_card'),
+
+    path('addcustomer/', views.add_customer, name='add_customer'),
+    path('addgoods/', views.add_goods, name='add_goods'),
+    path('addtocart/', views.add_to_cart, name='add_to_cart'),
+    re_path(r'getgoodslist/(?P<customerid>\d+)/', views.get_goods_list, name='get_goods_list'),
+
+    path('addcat/', views.add_cat, name='add_cat'),
+    path('adddog/', views.add_dog, name='add_dog'),
 ]

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GoodsList</title>
+</head>
+<body>
+<ul>
+    {% for goods in goods_list %}
+        <li>{{ goods.g_name }}{{ goods.id }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
