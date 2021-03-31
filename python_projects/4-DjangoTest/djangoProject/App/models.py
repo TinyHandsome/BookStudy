@@ -14,3 +14,9 @@ class Book(models.Model):
     class Meta:
         managed = False
         db_table = 'book'
+
+
+class UserModel(models.Model):
+    u_name = models.CharField(max_length=16)
+    # 相对路径，相对于MEDIA_ROOT，媒体根目录
+    u_icon = models.ImageField(upload_to='%Y/%m/%d/icons')

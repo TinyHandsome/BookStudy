@@ -827,6 +827,29 @@
 
 ## 10. 静态资源
 
+1. html中的img属性：`<img src="{{ icon_url }}" alt="{{ username }}">`，alt 属性是一个必需的属性，它规定在图像无法显示时的替代文本。
+
+2. 在models中设置文件上传的保存路径：
+
+   1. 在settings中设置media路径：
+
+      `MEDIA_ROOT = os.path.join(BASE_DIR, 'static/upload')`
+
+   2. 在models中设置属性：
+
+      `u_icon = models.ImageField(upload_to='%Y/%m/%d/icons')`
+
+      可以通过增加时间标记进行分文件夹保存
+   
+3. MCS结构体系，multi client server
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210331195524811.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+4. model、静态资源、文件上传、requests总结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210331195700881.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
+
+## 11. Django Cache
 
 
 
@@ -839,7 +862,10 @@
 
 
 
-学到（要学）：P246 09：44
+
+
+
+学到（要学）：P250
 
 ------
 
