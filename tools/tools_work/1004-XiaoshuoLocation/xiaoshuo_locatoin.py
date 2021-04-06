@@ -52,5 +52,5 @@ class XiaoshuoLocation:
 
 if __name__ == '__main__':
     info = input('请输入要查找的内容：\n')
-    XiaoshuoLocation(30, 'E:\study_books\明朝那些事.txt').search_words(info)
+    XiaoshuoLocation(30, 'E:\study_books\盘龙.txt').search_words(info)
     print('\n\n')
