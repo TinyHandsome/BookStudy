@@ -2272,10 +2272,97 @@
 ### 9.3 Web客户端
 
 1. SGML：标准通用标记语言，Standard Generalized Markup Language
+
 2. `__slots__`：正常情况下，当我们定义了一个class，创建了一个class的实例后，我们可以给该实例绑定任何属性和方法。但是，如果我们想要限制实例的属性怎么办？为了达到限制的目的，Python允许在定义class的时候，定义一个特殊的**slots**变量，来限制该class实例能添加的属性。
    1. *__slots__* 存在的真正原因是用于优化，否则我们是以*__dict__*来存储实例属性，如果我们涉及到很多需要处理的数据，使用元组来存储当然会节省时间和内存。
    2. 如果我们还是想要有可以随意添加实例属性，那么把 `__dict__` 放入 `__slots__` 中既可，实例会在元组中保存各个实例的属性，此外还支持动态创建属性，这些属性存储在常规的`__dict__` 中。优化完全就不见了。
-3. 
+   
+3. BeautifulSoup的简单应用
+
+   ```python
+   from html.parser import HTMLParser
+   from io import StringIO
+   from urllib.request import urlopen, urlparse
+   from urllib.parse import urljoin
+   
+   from bs4 import BeautifulSoup, SoupStrainer
+   from html5lib import parse, treebuilders
+   
+   
+   URLs = (
+       'http://python.org',
+       'http://google.com',
+   )
+   
+   def output(x):
+       print('\n'.join(sorted(set(x))))
+   
+   def simpleBS(url, f):
+       # simpleBS(): use BeautifulSoup to parse all tags to get anchors
+       output(urljoin(url, x['href']) for x in BeautifulSoup(f).findAll('a'))
+   
+   def fasterBS(url, f):
+       # fasterBS(): use BeautifulSoup to parse only anchor tags
+       output(urljoin(url, x['href']) for x in BeautifulSoup(f, parse_only=SoupStrainer('a')))
+   
+   def htmlparser(url, f):
+       # htmlparser(): user HTMLParser to parse anchor tags
+       class AnchorParser(HTMLParser):
+           def handle_starttag(self, tag, attrs):
+               if tag != 'a':
+                   return
+               if not hasattr(self, 'data'):
+                   self.data = []
+               for attr in attrs:
+                   if attr[0] == 'href':
+                       self.data.append(attr[1])
+       parser = AnchorParser()
+       parser.feed(f.read())
+       output(urljoin(url, x) for x in parser.data)
+   
+   def html5libparse(url, f):
+       # html5libparse(): use html5lib to parse anchor tags
+       output(urljoin(url, x.attributes['href']) for x in parse(f) if isinstance(x, treebuilders.simpletree.Element) and x.name=='a')
+   
+   def process(url, data):
+       print('\n*** simple BS')
+       simpleBS(url, data)
+       data.seek(0)
+       print('\n*** faster BS')
+       fasterBS(url, data)
+       data.seek(0)
+       print('\n*** HTMLParser')
+       htmlparser(url, data)
+       data.seek(0)
+       print('\n*** HTML5lib')
+       html5libparse(url, data)
+   
+   def main():
+       for url in URLs:
+           f = urlopen(url)
+           data = StringIO(f.read())
+           f.close()
+           process(url, data)
+   
+   if __name__ == '__main__':
+       main()
+   ```
+
+4. Mechanize：可以编程的Web浏览方式
+
+## 10. Web编程：CGI和WSGI
+
+## 10.1 CGI简介
+
+1. Web 最初目的是在全球范围内对文档进行在线存储和归档。这些文件通常用静态文本表示，一般是HTML。
+
+2. 表单：成为了Web站点从用户获得特定信息的唯一形式（在Java applet出现之前）
+
+3. CGI工作方式概览
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210408171016243.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+4. 
 
 
 
@@ -2299,7 +2386,7 @@
 
 
 
-核心编程：学到 333
+核心编程：学到 348   10.2.4
 
 python魔法
 
