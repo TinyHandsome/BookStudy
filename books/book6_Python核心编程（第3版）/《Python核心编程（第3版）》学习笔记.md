@@ -4,7 +4,9 @@
 
 ## 写在前面
 
-- 读后感：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201110153410970.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
+
+- 读后感：**这本书与python的优雅完全的背道而驰**
   - 真本书写的真的八行，外国人写的书，好的是真的好，烂的是真的烂，这本书不知道为什么吹的人那么多，烂的扣jio，有的例子真的不想抄一遍了，神神叨叨的，跑也跑不通，让自己填自己连接，我特么我知道怎么填，读你干嘛啊。还有啊，翻译得真跟shi一样，直接谷歌机翻也比这翻译的好吧。
   
   - 最严重的问题，也就是上面说的，很多例子对应的链接已经不行了，连也连不上，特别是**在第二章、第三章学网络的时候**，特别明显，就是学了个寂寞。
@@ -22,8 +24,6 @@
   - 讲道理，这本书最大的作用，就是见证历史，看看远古操作是什么样的，**我们现在用python编程门槛这么低，都是站在巨人的肩膀上。**
   
   - 很累，真心累，学了个寂寞，重在参与吧
-
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20201110153410970.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
 
 ## 1. 正则表达式
 
@@ -2352,17 +2352,49 @@
 
 ## 10. Web编程：CGI和WSGI
 
-## 10.1 CGI简介
+### 10.1 CGI简介
 
 1. Web 最初目的是在全球范围内对文档进行在线存储和归档。这些文件通常用静态文本表示，一般是HTML。
 
-2. 表单：成为了Web站点从用户获得特定信息的唯一形式（在Java applet出现之前）
+2. CGI：Common Gateway Interface，公共网关接口。
 
-3. CGI工作方式概览
+3. 表单：成为了Web站点从用户获得特定信息的唯一形式（在Java applet出现之前）
+
+4. CGI工作方式概览
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210408171016243.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
-4. 
+5. 若想要在浏览器中看到的是Web应用程序的回溯消息，而不是“内部服务器错误”，可以使用cgitb模块。
+
+   ```python
+   import cgitb
+   cgitb.enable()
+   ```
+
+### 10.2 WSGI简介
+
+1. 为什么需要CGI：
+
+   因为服务器无法创建动态内容，它们不知道用户特定的应用信息和数据，如验证信息、银行账户、在线支付等。Web服务器必须与外部的进程通信才能处理这些自定义工作。
+
+2. CGI的局限：
+
+   1. CGI方式无法扩展，CGI进程针对每个请求进行创建，用完就抛弃。
+   2. 如果应用程序接受数千个请求，创建大量的语言解释器进程很快就会导致服务器停机。
+   3. 有两种方法可以解决这个问题：一是服务器集成；而是外部进程。
+
+3. 服务器集成，也成为服务器API。
+
+   - 服务器根据对应的API 通过一组预先创建的进程或线程来处理工作。
+
+   - 缺点：对于服务器API，这种方式会带来许多问题，如含有bug 的代码会影响到服务器实现执行效率，不同语言的实现无法完全兼容，需要API 开发者使用与Web 服务器实现相同的编程语言，应用程序需要整合到商业解决方案中（如果没有使用开源服务器API），应用程序必须是线程安全的，等等。
+
+4. 外部进程
+
+   - 这是让CGI 应用在服务器外部运行。当有请求进入时，服务器将这个请求传递到外部进程中。这种方式的可扩展性比纯CGI 要好，因为外部进程存在的时间很长，而不是处理完单个请求后就终止。
+   - 有了外部进程，就可以利用服务器API 的好处，同时避免了其缺点。比如，在服务器外部运行就可以自由选择实现语言，应用程序的缺陷不会影响到Web 服务器，不需要必须与闭源的商业软件结合起来。
+
+5. WSGI：Web Server Gateway Interface，Web服务器网络接口。WSGI 不是服务器，也不是用于与程序交互的API，更不是真实的代码，而只是定义的一个接口。
 
 
 
@@ -2386,7 +2418,7 @@
 
 
 
-核心编程：学到 348   10.2.4
+核心编程：学到 377 10.6.6
 
 python魔法
 

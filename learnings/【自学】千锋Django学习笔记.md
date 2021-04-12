@@ -849,9 +849,9 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210331195700881.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
 
-## 11. Django Cache
+## 11. 缓存
 
-1. 缓存
+1. 缓存，Django Cache
 
    - 提升服务器响应速度
    - 将执行过的操作数据存储下来，在一定时间内，再次获取数据的时候，直接从缓存中获取
@@ -880,6 +880,107 @@
 
 4. 缓存配置
 
+   1. 在views前面新增装饰器：`@cache_page(30)`，括号中的时间为缓存保留的时间（秒）
+
+   2. 缓存数据流程图
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210412172615920.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+   3. 如果不用装饰器，也可以通过set和get缓存的方式，进行手动写入和获取缓存
+
+      ```python
+      # @cache_page(30)
+      def news(request):
+          result = cache.get("news")
+          # 如果缓存中能找到news对应的值，直接返回该值
+          if result:
+              return HttpResponse(result)
+      
+          news_list = []
+          for i in range(10):
+              news_list.append("最近贸易战又开始了 %d" % i)
+      
+          sleep(5)
+      
+          data = {
+              'news_list': news_list
+          }
+      
+          # 如果缓存中没有找到news的值，则返回response，并将内容写入到缓存中
+          response = render(request, 'news.html', context=data)
+          cache.set('news', response.content, timeout=60)
+      
+          return response
+      ```
+
+5. redis：内存级的数据库，django中没有redis的缓存实现，所以需要pypi安装
+
+   `pip install django-redis`
+
+   `pip install django-redis-cache`
+
+6. redis在windows中启动的方法
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021041219581947.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+7. 修改缓存为redis
+
+   ```python
+   CACHES = {
+       'default': {
+           # django原生缓存
+           # 'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+           # 'LOCATION': 'my_cache_table',
+           # 'TIMEOUT': 60 * 5,
+   
+           # redis缓存
+           "BACKEND": "django_redis.cache.RedisCache",
+           "LOCATION": "redis://127.0.0.1:6379/1",
+           "OPTIONS": {
+               "CLIENT_CLASS": "django_redis.client.DefaultClient",
+           }
+       }
+   }
+   ```
+
+8. 查看redis缓存的数据
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210412200501137.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+9. 查看过期时间
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021041220062498.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+10. 配置不同的数据库，选择不同的数据库进行缓存
+
+    1. 配置
+
+       ```python
+       CACHES = {
+           'default': {
+               # django原生缓存
+               'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+               'LOCATION': 'my_cache_table',
+               'TIMEOUT': 60 * 5,
+           },
+           'redis_backend': {
+               # redis缓存
+               "BACKEND": "django_redis.cache.RedisCache",
+               "LOCATION": "redis://127.0.0.1:6379/1",
+               "OPTIONS": {
+                   "CLIENT_CLASS": "django_redis.client.DefaultClient",
+               },
+           }
+       }
+       ```
+
+    2. 选择
+
+       ```python
+       @cache_page(60, cache='redis_backend')
+       ```
+
+## 12. 中间件
 
 
 
@@ -892,7 +993,8 @@
 
 
 
-学到（要学）：P251 1354
+
+学到（要学）：P253
 
 ------
 

@@ -85,9 +85,18 @@ DATABASES = {
 
 CACHES = {
     'default': {
+        # django原生缓存
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'my_cache_table',
         'TIMEOUT': 60 * 5,
+    },
+    'redis_backend': {
+        # redis缓存
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
     }
 }
 
