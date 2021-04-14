@@ -4,7 +4,7 @@
 
 ## 写在前面
 
-- 学习链接：[Python 900集（学完可就业/2019版）](https://www.bilibili.com/video/BV15J411T7WQ)：`[200集: )`
+- 学习链接：[Python 900集（学完可就业/2019版）](https://www.bilibili.com/video/BV15J411T7WQ)：`[200集: 358集]，共159集`
 - 感想|摘抄：
   1. 优秀的程序员：
      - 松耦合、解耦合
