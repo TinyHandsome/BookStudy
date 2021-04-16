@@ -2396,6 +2396,68 @@
 
 5. WSGI：Web Server Gateway Interface，Web服务器网络接口。WSGI 不是服务器，也不是用于与程序交互的API，更不是真实的代码，而只是定义的一个接口。
 
+6. 中间件：在某些情况下，除了运行应用本身之外，还想在应用执行之前（处理请求）或之后（发送响应）添加一些处理程序。这就是熟知的中间件，它用于在Web 服务器和Web 应用之间添加额外的功能。
+
+   中间件要么对来自用户的数据进行预处理，然后发送给应用；要么在应用将响应负载返回给用户之前，对结果数据进行一些最终的调整。这种方式类似洋葱结构，应用程序在内部，而额外的处理层在周围。
+
+7. Web编程相关模块
+
+   ![img](https://img-blog.csdnimg.cn/20210415135539550.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021041513561664.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+
+## 11. Web框架：Django
+
+### 11.1 Django简介
+
+1. SQLite：SQLite 数据库适配器是所有Python 版本中自带的。
+
+2. Django项目文件：
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210415141558827.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+3. Django应用文件
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210416144235559.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+4. 使用`django-admin startproject 项目名称`创建项目
+
+5. 使用`python manage.py startapp app名称`来创建app
+
+6. 在`settings.py`文件中的`INSTALLED_APPS`中添加app名，来告诉django这个新应用是项目的一部分
+
+   ```python
+   INSTALLED_APPS = [
+       'django.contrib.admin',
+       'django.contrib.auth',
+       'django.contrib.contenttypes',
+       'django.contrib.sessions',
+       'django.contrib.messages',
+       'django.contrib.staticfiles',
+       'blog',
+   ]
+   ```
+
+7. 数据模型表示将会存储在数据库每条记录中的数据类型。BlogPost 中的字段就像普通的类属性那样定义，每个都是特定字段类的实例，每个实例对应数据库中的一条记录。
+
+   1. 除了三个字段外，还有一个Django默认自动创建的字段，该字段可以自增
+   2. `CharField`：用于较短的单行文本
+   3. `TextField`：用于较长的文本，比如博文的正文
+   4. `DateTimeField`：时间戳
+
+   ```python
+   class BlogPost(models.Model):
+       title = models.CharField(max_length=150)
+       body = models.TextField()
+       timestamp = models.DateTimeField()
+   ```
+
+8. SQLite 一般用于测试。它甚至可以用于特定环境下的部署，如应用于无须大量同时写入
+   需求的场景。SQLite 没有主机、端口、用户，或密码信息。因为SQLite 使用本地文件来存储数据，本地文件系统的访问权限就是数据库的访问控制。SQLite 不仅可以使用本地文件，还可以使用纯内存数据库。因此针对SQLite 数据库的配置，在settings.py 中的DATABASES配置中只有ENGINE 和NAME 字段。
+
+9. `python manage.py syncdb`是迁移数据库的命令，当执行这个命令后，Django会查找INSTALLED_APPS中列出的应用的models.py文件。对于每个找到的模型，它会创建一个数据库表。如果使用的是SQLite，会注意到mysite.db这个数据文件刚好创建在设置中指定的文件夹里。
+
+   现在已改为`python manage.py migrate`
 
 
 
@@ -2418,7 +2480,8 @@
 
 
 
-核心编程：学到 377 10.6.6
+
+核心编程：学到 399
 
 python魔法
 

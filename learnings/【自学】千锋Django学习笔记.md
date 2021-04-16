@@ -980,7 +980,48 @@
        @cache_page(60, cache='redis_backend')
        ```
 
-## 12. 中间件
+## 12. 中间件和AOP
+
+1. 中间件：是一个轻量级的、底层插件。可以介入Django的请求和相应过程（面向切面编程）。中间件的本质是一个python类，装饰器。
+
+2. AOP：面像切面编程，Aspect Oriented Programming。AOP主要实现的目的是针对业务处理过程中的切面进行提取，它所面对的是处理步骤中的某个过程或阶段，以获得逻辑过程中各个部分之间低耦合的隔离效果。
+
+3. 中间件可以切入的点
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021041508371487.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+4. 切入函数
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210415092610226.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+5. 自定义中间件
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210415092727932.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+6. AOP中间件的作用
+
+   1. 实现统计功能
+      1. 统计IP
+      2. 统计浏览器
+      
+   2. 实现权重控制
+   
+      1. 黑名单
+      2. 白名单
+   
+   3. 实现反爬
+   
+      1. 反爬虫
+   
+         1. 十秒之内只能查询一次
+   
+         2. 频率请求限制反爬
+   
+            ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210415163902458.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+   
+      2. 实现频率控制
+   
+   
 
 
 
@@ -994,7 +1035,7 @@
 
 
 
-学到（要学）：P253
+学到（要学）：P256
 
 ------
 

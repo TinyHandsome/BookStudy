@@ -1,3 +1,4 @@
+import random
 from time import sleep
 
 from django.core.cache import cache
@@ -42,3 +43,23 @@ def news(request):
 def jokes(request):
     sleep(5)
     return HttpResponse('狗贼')
+
+
+def home(request):
+    return HttpResponse("Home")
+
+
+def get_phone(request):
+    if random.randrange(100) > 95:
+        return HttpResponse("恭喜您，抢到小米8了！")
+    return HttpResponse("正在排队。。。")
+
+
+def get_ticket(request):
+    if random.randrange(100) > 10:
+        return HttpResponse("还剩余99张满100-99")
+    return None
+
+
+def search(request):
+    return HttpResponse("这是你搜索到的种子资源")
