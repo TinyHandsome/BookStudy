@@ -2457,7 +2457,138 @@
 
 9. `python manage.py syncdb`是迁移数据库的命令，当执行这个命令后，Django会查找INSTALLED_APPS中列出的应用的models.py文件。对于每个找到的模型，它会创建一个数据库表。如果使用的是SQLite，会注意到mysite.db这个数据文件刚好创建在设置中指定的文件夹里。
 
-   现在已改为`python manage.py migrate`
+   现在已改为`python manage.py migrate`，于django2.0之后失效
+
+10. django创建超级用户：https://www.cnblogs.com/nanjo4373977/p/12880967.html
+
+    `python manage.py createsuperuser`
+
+11. 在django中使用python shell：`python manage.py shell`；如果不想进入ipython的话，可以指定对应的解析器：`python manage.py shell -i python`
+
+12. 在`admin.py`中给app注册，这样admin就可以管理数据库中app的对象
+
+    ```python
+    from django.contrib import admin
+    from blog import models
+    
+    admin.site.register(models.BlogPost)
+    ```
+
+13. 如果admin看不到app可能出现的情况：
+
+    1. 忘记通过`admin.site.register()`注册模型类
+    2. 应用的`models.py`文件中存在错误
+    3. 忘记将应用添加到`settings.py`文件中的INSTALLED_APPS元组中
+
+14. 有效的显示应用的列表
+
+    ```python
+    from django.contrib import admin
+    from blog import models
+    
+    class BlogPostAdmin(admin.ModelAdmin):
+        list_display = ('title', 'timestamp')
+    
+    admin.site.register(models.BlogPost, BlogPostAdmin)
+    ```
+
+15. Django是如何处理请求的：Django **自底向上** 处理请求，它首先查找匹配的URL模式，接着调用对应的视图函数，最后将渲染好的数据通过模板展现给用户。
+
+16. Django中的 **测试驱动模型（TDD）**，构建应用的顺序：
+
+    1. 创建基本的模板（需要一些可以观察的内容）
+    2. 设计一个简单的URL模式，让Django可以立刻访问应用
+    3. 开发出一个视图函数原型，然后在此基础上迭代开发
+
+    使用这个顺序的主要原因是因为模板和URL模式不会发生较大的改变。而应用的核心是视图，所以先快速构建一个基本视图，在此基础上逐步完善。
+
+17. **变量标签**：`<h2>{{ post.title }}</h2>`
+
+18. **过滤器**：`<h2>{{ post.title|title }}</h2>`，调用title属性的`.title()`方法
+
+19. **块标签**：`{% endfor %}`，表示循环
+
+20. 注意：这里的archive视图函数的context一定记住了，要写`:`而不是`,`，不要犯我这样的低级错误，不然会报错：`unhashable type: 'list'`
+
+    ```python
+    from django.shortcuts import render, HttpResponse
+    from datetime import datetime
+    from blog.models import BlogPost
+    
+    # Create your views here.
+    def archieve(request):
+        mypost = BlogPost(title='mocktitle', body='mockbody', timestamp=datetime.now())
+        data = {
+            'posts': [mypost]
+        }
+        return render(request, 'archive.html', context={'posts': [mypost]})
+    ```
+
+21. 我们常常用的是class.objects.all()方法来获取QuerySet，可以认为QuerySet是数据库中的每行数据，但其实QuerySet不是真实的每一行数据，因为QuerySet执行”惰性迭代“，只有在求值的时候才会真正查询数据库。换句话说，QuerySet可以进行任何操作，但并没有接触到数据。
+
+22. 设置模型的默认排序方式：在models中新增一个内部类：
+
+    ```python
+    class Meta:
+            ordering = ('-timestamp',)
+    ```
+
+23. Django有数据保留特性。这不允许不安全的POST通过 **跨站点请求伪造** （Cross-Site Request Forgery，CSRF）来进行攻击。[参考链接](https://baike.baidu.com/item/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0)，[参考链接2](https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html)
+
+    ![img](https://pic002.cnblogs.com/img/hyddd/200904/2009040916453171.jpg)
+
+    为了解决这个问题，需要在表单中添加CSRF标记：`{% csrf_token %}`
+
+24. 使用ModelForm 来生成HTML 表单：
+
+    1. models：新增BlogPostForm类
+
+       exclude是指：不额外生成timestamp的属性，保留原有的，即从生成的HTML 中
+       移除这个表单项。
+
+       ```python
+       from django.db import models
+       from django import forms
+       
+       class BlogPost(models.Model):
+           title = models.CharField(max_length=150)
+           body = models.TextField()
+           timestamp = models.DateTimeField()
+       
+           class Meta:
+               ordering = ('-timestamp',)
+       
+       class BlogPostForm(forms.ModelForm):
+           class Meta:
+               model = BlogPost
+               exclude = ('timestamp', )
+       ```
+
+    2. views：新增一个form键值对，指向models中的类
+
+       ```python
+       # archive = lambda req: render(req, 'archive.html', {'posts': BlogPost.objects.all()[11:20]})
+       archive = lambda req: render(req, 'archive.html', {'posts': BlogPost.objects.all()[11:20], 'form': BlogPostForm()})
+       ```
+
+    3. templates：将原来表单的格式换成
+
+       ```html
+       <form action="/blog/create/" method="post">
+           {% csrf_token %}
+           <!-- Title:
+           <input type=text name=title><br>
+           Body:
+           <textarea name=body rows=3 cols=60></textarea><br> -->
+       
+           <table>{{ form }}</table><br>
+       
+           <input type=submit>
+       </form>
+       <hr>
+       ```
+
+    4. 如果不想用HTML表格的行和列的形式输入，也可以通过`as_*()`的方法输出。比如`{{form.as_p}}`会以`<p>...</p>`分割文本；`{{ form.as_ul }}`会以`<li>`列表元素显示等等。
 
 
 
@@ -2473,15 +2604,7 @@
 
 
 
-
-
-
-
-
-
-
-
-核心编程：学到 399
+核心编程：学到  428 11.12.4
 
 python魔法
 
@@ -2490,20 +2613,6 @@ python从入门到放弃视频教程
 flask书
 
 flask视频教程
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
