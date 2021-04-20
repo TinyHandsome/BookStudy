@@ -2566,9 +2566,23 @@
 
     2. views：新增一个form键值对，指向models中的类
 
+       这里可以直接通过类获取request中的post中的相关类信息，由于timestamp的原因，所以只能先获取部分类属性，再更新timestamp属性，最后保存。
+
        ```python
        # archive = lambda req: render(req, 'archive.html', {'posts': BlogPost.objects.all()[11:20]})
        archive = lambda req: render(req, 'archive.html', {'posts': BlogPost.objects.all()[11:20], 'form': BlogPostForm()})
+       
+       def create_blogpost(request):
+           if request.method == 'POST':
+       
+               # BlogPost(title=request.POST.get('title'), body=request.POST.get('body'), timestamp=datetime.now(),).save()
+       
+               form = BlogPostForm(request.POST)
+               if form.is_valid():
+                   post = form.save(commit=False)
+                   post.timestamp=datetime.now()
+                   post.save()
+           return redirect('/blog/')
        ```
 
     3. templates：将原来表单的格式换成
@@ -2590,6 +2604,66 @@
 
     4. 如果不想用HTML表格的行和列的形式输入，也可以通过`as_*()`的方法输出。比如`{{form.as_p}}`会以`<p>...</p>`分割文本；`{{ form.as_ul }}`会以`<li>`列表元素显示等等。
 
+25. 在url中配置redirect_to或者RedirecView，[参考链接](https://www.cnblogs.com/wumingxiaoyao/p/7110131.html)
+
+    ```python
+    urlpatterns = [
+        path('', RedirectView.as_view(url='/blog/')),
+        path('admin/', admin.site.urls),
+        path('blog/', include('blog.urls')),
+    ]
+    ```
+
+### 11.2 单元测试
+
+1. 在创建应用时，Django通过自动生成`test.py`文件来促使开发者创建测试
+
+   ```python
+   from django.test import TestCase
+   from django.test.client import Client
+   from datetime import datetime
+   from blog.models import BlogPost
+   
+   class BlogPostTest(TestCase):
+       def test_obj_create(self):
+           """通过测试确保对象成功创建，并验证标题的内容"""
+           BlogPost.objects.create(title='raw title', body='raw body', timestamp=datetime.now())
+           self.assertEqual(1, BlogPost.objects.count())
+           self.assertEqual('raw title', BlogPost.objects.get(id=1).title)
+   
+       def test_home(self):
+           """检测用户界面"""
+           response = self.client.get('/blog/')
+           self.failUnlessEqual(response.status_code, 200)
+   
+       def test_slash(self):
+           """检测用户界面"""
+           response = self.client.get('/')
+           self.assertIn(response.status_code, (301, 302))
+   
+       def test_empty_create(self):
+           """测试某人在没有任何数据就错误地生成GET 请求这样的情形，代码应该忽略这个请求，并重定向"""
+           response = self.client.get('/blog/create/')
+           self.assertIn(response.status_code, (301, 302))
+   
+       def test_post_create(self):
+           """模拟真实用户请求通过POST发送真实数据"""
+           response = self.client.post('/blog/create/', {
+               'title': 'post title',
+               'body': 'post body',
+           })
+           self.assertIn(response.status_code, (301, 302))
+           self.assertEqual(1, BlogPost.objects.count())
+           self.assertEqual('post title', BlogPost.objects.get(id=1).title)
+   ```
+
+2. 调用测试：`python manage.py test`
+
+3. 测试结果：
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021042014493883.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+4. 默认情况下，系统会创建独立的内存数据库（default）进行测试，所以无需担心测试会损坏实际生产数据。其中的每个点表示通过了一个测试。对于未通过测试的，`E`表示错误，`F`表示失败。
 
 
 
@@ -2604,7 +2678,8 @@
 
 
 
-核心编程：学到  428 11.12.4
+
+核心编程：学到  439 11.16
 
 python魔法
 
