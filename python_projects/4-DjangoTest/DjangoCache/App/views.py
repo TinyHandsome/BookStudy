@@ -1,13 +1,13 @@
 import random
 from time import sleep
 
-from django.core.cache import cache
-from django.core.checks import caches
+from django.core.cache import cache, caches
 from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
@@ -16,8 +16,8 @@ def index(request):
 
 # @cache_page(30)
 def news(request):
-    cache = caches['redis_backend']
-    result = cache.get("news")
+    temp_cache = caches['redis_backend']
+    result = temp_cache.get("news")
     # 如果缓存中能找到news对应的值，直接返回该值
     if result:
         return HttpResponse(result)
@@ -63,3 +63,19 @@ def get_ticket(request):
 
 def search(request):
     return HttpResponse("这是你搜索到的种子资源")
+
+
+def calc(request):
+    a = 250
+    b = 250
+    result = (a + b) / 0
+    return HttpResponse(result)
+
+
+@csrf_exempt
+def login(request):
+    if request.method == 'GET':
+        return render(request, 'login.html')
+    elif request.method == 'POST':
+        return HttpResponse("POST请求成功！")
+    return None

@@ -12,4 +12,6 @@ urlpatterns = [
     path('getphone/', views.get_phone, name='get_phone'),
     path('getticket/', views.get_ticket, name='get_ticket'),
     path('search/', views.search, name='search'),
+    path('calc/', views.calc, name='calc'),
+    path('login/', views.login, name='login'),
 ]

@@ -1020,7 +1020,21 @@
             ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210415163902458.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
    
       2. 实现频率控制
+      
+   4. 通过中间件的`process_exception`函数实现 界面友好化、应用交互友好化
    
+      访问中出错、出异常后跳转到首页
+   
+7. HTTP默认端口为80，HTTPs默认端口为443
+
+8. csrf问题验证失败解决方法
+
+   1. 注释设置中的csrf中间件
+   2. 在页面的POSThtml代码中，添加`{% csrf_token %}`
+   3. 在views视图函数中添加csrf豁免装饰器：`csrf_exempt`
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210421171813552.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
    
 
 
@@ -1035,7 +1049,7 @@
 
 
 
-学到（要学）：P256
+学到（要学）：P257
 
 ------
 

@@ -15,14 +15,18 @@ import time
 
 from django.core.cache import cache
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.deprecation import MiddlewareMixin
 
 
 class HelloMiddle(MiddlewareMixin):
     def process_request(self, request):
+
         print(request.META.get("REMOTE_ADDR"))
 
         ip = request.META.get('REMOTE_ADDR')
+        pass
 
         ''' 白名单、黑名单、访问时限
         if request.path == '/app/getphone/':
@@ -43,6 +47,7 @@ class HelloMiddle(MiddlewareMixin):
             cache.set(ip, ip, timeout=10)
         '''
 
+        '''黑名单
         black_list = cache.get('black', [])
 
         if ip in black_list:
@@ -64,3 +69,8 @@ class HelloMiddle(MiddlewareMixin):
         # 如果60以内的数据大于10个，则频率过高
         if len(requests) > 5:
             return HttpResponse("请求次数过于频繁，请稍后再试")
+        '''
+
+    def process_exception(self, request, exception):
+        print(exception, request)
+        return redirect(reverse('app:index'))
