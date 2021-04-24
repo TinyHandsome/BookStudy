@@ -22,7 +22,6 @@ from django.utils.deprecation import MiddlewareMixin
 
 class HelloMiddle(MiddlewareMixin):
     def process_request(self, request):
-
         print(request.META.get("REMOTE_ADDR"))
 
         ip = request.META.get('REMOTE_ADDR')
@@ -74,3 +73,8 @@ class HelloMiddle(MiddlewareMixin):
     def process_exception(self, request, exception):
         print(exception, request)
         return redirect(reverse('app:index'))
+
+
+class TwoMiddle(MiddlewareMixin):
+    def process_request(self, request):
+        print("Two Middleware")

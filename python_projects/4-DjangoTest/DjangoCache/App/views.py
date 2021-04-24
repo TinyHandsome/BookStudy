@@ -2,12 +2,15 @@ import random
 from time import sleep
 
 from django.core.cache import cache, caches
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
+
+from App.models import Student
 
 
 def index(request):
@@ -79,3 +82,38 @@ def login(request):
     elif request.method == 'POST':
         return HttpResponse("POST请求成功！")
     return None
+
+
+def add_students(request):
+    for i in range(100):
+        student = Student()
+        student.s_name = "小明%d" % i
+        student.s_age = i
+        student.save()
+
+    return HttpResponse("学生创建成功")
+
+
+def get_students(request):
+    page = int(request.GET.get("page", 1))
+    per_page = int(request.GET.get("per_page", 10))
+    students = Student.objects.all()[per_page * (page - 1): page * per_page]
+    data = {
+        "students": students
+    }
+    return render(request, 'students.html', context=data)
+
+
+def get_students_with_page(request):
+    page = int(request.GET.get("page", 1))
+    per_page = int(request.GET.get("per_page", 10))
+
+    students = Student.objects.all()
+    paginator = Paginator(students, per_page)
+
+    page_obj = paginator.page(page)
+    data = {
+        "page_object": page_obj,
+        "page_range": paginator.page_range,
+    }
+    return render(request, 'students_with_page.html', context=data)

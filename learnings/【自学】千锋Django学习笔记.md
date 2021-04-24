@@ -1035,7 +1035,46 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210421171813552.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
+9. 中间件调用顺序
+
+   1. 中间件注册的时候是一个列表
+   2. 如果我们没有在切点出直接进行返回，中间件会依次执行
+   3. 如果我们直接进行了返回，后续中间就不再执行了
+
+10. 切点
+
+    1. process_request
+    2. process_view
+    3. process_template_response
+    4. process_response
+    5. process_exception
+
+11. 切面
+
+## 13. 分页器
+
+1. 分页器原理
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210424172516164.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+2. 分页显示：`Paginator`
+
+   ```python
+   def get_students_with_page(request):
+       page = int(request.GET.get("page", 1))
+       per_page = int(request.GET.get("per_page", 10))
    
+       students = Student.objects.all()
+       paginator = Paginator(students, per_page)
+   
+       page_obj = paginator.page(page)
+       data = {
+           "page_object": page_obj
+       }
+       return render(request, 'students_with_page.html', context=data)
+   ```
+
+3. `@property`：将函数设为类的私有属性，我们可以观测它。
 
 
 
@@ -1049,7 +1088,7 @@
 
 
 
-学到（要学）：P257
+学到（要学）：P59 18:34
 
 ------
 

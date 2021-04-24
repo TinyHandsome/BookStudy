@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StudentsWithPage</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.0-beta3/css/bootstrap.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.11.1-beta1/jquery.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.0-beta3/js/bootstrap.js"></script>
+</head>
+<body>
+<ul>
+    {% for student in page_object.object_list %}
+        <li>{{ student.s_name }}</li>
+    {% endfor %}
+</ul>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+
+        {% if page_object.has_previous %}
+            <li>
+                <a href="{% url 'app:get_students_with_page' %}?page={{ page_object.next_page_number }}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="disabled">
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for page_index in page_range %}
+            <li><a href="{% url 'app:get_students_with_page' %}?page={{ page_index }}">{{ page_index }}</a></li>
+        {% endfor %}
+
+        {% if page_object.has_next %}
+            <li>
+                <a href="{% url 'app:get_students_with_page' %}?page={{ page_object.next_page_number }}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="disabled">
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+    </ul>
+</nav>
+
+</body>
+</html>
