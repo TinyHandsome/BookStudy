@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>StudentsWithPage</title>
-    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.0-beta3/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.11.1-beta1/jquery.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.0-beta3/js/bootstrap.js"></script>
 </head>
@@ -19,9 +19,9 @@
 
         {% if page_object.has_previous %}
             <li>
-                <a href="{% url 'app:get_students_with_page' %}?page={{ page_object.next_page_number }}"
+                <a href="{% url 'app:get_students_with_page' %}?page={{ page_object.previous_page_number }}"
                    aria-label="Previous">
-                    <span aria-hidden="true">&raquo;</span>
+                    <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
         {% else %}
@@ -46,7 +46,7 @@
         {% else %}
             <li class="disabled">
                 <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&laquo;</span>
+                    <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         {% endif %}
