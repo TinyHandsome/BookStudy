@@ -33,7 +33,13 @@
         {% endif %}
 
         {% for page_index in page_range %}
-            <li><a href="{% url 'app:get_students_with_page' %}?page={{ page_index }}">{{ page_index }}</a></li>
+            {% ifequal page_index page_object.number %}
+                <li class="active"><a
+                        href="{% url 'app:get_students_with_page' %}?page={{ page_index }}">{{ page_index }}</a></li>
+            {% else %}
+                <li><a href="{% url 'app:get_students_with_page' %}?page={{ page_index }}">{{ page_index }}</a></li>
+            {% endifequal %}
+
         {% endfor %}
 
         {% if page_object.has_next %}
