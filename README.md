@@ -28,46 +28,14 @@
 6. [JDBC学习笔记](https://blog.csdn.net/qq_21579045/article/details/105386353)
 7. [JSON学习笔记](https://blog.csdn.net/qq_21579045/article/details/108577716)
 
-## 工作时的工具 | Tools.ToolsWork
-
-工作写的各种工具：
-
-1. 9-ExcelGroup：Excel分组工具
-   - 输入：excel文件
-     - 要求有两个sheet
-     - sheet1为任务安排，有表头，不要加分组列
-     - sheet2为人名，放一列，不要表头
-   - 输出：excel文件
-     - 只有一个sheet
-     - 在sheet1的基础上新增一列【分组】
-   - 可选项：
-     - 是否打乱顺序
-     - 是否保存结果
-2. 19-GetFileName：获取文件目录下的文件名，并输出为excel
-   - 输入：文件夹路径：str
-   - 输出：excel文件
-     - 编号，文件名
-   - 可选项：
-     - 是否过滤文件后缀
-
-
-
-
-
-
-
 
 
 ------
 
-我的CSDN：https://blog.csdn.net/qq_21579045
+- :cloud: 我的CSDN：https://blog.csdn.net/qq_21579045
+- :snowflake: 我的博客园：https://www.cnblogs.com/lyjun/
+- :sunny: 我的Github：https://github.com/TinyHandsome
+- :rainbow: 我的Gitee：https://gitee.com/li_yingjun
+- :palm_tree: 我的bilibili：https://space.bilibili.com/8182822
 
-我的博客园：https://www.cnblogs.com/lyjun/
-
-我的Github：https://github.com/TinyHandsome
-
-纸上得来终觉浅，绝知此事要躬行~
-
-欢迎大家过来OB~
-
-by 李英俊小朋友
+碌碌谋生，谋其所爱。:ocean:              @李英俊小朋友
