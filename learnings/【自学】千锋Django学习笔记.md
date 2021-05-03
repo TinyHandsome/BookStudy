@@ -116,7 +116,6 @@
       并输入：`python manage.py migrate`；再启动服务器：`python manage.py runserver`，现在就没有警告啦。
       
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210103225456454.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
-    
 
 ## 3. MTV简单流程
 
@@ -1092,14 +1091,11 @@
 
 ------
 
-我的CSDN：https://blog.csdn.net/qq_21579045
+- :cloud: 我的CSDN：https://blog.csdn.net/qq_21579045
+- :snowflake: 我的博客园：https://www.cnblogs.com/lyjun/
+- :sunny: 我的Github：https://github.com/TinyHandsome
+- :rainbow: 我的Gitee：https://gitee.com/li_yingjun
+- :palm_tree: 我的bilibili：https://space.bilibili.com/8182822
 
-我的博客园：https://www.cnblogs.com/lyjun/
+碌碌谋生，谋其所爱。:ocean:              @李英俊小朋友
 
-我的Github：https://github.com/TinyHandsome
-
-纸上得来终觉浅，绝知此事要躬行~
-
-欢迎大家过来OB~
-
-by 李英俊小朋友
