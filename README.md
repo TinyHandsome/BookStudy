@@ -28,16 +28,6 @@
 6. [JDBC学习笔记](https://blog.csdn.net/qq_21579045/article/details/105386353)
 7. [JSON学习笔记](https://blog.csdn.net/qq_21579045/article/details/108577716)
 
-## 常用小工具 | Tools
-
-1. 1004-XiaoshuoLocation
-   - 针对VSCode插件 **Thief-Book-VSCode** 查找关键字在对应小说的页码
-   - TODO
-     1. 将路径信息和一行显示字数存储到配置文件，而不是直接在代码中写死
-     2. 输入的书本名，就在当前路径中查找改书
-
-
-
 
 
 ------

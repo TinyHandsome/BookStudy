@@ -9,6 +9,9 @@
 @file: xiaoshuo_locatoin.py
 @time: 2020/12/19 14:07
 @desc: Thief-Book-VSCode查找小说的显示进度
+    TODO:
+        1. 将路径信息和一行显示字数存储到配置文件，而不是直接在代码中写死
+        2. 输入的书本名，就在当前路径中查找改书
 """
 
 from dataclasses import dataclass
