@@ -1,0 +1,14 @@
+Source path:... <ipython-input-200-d37c0dba5764>
+14:37:10.063869 call         2 def demo_func():
+14:37:10.066154 line         3     profile = {}
+New var:....... profile = {}
+14:37:10.066154 line         4     profile['name'] = "李英俊"
+Modified var:.. profile = {'name': '李英俊'}
+14:37:10.068157 line         5     profile['age'] = 27
+Modified var:.. profile = {'name': '李英俊', 'age': 27}
+14:37:10.069157 line         6     profile['gender'] = "male"
+Modified var:.. profile = {'name': '李英俊', 'age': 27, 'gender': 'male'}
+14:37:10.071191 line         8     return profile
+14:37:10.072154 return       8     return profile
+Return value:.. {'name': '李英俊', 'age': 27, 'gender': 'male'}
+Elapsed time: 00:00:00.010285
