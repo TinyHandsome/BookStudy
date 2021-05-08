@@ -1,14 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.11.1-beta1/jquery.js"></script>
+    <script src="{% static 'js/login.js' %}"></script>
 </head>
 <body>
 <form action="{% url 'app:login' %}" method="post">
     <span>用户名：</span> <input type="text" name="username" placeholder="精神精神">
     <br>
-    <button>精神以下</button>
+    <span>验证码：</span><input type="text" name="verify_code" placeholder="请输入下图中的验证码">
+    <br>
+    <img src="{% url 'app:get_code' %}">
+    <br>
+    <button>精神一下</button>
 </form>
 </body>
 </html>

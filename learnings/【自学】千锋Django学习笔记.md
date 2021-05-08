@@ -1075,7 +1075,41 @@
 
 3. `@property`：将函数设为类的私有属性，我们可以观测它。
 
+4. 验证码
 
+   ```python
+   def get_code(request):
+       # 初始化画布，初始化画笔
+       mode = 'RGB'
+       size = (200, 100)
+       red = get_color()
+       green = get_color()
+       blue = get_color()
+   
+       color_bg = (red, green, blue)
+       image = Image.new(mode=mode, size=size, color=color_bg)
+       imagedraw = ImageDraw(image, mode=mode)
+       imagefont = ImageFont.truetype(settings.FONT_PATH, 100)
+   
+       verify_code = generate_code()
+   
+       request.session['verify_code'] = verify_code
+   
+       for i in range(len(verify_code)):
+           fill = (get_color(), get_color(), get_color())
+           imagedraw.text(xy=(50 * i, 0), text=verify_code[i], font=imagefont, fill=fill)
+   
+       for i in range(10000):
+           fill = (get_color(), get_color(), get_color())
+           xy = (random.randrange(201), random.randrange(100))
+           imagedraw.point(xy=xy, fill=fill)
+   
+       fp = BytesIO()
+       image.save(fp, "png")
+       return HttpResponse(fp.getvalue(), content_type="image/png")
+   ```
+
+5. 
 
 
 
