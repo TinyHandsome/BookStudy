@@ -1,0 +1,2 @@
+a.txt 第1行：hello
+a.txt 第2行：world
