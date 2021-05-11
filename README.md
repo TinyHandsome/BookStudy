@@ -8,8 +8,8 @@
 
 ## 写在前面 | Head Info
 
-- 郑大姨儿（w_clzheng）专用指路牌
-  1. 正则表达式英俊专用手册：[点我传送](https://github.com/TinyHandsome/BookStudy/blob/master/books/book6_Python%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%EF%BC%88%E7%AC%AC3%E7%89%88%EF%BC%89/%E3%80%8APython%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%EF%BC%88%E7%AC%AC3%E7%89%88%EF%BC%89%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.md)
+- 郑狗贼专用指路牌
+  1. 正则表达式英俊专用手册：[点我传送](https://blog.csdn.net/qq_21579045/article/details/116023841)
 
 ## 读书笔记 | Books
 
@@ -17,8 +17,16 @@
 2. [《TensorFlow实战Google深度学习框架（第二版）》](https://blog.csdn.net/qq_21579045/category_10672814.html)
 3. [《Python数据科学手册》](https://blog.csdn.net/qq_21579045/category_10672841.html)
 4. [《机器学习实战——基于Scikit-Learn和TensorFlow》](https://blog.csdn.net/qq_21579045/category_10672881.html)
+5. [《FlaskWeb开发——基于Python的Web应用开发实战》]()
+6. [《Python核心编程（第3版）》](https://blog.csdn.net/qq_21579045/article/details/116023841)
+7. [《JavaScript基础教程（第9版）》]()
+8. [《流畅的python》]()
 
-## 视频学习笔记 | Learnings
+## 文档笔记 | Docs
+
+1. [Python魔法手册](http://magic.iswbm.com/zh/latest/index.html)
+
+## 视频笔记 | Learnings
 
 1. [ Linux学习笔记](https://blog.csdn.net/qq_21579045/article/details/95605401)
 2. [MySQL基础学习笔记](https://blog.csdn.net/qq_21579045/article/details/98111827)
@@ -27,6 +35,17 @@
 5. [Java高级学习笔记](https://www.cnblogs.com/lyjun/p/12524331.html)
 6. [JDBC学习笔记](https://blog.csdn.net/qq_21579045/article/details/105386353)
 7. [JSON学习笔记](https://blog.csdn.net/qq_21579045/article/details/108577716)
+8. [Python多线程编程学习笔记](https://blog.csdn.net/qq_21579045/article/details/113741647)
+
+## 设计笔记 | Designs
+
+### 1. Premiere
+
+### 2. After Effects
+
+### 3. Photoshop
+
+### 4. Illustrator
 
 
 
