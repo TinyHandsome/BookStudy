@@ -1,8 +1,8 @@
-# 李英俊的计算机书籍学习笔记
+# 李英俊的学习笔记
 
-件件有着落，事事有回音，凡事有交代。									——李英俊努力努力再努力
+件件有着落，事事有回音，凡事有交代。
 
-
+​        ——李英俊努力努力再努力        *更新时间：20210512*
 
 [TOC]
 
@@ -10,17 +10,20 @@
 
 - 郑狗贼专用指路牌
   1. 正则表达式英俊专用手册：[点我传送](https://blog.csdn.net/qq_21579045/article/details/116023841)
+- 我常用查询的传送门：
+  1. python数据模型的特殊方法：
+  2. 列表或元组的方法和属性：
 
 ## 读书笔记 | Books
 
-1. [《Python编程从入门到实践》]()
-2. [《TensorFlow实战Google深度学习框架（第二版）》](https://blog.csdn.net/qq_21579045/category_10672814.html)
-3. [《Python数据科学手册》](https://blog.csdn.net/qq_21579045/category_10672841.html)
-4. [《机器学习实战——基于Scikit-Learn和TensorFlow》](https://blog.csdn.net/qq_21579045/category_10672881.html)
+1. ==推荐== | [《Python编程从入门到实践》]()
+2. **别买** | [《TensorFlow实战Google深度学习框架（第二版）》](https://blog.csdn.net/qq_21579045/category_10672814.html)
+3. ==推荐== | [《Python数据科学手册》](https://blog.csdn.net/qq_21579045/category_10672841.html)
+4. **别买** | [《机器学习实战——基于Scikit-Learn和TensorFlow》](https://blog.csdn.net/qq_21579045/category_10672881.html)
 5. [《FlaskWeb开发——基于Python的Web应用开发实战》]()
-6. [《Python核心编程（第3版）》](https://blog.csdn.net/qq_21579045/article/details/116023841)
+6. **别买** | [《Python核心编程（第3版）》](https://blog.csdn.net/qq_21579045/article/details/116023841)
 7. [《JavaScript基础教程（第9版）》]()
-8. [《流畅的python》]()
+8. ==推荐== | [《流畅的python》]()
 
 ## 文档笔记 | Docs
 
