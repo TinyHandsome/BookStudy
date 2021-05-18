@@ -1113,7 +1113,14 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210517175111644.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
 
+## 14. 富文本
 
+- 带格式的文字：
+  - 博客、论坛
+    - 富文本：RTF
+    - MarkDown
+- 安装插件：`django-tinymce`（2.7.0）
+- **注意：**这里的`tiny_mce.js`我没有找到，但是在相同的目录下，找到了`tinymce.min.js`
 
 
 
