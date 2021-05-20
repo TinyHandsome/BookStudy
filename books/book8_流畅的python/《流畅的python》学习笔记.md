@@ -350,17 +350,146 @@
 
 <a name='2'>`dict`、`collections.defaultdict`和`collections.OrderedDict`的方法列表</a>
 
-|        方法         | dict | defaultdict | OrderedDIct |        描述         |
-| :-----------------: | :--: | :---------: | :---------: | :-----------------: |
-|     `d.clear()`     |  √   |      √      |      √      |    移除所有元素     |
-| `d.__contains__(k)` |  √   |      √      |      √      |   检查k是否在d中    |
-|     `d.copy()`      |  √   |      √      |      √      |       浅复制        |
-|   `d.__copy()__`    |  √   |      √      |      √      | 用于支持`copy.copy` |
-| `d.default_factory` |      |             |             |                     |
-|                     |      |             |             |                     |
-|                     |      |             |             |                     |
-|                     |      |             |             |                     |
-|                     |      |             |             |                     |
+|             方法             | dict | defaultdict | OrderedDIct |                             描述                             |
+| :--------------------------: | :--: | :---------: | :---------: | :----------------------------------------------------------: |
+|         `d.clear()`          |  √   |      √      |      √      |                         移除所有元素                         |
+|     `d.__contains__(k)`      |  √   |      √      |      √      |                        检查k是否在d中                        |
+|          `d.copy()`          |  √   |      √      |      √      |                            浅复制                            |
+|        `d.__copy()__`        |  ×   |      √      |      ×      |                     用于支持`copy.copy`                      |
+|     `d.default_factory`      |  ×   |      √      |      ×      | 在`__missing__`函数中被调用的函数，用以给未找到的元素设置值  |
+|      `d.__delitem__(k)`      |  √   |      √      |      √      |                 `del d[k]`，移除键位k的元素                  |
+| `d.fromkeys(it, [initial])`  |  √   |      √      |      √      | 将迭代器it里的元素设置为映射里的键，如果initial参数，就把它作为这些键对应的值（默认是None） |
+|    `d.get(k, [default])`     |  √   |      √      |      √      |  返回键k对应的值，如果字典里没有键k，则返回None或者default   |
+|      `d.__getitem__(k)`      |  √   |      √      |      √      |            让字典d能用`d[k]`的形式返回键k对应的值            |
+|         `d.items()`          |  √   |      √      |      √      |                     返回d里所有的键值对                      |
+|        `d.__iter__()`        |  √   |      √      |      √      |                        获取键的迭代器                        |
+|          `d.keys()`          |  √   |      √      |      √      |                         获取所有的键                         |
+|        `d.__len__()`         |  √   |      √      |      √      |          可以用`len(d)`的形式得到字典里键值对的数量          |
+|      `d.__missing__(k)`      |  ×   |      √      |      ×      |     当`__getitem__`找不到对应键的时候，这个方法会被调用      |
+|  `d.move_to_end(k, [last])`  |  ×   |      ×      |      √      | 把键位k的元素移动到最靠前或者最靠后的位置（last的默认值是True） |
+|    `d.pop(k, [default])`     |  √   |      √      |      √      | 返回键k所对应的值，然后移除这个键值对。如果没有这个键，返回None或者default |
+|        `d.popitem()`         |  √   |      √      |      √      |              随机返回一个键值对并从字典里移除它              |
+|      `d.__reversed__()`      |  ×   |      ×      |      √      |                     返回倒序的键的迭代器                     |
+| `d.setdefault(k, [default])` |  √   |      √      |      √      | 若字典里有键k，则把它对应的值设置位default，然后返回这个值；若无，则让`d[k]=default`，然后返回default |
+|       `d.__setitem__`        |  √   |      √      |      √      |              实现`d[k]=v`操作，把k对应的值设为v              |
+|  `d.update(m, [**kwargs])`   |  √   |      √      |      √      |      m可以是映射或者键值对迭代器，用来更新d里对应的条目      |
+|          `d.values`          |  √   |      √      |      √      |                      返回字典里的所有值                      |
+
+1. 用setdefault处理找不到的键
+
+   - 使用`d.get(k, default)`来代替`d[k]`，可以防止报错
+
+   - 字典处理优化
+
+     - 好的方法
+
+       ```python
+       my_dict.setdefault(key, []).append(new_value)
+       ```
+
+     - 差的方法
+
+       ```python
+       if key not in my_dict:
+       	my_dict[key] = []
+       my_dict[key].append(new_value)
+       ```
+
+     - 二者的效果是一样的，只不过后者至少要进行两次键查询——如果键不存在的话，就是三次，用`setdefault`只需要一次就可以完成整个操作。
+
+### 3.3 映射的弹性键查询
+
+1. 场景：有时候为了方便起见，就算某个键在映射里不存在，我们也希望在通过这个键读取值的时候能得到一个默认值。
+
+2. 方法：
+
+   1. `collections.defaultdict`类
+
+      - 把list构造方法作为`default_factory`来创建一个`defaultdict`
+      - 如果在创建`defaultdict`的时候没有指定`default_factory`，查询不存在的键会触发KeyError
+      - `defaultdict`里的`default_factory`只会在`__getitem__`里被调用，在其他的方法里完全不会发挥作用。比如`dd[k]`会创建默认值并返回该默认值，`dd.get(k)`就会返回None
+      - 所有这一切的背后是基于特殊方法`__missing__`实现的，它会在`defaultdict`遇到找不到的键的时候调用`default_factory`，而实际上这个特性是所有映射类型都可以选择去支持的
+
+      ```python
+      """创建一个从单词到其出现情况的映射"""
+      
+      import sys
+      import re
+      from collections import defaultdict
+      
+      WORD_RE = re.compile(r'\w+')
+      
+      # index = {}
+      index = defaultdict(list)
+      with open(sys.argv[1], encoding='utf-8') as fp:
+          for line_no, line in enumerate(fp, 1):
+              for match in WORD_RE.finditer(line):
+                  word = match.group()
+                  column_no = match.start() + 1
+                  location = (line_no, column_no)
+                  
+                  ''' 这其实是一种很不好的实现，这样写只是为了证明论点
+                  occurrences = index.get(word, [])
+                  occurrences.append(location)
+                  index[word] = occurrences
+                  '''
+                  
+                  ''' 下面是好的实现，用到了setdefault函数
+                  index.setdefault(word, []).append(location)
+                  '''
+                  
+                  ''' 通过collections.defaultdict实现，取得key没有的时候，新建这个key，并赋予默认值'''
+                  index[word].append(location)
+                  
+      # 以字母顺序打印出结果
+      for word in sorted(index, key=str.upper):
+          print(word, index[word])
+      ```
+
+   2. 自定义一个`dict`子类，然后在子类中实现`__missing__`方法
+
+      - 像`k in my_dict.keys()`这种操作在Python3中是很快的，而且即便映射类型对象很庞大也没关系。这是因为`dict.keys()`的返回值是一个**视图**。
+
+      - **视图**就像一个**集合**，而且跟字典类似的是，在视图里查找一个元素的速度很快。
+
+        ```python
+        class StrKeyDict0(dict):
+            def __missing__(self, key):
+                if isinstance(key, str):
+                    raise KeyError(key)
+                return self[str(key)]
+            
+            def get(self, key, default=None):
+                try:
+                    return self[key]
+                except KeyError:
+                    return default
+            def __contains__(self, key):
+                return key in self.keys() or str(key) in self.keys()
+        ```
+
+### 3.4 字典的变种
+
+1. `collections.OrderedDict`：这个类型在添加键的时候会保持顺序，因此键的迭代次序总是一致的。`OrderedDict` 的 `popitem `方法默认删除并返回的是字典里的最后一个元素，但是如果像 `my_odict.popitem(last=False)` 这样调用它，那么它删除并返回第一个被添加进去的元素。
+
+2. `collections.ChainMap`：该类型可以容纳数个不同的映射对象，然后在进行键查找操作的时候，这些对象会被当作一个整体被逐个查找，直到键被找到为止。这个功能在给有嵌套作用域的语言做解释器的时候很有用，可以用一个映射对象来代表一个作用域的上下文。
+
+3. `collections.Counter`：这个映射类型会给键准备一个整数计数器。每次更新一个键的时候都会增加这个计数器。所以这个类型可以用来给可散列表对象计数，或者是当成多重集来用——多重集合就是集合里的元素可以出现不止一次。
+
+4. `my_dict.most_common(n)`：统计字典中出现次数最多的数据
+
+   ```python
+   ct = Counter({'a': 10, 'b': 2, 'r': 2, 'c': 1, 'd': 1, 'z': 3})
+   ct.most_common(2)
+   
+   # [('a', 10), ('z', 3)]
+   ```
+
+5. `colllections.UserDict`：这个类其实就是把标准 `dict` 用纯 Python 又实现了一遍。跟 `OrderedDict`、`ChainMap `和 `Counter `这些开箱即用的类型不同，`UserDict `是让用户继承写子类的。
+
+   - 更倾向于从 `UserDict `而不是从 `dict `继承的主要原因是，后者有时会在某些方法的实现上走一些捷径，导致我们不得不在它的子类中重写这些方法，但是 UserDict 就不会带来这些问题。
+
+   
 
 
 
@@ -377,16 +506,13 @@
 
 
 
-
-
-学到 p131
+学到 p151
 
 ------
 
 - :cloud: 我的CSDN：https://blog.csdn.net/qq_21579045
 - :snowflake: 我的博客园：https://www.cnblogs.com/lyjun/
 - :sunny: 我的Github：https://github.com/TinyHandsome
-- :rainbow: 我的Gitee：https://gitee.com/li_yingjun
-- :palm_tree: 我的bilibili：https://space.bilibili.com/8182822
+- :rainbow: 我的bilibili：https://space.bilibili.com/8182822
 
 碌碌谋生，谋其所爱。:ocean:              @李英俊小朋友
