@@ -16,9 +16,10 @@
 </head>
 <body>
 
-<form action="#" method="post">
+<form action="{% url 'app:edit_blog' %}" method="post">
     {% csrf_token %}
-    <textarea></textarea>
+    <textarea name="content"></textarea>
+    <button>保存</button>
 </form>
 
 </body>

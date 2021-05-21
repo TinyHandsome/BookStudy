@@ -85,7 +85,7 @@ def get_path_name_extension(file_path):
 
 if __name__ == '__main__':
 
-    current_file = 'E:\study_books\盘龙.txt'
+    current_file = 'E:\study_books\星辰变.txt'
     current_single_page = 30
     xsloc = XiaoshuoLocation(current_single_page, current_file)
     xsloc.show_current_info()
