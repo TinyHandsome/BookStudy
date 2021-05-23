@@ -1109,28 +1109,92 @@
        return HttpResponse(fp.getvalue(), content_type="image/png")
    ```
 
-5. 总结
+5. 富文本
+
+   - 带格式的文字：
+     - 博客、论坛
+       - 富文本：RTF
+       - MarkDown
+   - 安装插件：`django-tinymce`（2.7.0）
+   
+6. 总结
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210517175111644.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
 
-## 14. 富文本
+## 14. 需求分析
 
-1. 富文本
-
-    - 带格式的文字：
-      - 博客、论坛
-        - 富文本：RTF
-        - MarkDown
-    - 安装插件：`django-tinymce`（2.7.0）
-2. 技术部
+1. 技术部
 
     - 产品经历
       - 产品狗
       - 一条产品线两个产品
       - 产品PRD（Product Requirement Document）产品需求文档
       - 原型图（其实就和真实网站长的差不多，只不过页面都是静态的，假的）
-
-3. 项目
+    - 后端
+      - 后端基本都是人最多的
+      - 最少2人
+        - Python
+        - Java
+        - PHP
+        - Node.js
+        - Go
+      - 根据需求进行表结构设计
+        - 有哪些表
+        - 表中有哪些字段
+        - 表有哪些关系
+    - UI
+      - UD：界面设计
+      - UE：用户体验
+    - 前端
+      - MTV
+      - HTML5 Web前端 一个人
+        - REACTNATIVE
+      - Android
+      - IOS
+    - 测试
+      - 黑盒测试
+        - 功能测试
+        - 点点测试（Excel，check_list）
+      - 白盒测试
+        - 不会正向开发，可以写代码测试你的代码
+        - 高级开发，专门用来查找bug
+    - 运维
+      - 上线
+      - 维护稳定运转
+    - 版本迭代
+      - 产品
+2. AXF项目分析
+    - 主页面显示
+      - 最简单的，数据查询，显示
+    - 商品数据展示
+      - 级联查询，排序
+    - 用户系统
+      - 核心系统
+    - 购物车系统
+      - 商品和用户的关系
+      - 订单系统
+        - 购物车数据转换成订单
+      - 支付系统
+        - 接口调用
+    - 扩展
+      - 地址管理系统
+      - 积分系统
+      - 会员级别
+      - 评价系统
+      - 优惠券系统
+      - 数据安全
+      - 过滤器
+      - 反爬
+      - 权限：用户角色
+    - 部署
+      - 动静分离部署
+3. 开始开发
+    - 基本工程搭建
+    - 前端静态搭建
+    - Model -> DB
+    - 业务逻辑开发
+    - 前后端一起来
+4. 项目
 
     - 端的概念
       - 京东自营
@@ -1165,7 +1229,7 @@
 
 
 
-学到（要学）：P66
+学到（要学）：P67
 
 ------
 
