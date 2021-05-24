@@ -12,6 +12,7 @@
 **/migrations
 **/lib
 **/out
+practice_data
 
 .*
 *.plk
