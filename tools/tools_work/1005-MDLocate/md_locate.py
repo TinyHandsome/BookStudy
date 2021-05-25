@@ -28,6 +28,9 @@ class Content:
             if line != '':
                 return line + '...'
 
+    def get_contents(self):
+        return '\n'.join(self.lines) + '\n'
+
 
 @dataclass
 class MultiWell:
@@ -38,7 +41,10 @@ class MultiWell:
     pattern = re.compile(r'(?P<level>#+)\s*(?:(?P<index>\d*)(?:\.\s*))?(?P<title>.*)')
 
     def __repr__(self):
-        return '#' * self.level + ' ' + self.get_index_info() + self.title + '(' + self.get_contents_info() + ')'
+        return self.get_all_title() + '(' + self.get_contents_info() + ')'
+
+    def get_all_title(self):
+        return '#' * self.level + ' ' + self.get_index_info() + self.title
 
     def get_index_info(self):
         if self.index:
@@ -55,6 +61,21 @@ class MultiWell:
                 infos.append(str(c))
         return '，'.join(infos)
 
+    def get_contents(self, add_select_title=False):
+        """获取该节内容，不要该节的标题，并返回字数"""
+        if add_select_title:
+            result = self.get_all_title() + '\n'
+        else:
+            result = ''
+        for c in self.contents:
+            if isinstance(c, Content):
+                result += c.get_contents()
+            else:
+                result += c.get_all_title() + '\n'
+                result += c.get_contents()
+
+        return result, len(result.replace('\n', ''))
+
 
 @dataclass
 class MDLocate:
@@ -64,6 +85,8 @@ class MDLocate:
         self.stack = LifoQueue()
         # 初始化，放一个头进去
         self.stack.put('head')
+        # 获取小说的所有内容
+        self.get_all_info()
 
     def well_check(self, line):
         """检查这一行是不是 #开头 """
@@ -85,7 +108,7 @@ class MDLocate:
 
         for line in lines:
             line = line.strip()
-            if lines != '':
+            if line != '':
                 current_line = self.well_check(line)
                 output = self.stack.get()
                 if current_line:
@@ -131,10 +154,16 @@ class MDLocate:
             last_well.contents.append(last_one)
             self.stack.put(last_well)
 
-        print(self.stack.queue)
+    def search_chapter(self, chap):
+        """
+        查找某个章节的名字，并获取所有内容（复制到粘贴板）和字数
+        如果输入的是数字，优先通过index来查找
+        否则，通过in来查找
+        """
+
 
 
 if __name__ == '__main__':
     sample_path = 'E:/1-工作/3-代码/writting/暗黑童话.md'
     mdl = MDLocate(sample_path)
-    mdl.get_all_info()
+    mdl.search_chapter(2)
