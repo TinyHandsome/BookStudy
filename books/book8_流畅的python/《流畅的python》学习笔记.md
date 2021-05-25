@@ -312,8 +312,7 @@
 7. `dq.rotate(n)`：队列的旋转操作接受一个参数n，当n>0时，队列的最右边的n个元素会被移动到队列的左边。当n<0时，最左边的n个元素会被移动到右边。
 8. `append` 和` popleft` 都是原子操作，也就说是 deque 可以在多线程程序中安全地当作先进先出的栈使用，而使用者不需要担心资源锁的问题。
 9. 其他队列的实现：
-   1. `queue`提供了`Queue`、`LifoQueue`、`PriorityQueue`。在满员的时候，这些类不会扔掉旧的元素来腾出位置。相反，如果队列满了，它就会被锁住，直到另外的线程
-      移除了某个元素而腾出了位置。这一特性让这些类很适合用来控制活跃线程的数量。
+   1. `queue`提供了`Queue`、`LifoQueue`、`PriorityQueue`。在满员的时候，这些类不会扔掉旧的元素来腾出位置。相反，如果队列满了，它就会被锁住，直到另外的线程移除了某个元素而腾出了位置。这一特性让这些类很适合用来控制活跃线程的数量。
    2. `multiprocessing`实现了自己的Queue，跟`queue.Queue`相似，是涉及给进程间通信用的。`multiprocessing.JoinableQueue`可以让任务管理变得更方便。
    3. `asyncio`里面有`Queue`、`LifoQueue`、`PriorityQueue`、`JoinableQueue`，这些类受到`queue`和`multiprocessing`模块的影响，但是为异步编程里的任务管理提供了专门的便利。
    4. `heapq`没有队列类，而是提供了`heappush`和`heappop`方法，让用户可以把可变序列当作堆队列或者优先队列来使用。
@@ -704,6 +703,106 @@
 16. 尽管如此，某些Windows 应用（尤其是 Notepad）依然会在 UTF-8 编码的文件中添加
     BOM；而且，Excel 会根据有没有 BOM 确定文件是不是 UTF-8 编码，否则，它假设内容使用 Windows 代码页（codepage）编码。UTF-8 编码的 U+FEFF 字符是一个三字节序列：`b'\xef\xbb\xbf'`。因此，如果文件以这三个字节开头，有可能是带有 BOM 的 UTF-8 文件。然而，Python 不会因为文件以 b'\xef\xbb\xbf' 开头就自动假定它是 UTF-8编码的。
 
+### 4.3 处理文本文件
+
+1. 处理文本的最佳实践是 **Unicode三明治** 。
+
+   1. 要尽早把输入（例如读取文件时）的字节序列解码成字符串。
+   2. 在程序的业务逻辑中只能处理字符串对象。在其他处理过程中，一定不能编码或解码。
+   3. 对输出来说，则要尽量晚地把字符串编码成字节序列。
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210525093248627.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+2. 如果打开文件是为了写入，但是没有指定编码参数，会使用区域设置中的默认编码，而且使用那个编码也能正确读取文件。
+
+3. 如果脚本要生成文件，而字节的内容取决于平台或同一平台中的区域设置，那么就可能导致兼容问题。
+
+4. 探索编码默认值
+
+   ```python
+   import sys, locale
+   
+   expressions = """
+   locale.getpreferredencoding()
+   type(my_file)
+   my_file.encoding
+   sys.stdout.isatty()
+   sys.stdout.encoding
+   sys.stdin.isatty()
+   sys.stdin.encoding
+   sys.stderr.isatty()
+   sys.stderr.encoding
+   sys.getdefaultencoding()
+   sys.getfilesystemencoding()
+   """
+   
+   my_file = open('dummy', 'w')
+   
+   for expression in expressions.split():
+       
+       value = eval(expression)
+       print(expression.rjust(30), '->', repr(value))
+   ```
+
+   输出：
+
+   ```
+    locale.getpreferredencoding() -> 'cp936'
+                    type(my_file) -> <class '_io.TextIOWrapper'>
+                 my_file.encoding -> 'cp936'
+              sys.stdout.isatty() -> False
+              sys.stdout.encoding -> 'UTF-8'
+               sys.stdin.isatty() -> False
+               sys.stdin.encoding -> 'cp936'
+              sys.stderr.isatty() -> False
+              sys.stderr.encoding -> 'UTF-8'
+         sys.getdefaultencoding() -> 'utf-8'
+      sys.getfilesystemencoding() -> 'utf-8'
+   ```
+
+5. 如果打开文件时没有指定`encoding`参数，默认值由`locale.getpreferredencoding()`提供
+
+6. 如果设定了`PYTHONIOENCODING`环境变量，`sys.stdout/stdin/stderr`的编码使用设定的值；否则，继承自所在的控制台；如果输入/输出重定向到文件，则由`locale.getpreferredencoding()`定义
+
+7. Python在二进制数据和字符串之间转换时，内部使用`sys.getdefaultencoding()`获得的编码；Python3很少如此，但仍有发生。这个设置不能修改。
+
+8. `sys.getfilesystemencoding()` 用于编解码文件名（不是文件内容）。把字符串参数作为文件名传给 `open()` 函数时就会使用它；如果传入的文件名参数是字节序列，那就不经改动直接传给 OS API。
+
+### 4.4 规范化Unicode字符串
+
+1. 因为 Unicode 有组合字符（变音符号和附加到前一个字符上的记号，打印时作为一个整体），所以字符串比较起来很复杂。
+
+   ```python
+   s1 = 'café'
+   s2 = 'cafe\u0301'
+   
+   s1, s2
+   len(s1), len(s2)
+   s1 == s2
+   
+   # ('café', 'café')
+   # (4, 5)
+   # False
+   ```
+
+2. 在Unicode 标准中，'é' 和 'e\u0301' 这样的序列叫“标准等价物”（canonical equivalent），应用程序应该把它们视作相同的字符。但是，Python 看到的是不同的码位序列，因此判定二者不相等。
+
+3. 这个问题的解决方案是使用 `unicodedata.normalize` 函数提供的Unicode 规范化。这个函数的第一个参数是这 4 个字符串中的一个：'NFC'、'NFD'、'NFKC' 和 'NFKD'。
+
+   ```python
+   from unicodedata import normalize
+   
+   len(normalize('NFC', s1)), len(normalize('NFC', s3))
+   # (4, 4)
+   len(normalize('NFD', s1)), len(normalize('NFD', s3))
+   # (5, 5)
+   normalize('NFC', s1) == normalize('NFC', s2)
+   # True
+   normalize('NFD', s1) == normalize('NFD', s3)
+   # True
+   ```
+
+4. 
 
 
 
@@ -730,8 +829,7 @@
 
 
 
-
-学到 p180
+学到 p208
 
 ------
 
