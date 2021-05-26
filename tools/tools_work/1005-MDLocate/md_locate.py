@@ -13,6 +13,7 @@
 
 from dataclasses import dataclass
 import re
+import pyperclip
 from queue import LifoQueue
 
 
@@ -74,7 +75,7 @@ class MultiWell:
                 result += c.get_all_title() + '\n'
                 result += c.get_contents()
 
-        return result, len(result.replace('\n', ''))
+        return result
 
 
 @dataclass
@@ -160,10 +161,42 @@ class MDLocate:
         如果输入的是数字，优先通过index来查找
         否则，通过in来查找
         """
+        try:
+            aim_index = int(chap)
+            well = self.find_index(aim_index)
+        except Exception as e:
+            aim_words = chap
+            well = self.find_title(aim_words)
 
+        if well is not None:
+            aim_contents = well.get_contents()
+            print(well.get_all_title(), '【字数:', len(aim_contents.replace('\n', '')), '】（已复制到剪贴板）')
+            pyperclip.copy(aim_contents)
+            print(aim_contents)
+        else:
+            print('未找到')
+
+    def find_index(self, index: int):
+        for well in self.stack.queue:
+            if str(index) == well.index:
+                return well
+
+        return None
+
+    def find_title(self, title: str):
+        for well in self.stack.queue:
+            if title in well.title:
+                return well
+
+        return None
 
 
 if __name__ == '__main__':
     sample_path = 'E:/1-工作/3-代码/writting/暗黑童话.md'
     mdl = MDLocate(sample_path)
-    mdl.search_chapter(2)
+    while True:
+        search = input('请输入查找字段：\n')
+        if search == '':
+            break
+        mdl.search_chapter(search)
+        print()
