@@ -13,30 +13,32 @@
      ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210427111042881.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
      
   2. 我被作者举的例子惊到了（见2.4），真的很有水平，翻译和作者本身都很厉害
-  
+
      比如下面这一句
-  
+
      ```python
      t = (1, 2, [30, 40])
      t[2] += [50, 60]
      ```
-  
+
      这两行代码的执行结果：
-  
+
      1. 抛出异常：`因为 tuple 不支持对它的元素赋值，所以会抛出 TypeError 异常。`
      2. `t[2]` 的值发生了修改：`t = (1, 2, [30, 40, 50, 60])`
      
   3. 在讲排序的时候，讲到`sorted`和`list.sort`背后使用的排序算法是Timsort，这个算法的作者是Tim Peters
-  
+
      - 这个算法的相关代码在Google对Sun的侵权案中，当作了呈堂证供。
      - 这个算法的作者也是`import this`，**python之禅**的作者。
      - 我靠，太离谱了，世界线收束，鸡皮疙瘩都起来了。
-  
+
   4. 每一章的小结真的写的太好了，方便回顾这一章讲了啥，也方便自己查漏补缺。
-  
+
   5. 延伸阅读也是惊艳啊，作者很明显博览群书，基础扎实。
-  
+
   6. 作者吹了一波《Python Cookbook（第三版）》和《Python Cookbook（第二版）》，我准备去学习学习！
+
+  7. 作者每章的小结写的很不错，每次因为知识点需要复查书籍的时候，可以先看对应章节的 **本章小结** ，再查。
 
 - 传送门：
   
@@ -802,7 +804,93 @@
    # True
    ```
 
-4. 
+4. 西方键盘通常能输出组合字符，因此用户输入的文本默认是 NFC 形式。不过，安全起见，保存文本之前，最好使用 `normalize('NFC', user_text)` 清洗字符串。
+
+5. NFC 也是 **W3C** 的“Character Model for the World Wide Web: String Matching and Searching”规范推荐的规范化形式。
+
+6. 使用 NFC 时，有些单字符会被规范成另一个单字符。这两个字符在视觉上是一样的，但是比较时并不相等，因此要规范化，防止出现意外。
+
+7. 在另外两个规范化形式（NFKC 和 NFKD）的首字母缩略词中，字母 K 表示 “compatibility”（兼容性）。这两种是较严格的规范化形式，对“兼容字符”有影响。虽然 Unicode 的目标是为各个字符提供 “规范的” 码位，但是为了兼容现有的标准，有些字符会出现多次。
+
+   微符号是一个 **“兼容字符”**。
+
+8. 使用 NFKC 和 NFKD 规范化形式时要小心，而且只能在特殊情况中使用，例如搜索和索引，而不能用于持久存储，因为这两种转换会导致数据损失。
+
+9. **大小写折叠**：`str.casefold()`，就是把所有文本变成小写，再做些其他转换，与`str.lower()`基本一致，但是存在例外：*微符号 'μ' 会变成小写的希腊字母“μ”（在多数字体中二者看起来一样）；德语 Eszett（“sharp s”，ß）会变成“ss”*
+
+10. 去掉变音符号的优势：
+
+    1. 搜索方便：人们有时很懒，或者不知道怎么正确使用变音符号，而且拼写规则会随时间变化，因此实际语言中的重音经常变来变去。
+    2. URL可读性：去掉变音符号还能让 URL 更易于阅读，至少对拉丁语系语言是如此。
+
+11. 变音符号对排序有影响的情况很少发生，只有两个词之间唯有变音符号不同时才有影响。此时，带有变音符号的词排在常规词的后面。
+
+12. 在 Python 中，非 ASCII 文本的标准排序方式是使用 `locale.strxfrm`
+    函数，根据 locale 模块的文档，这个函数会“把字符串转换成适合所在区域进行比较的形式”。
+
+13. PyUCA：Unicode 排序算法（Unicode Collation Algorithm，UCA）的纯 Python 实现。PyUCA 没有考虑区域设置。如果想定制排序方式，可以把自定义的排序表路径传给 Collator() 构造方法。PyUCA 默认使用项目自带的`allkeys.txt`。
+
+    ```python
+    import pyuca
+    
+    coll = pyuca.Collator()
+    fruits = ['caju', 'atemoia', 'cajá', 'açaí', 'acerola']
+    sorted_fruits = sorted(fruits, key=coll.sort_key)
+    sorted_fruits
+    ```
+
+14. Unicode 标准提供了一个完整的数据库（许多格式化的文本文件），不仅包括码位与字符名称之间的映射，还有各个字符的**元数据**，以及字符之间的关系。
+
+    Unicode 数据库记录了字符是否可以打印、是不是字母、是不是数字，或者是不是其他数值符号。unicodedata 模块中有几个函数用于获取字符的元数据。例如，字符在标准中的官方名称是不是组合字符（如结合波形符构成的变音符号等），以及符号对应的人类可读数值（不是码位）。
+
+15. ```python
+    import unicodedata
+    import re
+    
+    re_digit = re.compile(r'\d')
+    sample = '1\xbc\xb2\u0969\u136b\u216b\u2466\u2480\u3285'
+    
+    for char in sample:
+        print(
+            'U+%04x' % ord(char),
+            char.center(6),
+            're_dig' if re_digit.match(char) else '-',
+            'isdig' if char.isdigit() else '-',
+            'isnum' if char.isnumeric() else '-',
+            format(unicodedata.numeric(char), '5.2f'),
+            unicodedata.name(char),
+            sep='\t'
+        )
+    ```
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210527164001663.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+### 4.5 支持字符串和字节序列的双模式API
+
+1. 可以使用正则表达式搜索字符串和字节序列，但是在后一种情况中，ASCII 范围外的字节不会当成数字和组成单词的字母。
+
+   1. 字符串模式 r'\d+' 能匹配泰米尔数字和 ASCII 数字。
+   2. 字节序列模式 rb'\d+' 只能匹配 ASCII 字节中的数字。
+   3. 字符串模式 r'\w+' 能匹配字母、上标、泰米尔数字和 ASCII 数字。
+   4. 字节序列模式 rb'\w+' 只能匹配 ASCII 字节中的字母和数字。
+
+2. 字符串正则表达式有个 re.ASCII 标志，它让\w、\W、\b、\B、\d、\D、\s 和 \S 只匹配 ASCII 字符。
+
+3. 为了便于手动处理字符串或字节序列形式的文件名或路径名，os 模块提供了特殊的编码和解码函数。
+
+   1. `fsencode(filename)`：如果 filename 是 str 类型（此外还可能是 bytes 类型），使用 `sys.getfilesystemencoding()` 返回的编解码器把 filename 编码成字节序列；否则，返回未经修改的 filename 字节序列。
+
+   2. `fsdecode(filename)`：如果 filename 是 bytes 类型（此外还可能是 str 类型），使用 `sys.getfilesystemencoding()` 返回的编解码器把 filename 解码成字符串；否则，返回未经修改的 filename 字符串。
+
+   3. `surrogateescape`：在 Unix 衍生平台中，这些函数使用 surrogateescape 错误处理方式以避免遇到意外字节序列时卡住。Windows 使用的错误处理方式是 strict。
+
+      这种错误处理方式会把每个无法解码的字节替换成 Unicode 中 U+DC00 到 U+DCFF 之间的码位（Unicode 标准把这些码位称为“Low Surrogate Area”），这些码位是保留的，没有分配字符，供应用程序内部使用。编码时，这些码位会转换成被替换的字节值。
+
+   4. 在 Python 3.3 之前，编译 CPython 时可以配置在内存中使用 16 位或 32 位存储各个码位。16 位是“窄构建”（narrow build），32 位是“宽构建”（wide build）。如果想知道用的是哪个，要查看 `sys.maxunicode` 的值：65535 表示“窄构建”，不能透明地处理U+FFFF 以上的码位。“宽构建”没有这个限制，但是消耗的内存更多：每个字符占 4 个字节，就算是中文象形文字的码位大多数也只占 2 个字节。这两种构建没有高下之分，应该根据自己的需求选择。
+
+   5. 灵活的字符串表述类似于 Python 3 对 int 类型的处理方式：如果一个整数在一个机器字中放得下，那就存储在一个机器字中；否则解释器切换成变长表述，类似于 Python 2 中的 long 类型。
+
+## 5. 一等函数
 
 
 
@@ -829,7 +917,9 @@
 
 
 
-学到 p208
+
+
+学到 p238
 
 ------
 
