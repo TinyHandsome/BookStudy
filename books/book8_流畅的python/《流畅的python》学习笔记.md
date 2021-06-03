@@ -899,6 +899,54 @@
    4. 能作为函数的返回结果
 2. 人们经常将“把函数视作一等对象”简称为“一等函数”。这样说并不完美，似乎表明这是函数中的特殊群体。在 Python 中，**所有函数都是一等对象**。
 
+### 5.1 把函数视作对象
+
+1. `__doc__` 是函数对象众多属性中的一个，显示函数的备注
+
+2. `help(f)`：输出的文本来自函数对象的`__doc__`属性
+
+3. 函数对象的 **一等** 本性：
+
+   1. 把 factorial 函数赋值给变量 fact，然后通过变量名调用
+   2. 把它作为参数传给map 函数，返回一个可迭代对象，里面的元素是把第一个参数
+      （一个函数）应用到第二个参数（一个可迭代对象）中各个元素上得到的结果
+
+4. **高阶函数**：higher-order function，接受函数为参数，或者把函数作为结果返回的函数
+
+   这样的函数例如：map，sorted，reduce，filter，apply（已移除）
+
+   map、filter 和 reduce 这三个高阶函数还能见到，不过多数使用场景下都有更好的替代品。
+
+   1. 列表推导 或 生成器表达式 具有map和filter两个函数的功能，且更易于阅读
+
+      ```python
+      list(map(fact, range(6)))
+      [fact(n) for n in range(6)]
+      ```
+
+      ```python
+      list(map(factorial, filter(lambda n: n % 2, range(6))))
+      [fact(n) for n in range(7) if n % 2 != 0]
+      ```
+
+   2. reduce 是内置函数，最常用于求和，现在最好使用内置的 sum 函数，在可读性和性能方面，这是一项重大改善
+
+      sum 和 reduce 的通用思想是把某个操作连续应用到序列的元素上，累计之前的结果，把一系列值归约成一个值。
+
+      ```python
+      from functools import reduce
+      from operator import add
+      
+      reduce(add, range(100))
+      sum(range(100))
+      ```
+
+   3. all 和 any 也是内置的归约函数
+
+      - `all(iterable)`：如果 iterable 的每个元素都是真值，返回 True；`all([]) `返回True。
+      - `any(iterable)`：只要 iterable 中有元素是真值，就返回 True；`any([]) `返回False。
+
+5. **匿名函数**：lambda 关键字在 Python 表达式内创建匿名函数。
 
 
 
@@ -924,7 +972,8 @@
 
 
 
-学到 p238
+
+学到 p245
 
 ------
 
