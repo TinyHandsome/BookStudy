@@ -12,6 +12,7 @@
 **/migrations
 **/lib
 **/out
+**/desktop.ini
 practice_data
 
 .*
