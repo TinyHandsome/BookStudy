@@ -45,6 +45,7 @@
   1. [列表、元组、数组、双向队列的方法和属性](#1)
   2. [`dict`、`collections.defaultdict`和`collections.OrderedDict`的方法列表](#2)
   3. [集合的数学运算、集合的比较运算符、集合类型的其他方法](#3)
+  4. [用户定义函数的属性](#4)
 
 ## 1. Python数据模型
 
@@ -949,6 +950,65 @@
 5. **匿名函数**：lambda 关键字在 Python 表达式内创建匿名函数。
 
    lambda 句法只是语法糖：与 def 语句一样，lambda 表达式会创建函数对象。这是 Python 中几种可调用对象的一种。
+   
+6. 调用类的时候会运行类的`__new__`方法创建一个实例，然后运行`__init__`方法，初始化实例，最后把实例返回给调用方。
+
+   - 因为Python没有new运算符，所以调用类相当于调用函数。
+   - 如果类定义了`__call__`方法，那么它的实例可以作为函数调用。
+
+7. 生成器函数：使用`yield`关键字的函数或方法。调用生成器函数返回的是生成器对象。（生成器函数还可以作为协程）
+
+8. Python 中有各种各样可调用的类型，因此判断对象能否调用，最安全的方法是使用内置的 `callable()` 函数
+
+   ```python
+   [callable(obj) for obj in (abs, str, 13)]
+   
+   # [True, True, False]
+   ```
+
+9. 任何 Python 对象都可以表现得像函数。为此，只需实现实例方法 `__call__`
+
+10. **函数内省**：除了`__doc__`，函数对象还有其他属性：`dir(factorial)`
+
+    ```
+    ['__annotations__', '__call__', '__class__', '__closure__', '__code__', '__defaults__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__get__', '__getattribute__', '__globals__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__kwdefaults__', '__le__', '__lt__', '__module__', '__name__', '__ne__', '__new__', '__qualname__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
+    ```
+
+    1. 与用户定义的常规类一样，函数使用`__dict__`属性存储赋予它的用户属性。这相当于一种基本形式的注解。
+
+    2. 列出 **常规对象没有** 而 **函数对象有** 的属性：
+
+       ```python
+       class C: pass
+       obj = C()
+       def func(): pass
+       
+       str(sorted(set(dir(func)) - set(dir(obj))))
+       ```
+
+       ```
+       ['__annotations__', '__call__', '__closure__', '__code__', '__defaults__', '__get__', '__globals__', '__kwdefaults__', '__name__', '__qualname__']
+       ```
+
+    3. <a name='4'>用户定义函数的属性</a>：
+
+       |       名称        |      类型      |                   说明                   |
+       | :---------------: | :------------: | :--------------------------------------: |
+       | `__annotations__` |      dict      |            参数和返回值的注解            |
+       |    `__call__`     | method-wrapper |      实现()运算符；即可调用对象协议      |
+       |   `__closure__`   |     tuple      | 函数闭包，即自由变量的绑定（通常是None） |
+       |    `__code__`     |      code      |   编译成字节码的函数元数据和函数定义体   |
+       |  `__defaults__`   |     tuple      |             形式参数的默认值             |
+       |     `__get__`     | method-wrapper |            实现只读描述符协议            |
+       |   `__globals__`   |      dict      |         函数所在模块中的全局变量         |
+       | `__kwdefaults__`  |      dict      |        仅限关键字形式参数的默认值        |
+       |    `__name__`     |      str       |                 函数名称                 |
+       |  `__qualname__`   |      str       |    函数的限定名称，如`Random.choice`     |
+
+### 5.2 从定位参数到仅限关键字参数
+
+1. 仅限关键字参数：keyword-only argument，调用函数时使用`*`和`**`展开可迭代对象，映射到单个参数。
+2. 在传参的时候，将字典加上`**`作为参数传递，实现的是字典中所有元素作为单个参数传入，同名的键回绑定到对应的**具名**参数上，余下的则被`**attrs`捕获。
 
 
 
