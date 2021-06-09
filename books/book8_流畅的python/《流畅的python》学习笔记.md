@@ -46,6 +46,7 @@
   2. [`dict`、`collections.defaultdict`和`collections.OrderedDict`的方法列表](#2)
   3. [集合的数学运算、集合的比较运算符、集合类型的其他方法](#3)
   4. [用户定义函数的属性](#4)
+  5. [利用`inspect.signature`提取函数签名](#5)
 
 ## 1. Python数据模型
 
@@ -1005,7 +1006,7 @@
        |    `__name__`     |      str       |                 函数名称                 |
        |  `__qualname__`   |      str       |    函数的限定名称，如`Random.choice`     |
 
-### 5.2 参数
+### 5.2 函数的参数和注解
 
 1. 仅限关键字参数：keyword-only argument，调用函数时使用`*`和`**`展开可迭代对象，映射到单个参数。
 
@@ -1039,6 +1040,20 @@
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210608173931143.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
    2. 函数对象有个 `__defaults__` 属性，它的值是一个元组，里面保存着定位参数和关键字参数的默认值。仅限关键字参数的默认值在 `__kwdefaults__` 属性中。然而，参数的名称在 `__code__` 属性中，它的值是一个 code 对象引用，自身也有很多属性。
+   
+5. <a name='5'>通过`inspect.signature`提取函数的签名</a>
+
+   1. `inspect.signature` 函数返回一个 `inspect.Signature` 对象，它有一个 `parameters` 属性，这是一个有序映射，把参数名和 `inspect.Parameter` 对象对应起来。各个`Parameter `属性也有自己的属性，例如 `name`、`default `和 `kind`。特殊的 `inspect._empty` 值表示没有默认值，考虑到 `None `是有效的默认值（也经常这么做），而且这么做是合理的。
+   2. `kind`的属性的值，为`_ParameterKind`类中的5个值之一：
+      1. `POSITIONAL_OR_KEYWORD`：可以通过定位参数和关键字参数传入的形参（多数 Python 函数的参数属于此类）。
+      2. `VAR_POSITIONAL`：定位参数元组。
+      3. `VAR_KEYWORD`：关键字参数元组。
+      4. `KEYWORD_ONLY`：仅限关键字参数（Python 3 新增）。
+      5. `POSITIONAL_ONLY`：仅限定位参数；目前，Python 声明函数的句法不支持，但是有些使用 C 语言实现且不接受关键字参数的函数（如 divmod）支持。
+
+6. 函数注解
+
+   1. 函数声明中的各个参数可以在 : 之后增加注解表达式。如果参数有默认值，注解放在参数名和 = 号之间。
 
 
 
