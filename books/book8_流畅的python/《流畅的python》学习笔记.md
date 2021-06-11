@@ -1054,6 +1054,132 @@
 6. 函数注解
 
    1. 函数声明中的各个参数可以在 : 之后增加注解表达式。如果参数有默认值，注解放在参数名和 = 号之间。
+   2. 如果想注解返回值，在 ) 和函数声明末尾的 : 之间添加 -> 和一个表达式。那个表达式可以是任何类型。
+   3. 注解中最常用的类型是类（如 str 或 int）和字符串（如 'int > 0'）
+   4. 注解不会做任何处理，只是存储在函数的 `__annotations__` 属性中
+   5. Python 对注解所做的唯一的事情是，把它们存储在函数的`__annotations__`属性里。仅此而已，Python 不做检查、不做强制、不做验证，什么操作都不做。换句话说，**注解对 Python 解释器没有任何意义。**
+   6. 函数注解的最大影响或许不是让 Bobo 等框架自动设置，而是为 IDE 和
+      lint 程序等工具中的静态类型检查功能提供额外的类型信息。
+
+### 5.3 支持函数式编程的包
+
+1. operator模块
+
+   1. 使用reduce函数和一个匿名函数计算阶乘
+
+      ```python
+      def fact(n):
+          return reduce(lambda a,b: a*b, range(1, n+1))
+      ```
+
+   2. operator 模块为多个算术运算符提供了对应的函数，从而避免编写 `lambda a, b: a*b` 这种平凡的匿名函数
+
+      ```python
+      def fact2(n):
+          return reduce(mul, range(1, n+1))
+      ```
+
+   3. 使用 itemgetter 排序一个元组列表
+
+      - itemgetter 使用 `[]` 运算符，因此它不仅支持序列，还支持映射和任何实现 `__getitem__` 方法的类。
+
+      - `itemgetter(1)` 的作用与 `lambda fields:fields[1]` 一样
+
+      ```python
+      metro_data = [
+      ('Tokyo', 'JP', 36.933, (35.689722, 139.691667)),
+      ('Delhi NCR', 'IN', 21.935, (28.613889, 77.208889)),
+      ('Mexico City', 'MX', 20.142, (19.433333, -99.133333)),
+      ('New York-Newark', 'US', 20.104, (40.808611, -74.020386)),
+      ('Sao Paulo', 'BR', 19.649, (-23.547778, -46.635833)),
+      ]
+      
+      from operator import itemgetter
+      for city in sorted(metro_data, key=itemgetter(2)):
+          print(city)
+      ```
+
+   4. 如果把多个参数传给 itemgetter，它构建的函数会返回提取的值构成的元组：
+
+      ```python
+      cc_name = itemgetter(1, 0)
+      
+      for city in metro_data:
+          print(cc_name(city))
+      ```
+
+   5. attrgetter 与 itemgetter 作用类似，它创建的函数根据名称提取对象的属性
+
+      ```python
+      from collections import namedtuple
+      
+      LatLong = namedtuple('LatLong', 'lat long')
+      Metropolis = namedtuple('Metropolis', 'name cc pop coord')
+      metro_areas = [Metropolis(name, cc, pop, LatLong(lat, long)) for name, cc, pop, (lat, long) in metro_data]
+      metro_areas
+      metro_areas[0].coord.lat
+      
+      from operator import attrgetter
+      name_lat = attrgetter('name', 'coord.lat')
+      for city in sorted(metro_areas, key=attrgetter('coord.lat')):
+          print(name_lat(city))
+      ```
+
+   6. attrgetter 与 itemgetter 个人总结：
+
+      1. itemgetter：偏向于数组的切片操作
+      2. attrgetter：偏向于类的属性获取操作
+
+   7. methodcaller 的作用与 attrgetter 和 itemgetter 类似，它会自行创建函数，methodcaller 创建的函数会在对象上调用参数指定的方法：
+
+      ```python
+      from operator import methodcaller
+      s = 'The tiem has come'
+      
+      upcase = methodcaller('upper')
+      upcase(s)
+      hiphenate = methodcaller('replace', ' ', '-')
+      hiphenate(s)
+      ```
+
+   8. methodcaller还可以冻结某些参数，也就是部分应用（partial application），这与`functoosl.partial`函数的作用类似。
+
+2. 使用`functools.partial`冻结参数
+
+   - functools.partial 这个高阶函数用于部分应用一个函数。部分应用是指，基于一个函数创建一个新的可调用对象，把原函数的某些参数固定。使用这个函数可以把接受一个或多个参数的函数改编成需要回调的API，这样参数更少。
+
+     ```python
+     from operator import mul
+     from functools import partial
+     triple = partial(mul, 3)
+     triple(7)
+     
+     list(map(triple, range(1, 10)))
+     ```
+
+   - 固定nfc函数，标准化字符串编码处理
+
+     ```python
+     import unicodedata, functools
+     nfc = functools.partial(unicodedata.normalize, 'NFC')
+     
+     s1 = 'café'
+     s2 = 'cafe\u0301'
+     
+     s1, s2
+     s1 == s2
+     nfc(s1) == nfc(s2)
+     ```
+
+   - `functools.partialmethod` 函数的作用与 `partial`一样，不过是用于处理方法的。
+
+     - 对于类方法，partial就没办法了，所以新引用了`partialmethod`
+     - [参考链接](https://www.jianshu.com/p/e9d6bccecb9f)
+     - [Python functools 模块](https://blog.windrunner.me/python/functools.html)
+
+   - functools 模块中的 lru_cache 函数令人印象深刻，它会做备忘（memoization），这是一种自动优化措施，它会存储耗时的函数调用结果，避免重新计算。
+
+## 6. 使用一等函数实现涉及模式
 
 
 
@@ -1078,9 +1204,7 @@
 
 
 
-
-
-学到 p258
+学到 p278
 
 ------
 
