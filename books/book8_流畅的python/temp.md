@@ -247,6 +247,91 @@
 
 5. nonlocal声明
 
+   1. 上面的操作时引入了list（可变对象） series，用来保存每一次的值，然后这个series 是 所谓的 自由变量
+
+   2. 但是对数字、字符串、元组等不可变类型来说，只能读取，不能更新，就不是所谓的 自由变量了，因此不会保存在闭包中。
+
+   3. `nonlocal`生命可以把变量标记为自由变量，即使在函数中为变量赋予新值了，也会变成自由变量。
+
+   4. 如果为 `nonlocal `声明的变量赋予新值，闭包中保存的绑定会更新。
+
+   5. 优化后的闭包
+
+      ```python
+      def make_averager():
+          count = 0
+          total = 0
+          
+          def averager(new_value):
+              nonlocal count, total
+              count += 1
+              total += new_value
+              return total/count
+          
+          return averager
+      ```
+
+   6. nonlocal是python3的特性，在python2中需要把内部函数需要修改的变量存储为可变对象（如字典或简单的实例）的元素或属性，并且把那个对象绑定给一个自由变量。
+
+### 7.3 装饰器
+
+1. 实现一个简单的装饰器：定义了一个装饰器，它会在每次调用被装饰的函数时计时，然后把经过的时间、传入的参数和调用的结果打印出来。
+
+   ```python
+   import time
+   
+   def clock(func):
+       def clocked(*args):
+           # 记录初始时间t0
+           t0 = time.perf_counter()
+           # 调用原来的 factorial 函数，保存结果
+           result = func(*args)
+           # 计算经过的时间
+           elapsed = time.perf_counter() - t0
+           
+           # 格式化收集的数据，然后打印出来
+           name = func.__name__
+           arg_str = ', '.join(repr(arg) for arg in args)
+           print('[%0.8fs] %s(%s) -> %r' % (elapsed, name, arg_str, result))
+           # 返回第 2 步保存的结果
+           return result
+       return clocked
+   
+   @clock
+   def snooze(seconds):
+       time.sleep(seconds)
+       
+   @clock
+   def factorial(n):
+       return 1 if n < 2 else n * factorial(n - 1)
+   
+   if __name__ == '__main__':
+       print('*' * 40, 'Calling snooze(.123)')
+       snooze(.123)
+       print('*' * 40, 'Calling factorial(6)')
+       print('6! = ', factorial(6))
+   ```
+
+   ```
+   **************************************** Calling snooze(.123)
+   [0.12354480s] snooze(0.123) -> None
+   **************************************** Calling factorial(6)
+   [0.00000040s] factorial(1) -> 1
+   [0.00003500s] factorial(2) -> 2
+   [0.00004590s] factorial(3) -> 6
+   [0.00005500s] factorial(4) -> 24
+   [0.00006390s] factorial(5) -> 120
+   [0.00007470s] factorial(6) -> 720
+   6! =  720
+   ```
+
+2. 这是装饰器的典型行为：把被装饰的函数替换成新函数，二者接受相同的参数，而且（通常）返回被装饰的函数本该返回的值，同时还会做些额外操作。
+
+   > 装饰器：动态地给一个对象添加一些额外的职责
+   >
+   > ——《设计模式：可复用面向对象软件的基础》
+
+3. 
 
 
 
@@ -254,5 +339,4 @@
 
 
 
-
-学到 p316
+学到 p322
