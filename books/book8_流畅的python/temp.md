@@ -331,7 +331,114 @@
    >
    > ——《设计模式：可复用面向对象软件的基础》
 
-3. 
+3. 上述实现的clock装饰器有几个缺点：
+
+   1. 不支持关键字参数
+   2. 遮盖了被装饰函数的`__name__`和`__doc__`属性
+
+4. 使用`functools.wraps`装饰器把相关属性从func复制到clocked中，同时还可以正确处理关键字参数
+
+   ```python
+   import time
+   from functools import wraps
+   
+   def clock(func):
+       @wraps(func)
+       def clocked(*args, **kwargs):
+           t0 = time.perf_counter()
+           result = func(*args, **kwargs)
+           elapsed = time.perf_counter() - t0
+           name = func.__name__
+           
+           arg_lst = []
+           if args:
+               arg_lst.append(', '.join(repr(arg) for arg in args))
+           if kwargs:
+               pairs = ['%s=%r' % (k, w) for k, w in sorted(kwargs.items())]
+               arg_lst.append(', '.join(pairs))
+           arg_str = ', '.join(arg_lst)
+           print('[%0.8fs] %s(%s) -> %r' % (elapsed, name, arg_str, result))
+           return result
+       return clocked
+   ```
+
+5. 标准库中的装饰器
+
+   1. python 内置了三个用于装饰方法的函数：property、classmethod、staticmethod
+   2. functools：wraps、lru_cache、singledispatch
+
+6. 使用`functools.lru_cache`做备忘，memoization，这是一项优化技术，它把耗时的函数的结果保存起来，避免传入相同的参数时重复计算。
+
+   - LRU：Least Recently Used，表明缓存不会无限制增长，一段时间不用的缓存条目会被扔掉。
+   - 注意，必须像常规函数哪一行调用`lru_cache`：`@functools.lru_cache()`，这是因为`lru_cache`可以接受配置参数。
+   - 除了优化递归算法之外，`lru_cache`在从Web中获取信息的应用中也能发挥巨大作用。
+
+7. `functools.lru_cache(maxsize=128, typed=False)`
+
+   - maxsize 参数指定存储多少个调用的结果。缓存满了之后，旧的结果会被扔掉，腾出空间。为了得到最佳性能，maxsize 应该设为 2 的幂。
+   - typed 参数如果设为 True，把不同参数类型得到的结果分开保存，即把通常认为相等的浮点数和整数参数（如 1 和 1.0）区分开。
+   - lru_cache 使用字典存储结果，而且键根据调用时传入的定位参数和关键字参数创建，所以被 lru_cache 装饰的函数，它的所有参数都必须是可散列的。
+
+8. 单分派泛函数
+
+   1. 因为 Python **不支持重载方法或函数**，所以我们不能使用不同的签名定义htmlize 的变体，也无法使用不同的方式处理不同的数据类型。
+
+   2. 在Python 中，一种常见的做法是把 htmlize 变成一个分派函数，使用一串 if/elif/elif，调用专门的函数，如htmlize_str、htmlize_int，等等。这样不便于模块的用户扩展，还显得笨拙：时间一长，分派函数 htmlize 会变得很大，而且它与各个专门函数之间的耦合也很紧密。
+
+   3. `functools.singledispatch`装饰器可以把整体方案拆分成多个模块，甚至可以为你无法修改的类提供专门的函数。
+
+   4. 使用 `@singledispatch` 装饰的普通函数会变成泛函数（generic function）：根据第一个参数的类型，以不同方式执行相同操作的一组函数。
+
+      > 这才称得上是单分派。如果根据多个参数选择专门的函数，那就是多分派了。
+
+   5. singledispatch 创建一个自定义的htmlize.register 装饰器，把多个函数绑在一起组成一个泛函数
+
+      ```python
+      from functools import singledispatch
+      from collections import abc
+      import numbers
+      import html
+      
+      @singledispatch
+      def htmlize(obj):
+          content = html.escape(repr(obj))
+          return '<pre>{}</pre>'.format(content)
+      
+      @htmlize.register(str)
+      def _(text):
+          content = html.escape(text).replace('\n', '<br>\n')
+          return '<p>{0}</p>'.format(content)
+      
+      @htmlize.register(numbers.Integral)
+      def _(n):
+          return '<pre>{0} (0x{0:x})</pre>'
+      
+      @htmlize.register(tuple)
+      @htmlize.register(abc.MutableSequence)
+      def _(seq):
+          inner = '</li>\n<li>'.join(htmlize(item) for item in seq)
+          return '<ul>\n<li>' + inner + '</li>\n</ul>'
+      ```
+
+   6. `numbers.Integral` 是 `int` 的虚拟超类
+
+   7. 可以叠放多个 `register `装饰器，让同一个函数支持不同类型
+
+   8. 只要可能，注册的专门函数应该处理抽象基类（如 numbers.Integral和 abc.MutableSequence），不要处理具体实现（如 int 和 list）。这样，代码支持的兼容类型更广泛。
+
+   9. 使用抽象基类检查类型，可以让代码支持这些抽象基类现有和未来的具体子类或虚拟子类
+
+   10. `@singledispatch` 不是为了把 Java 的那种方法重载带入Python
+
+   11. 在一个类中为同一个方法定义多个重载变体，比在一个函数中使用一长串 if/elif/elif/elif 块要更好。
+
+   12. 但是这两种方案都有缺陷，因为它们让代码单元（类或函数）承担的职责太多。
+
+   13. `@singledispath` 的优点是支持模块化扩展：各个模块可以为它支持的各个类型注册一个专门函数。
+
+   14. 装饰器是函数，因此可以组合起来使用（即，**可以在已经被装饰的函数上应用装饰器**）
+
+9. 叠放装饰器
 
 
 
@@ -339,4 +446,5 @@
 
 
 
-学到 p322
+学到 p330
+
