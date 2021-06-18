@@ -251,7 +251,7 @@
 
    2. 但是对数字、字符串、元组等不可变类型来说，只能读取，不能更新，就不是所谓的 自由变量了，因此不会保存在闭包中。
 
-   3. `nonlocal`生命可以把变量标记为自由变量，即使在函数中为变量赋予新值了，也会变成自由变量。
+   3. `nonlocal`声明可以把变量标记为自由变量，即使在函数中为变量赋予新值了，也会变成自由变量。
 
    4. 如果为 `nonlocal `声明的变量赋予新值，闭包中保存的绑定会更新。
 
@@ -440,11 +440,131 @@
 
 9. 叠放装饰器
 
+   下述代码等价
+
+   ```python
+   @d1
+   @d2
+   def f():
+   	print('f')
+   	
+   f = d1(d2(f))
+   ```
+
+10. 参数化装饰器
+
+    ```python
+    registry = set()
+    def register(active=True):
+        def decorate(func):
+            print('running register(active=%s )->decorate(%s)' % (active, func))
+            if active:
+                registry.add(func)
+            else:
+                registry.discard(func)
+            
+            return func
+        return decorate
+    
+    @register(active=False)
+    def f1():
+        print('running f1()')
+        
+    @register()
+    def f2():
+        print('running f2()')
+        
+    def f3():
+        print('running f3()')
+    ```
+
+    1. 这里decorate时装饰器，必须返回一个函数
+    2. register是装饰器工厂函数，因此返回的是一个装饰器decorate
+    3. 即使不传入参数，register也必须作为函数调用：`@register()`
+    4. 如果不使用 @ 句法，那就要像常规函数那样使用 register；若想把 f 添加到 registry 中，则装饰 f 函数的句法是` register()(f)`；不想添加（或把它删除）的话，句法是 `register(active=False)(f)`
+
+11. 参数化clock装饰器
+
+    ```python
+    import time
+    
+    DEFAULT_FMT = '[{elapsed:0.8f}s] {name}({args}) -> {result}'
+    
+    def clock(fmt=DEFAULT_FMT):
+        def decorate(func):
+            def clocked(*_args):
+                t0 = time.time()
+                _result = func(*_args)
+                elapsed = time.time() - t0
+                name = func.__name__
+                args = ", ".join(repr(arg) for arg in _args)
+                result = repr(_result)
+                print(fmt.format(**locals()))
+                return _result
+            return clocked
+        return decorate
+    
+    if __name__ == '__main__':
+        @clock()
+        def snooze(seconds):
+            time.sleep(seconds)
+        
+        for i in range(3):
+            snooze(.123)
+    ```
+
+    ```
+    [0.12328148s] snooze(0.123) -> None
+    [0.12369442s] snooze(0.123) -> None
+    [0.12362432s] snooze(0.123) -> None
+    ```
+
+    1. clock：参数化装饰器工厂函数
+    2. decorate：真正的装饰器
+    3. clocked：包装被装饰的函数
+    4. `_result`：被装饰函数返回的真正结果
+    5. `_args`：clocked的参数，args用于显示的字符串
+    6. result：`_result`的字符串表现形式，用于显示
+
+12. 装饰器的参数
+
+    ```python
+    @clock('{name}: {elapsed}s')
+    def snooze(seconds):
+        time.sleep(seconds)
+    
+    for i in range(3):
+        snooze(.123)
+    ```
+
+    ```
+    snooze: 0.12300252914428711s
+    snooze: 0.12314867973327637s
+    snooze: 0.1238546371459961s
+    ```
+
+    ```python
+    @clock('{name}({args}) dt={elapsed:0.3f}s')
+    def snooze(seconds):
+        time.sleep(seconds)
+    
+    for i in range(3):
+        snooze(.123)
+    ```
+
+    ```
+    snooze(0.123) dt=0.124s
+    snooze(0.123) dt=0.123s
+    snooze(0.123) dt=0.123s
+    ```
+
+    
 
 
 
 
 
 
-学到 p330
+
+学到 p340
 
