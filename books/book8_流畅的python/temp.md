@@ -668,6 +668,153 @@
 
 4. `eval()` 函数用来执行一个字符串表达式，并返回表达式的值。
 
+5. classmethod：第一个参数是类本身，最常见的用途是定义备选构造方法
+
+6. staticmethod：第一个参数不是特殊的值，其实静态方法就是普通的函数，只是碰巧在类的定义体中，而不是在模块层定义
+
+7. 作者对staticmethod的态度是：”不是特别有用“，因为如果想定义不需要与类进行交互的函数，只需要在模块中定义就好了。
+
+### 9.2 格式化显示
+
+1. 内置的 `format()` 函数和 `str.format()` 方法把各个类型的格式化方式委托给相应的 `.__format__(format_spec)` 方法
+
+   - `format(my_obj, format_spec)`里的第二个参数
+
+   - `str.format()`方法的格式字符串，`{}`里代换字段中冒号后面的部分
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210706104922610.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+2. `{0.mass:5.3e}`这样的格式字符串其实包含两部分
+
+   - 冒号左边的`.mass`在代换字段句法中是字段名
+   - 冒号后面的`5.3e`是格式说明符
+   - 格式说明符使用的表示法叫 **格式规范微语言** ，Format Specification Mini-Language
+
+3. 格式规范微语言为一些内置类型提供了专用的表示代码
+
+   1. b 和 x 分别表示二进制和十六进制的 int 类型
+   2. f 表示小数形式的 float 类型
+   3. % 表示百分数形式
+
+4. 格式规范微语言是可扩展的，因为各个类可以自行决定如何解释format_spec 参数
+
+5. 如果类没有定义 `__format__ ` 方法，从 object 继承的方法会返回`str(my_object)`
+
+6. 在格式规范微语言中，整数使用的代码有`bcdoxXn`，浮点数使用的代码有`eEfFgGn%`，字符串使用的代码有`s`
+
+7. 使用两个前导下划线（尾部没有下划线，或者有一个下划线），把属性标记为私有的
+
+8. ` @property`装饰器把读值方法标记为属性
+
+9. 要想创建可散列的类型，不一定要实现特性，也不一定要保护实例属性。只需正确地实现 `__hash__` 和 `__eq__` 方法即可
+
+10. 如果定义的类型有标量数值，可能还要实现 `__int__ `和 `__float__ `方法（分别被 `int()` 和 `float()` 构造函数调用），以便在某些情况下用于强制转换类型。此外，还有用于支持内置的 `complex()` 构造函数的 `__complex__ `方法
+
+    ```python
+    from array import array
+    import math
+    
+    class Vector2d:
+        typecode = 'd'
+        
+        def __init__(self, x, y):
+            self.__x = float(x)
+            self.__y = float(y)
+        
+        @property
+        def x(self):
+            return self.__x
+        
+        @property
+        def y(self):
+            return self.__y
+            
+        def __iter__(self):
+            return (i for i in (self.x, self.y))
+            
+        def __repr__(self):
+            class_name = type(self).__name__
+            return '{}({!r}, {!r})'.format(class_name, *self)
+        
+        def __str__(self):
+            return str(tuple(self))
+        
+        def __bytes__(self):
+            return (bytes([ord(self.typecode)]) + bytes(array(self.typecode, self)))
+        
+        def __eq__(self, other):
+            return tuple(self) == tuple(other)
+        
+        def __abs__(self):
+            return math.hypot(self.x, self.y)
+        
+        def __bool__(self):
+            return bool(abs(self))
+        
+        @classmethod
+        def frombytes(cls, octets):
+            typecode = chr(octets[0])
+            memv = memoryview(octets[1:]).cast(typecode)
+            return cls(*memv)
+        
+        def angle(self):
+            return math.atan2(self.y, self.x)
+        
+        def __hash__(self):
+            return hash(self.x) ^ hash(self.y)
+        
+        def __format__(self, fmt_spec=''):
+            if fmt_spec.endswith('p'):
+                fmt_spec = fmt_spec[: -1]
+                coords = (abs(self), self.angle())
+                outer_fmt = '<{}, {}>'
+            else:
+                coords = self
+                outer_fmt = '({}, {})'
+                components = (format(c, fmt_spec) for c in coords)
+                return outer_fmt.format(*components)
+    ```
+
+### 9.3 Python的私有属性和受保护的属性
+
+1. 私有属性需要在前面加两根下划线，Python 会把属性名存入实例的
+   `__dict__` 属性中，而且会在前面加上一个下划线和类名
+
+   - 父类：_Dog__mood
+   - 子类：_Beagle__mood
+   - 这个语言特性叫 **名称改写** （name mangling）
+
+2. Python的私有属性是可以被修改的，通过上述名称修改
+
+3. 受保护属性：
+
+   - Python 解释器不会对使用单个下划线的属性名做特殊处理，不过这是很多 Python 程序员严格遵守的约定，他们不会在类外部访问这种属性。
+   - 不过在模块中，顶层名称使用一个前导下划线的话，的确会有影响：对 `from mymod import *` 来说，mymod 中前缀为下划线的名称不会被导入。然而，依旧可以使用 `from mymod import _privatefunc` 将其导入。
+
+4. 使用`__slots__`类属性节省空间
+
+   - 为了使用底层的散列表提升访问速度，字典会消耗大量内存。如果要处理数百万个属性不多的实例，通过 `__slots__ ` 类属性，能节省大量内存，方法是让解释器在元组中存储实例属性，而不用字典。
+
+   - 定义 `__slots__ ` 的方式是，创建一个类属性，使用 `__slots__ ` 这个名字，并把它的值设为一个字符串构成的可迭代对象，其中各个元素表示各个实例属性。
+
+     ```python
+     __slots__ = ('__x', '__y')
+     ```
+
+   - 在类中定义 `__slots__` 属性的目的是告诉解释器：“这个类中的所有实例属性都在这儿了！”这样，Python 会在各个实例中使用类似元组的结构存储实例变量，从而避免使用消耗内存的 `__dict__` 属性。如果有数百万个实例同时活动，这样做能节省大量内存。
+
+   - 如果类中定义了 `__slots__` 属性，而且想把实例作为弱引用的目标，那么要把 `'__weakref__'` 添加到 `__slots__` 中。
+
+5. 如果使用得当，`__slots__` 能显著节省内存
+
+   - 每个子类都要定义 `__slots__` 属性，因为解释器会忽略继承的 `__slots__` 属性
+   - 实例只能拥有 `__slots__` 中列出的属性，除非把 `'__dict__'` 加入 `__slots__` 中（这样做就失去了节省内存的功效）
+   - 如果不把 `'__weakref__'` 加入 `__slots__`，实例就不能作为弱引用的目标
+
+6. 覆盖类属性
+
+   
+
 
 
 
@@ -678,5 +825,5 @@
 
  
 
-学到 p390
+学到 p413
 
