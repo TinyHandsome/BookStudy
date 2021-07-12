@@ -855,6 +855,152 @@
 
 8. `reduce(function, iterable, initializer)`：使用的时候最好提供第三个参数，这样能避免异常。如果序列为空，`initializer` 是返回的结果；否则，在归约中使用它作为第一个参数，因此应该使用恒等值。比如，对 +、| 和 ^ 来说， `initializer` 应该是 0；而对 * 和 & 来说，应该是 1。
 
+9. `zip`：使用 zip 函数能轻松地并行迭代两个或更多可迭代对象，它返回的元组可以拆包成变量，分别对应各个并行输入中的一个元素。
+
+   - zip 有个奇怪的特性：当一个可迭代对象耗尽后，它不发出警告就停止
+   - `itertools.zip_longest` 函数的行为有所不同：使用可选的 `fillvalue`（默认值为 None）填充缺失的值，因此可以继续产出，直到最长的可迭代对象耗尽
+
+   ```python
+   from array import array
+   import reprlib
+   import math
+   import numbers
+   import functools
+   import operator
+   import itertools
+   
+   class Vector:
+       typecode = 'd'
+       
+       def __init__(self, components):
+           self._components = array(self.typecode, components)
+           
+       def __iter__(self):
+           return iter(self._components)
+       
+       def __repr__(self):
+           components = reprlib.repr(self._components)
+           components = components[components.find('['):-1]
+           return 'Vector({})'.format(components)
+       
+       def __str__(self):
+           return str(tuple(self))
+       
+       def __bytes__(self):
+           return (bytes([ord(self.typecode)]) + bytes(self._components))
+       
+       def __eq__(self, other):
+           return tuple(self) == tuple(other)
+       
+       def __abs__(self):
+           return math.sqrt(sum(x * x for x in self))
+       
+       def __bool__(self):
+           return bool(abs(self))
+       
+       def __len__(self):
+           return len(self._components)
+       
+   #     def __getitem__(self, index):
+   #         return self._components[index]
+   
+       def __getitem__(self, index):
+           cls = type(self)
+           # 如果传入的参数是切片，就返回改切片生成的Vector类
+           if isinstance(index, slice):
+               return cls(self._components[index])
+           # 如果传入的参数是数，就返回列表中的元素
+           elif isinstance(index, numbers.Integral):
+               return self._components[index]
+           # 否则就报错啦
+           else:
+               msg = '{cls.__name__} indices must be integers'
+               raise TypeError(msg.format(cls=cls))
+       
+       shortcut_names = 'xyzt'
+       def __getattr__(self, name):
+           cls = type(self)
+           
+           if len(name) == 1:
+               pos = cls.shortcut_names.find(name)
+               if 0 <= pos < len(self._components):
+                   return self._components[pos]
+           
+           msg = '{.__name__!r} object has no attribute {!r}'
+           raise AttributeError(msg.format(cls, name))
+           
+       def __setattr__(self, name, value):
+           cls = type(self)
+           if len(name) == 1:
+               if name in cls.shortcut_names:
+                   error = 'readonly attribute {attr_name!r}'
+               elif name.islower():
+                   error = "can't set attributes 'a' to 'z' in {cls_name!r}"
+               else:
+                   error = ''
+               
+               if error:
+                   msg = error.format(cls_name=cls.__name__, attr_name=name)
+                   raise AttributeError(msg)
+           super().__setattr__(name, value)
+           
+       def __eq__(self, other):
+   #         return tuple(self) == tuple(other)
+           # 为了提高比较的效率，使用zip函数
+   #         if len(self) != len(other):
+   #             return False      
+   #         for a, b in zip(self, other):
+   #             if a != b:
+   #                 return False
+   #         return True
+           
+           # 过用于计算聚合值的整个 for 循环可以替换成一行 all 函数调用：
+           # 如果所有分量对的比较结果都是 True，那么结果就是 True。
+           return len(self) == len(other) and all(a == b for a, b in zip(self, other))
+       
+       def __hash__(self):
+           # 创建一个生成器表达式，惰性计算各个分量的散列值
+           # hashes = (hash(x) for x in self._components)
+           # 这里换成map方法
+           hashes = map(hash, self._components)
+           
+           # 把hashes提供给reduce函数，第三个参数0是初始值
+           return functools.reduce(operator.xor, hashes, 0)
+       
+       def angle(self, n):
+           r = math.sqrt(sum(x * x for x in self[n:]))
+           a = math.atan2(r, self[n-1])
+           if (n == len(self) - 1) and (self[-1] < 0):
+               return math.pi * 2 - a
+           else:
+               return a
+           
+       def angles(self):
+           return (self.angle(n) for n in range(1, len(self)))
+       
+       def __format__(self, fmt_spec=''):
+           if fmt_spec.endswith('h'):
+               # 超球面坐标
+               fmt_spec = fmt_spec[:-1]
+               coords = itertools.chain([abs(self)], self.angles())
+               outer_fmt = '<{}>'
+           else:
+               coords = self
+               outer_fmt = '({})'
+           components = (format(c, fmt_spec) for c in coords)
+           return outer_fmt.format(', '.join(components))
+               
+       @classmethod
+       def frombytes(cls, octets):
+           typecode = chr(octets[0])
+           memv = memoryview(octets[1:]).cast(typecode)
+           return cls(memv)
+   ```
+
+## 11. 接口：从协议到抽象基类
+
+
+
 
 
 
