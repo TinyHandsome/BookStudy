@@ -1056,6 +1056,78 @@
       - 虽然没有 `__iter__` 方法，但是 Foo 实例是可迭代的对象，因为发现有 `__getitem__` 方法时，Python 会调用它，传入从 0 开始的整数索引，尝试迭代对象
       - 鉴于序列协议的重要性，如果没有 `__iter__` 和 `__contains__`方法，Python 会调用 `__getitem__` 方法，设法让迭代和 in 运算符可用。
 
+   3. shuffle 函数要调换集合中元素的位置，只实现了`__getitem__`即是只实现了不可变的序列协议，可变的序列还必须提供`__setitem__`方法。
+
+   4. **猴子补丁**：在运行时修改类或模块，而不改动源码
+
+   5. **协议是动态的**：`random.shuffle` 函数不关心参数的类型，只要那个对象实现了部分可变序列协议即可。即便对象一开始没有所需的方法也没关系，后来再提供也行。
+
+   6. **“鸭子类型”**：对象的类型无关紧要，只要实现了特定的协议即可。
+
+3. Alex Martelli的水禽
+
+   1. 用isinstance检查对象的类型，而不是`type(foo) is bar`。
+
+   2. 白鹅类型，goose typing，指只要`cls`是抽象基类，即`cls`的元类是`abc.ABCMeta`，就可以使用`isinstance(obj, cls)`
+
+   3. Python 的抽象基类还有一个重要的实用优势：可以使用 `register` 类方法在终端用户的代码中把某个类“声明”为一个抽象基类的“虚拟”子类
+
+   4. 无需注册，`abc.Sized`也能把Struggle识别为自己的子类，只要实现了特殊方法`__len__`即可。要使用正确的句法和语义实现，前者要求没有参数，后者要求返回一个非负整数，指明对象的长度。**如果不使用规范的语法和语义实现特殊方法，如`__len__`，会导致非常严重的问题**
+
+      ```python
+      class Struggle:
+          def __len__(self):
+              return 23
+      
+      from collections import abc
+      isinstance(Struggle(), abc.Sized)
+      ```
+
+   5. 在 Python 3.4 中没有能把字符串和元组或其他不可变序列区分开的抽象基类，因此必须测试 str：`isinstance(x, str)`。
+
+   6. EAFP和LBYL
+
+      1. EAFP：**E**asier to **A**sk for **F**orgiveness than **P**ermission，请求宽恕比许可更容易
+
+         - 操作前不检查，出了问题由异常处理来处理
+
+         - 代码表现：try...except...
+
+         ```python
+         try:
+             x = test_dict["key"]
+         except KeyError:
+             # key 不存在
+         ```
+
+      2. LBYL：**L**ook **B**efore **Y**ou **L**eap，三思而后行
+
+         - 操作前先检查，再执行
+         - 代码表现：if...else...
+
+         ```python
+         if "key" in test_dict:
+             x = test_dict["key"]
+         else:
+             # key 不存在
+         ```
+
+      3. EAFP 的异常处理往往也会影响一点性能，因为在发生异常的时候，程序会进行保留现场、回溯traceback等操作，但在异常发生频率比较低的情况下，性能相差的并不是很大。
+
+      4. 而 LBYL 则会消耗更高的固定成本，因为无论成败与否，总是执行额外的检查。
+
+      5. 相比之下，如果不引发异常，EAFP 更优一些，
+
+      6. Python 的动态类型（duck typing）决定了 EAFP，而 Java等强类型（strong typing）决定了 LBYL
+
+   7. 定义抽象基类的子类
+
+      1. 导入时，Python不会检查抽象方法的实现，在运行时实例化类的时候才会真正检查。因此，如果没有正确实现某个抽象方法，Python会抛出TypeError异常。
+
+      2. MutableSequence 抽象基类和 collections.abc 中它的超类的UML类图（箭头由子类指向祖先；以斜体显示的名称是抽象类和抽象方法）
+
+         ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210715195644418.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
 
 
 
@@ -1066,5 +1138,5 @@
 
  
 
-学到 p476
+学到 p485
 
