@@ -1127,6 +1127,51 @@
       2. MutableSequence 抽象基类和 collections.abc 中它的超类的UML类图（箭头由子类指向祖先；以斜体显示的名称是抽象类和抽象方法）
 
          ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210715195644418.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+      
+   8. 标准库中的抽象基类
+
+      1. `collections.abc` 模块中各个抽象基类的 UML 类图
+
+         ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210717112728709.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+      2. Iterable、Container 和 Sized
+
+         - 各个集合应该继承这三个抽象基类，或者至少实现兼容的协议。
+         - Iterable 通过 `__iter__ `方法支持迭代
+         - Container 通过 `__contains__ `方法支持 in 运算符
+         - Sized 通过 `__len__ `方法支持 `len()` 函数
+
+      3. Sequence、Mapping 和 Set
+
+         - 这三个是主要的不可变集合类型，而且各自都有可变的子类
+
+      4. MappingView
+
+         - 映射方法 .items()、.keys() 和 .values() 返回的对象分别是 ItemsView、KeysView 和 ValuesView 的实例
+
+      5. Callable 和 Hashable
+
+         - 这两个抽象基类与集合没有太大的关系，只不过因为 `collections.abc` 是标准库中定义抽象基类的第一个模块，而它们又太重要了，因此才把它们放到 `collections.abc` 模块中
+         - 这两个抽象基类的主要作用是为内置函数 `isinstance `提供支持，以一种安全的方式判断对象能不能调用或散列
+         - 若想检查是否能调用，可以使用内置的 callable() 函数；但是没有类似的 hashable() 函数，因此测试对象是否可散列，最好使用 `isinstance(my_obj, Hashable)`
+
+      6. Iterator
+
+         - Iterable 的子类
+
+   9. 抽象基类的金字塔
+
+      1. numbers包定义的是 **数字塔**
+         - Number
+         - Complex
+         - Real
+         - Rational
+         - Integral
+      2. 检查一个数是不是整数：`isinstance(x, numbers.Integral)`，这样代码就可以接受int、bool
+      3. 检查一个数是不是浮点数：`isinstance(x, number.Real)`，这样代码就可以接受bool、int、float、fractions.Fraction，还有外部库如Numpy
+      4. deciaml.Decimal没有注册为numbers.Real的虚拟子类，是因为，如果你的程序需要Decimal的精度，要防止与其他低精度数字类型混合，尤其是浮点数
+
+   10. 定义并使用一个抽象基类
 
 
 
@@ -1138,5 +1183,5 @@
 
  
 
-学到 p485
+学到 p492
 
