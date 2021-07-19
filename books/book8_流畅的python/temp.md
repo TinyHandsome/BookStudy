@@ -1172,6 +1172,63 @@
       4. deciaml.Decimal没有注册为numbers.Real的虚拟子类，是因为，如果你的程序需要Decimal的精度，要防止与其他低精度数字类型混合，尤其是浮点数
 
    10. 定义并使用一个抽象基类
+   
+       1. 抽象方法示例：
+   
+          ```python
+          import abc
+          
+          class Tombola(abc.ABC):
+              @abc.abstractmethod
+              def load(self, iterable):
+                  """从可迭代对象中添加元素"""
+              
+              @abc.abstractmethod
+              def pick(self):
+                  """随机删除元素，然后将其返回
+                  如果实例为空，这个方法应该抛出 LookupError
+                  """
+              
+              def loaded(self):
+                  """如果至少有一个元素，返回True，否则返回False"""
+                  return bool(self.inspect())
+              
+              def inspect(self):
+                  """返回一个有序元组，由当前元素构成"""
+                  items = []
+                  while True:
+                      try:
+                          items.append(self.pick())
+                      except LookupError:
+                          break
+                  self.load(items)
+                  return tuple(sorted(items))
+          ```
+   
+       2. 抽象方法可以有实现代码。即便实现了，子类也必须覆盖抽象方法，但是在子类中可以使用 super() 函数调用抽象方法，为它添加功能，而不是从头开始实现
+   
+       3. IndexEror和KeyError是LookupError的子类
+   
+          1. IndexError：尝试从序列中获取索引超过最后位置的元素时抛出
+          2. KeyError：使用不存在的键从映射中获取元素时，抛出 KeyError 异常
+   
+   11. 抽象基类语法详解
+   
+       1. 可以通过装饰器堆叠的方式，声明抽象类方法、抽象静态方法、抽象属性等。
+   
+          ```python
+          class MyABC(abc.ABC):
+              @classmethod
+              @abc.abstractmethod
+              def an_abstract_classmethod(cls, ...):
+                  pass
+          ```
+   
+       2. 与其他方法描述符一起使用时，`abstractmethod()` 应该放在 **最里层**
+   
+   12. 定义Tombola抽象基类的子类
+   
+       1. 
 
 
 
@@ -1183,5 +1240,5 @@
 
  
 
-学到 p492
+学到 p497
 
