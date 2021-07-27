@@ -1556,6 +1556,161 @@
     - 对序列类型来说，+ 通常要求两个操作数属于同一类型
     - 而 += 的右操作数往往可以是任何可迭代对象
 
+## 14. 可迭代的对象、迭代器和生成器
+
+- 迭代器模式（Iterator pattern）：迭代是数据处理的基石。扫描内存中放不下的数据集时，我们要找到一种惰性获取数据项的方式，即按需一次获取一个数据项。
+- 迭代器：用于从集合中取出元素
+- 生成器：用于“凭空”生成元素
+- 在 Python社区中，大多数时候都把迭代器和生成器视作同一概念
+
+1. 单词序列
+
+   1. 第一版Sentence
+
+      ```python
+      import re
+      import reprlib
+      
+      RE_WORD = re.compile('\w+')
+      
+      class Sentence:
+          def __init__(self, text):
+              self.text = text
+              self.words = RE_WORD.findall(text)
+          
+          def __getitem__(self, index):
+              return self.words[index]
+          
+          def __len__(self):
+              return len(self.words)
+          
+          def __repr__(self):
+              return 'Sentence(%s)' % reprlib.repr(self.text)
+      ```
+
+   2. 序列可以迭代的原因：iter函数，解释器需要迭代对象 x 时，会自动调用 iter(x)。
+
+   3. 内置的 iter 函数有以下作用：
+
+      1. 检查对象是否实现了 `__iter__ `方法，如果实现了就调用它，获取一个迭代器
+      2. 如果没有实现 `__iter__ `方法，但是实现了 `__getitem__` 方法，Python 会创建一个迭代器，尝试按顺序（从索引 0 开始）获取元素
+      3. 如果尝试失败，Python 抛出 TypeError 异常，通常会提示“C object is not iterable”（C 对象不可迭代），其中 C 是目标对象所属的类
+
+   4. 这是鸭子类型（duck typing）的极端形式：不仅要实现特殊的 `__iter__` 方法，还要实现 `__getitem__` 方法，而且 `__getitem__` 方法的参数是从 0 开始的整数（int），这样才认为对象是可迭代的
+
+   5. 白鹅类型（goose typing）理论中，可迭代对象的定义简单一些，不过没那么灵活：如果实现了 `__iter__` 方法，那么就认为对象是可迭代的。此时，不需要创建子类，也不用注册，因为 abc.Iterable 类实现了 `__subclasshook__` 方法
+
+   6. 检查对象 x 能否迭代，最准确的方法是：
+
+      1. 调用 iter(x) 函数，如果不可迭代，再处理 TypeError 异常。
+      2. 这比使用 isinstance(x, abc.Iterable) 更准确
+      3. 因为 iter(x) 函数会考虑到遗留的 `__getitem__` 方法，而 abc.Iterable 类则
+         不考虑
+
+2. 可迭代的对象与迭代器的对比
+
+   1. 可迭代的对象和迭代器之间的关系：Python 从可迭代的对象中获取迭代器
+   2. StopIteration 异常表明迭代器到头了
+   3. 标准的迭代器接口有两个方法：
+      1. `__next__`：返回下一个可用的元素，如果没有元素了，抛出 StopIteration异常
+      2. `__iter__`：返回 self，以便在应该使用可迭代对象的地方使用迭代器，例如在 for 循环中
+   4. 在`Iterator(Iterable)`源码中，根据`__subclasshook__(cls, C)`函数识别C是不是Iterator的子类。这种方法是通过在`C.__mro__`中找是否同时存在`__next__`和`__iter__`方法
+   5. 检查对象 x 是否为迭代器最好的方式是调用 `isinstance(x, abc.Iterator)`
+   6. 代器是这样的对象：
+      1. 实现了无参数的 `__next__` 方法，返回序列中的下一个元素；
+      2. 如果没有元素了，那么抛出 StopIteration 异常
+      3. Python 中的迭代器还实现了 `__iter__` 方法，因此迭代器也可以迭代
+
+3. 典型的迭代器
+
+   1. 构建==可迭代的对象==和==迭代器==时经常会出现错误，原因是**混淆了二者**
+
+      1. 可迭代的对象有个 `__iter__` 方法，每次都实例化一个新的迭代器
+      2. 而迭代器要实现 `__next__` 方法，返回单个元素，此外还要实现 `__iter__` 方法，返回迭代器本身
+
+   2. **迭代器可以迭代，但是可迭代的对象不是迭代器**
+
+   3. 迭代器模式可用来：
+
+      1. 访问一个聚合对象的内容而无需暴露它的内部表示
+      2. 支持对聚合对象的多种遍历
+      3. 为遍历不同的聚合结构提供一个统一的接口（即支持多态迭代）
+
+   4. 为了“支持多种遍历”，必须能从同一个可迭代的实例中获取多个**独立的迭代器**，而且各个迭代器要能维护自身的内部状态，因此这一模式正确的实现方式是，每次调用 iter(my_iterable) 都新建一个独立的迭代器。这就是为什么这个示例需要定义 SentenceIterator 类
+
+   5. 可迭代的对象一定不能是自身的迭代器。也就是说，可迭代的对象必须实现 `__iter__` 方法，但不能实现 `__next__ `方法
+
+   6. 另一方面，迭代器应该一直可以迭代。迭代器的 `__iter__` 方法应该返回自身
+
+   7. 第二版Sentence
+
+      ```python
+      import re
+      import reprlib
+      
+      RE_WORD = re.compile('\w+')
+      
+      class Sentence:
+          def __init__(self, text):
+              self.text = text
+              self.words = RE_WORD.findall(text)
+          
+          def __repr__(self):
+              return 'Sentence(%s)' % reprlib.repr(self.text)
+          
+          def __iter__(self):
+              return SentenceIterator(self.words)
+          
+      
+      class SentenceIterator:
+          def __init__(self, words):
+              self.words = words
+              self.index = 0
+              
+          def __next__(self):
+              try:
+                  word = self.words[self.index]
+              except IndexError:
+                  raise StopIteration()
+              self.index += 1
+              return word
+          
+          def __iter__(self):
+              return self
+      ```
+
+4. 生成器函数
+
+   1. 达到 **实现相同功能，但符合Python习惯** 的方式：用生成器函数代替SentenceIterator 类
+
+      ```python
+      import re
+      import reprlib
+      
+      RE_WORD = re.compile('\w+')
+      
+      class Sentence:
+          def __init__(self, text):
+              self.text = text
+              self.words = RE_WORD.findall(text)
+          
+          def __repr__(self):
+              return 'Sentence(%s)' % reprlib.repr(self.text)
+          
+          def __iter__(self):
+              for word in self.words:
+                  yield word
+              return 
+      ```
+
+   2. 这个 return 语句不是必要的；这个函数可以直接“落空”，自动返回。不管有没有 return 语句，生成器函数都不会抛出 StopIteration 异常，而是在生成完全部值之后会直接退出
+
+   3. 生成器函数的工作原理
+
+      1. 只要Python函数的定义体中有yield关键字，该函数就是生成器函数
+      2. 调用生成器函数时，会返回一个生成器对象
+      3. 也就是说，生成器函数是生成器工厂
+
 
 
 
@@ -1564,5 +1719,5 @@
 
  
 
-学到 p584
+学到 p610
 
