@@ -1711,6 +1711,450 @@
       2. 调用生成器函数时，会返回一个生成器对象
       3. 也就是说，生成器函数是生成器工厂
 
+   4. 描述：
+
+      1. 函数返回值；
+      2. 调用生成器函数返回生成器；
+      3. 生成器产出或生成值
+      4. 生成器不会以常规的方式“返回”值：生成器函数定义体中的 return 语句会触发生成器对象抛出 StopIteration 异常
+
+5. 惰性实现
+
+   1. 惰性求值（lazy evaluation）和 及早求值（eager evaluation）是编程语言理论方面的技术术语
+
+   2. re.finditer 函数是 re.findall 函数的惰性版本，返回的不是列表，而是一个生成器，能节省大量内存
+
+   3. Sentence类第4版：
+
+      ```python
+      import re
+      import reprlib
+      
+      RE_WORD = re.compile('\w+')
+      
+      class Sentence:
+          def __init__(self, text):
+              self.text = text
+          
+          def __repr__(self):
+              return 'Sentence(%s)' % reprlib.repr(self.text)
+          
+          def __iter__(self):
+              
+              for match in RE_WORD.finditer(self.text):
+                  yield match.group()
+      ```
+
+6. 生成器表达式
+
+   1. 生成器表达式可以理解为列表推导的惰性版本：不会迫切地构建列表，而是返回一个生成器，按需惰性生成元素
+
+   2. 如果列表推导是制造列表的工厂，那么生成器表达式就是制造生成器的工厂
+
+   3. 生成器表达式会产出生成器
+
+      ```python
+      import re
+      import reprlib
+      
+      RE_WORD = re.compile('\w+')
+      
+      class Sentence:
+          def __init__(self, text):
+              self.text = text
+          
+          def __repr__(self):
+              return 'Sentence(%s)' % reprlib.repr(self.text)
+          
+          def __iter__(self):
+              return (match.group() for match in RE_WORD.finditer(self.text))
+      ```
+
+   4. 生成器表达式是语法糖：完全可以替换成生成器函数，不过有时使用生成器表达式更便利
+
+7. 何时使用生成器表达式
+
+   1. 如果函数或构造方法只有一个参数，传入生成器表达式时不用写一对调用函数的括号，再写一对括号围住生成器表达式，**只写一对括号就行了**
+   2. 如果生成器表达式后面还有其他参数，那么必须使用括号围住，否则会抛出 SyntaxError 异常
+
+8. 等差数列生成器
+
+   1. 类生成器
+
+      ```python
+      class ArithmeticProgression:
+          def __init__(self, begin, step, end=None):
+              self.begin = begin
+              self.step = step
+              self.end = end
+              
+          def __iter__(self):
+              result = type(self.begin + self.step)(self.begin)
+              forever = self.end is None
+              index = 0
+              while forever or result < self.end:
+                  yield result
+                  index += 1
+                  result = self.begin + self.step * index
+      ```
+
+   2. 函数生成器
+
+      ```python
+      def aritpro_gen(begin, step, end=None):
+          result = type(begin + step)(begin)
+          forever = end is None
+          index = 0
+          while forever or result < end:
+              yield result
+              index += 1
+              result = begin + step * index
+      ```
+
+   3. 使用itertools模块生成等差数列
+
+      ```python
+      import itertools
+      
+      gen = itertools.count(1, .5)
+      next(gen)
+      ```
+
+   4. `itertools.takewhile`
+
+      - 它会生成一个使用另一个生成器的生成器
+
+      - 在指定的条件计算结果为 False 时停止
+
+      - 可以把这两个函数结合在一起使用
+
+        ```python
+        gen = itertools.takewhile(lambda n: n < 3, itertools.count(1, .5))
+        ```
+
+   5. 生成器工厂，返回的是一个生成器
+
+      ```python
+      import itertools
+      
+      def aritpro_gen(begin, step, end=None):
+          first = type(begin + step)(begin)
+          ap_gen = itertools.count(first, step)
+          if end is not None:
+              ap_gen = itertools.takewhile(lambda n: n < end, ap_gen)
+          return ap_gen
+      ```
+
+9. 标准库中的生成器函数，[参考链接](https://www.jb51.net/article/123094.htm)
+
+   1. 下面大多数函数都接受一个断言参数（predicate），这个参数是个布尔函数，有一个参数，会应用到输入中的每个元素上，用于判断元素是否包含在输出中。
+
+      用于过滤的生成器函数
+
+      |   模块    |                        函数                        |                             说明                             |
+      | :-------: | :------------------------------------------------: | :----------------------------------------------------------: |
+      | itertools |             compress(it, selector_it)              | 并行处理两个可迭代的对象；如果 selector_it 中的元素是真值，产出 it 中对应的元素 |
+      | itertools |              dropwhile(predicate, it)              | 处理 it，跳过 predicate 的计算结果为真值的元素，然后产出剩下的各个元素（不再进一步检查） |
+      | （内置）  |               filter(predicate, it)                | 把 it 中的各个元素传给 predicate，如果predicate(item) 返回真值，那么产出对应的元素；如果 predicate 是 None，那么只产出真值元素 |
+      | itertools |             filterfalse(predicate, it)             | 与 filter 函数的作用类似，不过 predicate 的逻辑是相反的：predicate 返回假值时产出对应的元素 |
+      | itertools | islice(it, stop) 或islice(it, start, stop, step=1) | 产出 it 的切片，作用类似于 s[:stop] 或s[start:stop:step]，不过 it 可以是任何可迭代的对象，而且这个函数实现的是惰性操作 |
+      | itertools |              takewhile(predicate, it)              | predicate 返回真值时产出对应的元素，然后立即停止，不再继续检查 |
+      
+   2. 上述函数测试
+
+      1. `compress(it, selector_it)`
+
+         按照真值表筛选元素
+
+         ```python
+         import itertools
+         
+         temp = [1, 0, -1, 2, 4, 9]
+         temp_select = [x > 2 for x in temp]
+         it = itertools.compress(temp, temp_select)
+         
+         list(it)
+         # [4, 9]
+         ```
+
+      2. `dropwhile(predicate, it)`
+
+         按照真值函数丢弃掉列表和迭代器前面的元素
+
+         ```python
+         import itertools
+         
+         x = itertools.dropwhile(lambda e: e < 5, range(10))
+         
+         list(x)
+         # [5, 6, 7, 8, 9]
+         ```
+
+      3. `filter(predicate, it)`
+
+         过滤函数为True的元素
+
+         ```python
+         x = filter(lambda e: e < 5, range(10))
+         
+         list(x)
+         # [0, 1, 2, 3, 4]
+         ```
+
+      4. `filterfalse(predicate, it)`
+
+         保留对应真值为False的元素
+
+         ```python
+         import itertools
+         
+         x = itertools.filterfalse(lambda e: e < 5, (1, 5, 3, 6, 9, 4))
+         list(x)
+         # [5, 6, 9]
+         ```
+
+      5. `islice(it, stop) 或 islice(it, start, stop, step=1)`
+
+         对迭代器进行切片
+
+         ```python
+         import itertools
+         
+         x = itertools.islice(range(10), 0, 9, 2)
+         list(x)
+         # [0, 2, 4, 6, 8]
+         ```
+
+      6. `takewhile(predicate, it)`
+
+         与dropwhile相反，保留元素直至真值函数值为假（有顺序，一旦为假，后面的就不管了）
+
+         ```python
+         import itertools
+         
+         x = itertools.takewhile(lambda x: x.lower() in 'aeiou', 'Aardvark')
+         list(x)
+         # ['A', 'a']
+         ```
+
+   3. 下一组是用于映射（map）的生成器函数：在输入的单个可迭代对象（map 和starmap 函数处理多个可迭代的对象）中的各个元素上做计算，然后返回结果
+
+      - 生成器函数会从输入的可迭代对象中的各个元素中产出一个元素
+
+      - 如果输入来自多个可迭代的对象，第一个可迭代的对象到头后就停止输出
+
+      - 用于映射的生成器函数
+
+        |   模块    |              函数               |                             说明                             |
+        | :-------: | :-----------------------------: | :----------------------------------------------------------: |
+        | itertools |     accumulate(it, [func])      | 产出累积的总和；如果提供了 func，那么把前两个元素传给它，然后把计算结果和下一个元素传给它，以此类推，最后产出结果 |
+        | （内置）  |  enumerate(iterable, start=0)   | 产出由两个元素组成的元组，结构是 (index, item)，其中 index 从 start 开始计数，item 则从 iterable 中获取 |
+        | （内置）  | map(func, it1, [it2, ..., itN]) | 把 it 中的各个元素传给func，产出结果；如果传入 N 个可迭代的对象，那么 func 必须能接受 N 个参 数，而且要并行处理各个可迭代的对象 |
+        | itertools |        starmap(func, it)        | 把 it 中的各个元素传给 func，产出结果；输入的 可迭代对象应该产出可迭代的元素 iit，然后以 func(*iit) 这种形式调用 func |
+
+   4. 上述函数测试
+
+      1. `accumulate(it, [func])`
+
+         简单来说就是累加
+
+         ```python
+         import itertools
+         
+         sample = [5, 4, 2, 8, 7, 6, 3, 0, 9, 1]
+         print(list(itertools.accumulate(sample)))
+         # [5, 9, 11, 19, 26, 32, 35, 35, 44, 45]
+         print(list(itertools.accumulate(sample, min)))
+         # [5, 4, 2, 2, 2, 2, 2, 0, 0, 0]
+         print(list(itertools.accumulate(sample, max)))
+         # [5, 5, 5, 8, 8, 8, 8, 8, 9, 9]
+         
+         import operator
+         print(list(itertools.accumulate(sample, operator.mul)))
+         # [5, 20, 40, 320, 2240, 13440, 40320, 0, 0, 0]
+         print(list(itertools.accumulate(range(1, 11), operator.mul)))
+         # [1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]
+         ```
+
+      2. `enumerate(iterable, start=0)`
+
+         生成编号
+
+         ```python
+         print(list(enumerate('albatroz', 1)))
+         # [(1, 'a'), (2, 'l'), (3, 'b'), (4, 'a'), (5, 't'), (6, 'r'), (7, 'o'), (8, 'z')]
+         ```
+
+      3. `map(func, it1, [it2, ..., itN])`
+
+         ```python
+         import itertools
+         
+         print(list(map(operator.mul, range(11), range(1, 12, 1))))
+         # [0, 2, 6, 12, 20, 30, 42, 56, 72, 90, 110]
+         ```
+
+         ```python
+         import itertools
+         
+         print(list(map(lambda a,b : (a, b), range(11), [2, 4, 8])))
+         # [(0, 2), (1, 4), (2, 8)]
+         ```
+
+      4. `starmap(func, it)`
+
+         类似map，`itertools`模块的`starmap()`函数实际上是`map()`函数的`*a`版本，[参考链接](https://geek-docs.com/python/python-functional-programming/starmap-and-map-apply-to-data.html)
+
+         ```python
+         import itertools
+         
+         print(list(itertools.starmap(operator.mul, enumerate('albatroz', 1))))
+         # ['a', 'll', 'bbb', 'aaaa', 'ttttt', 'rrrrrr', 'ooooooo', 'zzzzzzzz']
+         
+         sample = [5, 4, 2, 8, 7, 6, 3, 0, 9, 1]
+         print(list(itertools.starmap(lambda a, b: b / a, enumerate(itertools.accumulate(sample), 1))))
+         # [5.0, 4.5, 3.6666666666666665, 4.75, 5.2, 5.333333333333333, 5.0, 4.375, 4.888888888888889, 4.5]
+         ```
+
+   5. 这一组是用于合并的生成器函数，这些函数都从输入的多个可迭代对象中产出元素。chain 和 chain.from_iterable 按顺序（一个接一个）处理输入的可迭代对象，而 product、zip 和 zip_longest 并行处理输入的各个可迭代对象
+
+      合并多个可迭代对象的生成器函数
+
+      |   模块    |                    函数                    |                             说明                             |
+      | :-------: | :----------------------------------------: | :----------------------------------------------------------: |
+      | itertools |            chain(it1, ..., itN)            | 先产出 it1 中的所有元素，然后产出 it2 中的所有元素，以此类推，无缝连接在一起 |
+      | itertools |          chain.from_iterable(it)           | 产出 it 生成的各个可迭代对象中的元素，一个接一个，无缝连接在一起；it 应该产出可迭代的元素，例如可迭代的对象列表 |
+      | itertools |      product(it1, ..., itN, repeat=1)      | 计算笛卡儿积：从输入的各个可迭代对象中获取元素，合并成由 N 个元素组成的元组，与嵌套的 for 循环效果一样；repeat 指明重复处理 |
+      | （内置）  |             zip(it1, ..., itN)             | 并行从输入的各个可迭代对象中获取元素，产出由 N 个元素组成的元组，只要有一个可迭代的对象到头了，就默默地停止 |
+      | itertools | zip_longest(it1, ..., itN, fillvalue=None) | 并行从输入的各个可迭代对象中获取元素，产出由 N 个元素组成的元组，等到最长的可迭代对象到头后才停止，空缺的值使用 fillvalue 填充 |
+
+   6. 上述函数测试
+
+      1. `chain(it1, ..., itN)`
+
+         ```python
+         list(itertools.chain('ABC', range(2)))
+         # ['A', 'B', 'C', 0, 1]
+         ```
+
+      2. `chain.from_iterable(it)`
+
+         chain.from_iterable 函数从可迭代的对象中获取每个元素，然后按顺序把元素连接起来，前提是各个元素本身也是可迭代的对象
+
+         ```python
+         list(itertools.chain(enumerate('ABC')))
+         # [(0, 'A'), (1, 'B'), (2, 'C')]
+         ```
+
+         ```python
+         list(itertools.chain.from_iterable(enumerate('ABC')))
+         # [0, 'A', 1, 'B', 2, 'C']
+         ```
+
+      3. `zip(it1, ..., itN)`和`zip_longest(it1, ..., itN, fillvalue=None)`
+
+         ```python
+         list(zip('ABC', range(5)))
+         # [('A', 0), ('B', 1), ('C', 2)]
+         ```
+
+         ```python
+         list(itertools.zip_longest('ABC', range(5)))
+         # [('A', 0), ('B', 1), ('C', 2), (None, 3), (None, 4)]
+         ```
+
+         ```python
+         list(itertools.zip_longest('ABC', range(6), fillvalue='?'))
+         # [('A', 0), ('B', 1), ('C', 2), ('?', 3), ('?', 4)]
+         ```
+
+      4. `product(it1, ..., itN, repeat=1)`
+
+         计算笛卡儿积的惰性方式
+
+         ```python
+         list(itertools.product('ABC', range(2)))
+         # [('A', 0), ('A', 1), ('B', 0), ('B', 1), ('C', 0), ('C', 1)]
+         
+         print(list(itertools.product('AK', suits)))
+         # [('A', 'spades'), ('A', 'hearts'), ('A', 'diamonds'), ('A', 'clubs'), ('K', 'spades'), ('K', 'hearts'), ('K', 'diamonds'), ('K', 'clubs')]
+         
+         list(itertools.product('ABC'))
+         # [('A',), ('B',), ('C',)]
+         
+         print(list(itertools.product('ABC', repeat=2)))
+         # [('A', 'A'), ('A', 'B'), ('A', 'C'), ('B', 'A'), ('B', 'B'), ('B', 'C'), ('C', 'A'), ('C', 'B'), ('C', 'C')]
+         
+         print(list(itertools.product('AB', repeat=3)))
+         # [('A', 'A', 'A'), ('A', 'A', 'B'), ('A', 'B', 'A'), ('A', 'B', 'B'), ('B', 'A', 'A'), ('B', 'A', 'B'), ('B', 'B', 'A'), ('B', 'B', 'B')]
+         
+         print(list(itertools.product('AB', range(2), repeat=2)))
+         # [('A', 0, 'A', 0), ('A', 0, 'A', 1), ('A', 0, 'B', 0), ('A', 0, 'B', 1), ('A', 1, 'A', 0), ('A', 1, 'A', 1), ('A', 1, 'B', 0), ('A', 1, 'B', 1), ('B', 0, 'A', 0), ('B', 0, 'A', 1), ('B', 0, 'B', 0), ('B', 0, 'B', 1), ('B', 1, 'A', 0), ('B', 1, 'A', 1), ('B', 1, 'B', 0), ('B', 1, 'B', 1)]
+         ```
+
+   7. 有些生成器函数会从一个元素中产出多个值，扩展输入的可迭代对象
+
+      把输入的各个元素扩展成多个输出元素的生成器函数
+
+      |   模块    |                    函数                    |                             说明                             |
+      | :-------: | :----------------------------------------: | :----------------------------------------------------------: |
+      | itertools |         combinations(it, out_len)          |       把 it 产出的 out_len 个元素组合在一起，然后产出        |
+      | itertools | combinations_with_replacement(it, out_len) | 把 it 产出的 out_len 个元素组合在一起，然后产出，包含相同元素的组合 |
+      | itertools |           count(start=0, step=1)           |      从 start 开始不断产出数字，按 step 指定的步幅增加       |
+      | itertools |                 cycle(it)                  | 从 it 中产出各个元素，存储各个元素的副本，然后按顺序重复不断地产出各个元素 |
+      | itertools |       permutations(it, out_len=None)       | 把 out_len 个 it 产出的元素排列在一起，然后产出这些排列；out_len的默认值等于 len(list(it)) |
+      | itertools |           repeat(item, [times])            |      重复不断地产出指定的元素，除非提供 times，指定次数      |
+
+   8. 上述函数测试
+
+      1. `count(start=0, step=1)`
+
+         ```python
+         ct = itertools.count()
+         next(ct), next(ct), next(ct)
+         # (0, 1, 2)
+         
+         list(itertools.islice(itertools.count(1, .3), 3))
+         # [1, 1.3, 1.6]
+         ```
+
+      2. `cycle(it)`
+
+         ```python
+         cy = itertools.cycle('ABC')
+         list(itertools.islice(cy, 7))
+         # ['A', 'B', 'C', 'A', 'B', 'C', 'A']
+         ```
+
+      3. `repeat(item, [times])`
+
+          repeat 函数的常见用途：为 map 函数提供固定参数，这里提供的是
+         乘数 5
+
+         ```python
+         rp = itertools.repeat(7)
+         next(rp), next(rp), next(rp)
+         # (7, 7, 7)
+         
+         list(itertools.repeat(8, 4))
+         # [8, 8, 8, 8]
+         
+         list(map(operator.mul, range(11), itertools.repeat(5)))
+         # [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+         ```
+
+      4. `combinations(it, out_len)`
+
+         - combinations、combinations_with_replacement 和 permutations 生成器函数，连同 product 函数，称为组合学生成器（combinatoric generator）
+         - itertools.product 函数和其余的组合学函数有紧密的联系
+
+         ```
+         
+         ```
+
+         
+
+
 
 
 
@@ -1719,5 +2163,5 @@
 
  
 
-学到 p610
+学到 p634
 
