@@ -2148,11 +2148,166 @@
          - combinations、combinations_with_replacement 和 permutations 生成器函数，连同 product 函数，称为组合学生成器（combinatoric generator）
          - itertools.product 函数和其余的组合学函数有紧密的联系
 
+         ```python
+         # 两两组合，不包括自己，顺序无关，相当于排列组合中的组合
+         list(itertools.combinations('ABC', 2))
+         # [('A', 'B'), ('A', 'C'), ('B', 'C')]
+         
+         # 两两组合，包括自己，顺序无关
+         list(itertools.combinations_with_replacement('ABC', 2))
+         # [('A', 'A'), ('A', 'B'), ('A', 'C'), ('B', 'B'), ('B', 'C'), ('C', 'C')]
+         
+         # 两两组合，不包括自己，顺序有关
+         list(itertools.permutations('ABC', 2))
+         # [('A', 'B'), ('A', 'C'), ('B', 'A'), ('B', 'C'), ('C', 'A'), ('C', 'B')]
+         
+         # 两两组合，笛卡尔积，包括自己，顺序有关
+         print(list(itertools.product('ABC', repeat=2)))
+         # [('A', 'A'), ('A', 'B'), ('A', 'C'), ('B', 'A'), ('B', 'B'), ('B', 'C'), ('C', 'A'), ('C', 'B'), ('C', 'C')]
          ```
          
-         ```
+      
+   9. 最后一组生成器函数用于产出输入的可迭代对象中的全部元素，不过会以某种方式重新排列
+   
+      用于重新排列元素的生成器函数
+   
+      |   模块    |         函数          |                             说明                             |
+      | :-------: | :-------------------: | :----------------------------------------------------------: |
+      | itertools | groupby(it, key=None) | 产出由两个元素组成的元素，形式为 (key, group)，其中 key 是分组标准，group 是生成器，用于产出分组里的元素 |
+      | （内置）  |     reversed(seq)     | 从后向前，倒序产出 seq 中的元素；seq 必须是序列，或者是实现了 `__reversed__` 特殊方法的对象 |
+      | itertools |     tee(it, n=2)      | 产出一个由 n 个生成器组成的元组，每个生成器用于单独产出输入的可迭代对象中的元素 |
+   
+   10. 上述函数测试
+   
+       1. `groupby(it, key=None)`
+   
+          `itertools.groupby` 假定输入的可迭代对象要使用分组标准排序；即使不排序，至少也要使用指定的标准分组各个元素
+   
+          ```python
+          import itertools
+          
+          print(list(itertools.groupby('LLLLAAGGG')))
+          # [('L', <itertools._grouper object at 0x0000018A1AF32948>), ('A', <itertools._grouper object at 0x0000018A1AF32248>), ('G', <itertools._grouper object at 0x0000018A1AF32708>)]
+          
+          for char, group in itertools.groupby('LLLLAAAGG'):
+              print(char, '->', list(group))
+          # L -> ['L', 'L', 'L', 'L']
+          # A -> ['A', 'A', 'A']
+          # G -> ['G', 'G']
+          
+          animals = ['duck', 'eagle', 'rat', 'giraffe', 'bear', 'bat', 'dolphin', 'shark', 'lion']
+          animals.sort(key=len)
+          animals
+          # ['rat', 'bat', 'duck', 'bear', 'lion', 'eagle', 'shark', 'giraffe', 'dolphin']
+          
+          for length, group in itertools.groupby(animals, len):
+              print(length, '->', list(group))
+          """
+          3 -> ['rat', 'bat']
+          4 -> ['duck', 'bear', 'lion']
+          5 -> ['eagle', 'shark']
+          7 -> ['giraffe', 'dolphin']
+          """
+          
+          for length, group in itertools.groupby(reversed(animals), len):
+              print(length, '->', list(group))
+          """
+          7 -> ['dolphin', 'giraffe']
+          5 -> ['shark', 'eagle']
+          4 -> ['lion', 'bear', 'duck']
+          3 -> ['bat', 'rat']
+          """
+          ```
+   
+       2. `tee(it, n=2)`
+   
+          输入的一个可迭代对象中产出多个生成器，每个生成器都可以产出输入的各个元素
+   
+          ```python
+          list(itertools.tee('ABC'))
+          # [<itertools._tee at 0x18a1b6ac808>, <itertools._tee at 0x18a1b6ac688>]
+          
+          g1, g2 = itertools.tee('ABC')
+          list(g2), list(g2)
+          # (['A', 'B', 'C'], ['A', 'B', 'C'])
+          
+          list(zip(*itertools.tee('ABC')))
+          # [('A', 'A'), ('B', 'B'), ('C', 'C')]
+          ```
+   
+10. Python3.3中新出现的语法：yield from
 
-         
+    1. 下面两个代码等价
+
+       ```python
+       def chain(*iterrables):
+           print(iterrables)
+           for it in iterrables:
+               for i in it:
+                   yield i
+       ```
+
+       ```python
+       def chain(*iterables):
+           for i in iterables:
+               yield from i
+       ```
+
+    2. 可以看出，yield from i 完全代替了内层的 for 循环
+
+    3. 除了代替循环之外，yield from 还会创建通道，把内层生成器直接与外层生成器的客户端联系起来。把生成器当成协程使用时，这个通道特别重要，不仅能为客户端代码生成值，还能使用客户端代码提供的值
+
+11. 可迭代的归约函数
+
+    1. 下述函数都接受一个可迭代的对象，然后返回单个结果。这些函数叫“归约”函数、“合拢”函数或“累加”函数
+
+    2. 这里列出的每个内置函数都可以使用 functools.reduce 函数实现，内置是因为使用它们便于解决常见的问题
+
+    3. 对 all 和 any 函数来说，有一项重要的优化措施是 reduce 函数做不到的：这两个函数会**短路**（即一旦确定了结果就立即停止使用迭代器）
+
+    4. 读取迭代器，返回单个值的内置函数
+
+    5. sorted 和这些归约函数只能处理最终会停止的可迭代对象。否则，这些函数会一直收集元素，永远无法返回结果
+
+       |   模块    |             函数             |                             说明                             |
+       | :-------: | :--------------------------: | :----------------------------------------------------------: |
+       | （内置）  |           all(it)            | it 中的所有元素都为真值时返回 True，否则返回 False；all([]) 返回 True |
+       | （内置）  |           any(it)            | 只要 it 中有元素为真值就返回 True，否则返回 False；any([]) 返回 False |
+       | （内置）  | `max(it, [key=,][default=])` | 返回 it 中值最大的元素；key 是排序函数，与 sorted 函数中的一样；如果可迭代的对象为空，返回 default |
+       | （内置）  | `min(it, [key=,][default=])` | 返回 it 中值最小的元素；key 是排序函数，与 sorted 函数中的一样；如果可迭代的对象为空，返回 default |
+       | functools |  reduce(func,it,[initial])   | 把前两个元素传给 func，然后把计算结果和第三个元素传给 func，以此类推，返回最后的结果；如果提供了initial，把它当作第一个元素传入 |
+       | （内置）  |       sum(it,start=0)        | it 中所有元素的总和，如果提供可选的 start，会把它加上（计算浮点数的加法时，可以使用 math.fsum 函数提高精度） |
+
+12. 深入分析iter函数
+
+    1. iter 函数还有一个鲜为人知的用法
+
+       - 传入两个参数，使用常规的函数或任何可调用的对象创建迭代器
+       - 这样使用时，第一个参数必须是可调用的对象，用于不断调用（没有参数），产出各个值
+       - 第二个值是哨符，这是个标记值，当可调用的对象返回这个值时，触发迭代器抛出 StopIteration 异常，而不产出哨符
+
+    2. 如何使用 iter 函数掷骰子，直到掷出 1 点为止
+
+       ```python
+       from random import randint
+       
+       def d6():
+           return randint(1, 6)
+       
+       d6_iter = iter(d6, 1)
+       for roll in d6_iter:
+           print(roll)
+       ```
+
+    3. 逐行读取文件，直到遇到空行或者到达文件末尾为止：
+
+       ```python
+       with open('mydate.txt') as fp:
+           for line in iter(fp.readline, '\n'):
+               process_line(line)
+       ```
+
+13. 案例分析：在数据库转换工具中使用生成器
 
 
 
@@ -2161,7 +2316,5 @@
 
 
 
- 
-
-学到 p634
+学到 p645
 
