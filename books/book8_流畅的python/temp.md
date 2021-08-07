@@ -161,8 +161,177 @@
    2. `.send(...)`：生成器的调用方可以使用 .send(...) 方法发送数据，发送的数据会成为生成器函数中 yield 表达式的值
    3. `.throw(...)`：让调用方抛出异常，在生成器中处理
    4. `.close()`：终止生成器
+   
 2. 用作协程的生成器的基本行为
 
+   1. 协程使用生成器函数定义：定义体中有 yield 关键字
+
+   2. 协程可以身处四个状态中的一个
+
+   3. 当前状态可以使用 `inspect.getgeneratorstate(...)` 函数确定
+
+      - GEN_CREATED：等待开始执行
+      - GEN_RUNNING：解释器正在执行
+      - GEN_SUSPENDED：在 yield 表达式处暂停
+      - GEN_CLOSED：执行结束
+
+   4. 仅当协程处于暂停状态时才能调用 send 方法
+
+   5. 如果协程还没激活（即，状态是 'GEN_CREATED'）
+
+      - 始终要调用 `next(my_coro)` 激活协程
+      - 也可以调用 `my_coro.send(None)`，效果一样
+
+   6. 我对yield在协程中使用的理解
+
+      ```python
+      def simple_coro2(a):
+          print('-> Started: a =', a)
+          b = yield a
+          print('-> Received: b =', b)
+          c = yield a + b
+          print('-> Received: c =', c)
+      ```
+
+      - 拿这个例子为例
+      - `b = yield a`：也就是说，程序运行到这一行的时候，先执行`yield a`，相当于`return a`，前面的`b = yield`是等待赋值
+      - 然后使用`my_cc.send(28)`，就是给b赋值了，这一行才算运行结束
+      - 所以这一行的运行，夹在了两个`next(my_cc)`中
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/a83392974a814599b506426723f717f2.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+3. 示例：使用协程计算移动平均值
+
+   ```python
+   def averager():
+       total = 0.0
+       count = 0
+       average = None
+       while True:
+           term = yield average
+           total += term
+           count += 1
+           average = total/count
+   ```
+
+   - 使用协程之前必须预激
+
+4. 预激协程的装饰器
+
+   - 为了简化协程的用法，有时会使用一个预激装饰器
+
+     ```python
+     from functools import wraps
+     
+     def coroutine(func):
+         """装饰器：向前执行到第一个yield表达式，预激func"""
+         @wraps(func)
+         def primer(*args, **kwargs):
+             gen = func(*args, **kwargs)
+             next(gen)
+             return gen
+         return primer
+     ```
+
+   - 需要在协程的函数前面加这个装饰器
+
+     ```python
+     @coroutine
+     def averager():
+         total = 0.0
+         count = 0
+         average = None
+         while True:
+             term = yield average
+             total += term
+             count += 1
+             average = total/count
+     ```
+
+   - 这样该协程的初始化的状态就是 GEN_SUSPENDED
+
+     ```python
+     from inspect import getgeneratorstate
+     getgeneratorstate(coro_avg)
+     
+     # 'GEN_SUSPENDED'
+     ```
+
+   - 很多框架都提供了处理协程的特殊装饰器
+
+     - 不是所有装饰器都用于预激协程
+     - 有些会提供其他服务，例如勾入事件循环
+     - 比如说，异步网络库 Tornado 提供了 tornado.gen 装饰器
+
+   - 使用 yield from 句法调用协程时，会自动预激
+
+   - Python 3.4 标准库里的 asyncio.coroutine 装饰器不会预激协程，因此能兼容 yield from 句法
+
+5. 终止协程和异常处理
+
+   1. 协程中未处理的异常会向上冒泡，传给 next 函数或 send 方法的调用方（即触发协程的对象）
+
+   2. 终止协程的一种方式：发送某个哨符值，让协程退出
+
+   3. 内置的 None 和 Ellipsis 等常量经常用作哨符值
+
+   4. 客户代码可以在生成器对象上调用两个方法，显式地把异常发给协程
+
+      - generator.throw(exc_type[, exc_value[, traceback]])：致使生成器在暂停的 yield 表达式处抛出指定的异常
+      - generator.close()：致使生成器在暂停的 yield 表达式处抛出 GeneratorExit 异常
+
+   5. 学习在协程中处理异常的测试代码
+
+      ```python
+      class DemoException(Exception):
+          """为这次演示定义的异常类型"""
+          
+      def demo_exc_handling():
+          print('-> coroutine started')
+          while True:
+              try:
+                  x = yield
+              except DemoException:
+                  print('*** DemoException handled. Continuing...')
+              else:
+                  print('-> coroutine received: {!r}'.format(x))
+      
+          raise RuntimeError('This line should never run.')
+      ```
+
+      - 最后一行代码不会执行，因为只有未处理的异常才会中止那个无限循环，而一旦出现未处理的异常，协程会立即终止
+      - 激活和关闭 demo_exc_handling，没有异常
+      - 把 DemoException 异常传入 demo_exc_handling 不会导致协程中止
+      - 如果无法处理传入的异常，协程会终止
+
+   6. 使用 try/finally 块在协程终止时执行操作
+
+      ```python
+      class DemoException(Exception):
+          """为这次演示定义的异常类型"""
+          
+      def demo_exc_handling():
+          print('-> coroutine started')
+          try:
+              while True:
+                  try:
+                      x = yield
+                  except DemoException:
+                      print('*** DemoException handled. Continuing...')
+                  else:
+                      print('-> coroutine received: {!r}'.format(x))
+          finally:
+              print('-> coroutine ending...')
+      
+          raise RuntimeError('This line should never run.')
+      ```
+
+   7. Python 3.3 引入 yield from 结构的主要原因
+
+      - 与把异常传入嵌套的协程有关
+      - 让协程更方便地返回值
+
+6. 让协程返回值
 
 
 
@@ -173,4 +342,5 @@
 
 
 
-看到 P682
+
+看到 P697
