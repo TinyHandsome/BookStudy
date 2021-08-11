@@ -333,7 +333,225 @@
 
 6. 让协程返回值
 
+   1. 定义一个求平均值的协程，让它返回一个结果
 
+      ```python
+      from collections import namedtuple
+      
+      Result = namedtuple('Result', 'count average')
+      
+      def averager():
+          total = 0.0
+          count = 0
+          average = None
+          while True:
+              term = yield
+              if term is None:
+                  break
+              total += term
+              count += 1
+              average = total/count
+          return Result(count, average)
+      ```
+
+   2. 最后发送None的时候，协程结束，返回结果。抛出异常StopIteration，并将return的值保存到异常对象的value属性中
+
+   3. 如何获取协程的返回值
+
+      ```python
+      try:
+          coro_avg.send(None)
+      except StopIteration as exc:
+          result = exc.value
+          
+      result
+      # Result(count=3, average=15.5)
+      ```
+
+   4. yield from 结构会在内部自动捕获 StopIteration 异常
+
+7. 使用yield from
+
+   1. yield from 可用于简化 for 循环中的 yield 表达式
+
+      - 下述：
+
+        ```python
+        def gen():
+            for c in 'AB':
+                yield c
+            for i in range(1, 3):
+                yield i
+        ```
+
+      - 可改写为：
+
+        ```python
+        def gen():
+            yield from 'AB'
+            yield from range(1, 3)
+        ```
+
+   2. 相关术语
+
+      1. 委派生成器：包含` yield from <iterable>` 表达式的生成器函数
+      2. 子生成器：从 yield from 表达式中 `<iterable>` 部分获取的生成器
+      3. 调用方：调用委派生成器的客户端代码
+
+   3. 委派生成器在 yield from 表达式处暂停时，调用方可以直接把数据发给子生成器，子生成器再把产出的值发给调用方
+
+   4. 子生成器返回之后，解释器会抛出 StopIteration 异常，并把返回值附加到异常对象上，此时委派生成器会恢复
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/61c8fb71888a43958bff468b042249dd.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+
+   5. 如果子生成器不终止，委派生成器会在 yield from 表达式处永远暂停
+
+      ```python
+      from collections import namedtuple
+      
+      Result = namedtuple('Result', 'count average')
+      
+      # 子生成器 
+      def averager():
+          total = 0.0
+          count = 0
+          average = None
+          while True:
+              term = yield
+              if term is None:
+                  break
+              total += term
+              count += 1
+              average = total/count
+          return Result(count, average)
+      
+      # 委派生成器
+      def grouper(results, key):
+          while True:
+              results[key] = yield from averager()
+              
+      # 客户端代码，即调用方
+      def main(data):
+          results = {}
+          for key, values in data.items():
+              group = grouper(results, key)
+              next(group)
+              for value in values:
+                  group.send(value)
+              # 重要
+              group.send(None)
+              report(results)
+              
+      # 输出报告
+      def report(results):
+          for key, result in sorted(results.items()):
+              group, unit = key.split(';')
+              print('{:2}{:5} averaging {:.2f}{}'.format(result.count, group, result.average, unit))
+              
+      data = {
+      'girls;kg':
+      [40.9, 38.5, 44.3, 42.2, 45.2, 41.7, 44.5, 38.0, 40.6, 44.5],
+      'girls;m':
+      [1.6, 1.51, 1.4, 1.3, 1.41, 1.39, 1.33, 1.46, 1.45, 1.43],
+      'boys;kg':
+      [39.0, 40.8, 43.2, 40.8, 43.1, 38.6, 41.4, 40.6, 36.3],
+      'boys;m':
+      [1.38, 1.5, 1.32, 1.25, 1.37, 1.48, 1.25, 1.49, 1.46],
+      }
+      
+      if __name__ == '__main__':
+          main(data)
+      ```
+
+   6. 委派生成器相当于管道，所以可以把任意数量个委派生成器连接在一起
+
+   7. 一个委派生成器使用 yield from 调用一个子生成器，而那个子生成器本身也是委派生成器，使用 yield from 调用另一个子生成器，以此类推
+
+   8. 最终，这个链条要以一个只使用 yield 表达式的简单生成器结束；不过，也能以任何可迭代的对象结束
+
+   9. 任何 yield from 链条都必须由客户驱动，在最外层委派生成器上调用 next(...) 函数或 .send(...) 方法
+
+8. yield from 的意义（6点 yield from 的行为）
+
+   1. 子生成器产出的值都直接传给委派生成器的调用方（即客户端代码）
+   2. 使用 send() 方法发给委派生成器的值都直接传给子生成器。如果发送的值是 None，那么会调用子生成器的 `__next__()` 方法。如果发送的值不是 None，那么会调用子生成器的 send() 方法。如果调用的方法抛出 StopIteration 异常，那么**委派生成器恢复运行**。任何其他异常都会向上冒泡，传给委派生成器
+   3. 生成器退出时，生成器（或子生成器）中的 return expr 表达式会触发 StopIteration(expr) 异常抛出
+   4. yield from 表达式的值是子生成器终止时传给 StopIteration 异常的第一个参数
+
+   >  yield from 结构的另外两个特性与异常和终止有关
+
+   5. 传入委派生成器的异常，除了 GeneratorExit 之外都传给子生成器的 throw() 方法。如果调用 throw() 方法时抛出 StopIteration 异常，委派生成器恢复运行。StopIteration 之外的异常会向上冒泡，传给委派生成器
+
+   6. 如果把 GeneratorExit 异常传入委派生成器，或者在委派生成器上调用 close() 方法，那么在子生成器上调用 close() 方法，如果它有的话。
+
+      如果调用 close() 方法导致异常抛出，那么异常会向上冒泡，传给委派生成器；否则，委派生成器抛出 GeneratorExit 异常
+
+   - 通过阅读 yield from 的伪代码，我们可以看到代码里已经 预激了子生成器，这说明，用于自动预激的装饰器与 yield from 不兼容
+
+9. 使用案例：使用协程做离散时间仿真
+
+   1. 在计算机科学领域，仿真是协程的经典应用
+
+   2. 通过仿真系统能说明如何使用协程代替线程实现并发的活动
+
+   3. 离散事件仿真：Discrete Event Simulation，DES，是一种把系统建模成一系列事件的仿真类型
+
+   4. 为了实现连续仿真，在多个线程中处理实时并行的操作更自然。而协程恰好为实现离散事件仿真提供了合理的抽象
+
+   5. 一个示例：说明如何在一个主循环中处理事件，以及如何通过发送数据驱动协程
+
+      ```python
+      sim = Simulator(taxis)
+      sim.run(end_time)
+      ```
+
+      ```python
+      import queue
+      
+      class Simulator:
+          def __init__(self, procs_map):
+              self.events = queue.PriorityQueue()
+              self.procs = dict(procs_map)
+              
+          def run(self, end_time): #1
+              """排定并显示事件，直到时间结束"""
+              # 排定各辆出租车的第一个事件
+              for _, proc in sorted(self.procs.items()): #2
+                  first_event = next(proc) #3
+                  self.events.put(first_event) #4
+              
+              # 这个仿真系统的主循环
+              sim_time = 0 #5
+              while sim_time < end_time: #6
+                  if self.events.empty(): #7
+                      print('*** end of events ***')
+                      break
+                  
+                  current_event = self.events.get() #8
+                  sim_time, proc_id, previous_action = current_event #9
+                  print('taxi:', proc_id, proc_id * '  ', current_event) #10
+                  active_proc = self.procs[proc_id] #11
+                  # 传入前一个动作，把结果加到sim_time上，获得下一次活动的时刻
+                  next_time = sim_time + compute_duration(previous_action) #12
+                  try:
+                      next_event = active_proc.send(next_time) #13
+                  except StopIteration:
+                      del self.procs[proc_id] #14
+                  else:
+                      self.events.put(next_event) #15
+              
+              else: #16
+                  msg = '*** end of simulation time: {} events pending ***'
+                  print(msg.format(self.events.qsize()))            
+      ```
+
+10. 本章小结：
+
+    1. 生成器有三种不同代码编写风格：
+       - 传统的拉取式，迭代器
+       - 推送式，计算平均值
+       - 任务式，协程
+    2. 
 
 
 
