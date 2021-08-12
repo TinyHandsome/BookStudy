@@ -551,7 +551,180 @@
        - 传统的拉取式，迭代器
        - 推送式，计算平均值
        - 任务式，协程
-    2. 
+    2. 假如没有协程，我们要写一个并发程序。可能有以下问题：
+       - 使用最常规的同步编程要实现异步并发效果并不理想，或者难度极高
+       - 由于GIL锁的存在，多线程的运行需要频繁的加锁解锁，切换线程，这极大地降低了并发性能
+    3. 而协程的出现，刚好可以解决以上的问题。它的特点有：
+       - 协程是在单线程里实现任务的切换的
+       - 利用同步的方式去实现异步
+       - 不再需要锁，提高了并发性能
+    4. [深入理解yield from](https://www.cnblogs.com/wongbingming/p/9085268.html)
+    5. 事件驱动型框架（如 Tornado 和 asyncio）的运作方式：
+       - 在单个线程中使用一个主循环驱动协程执行并发活动
+       - 使用协程做面向事件编程时，协程会不断把控制权让步给主循环，激活并向前运行其他协程，从而执行各个并发活动
+       - 这是一种协作式多任务：协程显式自主地把控制权让步给中央调度程序
+       - 而多线程实现的是抢占式多任务。调度程序可以在任何时刻暂停线程（即使在执行一个语句的过程中），把控制权让给其他线程。
+    6. 宽泛的、不正式的对协程的定义：通过客户调用 .send(...) 方法发送数据或使用 yield from 结构驱动的生成器函数
+    7. asyncio 库建构在协程之上，不过采用的协程定义更为严格
+       - 在 asyncio 库中，协程（通常）使用 @asyncio.coroutine 装饰器装饰
+       - 而且始终使用 yield from 结构驱动
+       - 而不通过直接在协程上调用 .send(...) 方法驱动
+       - 当然，在 asyncio 库的底层，协程使用 next(...) 函数和 .send(...) 方法驱动，不过在用户代码中只使用 yield from 结构驱动协程运行
+    8. SimPy 是使用标准的 Python 开发的基于进程的离散事件仿真框架，事件调度程序基于 Python 的生成器实现，因此还可用于异步网络或实现多智能体系统（即可模拟，也可真正通信）
+    9. Python 3.5 已经接受了 PEP 492，增加了两个关键字：async 和 await
+    10. [Python Async/Await入门指南](https://zhuanlan.zhihu.com/p/27258289)
+        - 在3.5过后，我们可以使用async修饰将普通函数和生成器函数包装成异步函数和异步生成器
+
+## 17. 使用期物处理并发
+
+- 期物：future，期物指一种对象，表示异步执行的操作
+- 这个概念的作用很大，是 concurrent.futures 模块和 asyncio 包的基础
+
+1. 网络下载的三种风格
+
+   1. 对并发下载的脚本来说，每次下载的顺序都不同
+
+   2. 拒绝服务：Denial-of-Service，DoS
+
+   3. 在 I/O 密集型应用中，如果代码写得正确，那么不管使用哪种并发策略（使用线程或 asyncio 包），吞吐量都比依序执行的代码高很多
+
+   4. 第一种，直接按顺序下载棋子
+
+      ```python
+      import os
+      import time
+      import sys
+      
+      import requests
+      
+      POP20_CC = ('CN IN US ID BR P1K NG BD RU JP MX PH VN ET EG DE IR TR CD FR').split()
+      
+      BASE_URL = 'http://flupy.org/data/flags'
+      
+      DEST_DIR = './downloads/'
+      
+      def save_flag(img, filename):
+          path = os.path.join(DEST_DIR, filename)
+          with open(path, 'wb') as fp:
+              fp.write(img)
+              
+      def get_flag(cc):
+          url = '{}/{cc}/{cc}.gif'.format(BASE_URL, cc=cc.lower())
+          resp = requests.get(url)
+          return resp.content
+      
+      def show(text):
+          print(text, end=' ')
+          sys.stdout.flush()
+          
+      def download_many(cc_list):
+          for cc in sorted(cc_list):
+              image = get_flag(cc)
+              show(cc)
+              save_flag(image, cc.lower() + '.gif')
+              
+          return len(cc_list)
+      
+      def main(download_many):
+          t0 = time.time()
+          count = download_many(POP20_CC)
+          elapsed = time.time() - t0
+          msg = '\n{} flags downloaded in {:.2f}s'
+          print(msg.format(count, elapsed))
+          
+      if __name__ == '__main__':
+          main(download_many)
+          
+      # BD BR CD CN DE EG ET FR ID IN IR JP MX NG P1K PH RU TR US VN 
+      # 20 flags downloaded in 21.82s
+      ```
+
+   5. 第二种，使用`concurrent.futures`模块下载
+
+      ```python
+      from concurrent import futures
+      
+      from flags import save_flag, get_flag, show, main
+      
+      MAX_WORKERS = 20
+      
+      def download_one(cc):
+          image = get_flag(cc)
+          show(cc)
+          save_flag(image, cc.lower() + '.gif')
+          return cc
+      
+      def download_many(cc_list):
+          # 设定工作的线程数：允许的最大值与要处理的数量之间的 最小值，以免创建多余的线程
+          workers = min(MAX_WORKERS, len(cc_list))
+          with futures.ThreadPoolExecutor(workers) as executor:
+              res = executor.map(download_one, sorted(cc_list))
+              
+          return len(list(res))
+      
+      if __name__ == '__main__':
+          main(download_many)
+      
+      # BD CD BR TR IR FR JP IN MX VNET  PH NG EG CN ID DE P1K US RU 
+      # 20 flags downloaded in 1.05s
+      ```
+
+      - concurrent.futures 模块的主要特色是 ThreadPoolExecutor 和 ProcessPoolExecutor 类
+      - 这两个类实现的接口能分别在不同的线程或进程中执行可调用的对象
+      - 这两个类在内部维护着一个工作线程或进程池，以及要执行的任务队列
+
+   6. 从 Python 3.4 起，标准库中有两个名为 Future 的类：concurrent.futures.Future 和 asyncio.Future
+
+   7. 期物封装待完成的操作，可以放入队列，完成的状态可以查询，得到结果（或抛出异常）后可以获取结果（或异常）
+
+   8. 通常情况下自己不应该创建期物，而只能由并发框架（concurrent.futures 或 asyncio）实例化
+
+   9. 原因很简单：期物表示终将发生的事情，而确定某件事会发生的唯一方式是执行的时间已经排定
+
+   10. 因此，只有排定把某件事交给 concurrent.futures.Executor 子类处理时，才会创建 concurrent.futures.Future 实例
+
+   11. 客户端代码不应该改变期物的状态，并发框架在期物表示的延迟计算结束后会改变期物的状态，而我们无法控制计算何时结束
+
+   12. `.done()`：这个方法不阻塞，返回值是布尔值，指明期物链接的可调用对象是否已经执行
+
+   13. `.add_done_callback() `：这个方法只有一个参数，类型是可调用的对象，期物运行结束后会调用指定的可调用对象
+
+   14. `.result()`：返回可调用对象的结果，或者重新抛出执行可调用的对象时抛出的异常
+
+       - 如果期物没有运行结束，result 方法在两个 Future 类中的行为相差很大
+       - 对concurrency.futures.Future 实例来说，调用 `f.result()` 方法会阻塞调用方所在的线程，直到有结果可返回。此时，result 方法可以接收可选的 timeout 参数，如果在指定的时间内期物没有运行完毕，会抛出 TimeoutError 异常
+       - asyncio.Future.result 方法不支持设定超时时间，在那个库中获取期物的结果最好使用 yield from 结构
+
+   15. 这两个库中有几个函数会返回期物，其他函数则使用期物，以用户易于理解的方式实现自身
+
+   16. Executor.map 方法属于后者：返回值是一个迭代器，迭代器的 `__next__` 方法调用各个期物的result 方法，因此我们得到的是各个期物的结果，而非期物本身
+
+   17. `concurrent.futures.as_completed`：这个函数的参数是一个期物列表，返回值是一个迭代器，在期物运行结束后产出期物
+
+   18. 把download_many 函数中的 executor.map 方法换成 executor.submit 方法和 futures.as_completed 函数
+
+       ```python
+       def download_many(cc_list):
+           cc_list = cc_list[:5]
+           with futures.ThreadPoolExecutor(max_workers=3) as executor:
+               to_do = []
+               for cc in sorted(cc_list):
+                   future = executor.submit(download_one, c)
+                   to_do.append(future)
+                   msg = 'Scheduled for {}: {}'
+                   print(msg.format(cc, future))
+                   
+               results = []
+               for future in futures.as_completed(to_do):
+                   res = future.result()
+                   msg = '{} result: {!r}'
+                   print(msg.format(future, res))
+                   results.append(res)
+                   
+           return len(results)
+       ```
+
+   19. 
 
 
 
@@ -561,4 +734,4 @@
 
 
 
-看到 P697
+看到 P748
