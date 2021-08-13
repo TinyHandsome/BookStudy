@@ -57,11 +57,11 @@ class SQLSeperateTool:
             self.table_name = result[0]
 
     def deal_line(self, line: str):
-        if line.startswith('create table'):
+        if line.lower().startswith('create table'):
             # 此时该行为第一行，可以搞到对应的数据库名
             self.get_table_name(line)
             return '', ''
-        elif line.startswith('comment ') or line.startswith('partitioned by'):
+        elif line.lower().startswith('comment ') or line.lower().startswith('partitioned by'):
             return '', ''
         else:
             result = ''
