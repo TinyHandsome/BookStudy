@@ -724,7 +724,35 @@
            return len(results)
        ```
 
-   19. 
+   19. GIL：Global Interpreter Lock，全局解释器锁
+   
+   20. GIL 几乎对 I/O 密集型处理无害
+   
+2. 阻塞型I/O和GIL
+
+   1. CPython 解释器本身就不是线程安全的，因此有全局解释器锁（GIL），一次只允许使用一个线程执行 Python 字节码
+   2. 因此，一个 Python 进程通常不能同时使用多个 CPU 核心
+   3. 编写 Python 代码时无法控制 GIL；不过，执行耗时的任务时，可以使用一个内置的函数或一个使用 C 语言编写的扩展释放 GIL
+   4. 标准库中所有执行阻塞型 I/O 操作的函数，在等待操作系统返回结果时都会释放 GIL，这意味着在 Python 语言这个层次上可以使用多线程，而 I/O 密集型 Python 程序能从中受益
+   5. 一个 Python 线程等待网络响应时，阻塞型 I/O 函数会释放 GIL，再运行一个线程
+
+3. 使用concurrent.futures模块启动进程
+
+   1. 如果需要做 CPU 密集型处理，使用这个模块的ProcessPoolExecutor类能绕开 GIL，利用所有可用的 CPU 核心
+   2. 对简单的用途来说，ThreadPoolExecutor和ProcessPoolExecutor这两个实现Executor接口的类唯一值得注意的区别是，
+      - `ThreadPoolExecutor.__init__`方法需要max_workers参数，制定线程池中线程的数量
+      - 在 ProcessPoolExecutor 类中，那个参数是可选的，而且大多数情况下不使用——默认值是 `os.cpu_count()` 函数返回的 CPU 数量
+
+4. 实验Executor.map方法
+
+   1. Executor.map 函数返回结果的顺序与调用开始的顺序一致
+   2. 不过，通常更可取的方式是，不管提交的顺序，只要有结果就获取。为此，要把 Executor.submit 方法和 futures.as_completed 函数结合起来使用
+   3. executor.submit 和 futures.as_completed 这个组合比executor.map 更灵活，因为 submit 方法能处理不同的可调用对象和参数，而 executor.map 只能处理参数不同的同一个可调用对象
+   4. 传给 futures.as_completed 函数的期物集合可以来自多个 Executor 实例
+
+5. 显示下载进度并处理错误
+
+   1. 
 
 
 
@@ -734,4 +762,4 @@
 
 
 
-看到 P748
+看到 P759
