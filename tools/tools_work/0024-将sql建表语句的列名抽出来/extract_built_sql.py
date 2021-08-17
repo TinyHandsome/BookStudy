@@ -39,7 +39,7 @@ class SqlExtract:
         # 2. 将sql分为三部分
         sql_list = self.sql.split('\n')
         first_row = sql_list.pop(0)
-        last_row = sql_list.pop(-1).split()[-1].replace('=', ' ')
+        last_row = sql_list.pop(-1).split()[-1].replace('=', ' ').replace(';', '')
         middle_rows = [x.strip() for x in sql_list]
 
         # 3. 获取表名
