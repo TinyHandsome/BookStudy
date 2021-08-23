@@ -754,6 +754,131 @@
 
    1. flags2系列示例处理错误的方式
    2. 使用`futures.as_completed`函数
+   3. 线程和多进程的替代方案
+      1. concurrent.futures 是使用线程的最新方式
+      2. 如果 `futures.ThreadPoolExecutor` 类对某个作业来说不够灵活，可能要
+         使用 threading 模块中的组件（如 Thread、Lock、Semaphore 等）自行制定方案
+      3. 对 CPU 密集型工作来说，要启动多个进程，规避 GIL
+      4. 创建多个进程最简单的方式是，使用 futures.ProcessPoolExecutor 类
+      5. 如果使用场景较复杂，需要更高级的工具。使用 multiprocessing 模块，API 与 threading 模块相仿，不过作业交给多个进程处理
+      6. multiprocessing 模块还能解决协作进程遇到的最大挑战：在进程之间传递数据
+   
+6. 小结
+
+   1. 为什么尽管有 GIL，Python 线程仍然适合 I/O 密集型应用：准库中每个使用 C 语言编写的 I/O 函数都会释放 GIL，因此，当某个线程在等待 I/O 时， Python 调度程序会切换到另一个线程
+   2. 借助 `concurrent.futures.ProcessPoolExecutor` 类使用多进程，以此绕
+      开 GIL，使用多个 CPU 核心运行
+   3. 对于 CPU 密集型和数据密集型并行处理，现在有个新工具可用——分布式计算引擎 **Apache Spark**，Spark 在大数据领域发展势头强劲，提供了友好的 Python API，支持把 Python 对象当作数据
+   4. **`lelo`** 包：定义了一个@parallel 装饰器，可以应用到任何函数上，把函数变成非阻塞：调用被装饰的函数时，函数在一个新进程中执行
+   5. **`python-parallelize`** 包提供了一个 parallelize 生成器，能把 for 循环分配给多个 CPU 执行
+   6. 这两个包在内部都使用了 multiprocessing 模块
+   7. GIL 简化了 CPython 解释器和 C 语言扩展的实现，得益于 GIL，Python 有很多 C 语言扩展
+   8.  Python 线程特别适合在 I/O 密集型系统中使用
+   9. 在 JavaScript 中，只能通过回调式异步编程实现并发
+
+## 18. 使用asyncio包处理并发
+
+1. 线程与协程对比
+
+   1. spinner_thread.py
+
+      ```python
+      import threading
+      import itertools
+      import time
+      import sys
+      
+      class Signal:
+          go = True
+          
+      
+      def spin(msg, signal):
+          write, flush = sys.stdout.write, sys.stdout.flush
+          for char in itertools.cycle('|/-\\'):
+              status = char + ' ' + msg
+              write(status)
+              flush()
+              write('\x08' * len(status))
+              time.sleep(.1)
+              if not signal.go:
+                  break
+          write(' ' * len(status) + '\x08' * len(status))
+          
+      def slow_function():
+          # 假装等待I/O一段时间
+          time.sleep(3)
+          return 42
+      
+      def supervisor():
+          signal = Signal()
+          spinner = threading.Thread(target=spin, args=('thinking!', signal))
+          print('spinner object:', spinner)
+          spinner.start()
+          result = slow_function()
+          signal.go = False
+          spinner.join()
+          return result
+      
+      def main():
+          result = supervisor()
+          print('Answer:', result)
+          
+      if __name__ == '__main__':
+          main()
+      ```
+
+   2. Python 没有提供终止线程的 API，这是有意为之的。若想关闭线程，必须给线程发送消息，这里是signal.go属性
+
+   3. spinner_asyncio.py：通过协程以动画形式显示文本式旋转指针；使用 @asyncio.coroutine 装饰器替代线程，实现相同的行为
+   
+      ```python
+      import asyncio
+      import itertools
+      import sys
+      
+      
+      @asyncio.coroutine #1
+      def spin(msg): #2
+          write, flush = sys.stdout.write, sys.stdout, flush
+          for char in itertools.cycle('|/-\\'):
+              status = char + ' ' + msg
+              write(status)
+              flush()
+              write('\x08' * len(status))
+              try:
+                  yield from asyncio.sleep(.1) #3
+              except asyncio.CancelledError: #4
+                  break
+          write(' ' * len(status) + '\x08' * len(status))
+          
+      
+      @asyncio.coroutine
+      def slow_function(): #5
+          # 假装等待I/O一段时间
+          yield from asyncio.sleep(3) #6
+          return 42
+      
+      @asyncio.coroutine
+      def supervisor(): #7
+          spinner = asyncio.async(spin('thinking!')) #8
+          print('spinner object:', spinner) #9
+          result = yield from slow_function() #10
+          spinner.cancel() #11
+          return result
+      
+      def main():
+          loop = asyncio.get_event_loop() #12
+          result = loop.run_until_complete(supervisor()) #13
+          loop.close()
+          print('Answer:', result)
+          
+      
+      if __name__ == '__main__':
+          main()
+      ```
+   
+      1. 使用 `yield from asyncio.sleep(.1)` 代替 `time.sleep(.1)`，这样的休眠不会阻塞事件循环
+      2. `asyncio.async(...)` 函数排定 spin 协程的运行时间，使用一个Task 对象包装 spin 协程，并立即返回
 
 
 
@@ -763,4 +888,24 @@
 
 
 
-看到 P759
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+看到 P784

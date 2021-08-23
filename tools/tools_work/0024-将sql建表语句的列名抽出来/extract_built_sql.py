@@ -9,12 +9,31 @@
 @file: extract_built_sql.py
 @time: 2021/8/13 10:54
 @desc: 抽取建表语句中的字段名字，改为select ... from table
+        起名：mysql create table到hive建表+select字段工具
         输出exe文件：pyinstaller -F extract_built_sql.py -i pic.ico
+
+        - 【20210823】 v0.1
+            1. 新增中台创表语句的字段提取功能
+            2. 新增时间pause功能
 """
 import sys
 import re
 import pyperclip
+import time
 from dataclasses import dataclass
+
+update_info = """
+**************************************************************************************************************
+【mysql create table到hive建表 + select字段工具】 v0.1 20210823
+本工具为sql解析工具，包括以下功能：
+    1. cis到ods_cis开发
+        通过复制CIS原表的 show create table 中的内容，获得 (1)中台ods_cis创表语句 以及 (2)select各个字段的语句
+    2. 数据中台select字段语句的生成
+        通过dmp的某创表语句，生成select字段的语句（比如从dw到dm层时，辅助生成insert语句中的select语句）
+
+                                                                                                 @李英俊小朋友
+**************************************************************************************************************
+"""
 
 
 @dataclass
@@ -22,7 +41,9 @@ class SqlExtract:
     sql: str
 
     def __post_init__(self):
-        self.analyse_sql()
+        # 是否是中台的创表语句（是否有.），是的话，就不需要新建创表语句
+        self.dmp_flag = False
+        self.time_pause = 1
 
     def analyse_sql(self):
         """
@@ -43,8 +64,10 @@ class SqlExtract:
         middle_rows = [x.strip() for x in sql_list]
 
         # 3. 获取表名
-        pattern = re.compile(r'\s+(\w+)\s+\(')
+        pattern = re.compile(r'\s+([\w\.]+)\s+\(')
         table_name = pattern.search(first_row, re.I).group(1)
+        if '.' in table_name:
+            self.dmp_flag = True
 
         # 4. 获取列名和备注
         def get_column_comment(row):
@@ -60,27 +83,37 @@ class SqlExtract:
         result1 = 'create table if not exists ods_cis.' + table_name + ' (\n\t' + ',\n\t'.join(
             new_rows) + '\n) ' + last_row + '\nSTORED AS PARQUET TBLPROPERTIES ("orc.compress"="SNAPPY");'
         result2 = 'select\n\t' + ',\n\t'.join(columns) + '\nfrom ' + table_name
-        print(result1)
-        r1 = input('是否需要复制创表语句？[回车表示复制，任意键跳过]')
-        if r1 == '':
-            pyperclip.copy(result1)
-            print('--> 已复制')
+
+        if self.dmp_flag:
+            print('【识别到该表为中台的表，只进行字段提取】', end='')
         else:
-            ...
-        print('-' * 50)
+            # 进行创表数据获取
+            print('\n创表语句处理结果如下：')
+            time.sleep(self.time_pause)
+            print(result1)
+            time.sleep(self.time_pause)
+            r1 = input('是否需要复制创表语句？[回车表示复制，任意键跳过]\n')
+            if r1 == '':
+                pyperclip.copy(result1)
+                print('--> 已复制')
+            else:
+                ...
+            print('-' * 50)
+
+        # 进行字段提取
+        print('\n字段提取语句处理结果如下：')
+        time.sleep(self.time_pause)
         print(result2)
-        r2 = input('是否需要复制选择字段语句？[回车表示复制，任意键跳过]')
-        if r2 == '':
-            pyperclip.copy(result2)
-            print('--> 已复制')
-        else:
-            ...
+        pyperclip.copy(result2)
+        time.sleep(self.time_pause)
+        print('--> 字段提取语句已复制\n')
 
     def __repr__(self):
         return repr(self.sql)
 
 
 def run():
+    print('粘贴你的sql内容：')
     aim_sqls = []
     while (True):
         x = input()
@@ -92,9 +125,15 @@ def run():
             break
 
     se = SqlExtract('\n'.join(aim_sqls))
+    se.analyse_sql()
     print('-' * 50 + '\n' + '处理完毕，等待新的输入【输入q，退出程序】\n' + '-' * 50 + '\n')
 
 
 if __name__ == '__main__':
+    print(update_info)
     while True:
-        run()
+        try:
+            run()
+        except:
+            print('【警告】你粘贴的东西不行，请检查sql，或者联系【管理员】李英俊小朋友解决！！！')
+            time.sleep(1)
