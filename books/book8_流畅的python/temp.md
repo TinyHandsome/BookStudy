@@ -879,8 +879,86 @@
    
       1. 使用 `yield from asyncio.sleep(.1)` 代替 `time.sleep(.1)`，这样的休眠不会阻塞事件循环
       2. `asyncio.async(...)` 函数排定 spin 协程的运行时间，使用一个Task 对象包装 spin 协程，并立即返回
+   
+   4. 除非想阻塞主线程，从而冻结事件循环或整个应用，否则不要在 asyncio 协程中使用 `time.sleep(...)`。如果协程需要在一段时间内什么也不做，应该使用 `yield from asyncio.sleep(DELAY)`
+   
+   5. 两种 supervisor 实现之间的主要区别概述如下：
+   
+      1. asyncio.Task 对象差不多与 threading.Thread 对象等效
+      2. Task 对象用于驱动协程，Thread 对象用于调用可调用的对象
+      3. Task 对象不由自己动手实例化，而是通过把协程传给 `asyncio.async(...)` 函数或 loop.create_task(...) 方法获取
+      4. 获取的 Task 对象已经排定了运行时间（例如，由 `asyncio.async` 函数排定）；Thread 实例则必须调用 start 方法，明确告知让它运行
+      5. 在线程版 supervisor 函数中，slow_function 函数是普通的函数，直接由线程调用。在异步版 supervisor 函数中，slow_function 函数是协程，由 yield from 驱动
+      6. 没有 API 能从外部终止线程，因为线程随时可能被中断，导致系统处于无效状态。如果想终止任务，可以使用 Task.cancel() 实例方法，在协程内部抛出 CancelledError 异常。协程可以在暂停的yield 处捕获这个异常，处理终止请求
+      7. supervisor 协程必须在 main 函数中由 loop.run_until_complete 方法执行
+   
+   6. `asyncio.Future`：故意不阻塞
+   
+      1. asyncio.Future 类与 concurrent.futures.Future 类的接口基本一致，不过实现方式不同，不可以互换
+      2. asyncio.Future 类的 .result() 方法没有参数，因此不能指定超时时间。此外，如果调用 .result() 方法时期物还没运行完毕，那么.result() 方法不会阻塞去等待结果，而是抛出asyncio.InvalidStateError 异常
+      3. 使用 yield from 处理期物与使用 add_done_callback 方法处理协程的作用一样：延迟的操作结束后，事件循环不会触发回调对象，
+         而是设置期物的返回值；而 yield from 表达式则在暂停的协程中生成
+         返回值，恢复执行协程
+      4. 因为 asyncio.Future 类的目的是与 yield from 一起使用，所以通常不需要使用以下方法
+         1. 无需调用 my_future.add_done_callback(...)，因为可以直接把想在期物运行结束后执行的操作放在协程中 yield from my_future 表达式的后面。这是协程的一大优势：**协程是可以暂停和恢复的函数**
+         2. 无需调用 my_future.result()，因为 yield from 从期物中产出的值就是结果（例如，result = yield from my_future）
+   
+   7. 从期物、任务和协程中产出
+   
+      1. 对协程来说，获取 Task 对象有两种主要方式：
+   
+         1. `asyncio.async(coro_or_future, *, loop=None)`
+         2. `BaseEventLoop.create_task(coro)`
+   
+      2. 测试脚本中试验期物和协程：
+   
+         ```python
+         import asyncio
+         def run_sync(coro_or_future):
+             loop = asyncio.get_event_loop()
+             return loop.run_until_complete(coro_or_future)
+         
+         a = run_sync(some_coroutine())
+         ```
+   
+2. 使用asyncio和aiohttp包下载
 
+   1. flags_asyncio.py：使用 asyncio 和 aiohttp 包实现的异步下载脚本
 
+      ```python
+      import asyncio
+      import aiohttp # 1
+      from flags import BASE_URL, save_flag, show, main #2
+      
+      @asyncio.coroutine #3
+      def get_flag(cc):
+          url = '{}/{cc}/{cc}.gif'.format(BASE_URL, cc=cc.lower())
+          resp = yield from aiohttp.request('GET', url) #4
+          image = yield from resp.read() #5
+          return image
+      
+      @asyncio.coroutine
+      def download_one(cc): #6
+          image = yield from get_flag(cc) #7
+          show(cc)
+          save_flag(image, cc.lower() + '.gif')
+          return cc
+      
+      def download_many(cc_list):
+          loop = asyncio.get_event_loop() #8
+          to_do = [download_one(cc) for cc in sorted(cc_list)] #9
+          wait_coro = asyncio.wait(to_do) #10
+          res, _ = loop.run_until_complete(wait_coro) #11
+          loop.close() #12
+          
+          return len(res)
+      
+      
+      if __name__ == '__main__':
+          main(download_many)
+      ```
+
+      1. 虽然函数的名称是 asyncio.wait，但它不是阻塞型函数。wait 是一个协程，等传给它的所有协程运行完毕后结束
 
 
 
