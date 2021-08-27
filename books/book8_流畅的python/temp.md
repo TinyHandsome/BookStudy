@@ -950,7 +950,7 @@
           wait_coro = asyncio.wait(to_do) #10
           res, _ = loop.run_until_complete(wait_coro) #11
           loop.close() #12
-          
+          	
           return len(res)
       
       
@@ -959,6 +959,7 @@
       ```
 
       1. 虽然函数的名称是 asyncio.wait，但它不是阻塞型函数。wait 是一个协程，等传给它的所有协程运行完毕后结束
+      2. wait 函数有两个关键字参数，如果设定了可能会返回未结束的期物；这两个参数是timeout 和 return_when
 
 
 
@@ -986,4 +987,4 @@
 
 
 
-看到 P784
+看到 P794
