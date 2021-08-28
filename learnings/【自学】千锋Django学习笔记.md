@@ -218,6 +218,8 @@
 
          ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210106194411809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
+         伪装报错的原因：[mysqlclient 1.4.0 or newer is required; you have 0.10.0.](https://blog.csdn.net/lvluobo/article/details/107850673)
+
       7. 再执行迁移操作：`python manage.py migrate`，成功！
 
          ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210106194508424.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
@@ -243,14 +245,14 @@
       - 通常在终端中做一些调试工作
 
       - 如何看代bug：
-
+   
         - 看日志：先看第一条、再看最后一条
         - 梳理思路：程序在哪一个位置和预期出现了偏差
 
       - 表关系：1:1、1:M、M:N
 
       - 建立级联关系
-
+   
         ```python
         from django.db import models
         
@@ -268,10 +270,10 @@
         - 这是因为你用的django版本太新了，创建外键的时候需要指定，如果删除了，应该怎么处理，详见[参考链接](https://www.cnblogs.com/gerenboke/p/12091960.html)
 
       - 然后就是要迁移哦：
-
+   
         - `python manage.py makemigrations`
         - `python manage.py migrate`
-
+   
    8. 经典重现
    
       1. CS/BS
@@ -1291,7 +1293,7 @@
 
 
 
-学到（要学）：P76 0328
+学到（要学）：P68
 
 ------
 
