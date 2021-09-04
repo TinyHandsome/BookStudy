@@ -995,6 +995,112 @@
 4. 改进asyncio下载版本
 
    1. 使用 asyncio.as_completed 函数
+   
+   2. raise X from Y：链接原来的异常
+   
+   3. Semaphore对象维护着一个内部计数器，若在对象调用 .acquire() 协程方法，计数器则递减；若在对象上调用 .release() 协程方法，计数器则递增。
+   
+   4. 如果计数器大于0，那么调用 .acquire() 方法不会阻塞；可是，如果计数器为0，那么 .acquire() 方法会阻塞调用这个方法的协程，直到其他协程在同一个Semaphore对象上调用 .release() 方法，让计数器递增。
+   
+   5. flags2_asyncio.py
+   
+      ```python
+      import asyncio
+      import collections
+      
+      import aiohttp
+      from aiohttp import web
+      import tqdm
+      
+      from flags2_common import main, HTTPStatus, Result, save_flag
+      
+      # 默认设为较小的值，防止远程网站出错
+      # 例如503 - Service Temporarily Unavaliable
+      DEFAULT_CONCUR_REQ = 5
+      MAX_CONCUR_REQ = 1000
+      
+      class FetchError(Exception): #1
+          def __init__(self, country_code):
+              self.country_code = country_code
+              
+      @asyncio.coroutine
+      def get_flag(base_url, cc): #2
+          url = '{}/{cc}/{cc}.gif'.format(base_url, cc=cc.lower())
+          resp = yield from aiohttp.request('GET', url)
+          if resp.status == 200:
+              image = yield from resp.read()
+              return image
+          elif resp.status == 404:
+              raise web.HTTPNotFound()
+          else:
+              raise aiohttp.HttpProcessingError(code=resp.status, message=resp.reason, headers=resp.headers)
+      
+      @asyncio.coroutine
+      def download_one(cc, base_url, semaphore, verbose): #3
+          # semaphore: 信号标
+          try:
+              with (yield from semaphore): #4
+                  image = yield from get_flag(base_url, cc) #5
+          except web.HTTPNotFound: #6
+              status = HTTPStatus.not_found
+              msg = 'not found'
+          except Exception as exc:
+              raise FetchError(cc) from exc #7
+          else:
+              save_flag(image, cc.lower() + '.gif') #8
+              status = HTTPStatus.ok
+              msg = 'OK'
+              
+          if verbose and msg:
+              print(cc, msg)
+          
+          return Result(status, cc)
+      
+      @asyncio.coroutine
+      def downloader_coro(cc_list, base_url, verbose, concur_req): #1
+          counter = collections.Counter()
+          semaphore = asyncio.Semaphore(concur_req) #2
+          to_do = [download_one(cc, base_url, semaphore, verbose) for cc in sorted(cc_list)] #3
+          
+          to_do_iter = asyncio.as_completed(to_do) #4
+          if not verbose:
+              to_do_iter = tqdm.tqdm(to_do_iter, total=len(cc_list)) #5
+          for future in to_do_iter: #6
+              try:
+                  res = yield from future #7
+              except FetchError as exc: #8
+                  country_code = exc.country_code #9
+                  try:
+                      error_msg = exc.__cause__.args[0] #10
+                  except IndexError:
+                      error_msg = exc.__cause__.__class__.__name__ #11
+                  if verbose and error_msg:
+                      msg = '*** Error for {}: {}'
+                      print(msg.format(country_code, error_msg))
+                  status = HTTPStatus.error
+              else:
+                  status = res.status
+                  
+              counter[status] += 1 #12
+              
+          return counter #13
+      
+      def download_many(cc_list, base_url, verbose, concur_req):
+          loop = asyncio.get_event_loop()
+          coro = downloader_coro(cc_list, base_url, verbose, concur_req)
+          counts = loop.run_until_complete(coro) #14
+          loop.close() #15
+          return counts
+      
+      if __name__ == '__main__':
+          main(download_many, DEFAULT_CONCUR_REQ, MAX_CONCUR_REQ)
+      ```
+   
+   6. 获取 asyncio.Future 对象的结果，最简单的方法是使用 yield from，而不是调用 future.result() 方法
+   
+   7. 因为失败时不能以期物为键从字典中获取国家代码，所以实现了自定义的 FetchError 异常，包装网络异常，并关联相应的国家代码，因此在详细模式中报告错误时能显示国家代码。
+   
+5. 使用Executor对象，防止阻塞事件循环
 
 
 
@@ -1010,16 +1116,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-看到 P801
+看到 P807
