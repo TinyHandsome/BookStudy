@@ -1288,12 +1288,20 @@
         - VUE
         - Android
         - IOS
+    
+8. 一些开发时遇到的问题
+
+    1. [pymysql 报错：from . import connections # noqa: E402](https://blog.csdn.net/weixin_44678368/article/details/112631405)
+
+        这里需要下载 0.10.1的pymysql，不然会报错
+
+    2. 
 
 
 
 
 
-学到（要学）：P68
+学到（要学）：P70 0823
 
 ------
 

@@ -1,0 +1,8 @@
+footer .home span {
+    background: url(/static/img/home_selected.png) no-repeat;
+    background-size: 0.513889rem;
+}
+
+footer .home dd {
+    color: #ffa500;
+}
