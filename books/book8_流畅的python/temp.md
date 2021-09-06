@@ -1102,6 +1102,252 @@
    
 5. 使用Executor对象，防止阻塞事件循环
 
+   1. asyncio 的事件循环在背后维护着一个 ThreadPoolExecutor 对象，我们可以调用 run_in_executor 方法，把可调用的对象发给它执行。
+
+   2. 在 download_one函数中，save_flag函数会阻塞客户代码与 asyncio 事件循环公用的唯一线程，因此保存文件时，整个应用程序都会冻结。
+
+   3. 解决方案：
+
+      1. 之前的 download_one 函数中
+
+         ```python
+         @asyncio.coroutine
+         def download_one(cc, base_url, semaphore, verbose):
+             try:
+                 ...
+             else:
+                 save_flag(image, cc.lower() + '.gif')
+                 status = HTTPStatus.ok
+                 msg = 'OK'
+                 
+             if verbose and msg:
+                 ...
+         ```
+
+      2. 修改之后的代码
+
+         ```python
+         @asyncio.coroutine
+         def download_one(cc, base_url, semaphore, verbose):
+             try:
+                 ...
+             else:
+                 loop = asyncio.get_event_loop()
+                 loop.run_in_executor(None, save_flag, image, cc.lower() + '.gif')
+                 status = HTTPStatus.ok
+                 msg = 'OK'
+                 
+             if verbose and msg:
+                 ...
+         ```
+
+      3. run_in_executor 方法的第一个参数是 Executor 实例，如果设为None，使用事件循环的默认 ThreadPoolExecutor 实例。
+
+6. 从回调到期物和协程
+
+   1. 使用协程和yield from结构做异步编程，无需使用回调
+
+      ```python
+      @asyncio.coroutine
+      def three_stages(request1):
+          reponse1 = yield from api_call1(request1)
+          request2 = step1(response1)
+          response2 = yield from api_call2(request2)
+          request3 = step2(response2)
+          response3 = yield from api_call3(request3)
+          step3(response3)
+          
+      # 必须显示调度执行
+      loop.create_task(three_stages(request1))
+      ```
+
+   2. 每次下载发起多次请求
+
+      ```python
+      @asyncio.coroutine
+      def http_get(url):
+          res = yield from aiohttp.request('GET', url)
+          if res.status == 200:
+              ctype = res.headers.get('Content-type', '').lower()
+              if 'json' in ctype or url.endswith('json'):
+                  data = yield from res.json() #1
+              else:
+                  data = yield from res.read() #2
+              return data
+          
+          elif res.status == 404:
+              raise web.HTTPNotFound()
+          else:
+              raise aiohttp.errors.HttpProcessingError(code=res.status, message=res.reason, headers=res.headers)
+              
+      @asyncio.coroutine
+      def get_country(base_url, cc):
+          url = '{}/{cc}/metadata.json'.format(base_url, cc=cc.lower())
+          metadata = yield from http_get(url) #3
+          return metadata['country']
+      
+      @asyncio.coroutine
+      def get_flag(base_url, cc):
+          url = '{}/{cc}/{cc}.gif'.format(base_url, cc=cc.lower())
+          return (yield from http_get(url)) #4
+      
+      @asyncio.coroutine
+      def download_one(cc, base_url, semaphore, verbose):
+          try:
+              with (yield from semaphore): #5
+                  image = yield from get_flag(base_url, cc)
+              with (yield from semaphore):
+                  country = yield from get_country(base_url, cc)
+          except web.HTTPNotFound:
+              status = HTTPStatus.not_found
+              msg = 'not found'
+          except Exception as exc:
+              raise FetchError(cc) from exc
+          else:
+              country = country.replace(' ', '_')
+              filename = '{}-{}.gif'.format(country, cc)
+              loop = asyncio.get_event_loop()
+              loop.run_in_executor(None, save_flag, image, filename)
+              status = HTTPStatus.ok
+              msg = 'ok'
+          
+          if verbose and msg:
+              print(cc, msg)
+              
+          return Result(status, cc)
+      ```
+
+7. 使用asyncio包编写服务器
+
+   1. 使用asyncio包编写TCP服务器
+
+      ```python
+      import sys
+      import asyncio
+      
+      from charfinder import UnicodeNameIndex #1
+      
+      CRLF = b'\r\n'
+      PROMPT = b'?>'
+      
+      index = UnicodeNameIndex() #2
+      
+      @asyncio.coroutine
+      def handle_queries(reader, writer): #3
+          while True: #4
+              writer.write(PROMPT) # 不能使用yield from #5
+              yield from writer.drain() # 必须使用 yield from #6
+              data = yield from reader.readline() #7
+              try:
+                  query = data.decode().strip()
+              except UnicodeDecodeError: #8
+                  query = '\x00'
+              client = writer.get_extra_info('peername') #9
+              print('Received from {}: {!r}'.format(client, query)) #10
+              if query:
+                  if ord(query[:1]) < 32: #11
+                      break
+                  lines = list(index.find_description_strs(query)) #12
+                  if lines:
+                      writer.writelines(line.encode() + CRLF for line in lines) #13
+                  writer.write(index.status(query, len(lines)).encode() + CRLF) #14
+                  
+                  yield from writer.drain() #15
+                  print('Sent {} results'.format(len(lines))) #16
+              
+              print('Close the client socket') #17
+              writer.close() #18
+              
+      def main(address='127.0.0.1', port=2323): #1
+          port = int(port)
+          loop = asyncio.get_event_loop()
+          server_coro = asyncio.start_server(handle_queries, address, port, loop=loop) #2
+          server = loop.run_until_complete(server_coro) #3
+          host = server.sockets[0].getsockname() #4
+          print('Serving on {}. Hit CTRL-C to stop.'.format(host)) #5
+          try:
+              loop.run_forever() #6
+          except KeyboardInterrupt: # 按CTRL-C键
+              pass
+          
+          print('Server shutting down.')
+          server.close() #7
+          loop.run_until_complete(server.wait_closed()) #8
+          loop.close() #9
+      
+      if __name__ == '__main__':
+          main(*sys.argv[1:]) #10
+      ```
+
+   2. 使用aiohttp包编写Web服务器
+
+      1. asyncio.start_server 函数和 loop.create_server 方法都是协程，返回的结果都是 asyncio.Server 对象
+
+      2. 只有驱动协程，协程才能做事。而驱动 asyncio.coroutine 装饰的协程有两种方法：
+
+         - 要么使用 yield from
+         - 要么传给 asyncio 包中某个参数为协程或期物的函数，例如 run_until_complete
+
+      3. 更好地支持并发的智能客户端
+
+      4. http_charfinder.py
+
+         ```python
+         from aiohttp import web
+         import asyncio, sys
+         
+         
+         def home(request): #1
+             query = request.GET.get('query', '').strip() # 2
+             print('Query: {!r}'.format(query)) # 3
+             if query: # 4
+                 descriptions = list(index.find_descriptions(query))
+                 res = '\n'.join(ROW_TPL.format(**vars(descr)) for descr in descriptions)
+                 msg = index.status(query, len(descriptions))
+             else:
+                 descriptions = []
+                 res = ''
+                 msg = 'Enter words describing characters.'
+                 
+             html = template.format(query=query, result=res, message=msg) # 5
+             
+             print('Sending {} results'.format(len(descriptions))) # 6
+             return web.Response(content_type=CONTENT_TYPE, text=html) # 7
+         
+         @asyncio.coroutine
+         def init(loop, address, port): # 1
+             app = web.Application(loop=loop) #2
+             app.router.add_route('GET', '/', home) #3
+             handler = app.make_handler() # 4
+             server = yield from loop.create_server(handler, address, port) # 5
+             return server.sockets[0].getsockname() # 6
+         
+         
+         def main(address='127.0.0.1', port=8889):
+             port = int(port)
+             loop = asyncio.get_event_loop()
+             host = loop.run_until_complete(init(loop, address, port)) # 7
+             print('Serving on {}. Hit CTRL-C to stop.'.format(host))
+             try:
+                 loop.run_forever() # 8
+             except KeyboardInterrupt: # 按CTRL-C键
+                 pass
+             print('Server shutting down.')
+             loop.close() # 9
+             
+         
+         if __name__ == '__main__':
+             main(*sys.argv[1:])
+         ```
+
+8. 小结：
+
+   1. 尽管有些函数必然会阻塞，但是为了让程序持续运行，有两种解决方案可用：
+      - 使用多个线程
+      - 异步调用——以回调或协程的形式实现
+   2. 异步库依赖于低层线程（直至内核级线程），但是这些库的用户无需创建线程，也无需知道用到了基础设施中的低层线程
+   3. 使用 loop.run_in_executor 方法把阻塞的作业（例如保存文件）委托给线程池做
+   4. 使用协程解决回调的主要问题：执行分成多步的异步任务时丢失上下文，以及缺少处理错误所需的上下文
 
 
 
@@ -1116,4 +1362,5 @@
 
 
 
-看到 P807
+
+看到 P833
