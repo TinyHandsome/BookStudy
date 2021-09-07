@@ -1125,8 +1125,6 @@
 
 ## 14. 需求分析
 
-> **爱先锋项目** 因为资源缺的太多，并且需要一定的前端知识，所以就看了看，并没有具体进行实践（我摊牌了，我放弃了）
-
 1. 技术部
 
     - 产品经历
@@ -1295,13 +1293,15 @@
 
         这里需要下载 0.10.1的pymysql，不然会报错
 
-    2. 
+    2. [pycharm 高亮提示 unresolved template reference的解决](https://blog.csdn.net/louisliushu/article/details/89069341)
+    
+        需要设置django的settings.py的位置
 
 
 
 
 
-学到（要学）：P70 0823
+学到（要学）：P71 0415
 
 ------
 

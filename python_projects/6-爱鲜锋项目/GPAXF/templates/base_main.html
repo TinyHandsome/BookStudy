@@ -12,7 +12,7 @@
 
 {% block footer %}
     <footer>
-        <a href="#" class="home">
+        <a href="{% url 'axf:home' %}" class="home">
             <dl>
                 <dt>
                     <span></span>
@@ -20,7 +20,7 @@
                 <dd>首页</dd>
             </dl>
         </a>
-        <a href="#" class="market">
+        <a href="{% url 'axf:market' %}" class="market">
             <dl>
                 <dt>
                     <span></span>
@@ -28,7 +28,7 @@
                 <dd>闪购</dd>
             </dl>
         </a>
-        <a href="#" class="cart">
+        <a href="{% url 'axf:cart' %}" class="cart">
             <dl>
                 <dt>
                     <span></span>
@@ -36,7 +36,7 @@
                 <dd>购物车</dd>
             </dl>
         </a>
-        <a href="#" class="mine">
+        <a href="{% url 'axf:mine' %}" class="mine">
             <dl>
                 <dt>
                     <span></span>

@@ -9,4 +9,22 @@
 {% block ext_js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/swiper.jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'axf/main/js/home.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="home">
+    {# 首页顶部轮播 #}
+        <div class="swiper-container" id="topSwiper">
+            <div class="swiper-wrapper">
+                {% for main_wheel in main_wheels %}
+                    <div class="swiper-slide">
+                        <img src="{{ main_wheel.img }}" alt="{{ main_wheel.name }}">
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
 {% endblock %}
