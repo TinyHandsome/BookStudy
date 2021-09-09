@@ -1358,9 +1358,111 @@
    2. attribute：属性，在Python中，数据的属性和处理数据的方法统称属性。
    3. 使用点号访问属性时（如 obj.attr），Python 解释器会调用特殊的方法（如 `__getattr__` 和 `__setattr__`）计算属性
    4. 用户自己定义的类可以通过 `__getattr__` 方法实现“虚拟属性”，当访问不存在的属性时（如 obj.no_such_attribute），即时计算属性的值
+
 2. 使用动态属性转换数据
+
    1. 使用动态属性访问JSON类数据
 
+      ```python
+      from collections import abc
+      
+      class FrozenJson:
+          """一个只读接口，使用属性表示法访问JSON类对象"""
+          
+          def __init__(self, mapping):
+              self.__data = dict(mapping) #1
+              
+          def __getattr__(self, name): #2
+              if hasattr(self.__data, name):
+                  return getattr(self.__data, name) #3
+              else:
+                  return FrozenJson.build(self.__data[name]) #4
+          
+          @classmethod
+          def build(cls, obj): #5
+              if isinstance(obj, abc.Mapping): #6
+                  return cls(obj)
+              elif isinstance(obj, abc.MutableSequence): #7
+                  return [cls.build(item) for item in obj]
+              else:
+                  return obj
+      ```
+
+   2. 从随机源中生成或仿效动态属性名的脚本都必须处理一个问题：**原始数据中的键可能不适合作为属性名**
+
+   3. 处理无效属性名
+
+      ```python
+      from collections import abc
+      import keyword
+      
+      class FrozenJson:
+          """一个只读接口，使用属性表示法访问JSON类对象"""
+          
+          def __init__(self, mapping):
+              self.__data = {}
+              for key, value in mapping.items():
+                  if keyword.iskeyword(key):
+                      key += '_'
+                  self.__data[key] = value
+              
+          def __getattr__(self, name): #2
+              if hasattr(self.__data, name):
+                  return getattr(self.__data, name) #3
+              else:
+                  return FrozenJson.build(self.__data[name]) #4
+          
+          @classmethod
+          def build(cls, obj): #5
+              if isinstance(obj, abc.Mapping): #6
+                  return cls(obj)
+              elif isinstance(obj, abc.MutableSequence): #7
+                  return [cls.build(item) for item in obj]
+              else:
+                  return obj
+      ```
+
+   4. 使用 `__new__` 方法以灵活的方式创建对象
+
+      使用 `__new__` 方法取代 `build` 方法，构建可能是也可能不是 FrozenJSON 实例的新对象
+
+      ```python
+      from collections import abc
+      
+      class FrozenJSON:
+          """一个只读接口，使用属性表示法访问JSON类对象"""
+          
+          def __new__(cls, arg): #1
+              if isinstance(arg, abc.Mapping):
+                  return super().__new__(cls) #2
+              elif isinstance(arg, abc.MutableSequence): #3
+                  return [cls(item) for item in arg]
+              else:
+                  return arg
+              
+          def __init__(self, mapping):
+              self.__data = {}
+              for key, value in mapping.items():
+                  if keyword.iskeyword(key):
+                      key += '_'
+                  self.__data[key] = value
+                  
+          def __getattr__(self, name):
+              if hasattr(self.__data, name):
+                  return getattr(self.__data, name)
+              else:
+                  return FrozenJson(self.__data[name]) #4
+      ```
+
+   5. 使用shelve模块调整OSCON数据源的结构
+
+      1. shelve.open 高阶函数返回一个 shelve.Shelf 实例，这是简单的键值对象数据库，背后由 dbm 模块支持，具有下述特点：
+         - shelve.Shelf 是 abc.MutableMapping 的子类，因此提供了处理映射类型的重要方法
+         - 此外，shelve.Shelf 类还提供了几个管理 I/O 的方法，如 sync 和 close；它也是一个上下文管理器
+         - 只要把新值赋予键，就会保存键和值
+         - 键必须是字符串
+         - 值必须是 pickle 模块能处理的对象
+      2. 
 
 
 
@@ -1375,4 +1477,5 @@
 
 
 
-看到 P843
+
+看到 P851
