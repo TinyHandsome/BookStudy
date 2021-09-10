@@ -1457,12 +1457,40 @@
    5. 使用shelve模块调整OSCON数据源的结构
 
       1. shelve.open 高阶函数返回一个 shelve.Shelf 实例，这是简单的键值对象数据库，背后由 dbm 模块支持，具有下述特点：
+
          - shelve.Shelf 是 abc.MutableMapping 的子类，因此提供了处理映射类型的重要方法
          - 此外，shelve.Shelf 类还提供了几个管理 I/O 的方法，如 sync 和 close；它也是一个上下文管理器
          - 只要把新值赋予键，就会保存键和值
          - 键必须是字符串
          - 值必须是 pickle 模块能处理的对象
-      2. 
+
+      2. schedule1.py：访问保存在 shelve.Shelf 对象里的 OSCON 日程数据
+
+         ```python
+         import warnings
+         
+         DB_NAME = 'data/schedule1_db'
+         CONFERENCE = 'conference.115'
+         
+         
+         class Record:
+             def __init__(self, **kwargs):
+                 self.__dict__.update(kwargs) #2
+                 
+             
+         def load_db(db):
+             raw_data = load() #3
+             warnings.warn('loading ' + DB_NAME)
+             for collection, rec_list in raw_data['Schedule'].items(): #4
+                 record_type = collection[:-1] #5
+                 for record in rec_list:
+                     key = '{}.{}'.format(record_type, record['serial']) #6
+                     record['serial'] = key #7
+                     db[key] = Record(**record) #8
+         ```
+
+         1. `Record.__init__` 方法展示了一个流行的 Python 技巧。我们知道，对象的 `__dict__` 属性中存储着对象的属性——前提是类中没有声明`__slots__` 属性	
+         2. 因此，更新实例的 `__dict__` 属性，把值设为一个映射，能快速地在那个实例中创建一堆属性
 
 
 
@@ -1478,4 +1506,4 @@
 
 
 
-看到 P851
+看到 P854

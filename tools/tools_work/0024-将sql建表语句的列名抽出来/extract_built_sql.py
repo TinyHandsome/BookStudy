@@ -92,12 +92,12 @@ class SqlExtract:
             time.sleep(self.time_pause)
             print(result1)
             time.sleep(self.time_pause)
-            r1 = input('是否需要复制创表语句？[回车表示复制，任意键跳过]\n')
-            if r1 == '':
-                pyperclip.copy(result1)
-                print('--> 已复制')
-            else:
+            pyperclip.copy(result1)
+            r1 = input('已复制创表语句，请粘贴后按[回车]获取字段提取语句，按q键退出\n')
+            if r1.lower() != 'q':
                 ...
+            else:
+                return
             print('-' * 50)
 
         # 进行字段提取
