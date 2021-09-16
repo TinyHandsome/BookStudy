@@ -1491,6 +1491,245 @@
 
          1. `Record.__init__` 方法展示了一个流行的 Python 技巧。我们知道，对象的 `__dict__` 属性中存储着对象的属性——前提是类中没有声明`__slots__` 属性	
          2. 因此，更新实例的 `__dict__` 属性，把值设为一个映射，能快速地在那个实例中创建一堆属性
+      
+   6. 使用特性获取链接的记录：schedule2.py
+   
+      ```python
+      import warnings
+      import inspect #1
+      
+      import osconfeed
+      
+      DB_NAME = 'data/schedule2_db' #2
+      CONFERENCE = 'conference.115'
+      
+      
+      class Record:
+          def __init__(self, **kwargs):
+              self.__dict__.update(kwargs)
+              
+          def __eq__(self, other): #3
+              if isinstance(other, Record):
+                  return self.__dict__ == other.__dict__
+              else:
+                  return NotImplemented
+      
+      class MissingDatabaseError(RuntimeError):
+          """需要数据哭但没有制定数据库时抛出""" #1
+          
+      
+      class DbRecord(Record): #2
+          __db = None #3
+          
+          @staticmethod #4
+          def set_db(db):
+              DbRecord.__db = db #5
+          
+          @staticmethod #6
+          def get_db():
+              return DbRecordc.__db
+          
+          @classmethod #7
+          def fetch(cls, ident):
+              db = cls.get_db()
+              try:
+                  return db[ident] #8
+              except TypeError:
+                  if db is None: #9
+                      msg = "database not set; call '{}.set_db(my_db)'"
+                      raise MissingDatabaseError(msg.format(cls.__name__))
+                  else: #10
+                      raise
+          
+          def __repr__(self):
+              if hasattr(self, 'serial'): #11
+                  cls_name = self.__class__.__name__
+                  return '<{} serial={!r}>'.format(cls_name, self.serial)
+              else:
+                  return super().__repr__() #12
+              
+      
+      class Event(DbRecord): #1
+          @property
+          def venue(self):
+              key = 'venue.{}'.format(self.venue_serial)
+              return self.__class__.fetch(key) #2
+          
+          @property
+          def speakers(self):
+              if not hasattr(self, '_speaker_objs'): #3
+                  spkr_serials = self.__dict__['speakers'] #4
+                  fetch = self.__class__.fetch #5
+                  self._speaker_objs = [fetch('speaker.{}'.format(key)) for key in spkr_serials] #6
+                  
+              return self._speaker_objs #7
+          
+          def __repr__(self):
+              if hasattr(self, 'name'): #8
+                  cls_name = self.__class__.__name__
+                  return '<{} {!r}>'.format(cls_name, self.name)
+              else:
+                  return super().__repr__() #9
+              
+      def load_db(db):
+          raw_data = osconfeed.load()
+          warnings.warn('loading ' + DB_NAME)
+          for collection, rec_list in raw_data['Schedule'].items():
+              record_type = collection[:-1] #1
+              cls_name = record_type.capitalize() #2
+              cls = globals().get(cls_name, DbRecord) #3
+              if inspect.isclass(cls) and issubclass(cls, DbRecord): #4
+                  factory = cls #5
+              else:
+                  factory = DbRecord #6
+              for record in rec_list: #7
+                  key = '{}.{}'.format(record_type, record['serial'])
+                  record['serial'] = key
+                  db[key] = factory(**record) #8
+      ```
+   
+3. 使用特性验证属性
+
+   1. LineItem类第1版：表示订单中商品的类
+
+      ```python
+      class LineItem:
+          def __init__(self, description, weight, price):
+              self.description = description
+              self.weight = weight
+              self.price = price
+              
+          def subtotal(self):
+              return self.weight * self.price
+      ```
+
+   2. LineItem类第2版：能验证值的特性
+
+      ```python
+      class LineItem:
+          def __init__(self, description, weight, price):
+              self.description = description
+              self.weight = weight
+              self.price = price
+              
+          def subtotal(self):
+              return self.weight * self.price
+          
+          @property
+          def weight(self):
+              return self.__weight
+          
+          @weight.setter
+          def weight(self, value):
+              if value > 0:
+                  self.__weight = value
+              else:
+                  raise ValueError('value must be > 0')
+      ```
+
+4. 特性全解析
+
+   1. 特性会覆盖实例属性
+
+      - 如果实例和所属的类有同名数据属性，那么实例属性会覆盖（或称遮盖）类属性——至少通过那个实例读取属性时是这样
+      - **属性**：类变量（类属性）、成员变量（实例属性）（我的理解）
+      - **特性**：用@property修饰的，特性是类属性（我的理解）
+      - 同名变量会导致，成员变量覆盖类变量，特性覆盖属性
+      - 删除特性后，类属性和实例属性，都会恢复
+      - bj.attr 这样的表达式不会从 obj 开始寻找 attr，而是从 `obj.__class__` 开始，而且，仅当类中没有名为 attr 特性时，Python 才会在 obj 实例中寻找
+      - **特性** 其实是 **覆盖型描述符**
+
+   2. 特性的文档
+
+      - 控制台中的 help() 函数或 IDE 等工具需要显示特性的文档时，会从特性的 `__doc__` 属性中提取信息
+
+      - `weight = property(get_weight, set_weight, doc='weight in kilograms')`
+
+        ```python
+        class Foo:
+            @property
+            def bar(self):
+                '''The bar attribute'''
+                return self.__dict__['bar']
+            
+            @bar.setter
+            def bar(self, value):
+                self.__dict__['bar'] = value
+        ```
+
+5. 定义一个特性工厂函数
+
+   1. bulkfood_v2prop.py
+
+      ```python
+      def quantity(storage_name): #1
+          def qty_getter(instance): #2
+              return instance.__dict__[storage_name] #3
+          
+          def qty_setter(instance, value): #4
+              if value > 0:
+                  instance.__dict__[storage_name] = value #5
+              else:
+                  raise ValueError('value must be > 0')
+                  
+          return property(qty_getter, qty_setter) #6
+          
+          
+      class LineItem:
+          weight = quantity('weight')
+          price = quantity('price')
+          
+          def __init__(self, description, weight, price):
+              self.description = description
+              self.weight = weight
+              self.price = price
+              
+          def subtotal(self):
+              return self.weight * self.price
+      ```
+
+   2. 对 self.weight 或 nutmeg.weight 的每个引用都由特性函数处理
+
+   3. 只有直接存取 `__dict__` 属性才能跳过特性的处理逻辑
+
+6. 处理属性删除操作
+
+   - 使用 Python 编程时不常删除属性，通过特性删除属性更少见
+
+   - 对象的属性可以使用 del 语句删除
+
+     ```python
+     class BlackKnight:
+         def __init__(self):
+             self.members = ['an arm', 'another arm', 'a leg', 'another leg']
+             self.phrases = ["'Tis but a scratch.'", "It's just a flesh wound.", "I'm invinvible!", "All right, we'll call it a draw."]
+             
+         @property
+         def member(self):
+             print('next member is:')
+             return self.members[0]
+         
+         @member.deleter
+         def member(self):
+             text = 'BLACK KNIGHT (loses {})\n-- {}'
+             print(text.format(self.members.pop(0), self.phrases.pop(0)))
+     ```
+
+7. 处理属性的重要属性和函数
+
+   1. 影响属性处理方式的特殊属性
+
+      - `__class__`：对象所属类的引用（即 `obj.__class__` 与 `type(obj)` 的作用相同）。Python 的某些特殊方法，例如 `__getattr__`，只在对象的类中寻找，而不在实例中寻找。
+
+      - `__dict__`：一个映射，存储对象或类的可写属性。有 `__dict__` 属性的对象，任何时候都能随意设置新属性。如果类有 `__slots__` 属性，它的实例可能没有 `__dict__` 属性。
+
+      - `__slots__`：类可以定义这个这属性，限制实例能有哪些属性。`__slots__` 属性的值是一个字符串组成的元组，指明允许有的属性。如果 `__slots__` 中没有 `'__dict__'`，那么该类的实例没有 `__dict__` 属性，实例只允许有指定名称的属性。
+
+        `__slots__` 属性的值虽然可以是一个列表，但是最好始终使用元组，因为处理完类的定义体之后再修改 `__slots__` 列表没有任何作用，所以使用可变的序列容易让人误解
+
+   2. 处理属性的内置函数
+
+      - `dir([object])`：列出对象的大多数属性
 
 
 
@@ -1506,4 +1745,4 @@
 
 
 
-看到 P854
+看到 P881
