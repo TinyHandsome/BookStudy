@@ -1730,6 +1730,51 @@
    2. 处理属性的内置函数
 
       - `dir([object])`：列出对象的大多数属性
+        - dir 函数能审查有或没有 `__dict__` 属性的对象
+        - dir 函数不会列出 `__dict__` 属性本身，但会列出其中的键
+        - dir 函数也不会列出类的几个特殊属性，例如 `__mro__`、`__bases__` 和 `__name__`
+      - `getattr(object, name[, default])`：从 object 对象中获取 name 字符串对应的属性
+        - 获取的属性可能来自对象所属的类或超类
+        - 如果没有指定的属性，getattr 函数抛出 AttributeError 异常，或者返回 default 参数的值
+      - `hasattr(object, name)`：如果 object 对象中存在指定的属性，或者能以某种方式（例如继承）通过 object 对象获取指定的属性，返回 True
+      - `setattr(object, name, value)`：把 object 对象指定属性的值设为 value，前提是 object 对象能接受那个值
+        - 这个函数可能会创建一个新属性，或者覆盖现有的属性
+      - `vars([object])`：返回 object 对象的 `__dict__` 属性
+        - 如果实例所属的类定义了`__slots__` 属性，实例没有 `__dict__` 属性，那么 vars 函数不能处理那个实例
+        - 如果没有指定参数，那么 vars() 函数的作用与 locals() 函数一样：返回表示本地作用域的字典
+      
+   3. 处理属性的特殊方法
+
+      - 使用点号或内置的 getattr、hasattr 和 setattr 函数存取属性都会触发下述列表中相应的特殊方法
+
+      - 但是，直接通过实例的 `__dict__` 属性读写属性不会触发这些特殊方法
+
+      - 如果需要，通常会使用这种方式跳过特殊方法
+
+      - 要假定特殊方法从类上获取，即便操作目标是实例也是如此。因此，特殊方法不会被同名实例属性遮盖
+
+      - `__delattr__(self, name)`：只要使用 del 语句删除属性，就会调用这个方法
+
+      - `__dir__(self)`：把对象传给 dir 函数时调用，列出属性
+
+      - `__getattr__(self, name)`：仅当获取指定的属性失败，搜索过 obj、Class 和超类之后调用
+
+      - `__getattribute__(self, name)`：尝试获取指定的属性时总会调用这个方法，不过，寻找的属性是特殊属性或特殊方法时除外
+
+        为了在获取 obj 实例的属性时不导致无限递归，`__getattribute__` 方法的实现要使用 `super().__getattribute__(obj, name)`
+
+      - `__setattr__(self, name, value)`：尝试设置指定的属性时总会调用这个方法，点号和 setattr 内置函数会触发这个方法
+
+8. 总结：
+
+   1. [详解Python中的`__init__`和`__new__`](https://zhuanlan.zhihu.com/p/58139772)
+   2. 在 Python 中，很多情况下类和函数可以互换。这不仅是因为 Python 没有 new 运算符，还因为有特殊的 `__new__` 方法，可以把类变成工厂方法，生成不同类型的对象，或者返回事先构建好的实例，而不是每次都创建一个新实例
+   3. UAP：统一访问原则，Unifrom Access Principle
+   4. **new** 方法接受的参数虽然也是和 **init** 一样，但 **init** 是在类实例创建之后调用，而  **new** 方法正是创建这个类实例的方法
+
+## 20. 属性描述符
+
+1. 
 
 
 
@@ -1745,4 +1790,5 @@
 
 
 
-看到 P881
+看到 P890
+
