@@ -1774,7 +1774,155 @@
 
 ## 20. 属性描述符
 
-1. 
+1. 前言
+
+   1. 描述符是对多个属性运用相同存取逻辑的一种方式
+   2. 描述符是实现了特定协议的类，这个协议包括 `__get__`、`__set__` 和
+      `__delete__` 方法
+   3. 除了特性之外，使用描述符的 Python 功能还有方法及 classmethod 和 staticmethod 装饰器
+
+2. 描述符示例：验证属性
+
+   1. LineItem类第3版：一个简单的描述符
+
+      1. 描述符的用法是，创建一个实例，作为另一个类的类属性
+
+      2. 描述符类：实现描述符协议的类
+
+      3. 托管类：把描述符实例声明为类属性的类
+
+      4. 描述符实例：描述符类的各个实例，声明为托管类的类属性
+
+      5. 托管实例：托管类的实例
+
+      6. 储存属性：托管实例中存储自身托管属性的属性
+
+      7. 托管属性：托管类中由描述符实例处理的公开属性，值存储在储存属性中。也就是说，描述符实例和储存属性为托管属性建立了基础
+
+      8. 代码
+
+         ```python
+         class Quantity: #1
+             def __init__(self, storage_name):
+                 self.storage_name = storage_name #2
+             
+             def __set__(self, instance, value): #3
+                 if value > 0:
+                     instance.__dict__[self.storage_name] = value #4
+                 else:
+                     raise ValueError('value must be > 0')
+                     
+         
+         class LineItem:
+             weight = Quantity('weight') #5
+             price = Quantity('price') #6
+             
+             def __init__(self, description, weight, price): #7
+                 self.description = description
+                 self.weight = weight
+                 self.price = price
+                 
+             def subtotal(self):
+                 return self.weight * self.price
+         ```
+
+   2. LineItem类第4版：自动获取储存属性的名称
+
+      1. 这里可以使用内置的高阶函数 getattr 和 setattr 存取值，无需使用`instance.__dict__`，因为托管属性和储存属性的名称不同，所以把储存属性传给 getattr 函数不会触发描述符，不会像前面那样出现无限递归
+
+         ```python
+         class Quantity:
+             __counter = 0 #1
+             
+             def __init__(self):
+                 cls = self.__class__ #2
+                 prefix = cls.__name__
+                 index = cls.__counter
+                 self.storage_name = '_{}#{}'.format(prefix, index) #3
+                 cls.__counter += 1 #4
+                 
+             def __get__(self, instance, owner): #5
+                 return getattr(instance, self.storage_name) #6
+             
+             def __set__(self, instance, value): #6
+                 if value > 0:
+                     setattr(instance, self.storage_name, value) #7
+                 else:
+                     raise ValueError('value must be > 0')
+                     
+         class LineItem:
+             weight = Quantity() #9
+             price = Quantity()
+             
+             def __init__(self, description, weight, price):
+                 self.description = description
+                 self.weight = weight
+                 self.price = price
+                 
+             def subtotal(self):
+                 return self.weight * self.price
+         ```
+
+      2. 为了给用户提供内省和其他元编程技术支持，通过类访问托管属性时，最好让 `__get__` 方法返回描述符实例
+
+         ```python
+         def __get__(self, instance, owner): #5
+             if instance is None:
+             	return self
+             else:
+             	return getattr(instance, self.storage_name) #6
+         ```
+
+      3. 描述符的常规用法：整洁的 LineItem 类；Quantity 描述符类现在位于导入的 model_v4c 模块中
+
+         ```python
+         import model_v4c as model
+         
+         
+         class LineItem:
+             weight = model.Quantity()
+             price = model.Quantity()
+             
+             def __init__(self, description, weight, price):
+                 self.description = description
+                 self.weight = weight
+                 self.price = price
+                 
+             def subtotal(self):
+                 return self.weight * self.price
+         ```
+
+         1. Django 模型的字段就是描述符
+
+      4. 使用特性工厂函数实现与上述示例中的描述符类相同的功能
+
+         ```python
+         def quantity(): #1
+             try:
+                 quantity.counter += 1 #2
+             except AttributeError:
+                 quantity.counter = 0 #3
+             storage_name = '_{}:{}'.format('quntity', quantity.counter) #4
+             
+             def qty_getter(instance): #5
+                 return getattr(instance, storage_name)
+             
+             def qty_setter(instance, value):
+                 if value > 0:
+                     setattr(instance, storage_name, value)
+                 else:
+                     raise ValueError('value must be > 0')
+             
+             return property(qty_getter, qty_setter)
+         ```
+
+         1. 不能依靠类属性在多次调用之间共享 counter，因此把它定义为 quantity 函数自身的属性
+         2. 作者更喜欢描述符类的方式，因为：
+            1. 描述符类可以使用子类扩展；若想重用工厂函数中的代码，除了复制粘贴，很难有其他方法
+            2. 与使用函数属性和闭包保持状态相比，在类属性和实例属性中保持状态更易于理解
+         3. 从某种程度上来讲，特性工厂函数模式较简单，可是描述符类方式更易扩展，而且应用也更广泛
+
+   3. LineItem类第5版：一种新型描述符
 
 
 
@@ -1790,5 +1938,5 @@
 
 
 
-看到 P890
+看到 P904
 
