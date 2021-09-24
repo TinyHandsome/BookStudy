@@ -59,7 +59,8 @@
   3. [集合的数学运算、集合的比较运算符、集合类型的其他方法](#3)
   4. [用户定义函数的属性](#4)
   5. [利用`inspect.signature`提取函数签名](#5)
-  6. [__set__,__setattr__,__getattr__等几个方法区别小记](https://www.jianshu.com/p/1e60edf21794)
+  6. [`__set__,__setattr__,__getattr__`等几个方法区别小记](https://www.jianshu.com/p/1e60edf21794)
+  7. [属性、特性、描述符](https://www.cnblogs.com/xiaobingqianrui/p/8556001.html)
 
 ## 1. Python数据模型
 

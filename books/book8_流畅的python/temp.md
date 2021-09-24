@@ -1923,6 +1923,264 @@
          3. 从某种程度上来讲，特性工厂函数模式较简单，可是描述符类方式更易扩展，而且应用也更广泛
 
    3. LineItem类第5版：一种新型描述符
+   
+      ```python
+      import abc
+      
+      class AutoStorage: #1
+          __counter = 0
+          
+          
+          def __init__(self):
+              cls = self.__class__
+              prefix = cls.__name__
+              index = cls.__counter
+              self.storage_name = '_{}#{}'.format(prefix, index)
+              cls.__counter += 1
+              
+          def __get__(self, instance, owner):
+              if instance is None:
+                  return self
+              else:
+                  return getattr(instance, self.storage_name)
+              
+          def __set__(self, instance, value):
+              setattr(instance, self.storage_name, value) #2
+              
+      
+      class Validated(abc.ABC, AutoStorage): #3
+          def __set__(self, instance, value):
+              value = self.validate(instance, value) #4
+              super().__set__(instance, value) #5
+              
+          @abc.abstractmethod
+          def validate(self, instance, value): #6
+              """return validated value or raise ValueError"""
+              
+      
+      class Quantity(Validated): #7
+          """a number greater than zero"""
+          def validate(self, instance, value):
+              if value <= 0:
+                  raise ValueError('value must be > 0')
+              return value
+          
+      
+      class NonBlank(Validated):
+          """a string with at least one ono-space character"""
+          def validate(self, instance, value):
+              value = value.strip()
+              if len(value) == 0:
+                  raise ValueError('value cannot be empty or blank')
+              return value #8
+          
+      class LineItem:
+          description = NonBlank()
+          weight = Quantity()
+          price = Quantity()
+          
+          def __init__(self, description, weight, price):
+              self.description = description
+              self.weight = weight
+              self.price = price
+              
+          def subtotal(self):
+              return self.weight * self.price
+      ```
+   
+      1. 这种描述符也叫覆盖型描述符，因为描述符的 `__set__` 方法使用托管实例中的同名属性覆盖（即插手接管）了要设置的属性
+   
+      2. 上述代码的类图
+   
+         ![在这里插入图片描述](https://img-blog.csdnimg.cn/8dd377d03066490bb686c6bd86567654.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+   
+3. 覆盖型与非覆盖型描述符对比
+
+   1. Python 存取属性的方式特别不对等
+
+      - 通过实例读取属性时，通常返回的是实例中定义的属性
+      - 如果实例中没有指定的属性，那么会获取类属性
+      - 而为实例中的属性赋值时，通常会在实例中创建属性，根本不影响类
+
+   2. 覆盖型描述符
+
+      1. 实现 `__set__` 方法的话，会覆盖对实例属性的赋值操作
+
+      2. 特性也是覆盖型描述符：如果没提供设值函数，property 类中的 `__set__` 方法会抛出 AttributeError 异常，指明那个属性是只读的
+
+      3. 代码样例
+
+         ```python
+         def cls_name(obj_or_cls):
+             cls = type(obj_or_cls)
+             if cls is type:
+                 cls = obj_or_cls
+             return cls.__name__.split('.')[-1]
+         
+         def display(obj):
+             cls = type(obj)
+             if cls is type:
+                 return '<class {}>'.format(obj.__name__)
+             elif cls in [type(None), int]:
+                 return repr(obj)
+             else:
+                 return '<{} object>'.format(cls_name(obj))
+             
+         def print_args(name, *args):
+             pseudo_args = ', '.join(display(x) for x in args)
+             print('-> {}.__{}__({})'.format(cls_name(args[0]), name, pseudo_args))
+             
+         class Overriding: #1
+             """也称数据描述符或强制描述符"""
+             def __get__(self, instance, owner):
+                 print_args('get', self, instance, owner) #2
+                 
+             def __set__(self, instance, value):
+                 print_args('set', self, instance, value)
+                 
+         class OverridingNoGet: #3
+             """没有``__get__``方法的覆盖性描述符"""
+             def __set__(self, instance, value):
+                 print_args('set', self, instance, value)
+                 
+                 
+         class NonOverriding: #4
+             """也称非数据描述符或遮盖型描述符"""
+             def __get__(self, instance, owner):
+                 print_args('get', self, instance, owner)
+                 
+         
+         class Managed: #5
+             over = Overriding()
+             over_no_get = OverridingNoGet()
+             non_over = NonOverriding()
+             
+             def spam(self): #6
+                 print('-> Managed.spam({})'.format(display(self)))
+         ```
+
+   3. 没有 `__get__` 方法的覆盖型描述符
+
+      1. 实例属性会遮盖描述符，不过只有读操作是如此
+      2. 读取时，只要有同名的实例属性，描述符就会被遮盖
+
+   4. 非覆盖型描述符
+
+      1. 没有实现 `__set__` 方法的描述符是非覆盖型描述符
+      2. obj 有个名为 non_over 的实例属性，把 Managed 类的同名描述符属性遮盖掉
+      3. 在上述几个示例中，我们为几个与描述符同名的实例属性赋了值，结果依描述符中是否有 `__set__` 方法而有所不同
+      4. 依附在类上的描述符无法控制为类属性赋值的操作。其实，这意味着为类属性赋值能覆盖描述符属性
+
+   5. 在类中覆盖描述符
+
+      1. 不管描述符是不是覆盖型，为类属性赋值都能覆盖描述符
+      2. 这是一种猴子补丁技术
+      3. 读写属性的另一种不对等：
+         1. 读类属性的操作可以由依附在托管类上定义有 `__get__` 方法的描述符处理
+         2. 但是写类属性的操作不会由依附在托管类上定义有 `__set__` 方法的描述符处理
+         3. 若想控制设置类属性的操作，要把描述符依附在类的类上，即依附在元类上
+
+4. 方法是描述符
+
+   1. 在类中定义的函数属于绑定方法（bound method）
+   2. 过托管类访问时，函数的 `__get__` 方法会返回自身的引用
+   3. 通过实例访问时，函数的 `__get__` 方法返回的是绑定方法对象：一种可调用的对象，里面包装着函数，并把托管实例（例如 obj）绑定给函数的第一个参数（即 self），这与 functools.partial 函数的行为一致
+   4. function：函数；method：方法
+   5. 函数会变成绑定方法，这是 Python 语言底层使用描述符的最好例证
+
+5. 描述符用法建议
+
+   1. 使用特性以保持简单
+      - 内置的 property 类创建的其实是覆盖型描述符，`__set__` 方法和 `__get__` 方法都实现了，即便不定义设值方法也是如此
+      - 特性的 `__set__` 方法默认抛出 AttributeError: can't set attribute
+      - 因此创建只读属性最简单的方式是使用特性，这能避免下一条所述的问题
+   2. 只读描述符必须有 `__set__` 方法
+      - 如果使用描述符类实现只读属性，要记住，`__get__` 和 `__set__` 两个方法必须都定义
+      - 否则，实例的同名属性会遮盖描述符
+      - 只读属性的 `__set__` 方法只需抛出 AttributeError 异常，并提供合适的错误消息
+   3. 用于验证的描述符可以只有 `__set__` 方法
+      - 对仅用于验证的描述符来说，`__set__` 方法应该检查 value 参数获得的值，如果有效，使用描述符实例的名称为键，直接在实例的 `__dict__` 属性中设置
+      - 这样，从实例中读取同名属性的速度很快，因为不用经过 `__get__` 方法处理
+   4. 仅有 `__get__` 方法的描述符可以实现高效缓存
+      - 如果只编写了 `__get__` 方法，那么创建的是非覆盖型描述符
+      - 这种描述符可用于执行某些耗费资源的计算，然后为实例设置同名属性，缓存结果
+      - 同名实例属性会遮盖描述符，因此后续访问会直接从实例的 `__dict__` 属性中获取值，而不会再触发描述符的 `__get__` 方法
+   5. 非特殊的方法可以被实例属性遮盖
+      - 由于函数和方法只实现了 `__get__` 方法，它们不会处理同名实例属性的赋值操作
+      - 特殊方法不受这个问题的影响
+      - 释器只会在类中寻找特殊的方法，也就是说，repr(x) 执行的其实是`x.__class__.__repr__(x)`，因此 x 的 `__repr__` 属性对 repr(x) 方
+        法调用没有影响
+      - 出于同样的原因，实例的 `__getattr__` 属性不会破坏常规的属性访问规则
+
+6. 描述符的文档字符串和覆盖删除操作
+
+   1. 在描述符类中，实现常规的 `__get__` 和（或）`__set__` 方法之外，可以实现 `__delete__` 方法，或者只实现 `__delete__` 方法做到这一点
+
+   2. [python中函数和方法的区别](https://www.cnblogs.com/mayugang/p/9977914.html)
+
+      - 函数：def定义的，或者内置的，或者lambda
+
+        与类和实例无绑定关系的function都属于函数（function）
+
+      - 方法：跟类有关的，`__init__`、`def(self)`
+
+        与类和实例有绑定关系的function都属于方法（method）
+
+## 21. 类元编程
+
+1. 前言
+
+   1. 类元编程是指在运行时创建或定制类的技艺
+   2. 元类是类元编程最高级的工具：使用元类可以创建具有某种特质的全新类种，例如我们见过的抽象基类
+   3. 除非开发框架，否则不要编写元类
+
+2. 类工厂函数
+
+   1. record_factory.py：一个简单的类工厂函数
+
+      ```python
+      def record_factory(cls_name, field_names):
+          try:
+              field_names = field_names.replace(',', ' ').split() #1
+          except AttributeError: # 不能调用.replace或.split方法
+              pass # 假定field_names本就是标识符组成的序列
+          field_names = tuple(field_names) #2
+          
+          def __init__(self, *args, **kwargs):
+              attrs = dict(zip(self.__slots__, args))
+              attrs.update(kwargs)
+              for name, value in attrs.items():
+                  setattr(self, name, value)
+                  
+          def __iter__(self): #4
+              for name in self.__slots__:
+                  yield getattr(self, name)
+                  
+          def __repr__(self): #5
+              values = ', '.join('{}={!r}'.format(*i) for i in zip(self.__slots__, self))
+              return '{}({})'.format(self.__class__.__name__, values)
+          
+          cls_attrs = dict(
+              __slots__ = field_names,
+              __init__ = __init__,
+              __iter__ = __iter__,
+              __repr__ = __repr
+          ) #6
+          
+          return type(cls_name, (object,), cls_attrs) #7
+      ```
+
+   2. 通常，我们把 type 视作函数，因为我们像函数那样使用它。调用 type(my_object) 获取对象所属的类，作用与 `my_object.__class__` 相同
+
+   3. type 当成类使用时，传入三个参数可以新建一个类
+
+   4. record_factory 函数创建的类，其实例有个局限——不能序列化，即不能使用 pickle 模块里的 dump/load 函数处理
+
+3. 定制描述符的类装饰器
+
+   1. 我们要在创建类时设置储存属性的名称，用类装饰器或元类可以做到这一点
+   2. 类装饰器与函数装饰器非常类似，是参数为类对象的函数，返回原来的类或修改后的类
+   3. bulkfood_v6.py：使用 Quantity 和 NonBlank 描述符的LineItem 类
 
 
 
@@ -1938,5 +2196,7 @@
 
 
 
-看到 P904
+
+
+看到 P933
 
