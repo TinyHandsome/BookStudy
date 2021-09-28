@@ -2198,14 +2198,386 @@
 4. 导入时和运行时比较
 
    1. 在导入时，解释器会从上到下一次性解析完 .py 模块的源码，然后生成用于执行的字节码。如果句法有错误，就在此时报告。如果本地的 `__pycache__` 文件夹中有最新的 .pyc 文件，解释器会跳过上述步骤，因为已经有运行所需的字节码了
+
    2. import 语句，它不只是声明，在进程中首次导入模块时，还会运行所导入模块中的全部顶层代码——以后导入相同的模块则使用缓存，只做名称绑定
+
    3. 那些顶层代码可以做任何事，包括通常在“运行时”做的事，例如连接数据库
+
    4. 因此，“导入时”与“运行时”之间的界线是模糊的：import 语句可以触发任何“运行时”行为
+
    5. 解释器在导入时定义顶层函数，但是仅当在运行时调用函数时才会执行函数的定义体
+
    6. 对类来说，情况就不同了：
+
       1. 在导入时，解释器会执行每个类的定义体，甚至会执行嵌套类的定义体
       2. 执行类定义体的结果是，定义了类的属性和方法，并构建了类对象
-      3. 从这个意义上理解，类的定义体属于“顶层代码”，因为它在导入时运行
+
+   7. 从这个意义上理解，类的定义体属于“顶层代码”，因为它在导入时运行
+
+   8. 场景演示
+
+      1. evalsupport.py
+
+         ```python
+         print('<[100]> evalsupport module start')
+         
+         def deco_alpha(cls):
+             print('<[200]> deco_alpha')
+             def inner_1(self):
+                 print('<[300]> deco_alpha:inner_1')
+                 
+             cls.method_y = inner_1
+             return cls
+         
+         class MetaAleph(type):
+             print('<[400]> MetaAleph body')
+             
+             def __init__(cls, name, bases, dic):
+                 print('<[500]> MetaAleph.__init__')
+                 
+                 def inner_2(self):
+                     print('<[600]> MetaAleph.__init__:init_2')
+                     
+                 cls.method_z = inner_2
+                 
+         print('<[700]> evalsupport module end')
+         ```
+
+      2. evaltime.py
+
+         ```python
+         from evalsupport import deco_alpha
+         
+         print('<[1]> evaltime module start')
+         
+         
+         class ClassOne():
+             print('<[2]> ClassOne body')
+             
+             def __init__(self):
+                 print('<[3]> ClassOne.__init__')
+                 
+             def __del__(self):
+                 print('<[4]> ClassOne.__del_-')
+                 
+             def method_x(self):
+                 print('<[5]> ClassOne.method_x')
+                 
+             class ClassTwo(object):
+                 print('<[6]> ClassTwo body')
+                 
+         
+         @deco_alpha
+         class ClassThree():
+             print('<[7]> ClassThree body')
+             
+             def method_y(self):
+                 print('<[8]> ClassThree.method_y')
+                 
+         class ClassFour(ClassThree):
+             print('<[9]> ClassFour body')
+             
+             def method_y(self):
+                 print('<[10]> ClassFour.method_y')
+                 
+                 
+         if __name__ == '__main__':
+             print('<[11]> ClassOne tests', 30 * '.')
+             one = ClassOne()
+             one.method_x()
+             print('<[12]> ClassThree tests', 30 * '.')
+             three = ClassThree()
+             three.method_y()
+             print('<[13]> CLassFour tests', 30 * '.')
+             four = ClassFour()
+             four.method_y()
+             
+         print('<[14]> evaltime module end')
+         ```
+
+      3. 结果
+
+         ```python
+         >>> import evaltime
+         <[100]> evalsupport module start
+         <[400]> MetaAleph body
+         <[700]> evalsupport module end
+         <[1]> evaltime module start
+         <[2]> ClassOne body
+         <[6]> ClassTwo body
+         <[7]> ClassThree body
+         <[200]> deco_alpha
+         <[9]> ClassFour body
+         <[14]> evaltime module end
+         ```
+
+      4. 结论：
+
+         1. 这个场景由简单的 import evaltime 语句触发
+         2. 解释器会执行所导入模块及其依赖（evalsupport）中的每个类定义体
+         3. 解释器先计算类的定义体，然后调用依附在类上的装饰器函数，这是合理的行为，因为必须先构建类对象，装饰器才有类对象可处理
+
+   9. 场景2：`python evaltime.py`
+
+      1. 结果
+
+         ```python
+         python evaltime.py
+         <[100]> evalsupport module start
+         <[400]> MetaAleph body
+         <[700]> evalsupport module end
+         <[1]> evaltime module start
+         <[2]> ClassOne body
+         <[6]> ClassTwo body
+         <[7]> ClassThree body
+         <[200]> deco_alpha
+         <[9]> ClassFour body
+         <[11]> ClassOne tests ..............................
+         <[3]> ClassOne.__init__
+         <[5]> ClassOne.method_x
+         <[12]> ClassThree tests ..............................
+         <[300]> deco_alpha:inner_1
+         <[13]> CLassFour tests ..............................
+         <[10]> ClassFour.method_y
+         <[14]> evaltime module end
+         <[4]> ClassOne.__del_-
+         ```
+
+      2. 结论：
+
+         1. 类装饰器可能对子类没有影响
+         2. 当然，如果 `ClassFour.method_y` 方法使用 `super(...)`  调用 `ClassThree.method_y` 方法，我们便会看到装饰器起作用，执行 inner_1 函数
+
+5. 元类基础知识
+
+   1. 元类是制造类的工厂，是用于构建类的类
+
+   2. 根据 Python 对象模型，类是对象，因此类肯定是另外某个类的实例
+
+   3. 默认情况下，Python 中的类是 type 类的实例
+
+   4. type 是大多数内置的类和用户定义的类的元类
+
+   5. 左边的示意图强调 str、type 和 LineItem 是 object 的子类；右边的示意图则清楚地表明 str、object 和 LineItem 是 type 的实例
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/be8999a6d4cb40bdbad747f9b334bc15.png)
+
+   6. object 类和 type 类之间的关系很独特：object 是 type 的实例，而 type 是 object 的子类
+
+   7. 所有类都直接或间接地是 type 的实例，不过只有元类同时也是 type 的子类
+
+   8. 元类（如 ABCMeta）从 type 类继承了构建类的能力
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/2d830b28ec2c4916b0dea61e9cb8e49e.png)
+
+   9. 所有类都是 type 的实例，但是元类还是 type 的子类，因此可以作为制造类的工厂
+
+   10. 元类可以通过实现 `__init__` 方法定制实例。元类的 `__init__` 方法可以做到类装饰器能做的任何事情，但是作用更大
+
+   11. evaltime_meta.py：ClassFive 是 MetaAleph 元类的实例
+
+       ```python
+       from evalsupport import deco_alpha
+       from evalsupport import MetaAleph
+       
+       print('<[1]> evaltime_meta module start')
+       
+       @deco_alpha
+       class ClassThree():
+           print('<[2]> ClassThree body')
+           
+           def method_y(self):
+               print('<[3]> ClassThree.method_y')
+               
+       class ClassFour(ClassThree):
+           print('<[4]> ClassFour body')
+           
+           def method_y(self):
+               print('<[5]> ClassFour.method_y')
+       
+       class ClassFive(metaclass=MetaAleph):
+           print('<[6]> CLassFive body')
+           
+           def __init__(self):
+               print('<[7]> ClassFive.__init__')
+               
+           def method_z(self):
+               print('<[8]> ClassFive.method_z')
+               
+       class ClassSix(ClassFive):
+           print('<[9]> ClassSix body')
+           def method_z(self):
+               print('<[10]> ClassSix.method_z')
+               
+               
+       if __name__ == '__main__':
+           print('<[11]> ClassThree tests', 30 * '.')
+           three = ClassThree()
+           three.method_y()
+           print('<[12]> ClassFour tests', 30 * '.')
+           four = ClassFour()
+           four.method_y()
+           print('<[13]> ClassFive tests', 30 * '.')
+           five = ClassFive()
+           five.method_z()
+           print('<[14]> ClassSix tests', 30 * '.')
+           six = ClassSix()
+           six.method_z()
+           
+           
+       print('<[15]> evaltime_meta module end')
+       ```
+
+   12. 场景3：在 Python 控制台中以交互的方式导入 evaltime_meta.py 模块
+
+       ```python
+       >>> import evaltime_meta
+       <[100]> evalsupport module start
+       <[400]> MetaAleph body
+       <[700]> evalsupport module end
+       <[1]> evaltime_meta module start
+       <[2]> ClassThree body
+       <[200]> deco_alpha
+       <[4]> ClassFour body
+       <[6]> CLassFive body
+       <[500]> MetaAleph.__init__
+       <[9]> ClassSix body
+       <[500]> MetaAleph.__init__
+       <[15]> evaltime_meta module end
+       ```
+
+   13. 场景4：在命令行中运行 evaltime_meta.py 模块
+
+       ```python
+       python evaltime_meta.py
+       <[100]> evalsupport module start
+       <[400]> MetaAleph body
+       <[700]> evalsupport module end
+       <[1]> evaltime_meta module start
+       <[2]> ClassThree body
+       <[200]> deco_alpha
+       <[4]> ClassFour body
+       <[6]> CLassFive body
+       <[500]> MetaAleph.__init__
+       <[9]> ClassSix body
+       <[500]> MetaAleph.__init__
+       <[11]> ClassThree tests ..............................
+       <[300]> deco_alpha:inner_1
+       <[12]> ClassFour tests ..............................
+       <[5]> ClassFour.method_y
+       <[13]> ClassFive tests ..............................
+       <[7]> ClassFive.__init__
+       <[600]> MetaAleph.__init__:init_2
+       <[14]> ClassSix tests ..............................
+       <[7]> ClassFive.__init__
+       <[600]> MetaAleph.__init__:init_2
+       <[15]> evaltime_meta module end
+       ```
+
+   14. 编写元类时，通常会把 self 参数改成 cls；在元类的 `__init__` 方法中，把第一个参数命名为 cls 能清楚地表明要构建的实例是类
+
+   15. 装饰器装饰的类产生的效果不会影响其子类；而通过metaclass设置了原类的类，产生的效果会影响其子类
+
+6. 定制描述符的元类
+
+   ```python
+   class EntityMeta(type):
+       """元类，用于创建带有验证字段的业务实体"""
+       def __init__(cls, name, bases, attr_dict):
+           super().__init__(name, bases, attr_dict) #1
+           for key, attr in attr_dict.items(): #2
+               if isinstance(attr, Validated):
+                   type_name = type(attr).__name__
+                   attr.storage_name = '_{}#{}'.format(type_name, key)
+                   
+   class Entity(metaclass=EntityMeta): #3
+       """带有验证字段的业务实体"""
+   ```
+
+   ```python
+   class LineItem(Entity):
+   	...
+   ```
+
+7. 元类的特殊方法 `__prepare__`
+
+   1. 元类或类装饰器获得映射时，属性在类定义体中的顺序已经丢失了（因为名称到属性的映射是字典）
+
+   2. 这个问题的解决办法是，使用 Python 3 引入的特殊方法 `__prepare__`
+
+   3. 这个特殊方法只在元类中有用，而且必须声明为类方法（即，要使用 @classmethod 装饰器定义）
+
+   4. 解释器调用元类的 `__new__` 方法之前会先调用 `__prepare__` 方法，使用类定义体中的属性创建映射
+
+   5. `__prepare__` 方法的第一个参数是元类，随后两个参数分别是要构建的类的名称和基类组成的元组，返回值必须是映射
+
+   6. 元类构建新类时，`__prepare__` 方法返回的映射会传给 `__new__` 方法的最后一个参数，然后再传给 `__init__` 方法
+
+   7. 代码
+
+      ```python
+      import collections
+      class EntityMeta(type):
+          """元类，用于创建带有验证字段的业务实体"""
+          
+          @classmethod
+          def __prepare__(cls, name, bases):
+              return collections.OrderedDict()
+          
+          def __init__(cls, name, bases, attr_dict):
+              super().__init__(name, bases, attr_dict)
+              cls._field_names = []
+              for key, attr in attr_dict.items():
+                  if isinstance(attr, Validated):
+                      type_name = type(attr).__name__
+                      attr.storage_name = '_{}#{}'.format(type_name, key)
+                      cls._field_names.append(key)
+                      
+      class Entity(metaclass=EntityMeta): #3
+          """带有验证字段的业务实体"""
+          
+          @classmethod
+          def field_names(cls):
+              for name in cls._field_names:
+                  yield name
+      ```
+
+   8. 在现实世界中，框架和库会使用元类协助程序员执行很多任务：
+
+      - 验证属性
+      - 一次把装饰器依附到多个方法上
+      - 序列化对象或转换数据
+      - 对象关系映射
+      - 基于对象的持久存储
+      - 动态转换使用其他语言编写的类结构
+
+8. 类作为对象
+
+   1. `cls.__mro__`：类的继承关系和调用顺序，方法解析顺序，Method Resolution Order
+
+   2. `cls.__class__`：实例调用 `__class__` 属性时会指向该实例对应的类
+
+   3. `cls.__name__`：类、 函数、方法、描述符或生成器对象的名称
+
+   4. `cls.__bases__`：由类的基类组成的元组
+
+   5. `cls.__qualname__`：其值是类或函数的限定名称，即从模块的全局作用域到类的点分路径
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/258e3b36b2ae4250b3c0cf7008243186.png)
+
+   6. `cls.__subclasses__()`：这个方法返回一个列表，包含类的直接子类
+
+      - 这个方法的实现使用弱引用，防止在超类和子类之间出现循环引用
+      - 子类在 `__bases__` 属性中储存指向超类的强引用
+      - 这个方法返回的列表中是内存里现存的子类
+
+   7. `cls.mro()`：构建类时，如果需要获取储存在类属性 `__mro__` 中的超类元组，解释器会调用这个方法；元类可以覆盖这个方法，定制要构建的类解析方法的顺序
+
+   8. `dir(...)` 函数不会列出上述提到的任何一个属性
+
+9. 小结：
+
+   1. 元类可以定制类的层次结构。类装饰器则不同，它只能影响一个类，而且对后代可能没有影响
 
 
 
@@ -2217,11 +2589,5 @@
 
 
 
-
-
-
-
-
-
-看到 P936
+看到 P957
 
