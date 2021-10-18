@@ -4,3 +4,84 @@
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'axf/main/css/market.css' %}">
 {% endblock %}
+
+{% block ext_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'axf/main/js/market.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <div id="market">
+        {#        左边的大类型导航#}
+        <aside>
+            <ul>
+                {% for foodtype in foodtypes %}
+                    <li>
+                        <a href="{% url 'axf:market_with_params' typeid=foodtype.typeid %}">{{ foodtype.typename }}</a>
+                        {% ifequal foodtype.typeid typeid %}
+                            <span class="yellowSlide"></span>
+                        {% endifequal %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+        <section>
+            <nav>
+                <ul>
+                    <li id="all_types"><span>全部分类 <span class="glyphicon glyphicon-chevron-down"></span></span></li>
+                    <li id="sort_rule"><span>综合排序 <span class="glyphicon glyphicon-chevron-down"></span></span></li>
+                </ul>
+            </nav>
+            <menu>
+                <ul>
+                    {% for goods in goods_list %}
+                        <li>
+                            <a href="#">
+                                <img src="{{ goods.productimg }}" alt="{{ goods.productlongname }}">
+                                <div class="shoppingInfo">
+                                    <h6>{{ goods.productlongname }}</h6>
+                                    <p class="detailTag">
+                                        <span>精选</span>
+                                        <span></span>
+                                    </p>
+                                    <p class="unit">{{ goods.specifics }}</p>
+                                    <p class="price">
+                                        <span>{{ goods.price }}</span>
+                                        <s>{{ goods.marketprice }}</s>
+                                    </p>
+                                </div>
+                            </a>
+                            <section>
+                                <button>－</button>
+                                <span>0</span>
+                                <button>＋</button>
+                            </section>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div id="all_types_container">
+                    <div>
+                        <a href="#">
+                            <button class="btn btn-success">全部分类</button>
+                        </a>
+                        <a href="#">
+                            <button class="btn btn-default">牛奶面包</button>
+                        </a>
+                    </div>
+                </div>
+                <div id="sort_rule_container">
+                    <div>
+                        <a href="#">
+                            <button class="btn btn-success">综合排序</button>
+                        </a>
+                        <a href="#">
+                            <button class="btn btn-default">价格降序</button>
+                        </a>
+                    </div>
+                </div>
+            </menu>
+        </section>
+    </div>
+{% endblock %}

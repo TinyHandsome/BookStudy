@@ -30,7 +30,7 @@ footer .home span {
 }
 
 /*
-            轮播样式
+顶部轮播
 */
 #topSwiper {
     height: 3.95rem;
@@ -50,12 +50,12 @@ footer .home span {
 }
 
 /*
-    导航快
+    顶部导航
 */
 
-
 .topMenu {
-    padding-bottom: 0.26rem;
+    /*padding-bottom: 0.26rem;*/
+    padding-bottom: 0;
 }
 
 .topMenu nav {
@@ -97,72 +97,71 @@ footer .home span {
 /*
     商店
 */
-
-
-.CVS {
+.shop_container {
     background: white;
+    margin-top: 0.3rem
 }
 
-.CVS h2 img {
+.shop_container h2 img {
     width: 100%;
 }
 
 
 
-.CVS fieldset {
+.shop_container fieldset {
     border: none;
     padding: 0;
 }
 
-.CVS fieldset > a {
+.shop_container fieldset > a {
     display: inline-block;
     width: 49%;
 }
 
-.CVS fieldset img {
+.shop_container fieldset img {
     width: 100%;
 }
 
 
 
-.CVS ul {
+.shop_container ul {
     display: flex;
 }
 
-.CVS ul li {
+.shop_container ul li {
     width: 2.5rem;
     text-align: center;
     font-size: 0.35rem;
 }
 
-.CVS ul li img {
+.shop_container ul li img {
     width: 2.5rem;
 }
 
 
 
 
-.CVS ol {
+.shop_container ol {
     display: flex;
     flex-wrap: wrap;
 }
 
-.CVS ol li {
+.shop_container ol li {
     list-style: none;
     width: 5rem;
 }
 
-.CVS > ol a {
+.shop_container > ol a {
     display: block;
 }
 
-.CVS ol a img {
+.shop_container ol a img {
     width: 100%;
 }
 
 
 /*
-    主要信息
+    主显示区
 */
 
 .mainInfo {
@@ -220,6 +219,11 @@ footer .home span {
     display: block;
 }
 
+.mainInfo > section > ul > li > a > span:before {
+    color: red;
+    content: "￥";
+}
+
 .mainInfo > section > ul > li > a > img {
     width: 100%;
 }
@@ -227,6 +231,11 @@ footer .home span {
 .mainInfo > section > ul > li > a > s {
     color: grey;
     font-size: 0.3rem;
+}
+
+.mainInfo > section > ul > li > a > s:before {
+    color:grey;
+    content: "￥";
 }
 
 .mainInfo .description {

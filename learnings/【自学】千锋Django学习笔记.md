@@ -9,6 +9,7 @@
   1. 优秀的程序员：
      - 松耦合、解耦合
      - 高内聚
+  2. Django版本：1.1
 - 学习的时候遇到的问题：
   1. [PyCharm右键SQLite找不到As Data Source选项](#anchor)
   2. [如何让其他电脑访问到自己的Django项目](#anchor2)
@@ -1123,7 +1124,9 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210517175111644.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
 
-## 14. 需求分析
+## 14. AXF项目
+
+### 14.1 需求分析
 
 1. 技术部
 
@@ -1286,22 +1289,49 @@
         - VUE
         - Android
         - IOS
-    
-8. 一些开发时遇到的问题
 
-    1. [pymysql 报错：from . import connections # noqa: E402](https://blog.csdn.net/weixin_44678368/article/details/112631405)
+### 14.2 一些开发时遇到的问题
 
-        这里需要下载 0.10.1的pymysql，不然会报错
+1. [pymysql 报错：from . import connections # noqa: E402](https://blog.csdn.net/weixin_44678368/article/details/112631405)
 
-    2. [pycharm 高亮提示 unresolved template reference的解决](https://blog.csdn.net/louisliushu/article/details/89069341)
-    
-        需要设置django的settings.py的位置
+    这里需要下载 0.10.1的pymysql，不然会报错
+
+2. [mysqlclient 1.4.0 or newer is required; you have 0.10.1](https://knight.blog.csdn.net/article/details/108576312)
+
+    需要在 `__init__`文件下加如下内容
+
+    ```python
+    import pymysql
+    pymysql.version_info = (1, 4, 13, "final", 0)
+    pymysql.install_as_MySQLdb()
+    ```
+
+3. [pycharm 高亮提示 unresolved template reference的解决](https://blog.csdn.net/louisliushu/article/details/89069341)
+
+    需要设置django的settings.py的位置
+
+4. 安装 django-debug-toolbar的时候，不要直接 `pip install`，否则会直接卸载了你低版本的django，给你装一个高级的，然后运行就会报错了
+
+    所以需要安装指定版本的： `pip install django-debug-toolbar==1.10.1`
+
+### 14.3 一些需要注意的细节
+
+1. 链接路径后面无特殊要求，一定要加 `/`（可以少一步请求）
+2. 
 
 
 
 
 
-学到（要学）：P71 0415
+
+
+
+
+
+
+
+
+学到（要学）：P79
 
 ------
 
