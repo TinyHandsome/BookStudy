@@ -13,8 +13,12 @@
 **/lib
 **/out
 **/desktop.ini
+
 practice_data
-python_projects/axf
+python_projects/6-爱鲜锋项目/axf
+
+
+**/uploads
 
 .*
 *.plk

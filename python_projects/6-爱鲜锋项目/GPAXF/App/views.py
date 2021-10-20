@@ -1,8 +1,11 @@
-from django.http import HttpResponse
+from django.contrib.auth.hashers import make_password
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from App.models import MainWheel, MainNav, MainMustBuy, MainShop, MainShow, FoodType, Goods
+from App.models import MainWheel, MainNav, MainMustBuy, MainShop, MainShow, FoodType, Goods, AXFUser
+from App.views_constant import *
+from App.views_helper import *
 
 
 def home(request):
@@ -33,19 +36,61 @@ def home(request):
 
 def market(request):
     return redirect(reverse('axf:market_with_params', kwargs={
-        "typeid": 104749
+        "typeid": 104749,
+        "childcid": 0,
+        "order_rule": 0,
     }))
 
 
-def market_with_params(request, typeid):
+def market_with_params(request, typeid, childcid, order_rule):
     foodtypes = FoodType.objects.all()
     goods_list = Goods.objects.filter(categoryid=typeid)
+
+    if childcid == ALL_TYPE:
+        pass
+    else:
+        goods_list = goods_list.filter(childcid=childcid)
+    foodtype = foodtypes.get(typeid=typeid)
+
+    if order_rule == ORDER_TOTAL:
+        pass
+    elif order_rule == ORDER_PRICE_UP:
+        goods_list = goods_list.order_by("price")
+    elif order_rule == ORDER_PRICE_DOWN:
+        goods_list = goods_list.order_by("-price")
+    elif order_rule == ORDER_SALE_UP:
+        goods_list = goods_list.order_by("productnum")
+    elif order_rule == ORDER_SALE_DOWN:
+        goods_list = goods_list.order_by("-productnum")
+
+    """
+        全部分类：0#进口水果:103534#国产水果:103433
+        切割 #
+            ['全部分类:0', '进口水果:103534', '国产水果:103533']
+        切割 :
+            [[全部分类, 0], [进口水果, 103534], [国产水果, 103533]]
+    """
+    foodtypechildnames = foodtype.childtypenames
+    foodtypechildname_list = foodtypechildnames.split('#')
+    foodtype_childname_list = [x.split(':') for x in foodtypechildname_list]
+
+    order_rule_list = [
+        ['综合排序', ORDER_TOTAL],
+        ['价格升序', ORDER_PRICE_UP],
+        ['价格降序', ORDER_PRICE_DOWN],
+        ['销量升序', ORDER_SALE_UP],
+        ['销量降序', ORDER_SALE_DOWN],
+    ]
 
     data = {
         "title": "闪购",
         "foodtypes": foodtypes,
         "goods_list": goods_list,
         "typeid": int(typeid),
+        'foodtype_childname_list': foodtype_childname_list,
+        'childcid': childcid,
+        "order_rule_list": order_rule_list,
+        "order_rule_view": order_rule,
     }
 
     return render(request, 'main/market.html', context=data)
@@ -59,5 +104,61 @@ def mine(request):
     return render(request, 'main/mine.html')
 
 
-def learn(request):
-    return redirect(reverse('axf:home'))
+def regster(request):
+    if request.method == 'GET':
+
+        data = {
+            'title': "注册",
+        }
+
+        return render(request, 'user/register.html', context=data)
+    elif request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        icon = request.FILES.get("icon")
+
+        # password = hash_str(password)
+        password = make_password(password)
+
+        user = AXFUser()
+        user.u_username = username
+        user.u_password = password
+        user.u_email = email
+        user.u_icon = icon
+
+        user.save()
+        return redirect(reverse("axf:login"))
+
+
+def login(request):
+    if request.method == "GET":
+
+        data = {
+            "title": "登录",
+        }
+
+        return render(request, 'user/login.html', context=data)
+    elif request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        return HttpResponse("登录成功")
+
+
+def check_user(request):
+    username = request.GET.get('username')
+    users = AXFUser.objects.filter(u_username=username)
+
+    data = {
+        "status": HTTP_OK,
+        "msg": "username can use",
+    }
+
+    if users.exists():
+        data['status'] = HTTP_USER_EXISTS
+        data['msg'] = 'user already exist'
+    else:
+        ...
+
+    return JsonResponse(data=data)

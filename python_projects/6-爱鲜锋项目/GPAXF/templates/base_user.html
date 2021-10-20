@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block ext_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'axf/user/css/user.css' %}">
+{% endblock %}
+
+{% block header %}
+    <header></header>
+{% endblock %}
