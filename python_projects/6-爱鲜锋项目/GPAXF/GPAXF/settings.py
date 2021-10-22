@@ -130,5 +130,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+MEDIA_KEY_PREFIX = "/static/uploads/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/uploads')
 INTERNAL_IPS = ('127.0.0.1', 'localhost')
+
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'litian_django_test@163.com'
+# 实际的邮箱密码：Django_test
+EMAIL_HOST_PASSWORD = 'QWOFTHTOOSHHLVIY'

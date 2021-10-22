@@ -1,11 +1,14 @@
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
+from django.core.mail import send_mail
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.template import loader
 from django.urls import reverse
 
 from App.models import MainWheel, MainNav, MainMustBuy, MainShop, MainShow, FoodType, Goods, AXFUser
 from App.views_constant import *
 from App.views_helper import *
+from GPAXF.settings import MEDIA_KEY_PREFIX
 
 
 def home(request):
@@ -101,7 +104,22 @@ def cart(request):
 
 
 def mine(request):
-    return render(request, 'main/mine.html')
+    user_id = request.session.get('user_id')
+    if user_id:
+        ...
+
+    data = {
+        "title": "我的",
+        'is_login': False,
+    }
+
+    if user_id:
+        user = AXFUser.objects.get(pk=user_id)
+        data['is_login'] = True
+        data['username'] = user.u_username
+        data['icon'] = MEDIA_KEY_PREFIX + user.u_icon.url
+
+    return render(request, 'main/mine.html', context=data)
 
 
 def regster(request):
@@ -143,7 +161,20 @@ def login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        return HttpResponse("登录成功")
+        users = AXFUser.objects.filter(u_username=username)
+
+        if users.exists():
+            user = users.first()
+
+            if check_password(password, user.u_password):
+                request.session['user_id'] = user.id
+                return redirect(reverse('axf:mine'))
+            else:
+                print('密码错误')
+                redirect(reverse('axf:login'))
+
+        print('用户不存在')
+        return redirect(reverse('axf:login'))
 
 
 def check_user(request):
@@ -162,3 +193,12 @@ def check_user(request):
         ...
 
     return JsonResponse(data=data)
+
+
+def logout(request):
+    request.session.flush()
+    return redirect(reverse('axf:mine'))
+
+
+def activate(request):
+    return None

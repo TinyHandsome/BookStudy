@@ -32,6 +32,11 @@ function check() {
         console.log("不允许注册");
         return false;
     }
+
+    var $password_input = $("#password_input");
+    var password = $password_input.val().trim();
+    $password_input.val(md5(password));
+
     console.log("允许注册");
     return true;
 }
