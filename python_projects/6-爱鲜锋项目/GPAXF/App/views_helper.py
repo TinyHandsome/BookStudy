@@ -15,21 +15,23 @@ import hashlib
 from django.core.mail import send_mail
 from django.template import loader
 
+from GPAXF.settings import EMAIL_HOST_USER, SERVER_HOST, SERVER_PORT
+
 
 def hash_str(source):
     return hashlib.new('sha512', source.encode('utf-8')).hexdigest()
 
 
-def send_email_activate(request):
+def send_email_activate(username, receive, u_token):
 
-    subject = 'AXF Activate2'
+    subject = '%s AXF Activate2' % username
     message = '<h1>Hello</h1>'
-    from_email = 'litian_django_test@163.com'
-    recipient_list = ['2528897250@qq.com', '694317828@qq.com']
+    from_email = EMAIL_HOST_USER
+    recipient_list = [receive, ]
 
     data = {
-        "username": 'gouzei',
-        'activate_url': 'http://www.1000phone.com'
+        "username": username,
+        'activate_url': 'http://{}:{}/axf/activate/?u_token={}'.format(SERVER_HOST, SERVER_PORT, u_token)
     }
 
     html_message = loader.get_template('user/activate.html').render(data)

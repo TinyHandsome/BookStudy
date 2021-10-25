@@ -10,6 +10,9 @@
     <div class="container">
         <form method="post" enctype="multipart/form-data" action="{% url 'axf:login' %}" onsubmit="return parse_data()">
             {% csrf_token %}
+
+            <p>{{ error_message }}</p>
+
             <div class="form-group">
                 <label for="username_input">用户名</label>
                 <input name="username" type="text" class="form-control" id="username_input" placeholder="请输入用户名/邮箱">

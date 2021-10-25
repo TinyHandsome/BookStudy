@@ -139,3 +139,16 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = 'litian_django_test@163.com'
 # 实际的邮箱密码：Django_test
 EMAIL_HOST_PASSWORD = 'QWOFTHTOOSHHLVIY'
+
+SERVER_HOST = '127.0.0.1'
+SERVER_PORT = '9000'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}

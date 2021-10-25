@@ -1,4 +1,7 @@
+import uuid
+
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -146,15 +149,26 @@ def regster(request):
         user.u_icon = icon
 
         user.save()
+
+        u_token = uuid.uuid4().hex
+        cache.set(u_token, user.id, timeout=60 * 60 * 24)
+
+        send_email_activate(username, email, u_token)
+
         return redirect(reverse("axf:login"))
 
 
 def login(request):
     if request.method == "GET":
+        error_message = request.session.get("error_message")
 
         data = {
             "title": "登录",
         }
+
+        if error_message:
+            del request.session['error_message']
+            data['error_message'] = error_message
 
         return render(request, 'user/login.html', context=data)
     elif request.method == "POST":
@@ -167,13 +181,21 @@ def login(request):
             user = users.first()
 
             if check_password(password, user.u_password):
-                request.session['user_id'] = user.id
-                return redirect(reverse('axf:mine'))
+
+                if user.is_active:
+                    request.session['user_id'] = user.id
+                    return redirect(reverse('axf:mine'))
+                else:
+                    print('用户未激活')
+                    request.session['error_message'] = 'not activate'
+                    return redirect(reverse('axf:login'))
             else:
                 print('密码错误')
+                request.session['error_message'] = 'password error'
                 redirect(reverse('axf:login'))
-
-        print('用户不存在')
+        else:
+            request.session['error_message'] = 'user does not exist'
+            print('用户不存在')
         return redirect(reverse('axf:login'))
 
 
@@ -201,4 +223,14 @@ def logout(request):
 
 
 def activate(request):
-    return None
+    u_token = request.GET.get('u_token')
+    user_id = cache.get(u_token)
+    if user_id:
+        # 激活只能激活这一次，拿到之后就删除了
+        cache.delete(u_token)
+
+        user = AXFUser.objects.get(pk=user_id)
+        user.is_active = True
+        user.save()
+        return redirect(reverse('axf:login'))
+    return render(request, 'user/activate_fail.html')
