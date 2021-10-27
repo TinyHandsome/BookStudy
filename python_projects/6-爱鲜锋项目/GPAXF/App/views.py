@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 
-from App.models import MainWheel, MainNav, MainMustBuy, MainShop, MainShow, FoodType, Goods, AXFUser
+from App.models import MainWheel, MainNav, MainMustBuy, MainShop, MainShow, FoodType, Goods, AXFUser, Cart
 from App.views_constant import *
 from App.views_helper import *
 from GPAXF.settings import MEDIA_KEY_PREFIX
@@ -103,6 +103,11 @@ def market_with_params(request, typeid, childcid, order_rule):
 
 
 def cart(request):
+    carts = Cart.objects.filter(c_user=request.user)
+    data = {
+        'title': '购物车',
+        'carts': carts,
+    }
     return render(request, 'main/cart.html')
 
 
@@ -234,3 +239,25 @@ def activate(request):
         user.save()
         return redirect(reverse('axf:login'))
     return render(request, 'user/activate_fail.html')
+
+
+def add_to_cart(request):
+    goodsid = request.GET.get('goodsid')
+
+    # print(request.user)
+    carts = Cart.objects.filter(c_user=request.user).filter(c_goods_id=goodsid)
+    if carts.exists():
+        cart_obj = carts.first()
+        cart_obj.c_goods_num = cart_obj.c_goods_num + 1
+    else:
+        cart_obj = Cart()
+        cart_obj.c_goods_id = goodsid
+        cart_obj.c_user = request.user
+    cart_obj.save()
+
+    data = {
+        'status': 200,
+        'msg': 'add success',
+        'c_goods_num': cart_obj.c_goods_num
+    }
+    return JsonResponse(data=data)

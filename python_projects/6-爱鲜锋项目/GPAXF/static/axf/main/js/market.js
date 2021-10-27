@@ -49,4 +49,23 @@ $(function () {
         var $span = $sort_rule.find("span").find("span");
         $span.removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
     })
+
+    $(".subShopping").click(function () {
+        console.log('减少此商品');
+    })
+    $(".addShopping").click(function () {
+        console.log('增加此商品');
+        var $add = $(this);
+        var goodsid = $add.attr("goodsid");
+
+        $.get('/axf/addtocart/', {'goodsid': goodsid}, function (data) {
+            console.log(data);
+
+            if (data['status'] == 302) {
+                window.open('/axf/login/', target = "_self")
+            }else if(data['status'] == 200) {
+                $add.prev('span').html(data['c_goods_num'])
+            }
+        })
+    })
 })
