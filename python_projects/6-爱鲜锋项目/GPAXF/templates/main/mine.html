@@ -46,7 +46,12 @@
             </p>
             <nav id="nav">
                 <ul>
-                    <li>
+                    <li id="not_pay">
+                        {% ifnotequal order_not_pay 0 %}
+                            <span class="badge">
+                                {{ order_not_pay }}
+                            </span>
+                        {% endifnotequal %}
                         <dl>
                             <dt>
                                 <span class="glyphicon glyphicon-usd"></span>
@@ -55,6 +60,11 @@
                         </dl>
                     </li>
                     <li>
+                        {% ifnotequal order_not_receive 0 %}
+                            <span class="badge">
+                                {{ order_not_receive }}
+                            </span>
+                        {% endifnotequal %}
                         <dl>
                             <dt>
                                 <span class="glyphicon glyphicon-envelope"></span>

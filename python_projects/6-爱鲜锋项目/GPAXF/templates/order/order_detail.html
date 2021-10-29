@@ -1,0 +1,35 @@
+{% extends 'base_order.html' %}
+{% load static %}
+
+{% block ext_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'axf/order/css/order_detail.css' %}">
+{% endblock %}
+
+{% block ext_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'axf/order/js/order_detail.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="order_detail" class="container">
+        <h6>订单编号：{{ order.id }}</h6>
+        <ul>
+            {% for ordergoods in order.ordergoods_set.all %}
+                <li class="menuList">
+                    <a href="#">
+                        <img src="{{ ordergoods.o_goods.productimg }}" alt="{{ ordergoods.o_goods.productlongname }}">
+                        <p>{{ ordergoods.o_goods.productlongname }}</p>
+                        <p class="presentPrice">{{ ordergoods.o_goods.price }}</p>
+                    </a>
+                    <section>
+                        <span>{{ ordergoods.o_goods_num }}</span>
+                    </section>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h6 class="total_price">总价：<span id="total_price">{{ order.o_price }}</span></h6>
+        <button orderid="{{ order.id }}" id="alipay" class="btn btn-success btn-block">支付</button>
+    </div>
+{% endblock %}

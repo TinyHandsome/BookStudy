@@ -4,7 +4,7 @@ footer .cart span {
 }
 
 footer .cart dd {
-    color: #ffa500;
+    color: orange;
 }
 
 /*Container*/
@@ -13,13 +13,12 @@ footer .cart dd {
     z-index: +15;
     width: 100%;
     background: #fafafa;
-    font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif;
     overflow: hidden;
 }
 
-header {
-    height: 0;
-}
+/*header {*/
+/*    height: 0;*/
+/*}*/
 
 h3 {
     text-align: center;
@@ -28,7 +27,7 @@ h3 {
     width: 100%;
     border-bottom: 0.04rem solid lightgrey;
     line-height: 1.5rem;
-    background: white;
+    background: yellow;
     top: 0;
     margin-top: 0 !important;
 }
@@ -104,7 +103,7 @@ h3 {
 .bill > p {
     padding: 0 0.3rem;
     font-size: 0.3rem;
-    color: aqua;
+    color: green;
 }
 
 .bill > p:first-child:before {
@@ -162,7 +161,7 @@ h3 {
     position: relative;
 }
 
-.confirm {
+.confirm, .all_select {
     padding: 0.95rem 0;
     width: 15%;
     height: 2.5rem;
@@ -172,7 +171,7 @@ h3 {
     float: left;
 }
 
-.confirm > span {
+.confirm > span, .all_select > span {
     box-sizing: border-box;
     border: 0.04rem solid orange;
     background: white;
@@ -184,7 +183,7 @@ h3 {
     line-height: 0.6rem;
 }
 
-.confirm > span > span {
+.confirm > span > span, .all_select > span > span {
     background: yellow;
     font-size: 0.5rem;
     display: block;
@@ -205,7 +204,7 @@ h3 {
 }
 
 .menuList > a > p {
-    width: 75%;
+    width: 70%;
     height: 1rem;
     float: right;
     overflow: hidden;
@@ -254,9 +253,9 @@ h3 {
     position: relative;
 }
 
-.payTheBill .confirm {
+.payTheBill .all_select {
     width: 10%;
-    padding-top: 0.5rem;
+    padding-top: 0.4rem;
     padding-left: 0.4rem;
 }
 

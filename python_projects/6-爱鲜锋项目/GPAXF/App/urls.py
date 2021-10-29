@@ -19,5 +19,14 @@ urlpatterns = [
     url(r'^activate/', views.activate, name='activate'),
 
     url(r'^addtocart/', views.add_to_cart, name='add_to_cart'),
+    url(r'^changecartstatus/', views.change_cart_status, name='change_cart_status'),
 
+    url(r'^subshopping/', views.sub_shopping, name='sub_shopping'),
+    url(r'^allselect/', views.all_select, name='all_select'),
+
+    url(r'^makeorder/', views.make_order, name='make_order'),
+    url(r'^orderdetail/', views.order_detail, name='order_detail'),
+
+    url(r'^orderlistnotpay/', views.order_list_not_pay, name='order_list_not_pay'),
+    url(r'^payed/', views.payed, name='payed'),
 ]

@@ -8,7 +8,8 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 
-from App.models import MainWheel, MainNav, MainMustBuy, MainShop, MainShow, FoodType, Goods, AXFUser, Cart
+from App.models import MainWheel, MainNav, MainMustBuy, MainShop, MainShow, FoodType, Goods, AXFUser, Cart, Order, \
+    OrderGoods
 from App.views_constant import *
 from App.views_helper import *
 from GPAXF.settings import MEDIA_KEY_PREFIX
@@ -104,11 +105,16 @@ def market_with_params(request, typeid, childcid, order_rule):
 
 def cart(request):
     carts = Cart.objects.filter(c_user=request.user)
+
+    is_all_select = not carts.filter(c_is_select=False).exists()
+
     data = {
         'title': '购物车',
         'carts': carts,
+        'is_all_select': is_all_select,
+        'total_price': get_total_price(),
     }
-    return render(request, 'main/cart.html')
+    return render(request, 'main/cart.html', context=data)
 
 
 def mine(request):
@@ -126,6 +132,8 @@ def mine(request):
         data['is_login'] = True
         data['username'] = user.u_username
         data['icon'] = MEDIA_KEY_PREFIX + user.u_icon.url
+        data['order_not_pay'] = Order.objects.filter(o_user=user).filter(o_status=ORDER_STATUS_NOT_PAY).count()
+        data['order_not_receive'] = Order.objects.filter(o_user=user).filter(o_status__in=[ORDER_STATUS_NOT_RECEIVE, ORDER_STATUS_NOT_SEND]).count()
 
     return render(request, 'main/mine.html', context=data)
 
@@ -261,3 +269,112 @@ def add_to_cart(request):
         'c_goods_num': cart_obj.c_goods_num
     }
     return JsonResponse(data=data)
+
+
+def change_cart_status(request):
+    cart_id = request.GET.get('cart_id')
+    cart_obj = Cart.objects.get(pk=cart_id)
+    cart_obj.c_is_select = not cart_obj.c_is_select
+    cart_obj.save()
+
+    is_all_select = not Cart.objects.filter(c_user=request.user).filter(c_is_select=False).exists()
+
+    data = {
+        'status': 200,
+        'msg': 'change ok',
+        'c_is_select': cart_obj.c_is_select,
+        'is_all_select': is_all_select,
+        'total_price': get_total_price(),
+    }
+    return JsonResponse(data=data)
+
+
+def sub_shopping(request):
+    cartid = request.GET.get('cartid')
+    cart_obj = Cart.objects.get(pk=cartid)
+
+    data = {
+        'status': 200,
+        'msg': 'ok',
+    }
+
+    if cart_obj.c_goods_num > 1:
+        cart_obj.c_goods_num = cart_obj.c_goods_num - 1
+        cart_obj.save()
+        data['c_goods_num'] = cart_obj.c_goods_num
+    else:
+        cart_obj.delete()
+        data['c_goods_num'] = 0
+    data['total_price'] = get_total_price()
+
+    return JsonResponse(data=data)
+
+
+def all_select(request):
+    cart_list = request.GET.get("cart_list")
+    cart_list = cart_list.split('#')
+    carts = Cart.objects.filter(id__in=cart_list)
+    for cart_obj in carts:
+        cart_obj.c_is_select = not cart_obj.c_is_select
+        cart_obj.save()
+
+    data = {
+        "status": 200,
+        "msg": 'ok',
+        'total_price': get_total_price(),
+    }
+    return JsonResponse(data=data)
+
+
+def make_order(request):
+    carts = Cart.objects.filter(c_user=request.user).filter(c_is_select=True)
+    order = Order()
+    order.o_user = request.user
+    order.o_price = get_total_price()
+    order.save()
+
+    for cart_obj in carts:
+        ordergoods = OrderGoods()
+        ordergoods.o_order = order
+        ordergoods.o_goods_num = cart_obj.c_goods_num
+        ordergoods.o_goods = cart_obj.c_goods
+        ordergoods.save()
+        cart_obj.delete()
+
+    data = {
+        "status": 200,
+        "msg": "ok",
+        "order_id": order.id,
+    }
+    return JsonResponse(data)
+
+
+def order_detail(request):
+    order_id = request.GET.get('orderid')
+    order = Order.objects.get(pk=order_id)
+    data = {
+        'title': "订单详情",
+        'order': order,
+    }
+    return render(request, 'order/order_detail.html', context=data)
+
+
+def order_list_not_pay(request):
+    orders = Order.objects.filter(o_user=request.user).filter(o_status=ORDER_STATUS_NOT_PAY)
+    data = {
+        'title': '订单列表',
+        'orders': orders,
+    }
+    return render(request, 'order/order_list_not_pay.html', context=data)
+
+
+def payed(request):
+    order_id = request.GET.get("orderid")
+    order = Order.objects.get(pk=order_id)
+    order.o_status = ORDER_STATUS_NOT_SEND
+    order.save()
+    data = {
+        "status": 200,
+        "msg": 'payed success',
+    }
+    return JsonResponse(data)
