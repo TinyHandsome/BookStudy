@@ -1,5 +1,6 @@
 import uuid
 
+from alipay import AliPay
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.cache import cache
 from django.core.mail import send_mail
@@ -12,7 +13,7 @@ from App.models import MainWheel, MainNav, MainMustBuy, MainShop, MainShow, Food
     OrderGoods
 from App.views_constant import *
 from App.views_helper import *
-from GPAXF.settings import MEDIA_KEY_PREFIX
+from GPAXF.settings import MEDIA_KEY_PREFIX, APP_PRIVATE_KEY, ALIPAY_PUBLIC_KEY, ALIPAY_APPID
 
 
 def home(request):
@@ -133,7 +134,8 @@ def mine(request):
         data['username'] = user.u_username
         data['icon'] = MEDIA_KEY_PREFIX + user.u_icon.url
         data['order_not_pay'] = Order.objects.filter(o_user=user).filter(o_status=ORDER_STATUS_NOT_PAY).count()
-        data['order_not_receive'] = Order.objects.filter(o_user=user).filter(o_status__in=[ORDER_STATUS_NOT_RECEIVE, ORDER_STATUS_NOT_SEND]).count()
+        data['order_not_receive'] = Order.objects.filter(o_user=user).filter(
+            o_status__in=[ORDER_STATUS_NOT_RECEIVE, ORDER_STATUS_NOT_SEND]).count()
 
     return render(request, 'main/mine.html', context=data)
 
@@ -378,3 +380,30 @@ def payed(request):
         "msg": 'payed success',
     }
     return JsonResponse(data)
+
+
+def alipay(request):
+    # 构建支付的客户端 AlipayClient
+    alipay_client = AliPay(
+        appid=ALIPAY_APPID,
+        # 默认回调url
+        app_notify_url=None,
+        app_private_key_string=APP_PRIVATE_KEY,
+        # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
+        alipay_public_key_string=ALIPAY_PUBLIC_KEY,
+        # RSA or RSA2
+        # sign_type="RSA2",
+        debug=False
+    )
+    # 使用Alipay进行支付的请求发起
+    subject = "苹果 iwatch7"
+    order_string = alipay_client.api_alipay_trade_page_pay(
+        out_trade_no='100',
+        total_amount=10000,
+        subject=subject,
+        return_url='',
+        notify_url=''
+    )
+
+    # 客户端操作
+    return redirect("https://openapi.alipaydev.com/gateway.do?" + order_string)

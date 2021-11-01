@@ -29,4 +29,6 @@ urlpatterns = [
 
     url(r'^orderlistnotpay/', views.order_list_not_pay, name='order_list_not_pay'),
     url(r'^payed/', views.payed, name='payed'),
+
+    url(r'^alipay/', views.alipay, name='alipay'),
 ]

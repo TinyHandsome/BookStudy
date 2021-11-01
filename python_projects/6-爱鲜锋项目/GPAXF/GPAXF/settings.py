@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = '$jc+tcr=!b59-soa#q2g7u)cxp1%sq65ed)^gtxo^yljn@zp4%'
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -74,7 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'GPAXF.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -88,7 +85,6 @@ DATABASES = {
         'PORT': 3306
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -108,7 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -121,7 +116,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -153,3 +147,10 @@ CACHES = {
         }
     }
 }
+
+ALIPAY_APPID = "2021000118642346"
+RAS_START = '-----BEGIN RSA PRIVATE KEY-----\n\r'
+RAS_END = '\n\r-----END RSA PRIVATE KEY-----'
+APP_PRIVATE_KEY = RAS_START + open(os.path.join(BASE_DIR, 'alipay_config/app_rsa2_private_key.txt'), 'r').read() + RAS_END
+print(APP_PRIVATE_KEY)
+ALIPAY_PUBLIC_KEY = RAS_START + open(os.path.join(BASE_DIR, 'alipay_config/alipay_rsa2_public_key.txt'), 'r').read() + RAS_END
