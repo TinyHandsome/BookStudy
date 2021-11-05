@@ -168,6 +168,6 @@ class ManHua:
 
 
 if __name__ == '__main__':
-    single = 233380
-    mh = ManHua(single, single, 1) #20 233323
+    single = 236017
+    mh = ManHua(single, single, 0) #41 235821
     mh.get_chapters()

@@ -136,7 +136,7 @@ EMAIL_HOST_USER = 'litian_django_test@163.com'
 EMAIL_HOST_PASSWORD = 'QWOFTHTOOSHHLVIY'
 
 SERVER_HOST = '127.0.0.1'
-SERVER_PORT = '9000'
+SERVER_PORT = '8000'
 
 CACHES = {
     "default": {
@@ -152,5 +152,4 @@ ALIPAY_APPID = "2021000118642346"
 RAS_START = '-----BEGIN RSA PRIVATE KEY-----\n\r'
 RAS_END = '\n\r-----END RSA PRIVATE KEY-----'
 APP_PRIVATE_KEY = RAS_START + open(os.path.join(BASE_DIR, 'alipay_config/app_rsa2_private_key.txt'), 'r').read() + RAS_END
-print(APP_PRIVATE_KEY)
 ALIPAY_PUBLIC_KEY = RAS_START + open(os.path.join(BASE_DIR, 'alipay_config/alipay_rsa2_public_key.txt'), 'r').read() + RAS_END
