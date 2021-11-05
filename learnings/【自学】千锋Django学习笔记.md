@@ -1476,6 +1476,148 @@
     - 支付宝支付
       - 支付宝开放平台
       - 蚂蚁金服开放平台 
+    
+11. 部署
+
+    - 默认Django中使用的是开发者服务器
+      - runserver
+        - 路由处理功能，动态资源处理
+        - 如果是debug的话，静态资源处理功能
+      - 功能健壮，性能比较低，仅适用于开发
+    - 部署不会使用单一服务器
+      - Apache
+      - Nginx
+        - HTTP服务器
+          - 处理静态资源
+        - 反向代理
+          - uWSGI：HTTP服务器
+          - gunicorn：HTTP服务器
+        - 邮件服务器
+        - 流媒体服务器
+
+## 15. Nginx
+
+- Nginx简介
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/a6fa567d83a1456fbdfdf33a3e353c0c.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- [Nginx开发从入门到精通](http://tengine.taobao.org/book/)
+
+- HTTP和反向代理
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/1fc288250f38438b96749cef93a1e279.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- [win10上安装nginx](https://www.cnblogs.com/wzz2500/p/11401118.html)
+
+- Nginx配置文件
+
+  - 指令分未简单指令和块指令
+  - 一个简单指令：由名称和参数组成，以空格分隔，并以分号结尾
+  - 一个块指令：和简单指令具有相同的结构，但不是以分号结束，而是以一个大括号包围的一堆附加指令结束
+  - 如果一个大括号内可以由其他的指令，它接被称为一个上下文，比如（events，http，server，location）
+
+- Nginx配置文件结构
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/fe72ca1fa77d47759e8f8e4a7f9ac806.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_14,color_FFFFFF,t_70,g_se,x_16)
+
+- main：
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/852c2fc380ab40f9a91977b15fb9926c.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- events：
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/3ce3cfa2c76f4609aaeae910e53816b9.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- http
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/0057b286bacb49ebae6fa7a2c0073669.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- server
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/9406098b852a4dcca7e39e70daec4922.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- location
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/be9759fb8452454ab5f6b3d08ee109bb.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- Django部署
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/1fdf162133514c109a65267b65702a21.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_19,color_FFFFFF,t_70,g_se,x_16)
+
+- nginx配置文件（关于AXF项目）
+
+  ```conf
+  #user  nobody;
+  worker_processes  1;
+  
+  #error_log  logs/error.log;
+  #error_log  logs/error.log  notice;
+  #error_log  logs/error.log  info;
+  
+  #pid        logs/nginx.pid;
+  
+  
+  events {
+      worker_connections  1024;
+  }
+  
+  
+  http {
+      include       D:/nginx-1.20.1/conf/mime.types;
+      default_type  application/octet-stream;
+  
+      sendfile        on;
+      #tcp_nopush     on;
+  
+      #keepalive_timeout  0;
+      keepalive_timeout  65;
+  
+      #gzip  on;
+  
+      server {
+          listen       80;
+          server_name  localhost;
+          root  E:/1-Work/3-Code/python_projects/6-AXFProject/GPAXF;
+  
+          #charset koi8-r;
+  
+          #access_log  logs/host.access.log  main;
+  
+          location /static {
+              alias E:/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/static;
+              # root   html;
+              # index  index.html index.htm;
+          }
+  
+          error_page   500 502 503 504  /50x.html;
+          location = /50x.html {
+              root   html;
+          }
+      }
+  }
+  ```
+
+- nginx配置文件测试
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/80896296e42d48e0ae2f8ad8926deac4.png)
+
+- 启动nginx
+
+  `nginx -c E:/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/config.conf`
+
+- 安装uwsgi报错
+
+  - 这是因为uwsgiconfig.py文件中，os.uname()是不支持windows系统的，platform模块是支持任何系统
+
+  - [所以要用离线包安装才行](https://blog.csdn.net/qq_38327141/article/details/119819290)
+
+    ```
+    修改uwsgiconfig.py中的所有os.uname,将其改为platform.uname,在文件顶部添加import platform
+    ```
+
+  - **经检测，uwsgi里面的.h中的库都是linux的，windows没办法**
+  
+  - 拉倒吧
 
 
 
