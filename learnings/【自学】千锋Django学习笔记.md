@@ -1603,7 +1603,13 @@
 
 - 启动nginx
 
-  `nginx -c E:/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/config.conf`
+  - win10
+
+    `nginx -c E:/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/config_win10.conf`
+
+  - ubuntu
+
+    `nginx -c /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/config_ubuntu.conf`
 
 - 安装uwsgi报错
 
@@ -1618,6 +1624,24 @@
   - **经检测，uwsgi里面的.h中的库都是linux的，windows没办法**
   
   - 拉倒吧
+  
+- uwsgi启动：`/home/litian/.pyenv/versions/3.5.4/bin/uwsgi --ini uwsgi.ini`
+
+- 启动总结：
+
+  - 进入nginx目录：
+
+    ```
+    nginx -c /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/config_ubuntu.conf
+    ```
+
+  - 进入工程目录：
+
+    ```
+    /home/litian/.pyenv/versions/3.5.4/bin/uwsgi --ini uwsgi.ini
+    ```
+
+- 
 
 
 
@@ -1631,7 +1655,7 @@
 
 
 
-学到（要学）：P105
+学到（要学）：P112
 
 ------
 

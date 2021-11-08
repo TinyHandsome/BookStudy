@@ -1,0 +1,98 @@
+*** Starting uWSGI 2.0.20 (64bit) on [Mon Nov  8 09:44:56 2021] ***
+compiled with version: 7.5.0 on 08 November 2021 01:09:24
+os: Linux-4.4.0-17763-Microsoft #1432-Microsoft Mon Aug 18 18:18:00 PST 2020
+nodename: L511900749908
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF
+writing pidfile to uwsgi.pid
+detected binary path: /home/litian/.pyenv/versions/3.5.4/bin/uwsgi
+chdir() to /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF
+your processes number limit is 7823
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uWSGI http bound on 0.0.0.0:8888 fd 4
+uwsgi socket 0 bound to TCP address 127.0.0.1:58660 (port auto-assigned) fd 3
+Python version: 3.5.4 (default, Nov  5 2021, 10:25:44)  [GCC 7.5.0]
+Python main interpreter initialized at 0x7ffff04894c0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 835120 bytes (815 KB) for 40 cores
+*** Operational MODE: preforking+threaded ***
+/home/litian/.pyenv/versions/3.5.4/lib/python3.5/site-packages/pymysql/_auth.py:10: CryptographyDeprecationWarning: Python 3.5 support will be dropped in the next release of cryptography. Please upgrade your Python.
+  from cryptography.hazmat.backends import default_backend
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x7ffff04894c0 pid: 2982 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 2982)
+spawned uWSGI worker 1 (pid: 3001, cores: 10)
+spawned uWSGI worker 2 (pid: 3011, cores: 10)
+spawned uWSGI worker 3 (pid: 3021, cores: 10)
+spawned uWSGI worker 4 (pid: 3031, cores: 10)
+spawned uWSGI http 1 (pid: 3041)
+SIGINT/SIGTERM received...killing workers...
+gateway "uWSGI http 1" has been buried (pid: 3041)
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+*** Starting uWSGI 2.0.20 (64bit) on [Mon Nov  8 10:34:24 2021] ***
+compiled with version: 7.5.0 on 08 November 2021 01:09:24
+os: Linux-4.4.0-17763-Microsoft #1432-Microsoft Mon Aug 18 18:18:00 PST 2020
+nodename: L511900749908
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF
+writing pidfile to uwsgi.pid
+detected binary path: /home/litian/.pyenv/versions/3.5.4/bin/uwsgi
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF
+your processes number limit is 8041
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uwsgi socket 0 bound to TCP address 0.0.0.0:8888 fd 3
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+Python version: 3.5.4 (default, Nov  5 2021, 10:25:44)  [GCC 7.5.0]
+Python main interpreter initialized at 0x7ffff22dfd60
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 835120 bytes (815 KB) for 40 cores
+*** Operational MODE: preforking+threaded ***
+/home/litian/.pyenv/versions/3.5.4/lib/python3.5/site-packages/pymysql/_auth.py:10: CryptographyDeprecationWarning: Python 3.5 support will be dropped in the next release of cryptography. Please upgrade your Python.
+  from cryptography.hazmat.backends import default_backend
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x7ffff22dfd60 pid: 6780 (default app)
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 6780)
+spawned uWSGI worker 1 (pid: 6782, cores: 10)
+spawned uWSGI worker 2 (pid: 6792, cores: 10)
+spawned uWSGI worker 3 (pid: 6802, cores: 10)
+spawned uWSGI worker 4 (pid: 6812, cores: 10)
+[pid: 6812|app: 0|req: 1/1] 127.0.0.1 () {50 vars in 1006 bytes} [Mon Nov  8 10:35:38 2021] GET /axf/mine => generated 0 bytes in 175 msecs (HTTP/1.1 301) 3 headers in 115 bytes (2 switches on core 3)
+[pid: 6802|app: 0|req: 1/2] 127.0.0.1 () {50 vars in 1008 bytes} [Mon Nov  8 10:35:39 2021] GET /axf/mine/ => generated 5833 bytes in 172 msecs (HTTP/1.1 200) 4 headers in 124 bytes (2 switches on core 0)
+[pid: 6782|app: 0|req: 1/3] 127.0.0.1 () {52 vars in 1057 bytes} [Mon Nov  8 10:35:41 2021] GET /axf/home/ => generated 26039 bytes in 226 msecs (HTTP/1.1 200) 3 headers in 111 bytes (2 switches on core 1)
+[pid: 6802|app: 0|req: 2/4] 127.0.0.1 () {52 vars in 1061 bytes} [Mon Nov  8 10:35:44 2021] GET /axf/market/ => generated 0 bytes in 1 msecs (HTTP/1.1 302) 4 headers in 155 bytes (2 switches on core 3)
+[pid: 6782|app: 0|req: 2/5] 127.0.0.1 () {52 vars in 1103 bytes} [Mon Nov  8 10:35:44 2021] GET /axf/marketwithparams/104749/0/0/ => generated 10153 bytes in 39 msecs (HTTP/1.1 200) 3 headers in 111 bytes (2 switches on core 4)
+[pid: 6782|app: 0|req: 3/6] 127.0.0.1 () {52 vars in 1080 bytes} [Mon Nov  8 10:35:46 2021] GET /axf/cart/ => generated 0 bytes in 1 msecs (HTTP/1.1 302) 5 headers in 147 bytes (2 switches on core 5)
+[pid: 6782|app: 0|req: 4/7] 127.0.0.1 () {52 vars in 1082 bytes} [Mon Nov  8 10:35:46 2021] GET /axf/login/ => generated 1797 bytes in 4 msecs (HTTP/1.1 200) 5 headers in 278 bytes (2 switches on core 6)
+[pid: 6782|app: 0|req: 5/8] 127.0.0.1 () {52 vars in 1085 bytes} [Mon Nov  8 16:31:29 2021] GET /axf/marketwithparams/104749/0/0/ => generated 10153 bytes in 130 msecs (HTTP/1.1 200) 3 headers in 111 bytes (1 switches on core 7)
+[pid: 6782|app: 0|req: 6/9] 127.0.0.1 () {50 vars in 1006 bytes} [Mon Nov  8 16:31:36 2021] GET /axf/mine => generated 0 bytes in 1 msecs (HTTP/1.1 301) 3 headers in 115 bytes (1 switches on core 8)
+[pid: 6792|app: 0|req: 1/10] 127.0.0.1 () {50 vars in 1008 bytes} [Mon Nov  8 16:31:36 2021] GET /axf/mine/ => generated 5833 bytes in 280 msecs (HTTP/1.1 200) 4 headers in 124 bytes (1 switches on core 8)
