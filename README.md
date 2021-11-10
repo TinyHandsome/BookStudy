@@ -2,15 +2,13 @@
 
 件件有着落，事事有回音，凡事有交代。
 
-——李英俊努力努力再努力 | *更新时间：20210512*
+——李英俊努力努力再努力 | *更新时间：20211110*
 
 [TOC]
 
-## 写在前面 | Head Info
+## 写在前面 | Header
 
-- 我常用查询的传送门：
-  1. python数据模型的特殊方法：
-  2. 列表或元组的方法和属性：
+- 笔记总览地址：https://github.com/TinyHandsome/BookStudy
 
 ## 读书笔记 | Books
 
@@ -20,12 +18,11 @@
 4. **别买** | [《机器学习实战——基于Scikit-Learn和TensorFlow》](https://blog.csdn.net/qq_21579045/category_10672881.html)
 5. [《FlaskWeb开发——基于Python的Web应用开发实战》]()
 6. **别买** | [《Python核心编程（第3版）》](https://blog.csdn.net/qq_21579045/article/details/116023841)
-7. [《JavaScript基础教程（第9版）》]()
-8. ==推荐== | [《流畅的python》]()
+7. ==推荐== | [《流畅的python》](https://blog.csdn.net/qq_21579045/article/details/120565729)
 
 ## 文档笔记 | Docs
 
-1. [Python魔法手册](http://magic.iswbm.com/zh/latest/index.html)
+1. [Python魔法手册](https://github.com/TinyHandsome/BookStudy/tree/master/books/docs1_python%E9%AD%94%E6%B3%95%E6%89%8B%E5%86%8C)
 
 ## 视频笔记 | Learnings
 
@@ -40,15 +37,41 @@
 
 ## 设计笔记 | Designs
 
-### 1. Premiere
+### 1. PR | Premiere
 
-### 2. After Effects
+### 2. AE | After Effects
 
-### 3. Photoshop
+### 3. PS | Photoshop
 
-### 4. Illustrator
+### 4. AI | Illustrator
 
+## 自研教程 | Practice
 
+1. [两步解决jetbrains-agent-latest.zip不能拖入工作区](https://blog.csdn.net/qq_21579045/article/details/108804218)
+
+2. [最简洁的Mysql修改密码，不会你打我](https://blog.csdn.net/qq_21579045/article/details/108908862)
+
+3. [两步解决VS Code运行Jupyter报错问题](https://blog.csdn.net/qq_21579045/article/details/108908862)
+
+4. [VSCode小说神器Thief-Book-VSCode页数获取](https://blog.csdn.net/qq_21579045/article/details/111408200)
+
+5. [两步解决XMind发生了错误，请参阅日志文件](https://blog.csdn.net/qq_21579045/article/details/111414608)
+
+6. [两步解决XMind打不开的问题](https://blog.csdn.net/qq_21579045/article/details/111467229)
+
+7. [简单谈谈contextlib的使用](https://blog.csdn.net/qq_21579045/article/details/111645056)
+
+8. [PyCharm的Terminal无法键入](https://blog.csdn.net/qq_21579045/article/details/112758972)
+
+9. [-1073740771 (0xC000041D)问题解决方案（已放弃）](https://blog.csdn.net/qq_21579045/article/details/112759299)
+
+10. [我用python写了一个模拟鼠标的软件|如何成为一名合格的阴阳带师](https://blog.csdn.net/qq_21579045/article/details/117168759)
+
+11. [基于PythonMagick实现png、jpg批量转ico](https://blog.csdn.net/qq_21579045/article/details/117465485)
+
+12. [Cmder启动WSL中的Ubuntu出现复制粘贴异常](https://blog.csdn.net/qq_21579045/article/details/121230751)
+
+    
 
 ------
 
@@ -56,5 +79,6 @@
 - :snowflake: 我的博客园：https://www.cnblogs.com/lyjun/
 - :sunny: 我的Github：https://github.com/TinyHandsome
 - :rainbow: 我的bilibili：https://space.bilibili.com/8182822
+- :penguin: 粉丝交流群：1060163543，神秘暗号：为干饭而来
 
 碌碌谋生，谋其所爱。:ocean:              @李英俊小朋友
