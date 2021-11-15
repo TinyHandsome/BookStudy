@@ -82,7 +82,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'password',
         'HOST': 'localhost',
-        'PORT': 3306
+        'PORT': 3307
     }
 }
 
@@ -136,7 +136,7 @@ EMAIL_HOST_USER = 'litian_django_test@163.com'
 EMAIL_HOST_PASSWORD = 'QWOFTHTOOSHHLVIY'
 
 SERVER_HOST = '127.0.0.1'
-SERVER_PORT = '8000'
+SERVER_PORT = '80'
 
 CACHES = {
     "default": {

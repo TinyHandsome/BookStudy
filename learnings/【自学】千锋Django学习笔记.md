@@ -1289,6 +1289,15 @@
         - VUE
         - Android
         - IOS
+    
+8. 需求，统计用户
+
+    - 自己统计
+      - 通过中间件直接实现
+    - 使用专用的统计分析工具
+      - 百度统计
+      - 极光统计
+      - 友盟统计
 
 ### 14.2 一些开发时遇到的问题
 
@@ -1494,6 +1503,71 @@
           - gunicorn：HTTP服务器
         - 邮件服务器
         - 流媒体服务器
+    
+12. 部署云服务器
+
+    - 从零开始做的
+
+    - 安装云服务器系统
+
+      - Ubuntu 16.04
+
+    - 安装一套开发环境
+
+      - Python
+        - 2.x
+        - 3.x
+      - pip
+        - 注意版本兼容
+      - virtualenv
+        - 版本不兼容
+        - workon_home
+        - source xxx
+      - mysql
+        - apt 直接安装
+      - redis
+        - 源码安装
+        - make & make test​
+        - utils/install_server.sh
+      - nginx
+        - 添加钥匙
+        - 添加源
+        - update，install
+      - 准备进行部署
+        - 安装项目所需的依赖
+          - pip install -r xxx.txt
+        - 修改配置文件的指定路径
+        - 从静态文件开始部署
+        - 动态资源
+          - 处理好数据库
+          - 创建库，创建表
+          - 插入数据
+      - 坑点
+        - 邮件发送
+          - 25端口是非安全端口，阿里不允许使用
+          - 使用安全协议接口：SSL端口，465/994
+
+    - ab测试
+
+      - ab安装：
+
+        ```
+        sudo apt-get install apache2-utils
+        ```
+
+      - 测试100次
+
+        ```
+        ab -n 100 http://127.0.0.1/axf/mine/
+        ```
+
+13. 通过配置pycharm实现远程写代码
+
+    ![image-20211115110423881](E:\typora_pics_savepath\image-20211115110423881.png)
+
+14. 总结
+
+    ![请添加图片描述](https://img-blog.csdnimg.cn/e65c9bf2e1824740a25b8def6ee728c7.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 ## 15. Nginx
 
@@ -1641,7 +1715,115 @@
     /home/litian/.pyenv/versions/3.5.4/bin/uwsgi --ini uwsgi.ini
     ```
 
-- 
+- redis安装遇到问题：`it seems like you don't have a redis executable. Did you run make install yet?`
+
+  - 这是因为没有加入自己的 `src/redis-server`
+
+  - 参考链接：https://blog.csdn.net/BLADCS/article/details/109648842
+
+  - 安装成功
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/4efec054510146d58b5e4f8c5571a6c6.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- redis-cli成功
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/b292d0669aaf4749bf3ecfd2535e1fe4.png)
+
+- 测试项目的conf是不是正确的
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/6581addbb57e4ce1aafdff04361d1614.png)
+
+- 启动
+
+  1. 切到项目路径
+
+     ```
+     cd /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF
+     ```
+
+  2. 启动mysql
+
+     ```
+     sudo service mysql start
+     ```
+
+  3. 启动nginx
+
+     ```
+     sudo /usr/sbin/nginx -c /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/config_ubuntu.conf
+     ```
+
+     停止
+  
+     ```
+     sudo /usr/sbin/nginx -s stop
+     ```
+  
+  4. 启动uwsgi
+  
+     ```
+     sudo /home/litian/.pyenv/versions/3.5.4/bin/uwsgi --ini uwsgi.ini
+     ```
+  
+     停止
+  
+     ```
+     sudo /home/litian/.pyenv/versions/3.5.4/bin/uwsgi --stop uwsgi.pid
+     ```
+  
+-  反向代理
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/160dd8e62b2341e09e2f08d4159cdb8b.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- ngnix也可以对接runserver
+
+  ```
+  # runserver
+  location / {
+  	proxy_pass http://127.0.0.1:9000;
+  }
+  
+  # uwsgi
+  # location / {
+  #     include /etc/nginx/uwsgi_params;
+  #     uwsgi_pass 0.0.0.0:8888;
+  # }
+  ```
+
+- 负载均衡模块：upstream
+
+  - 负载均衡是分发请求的
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/00fdc3b3e15c4db497b97327d79f76ff.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+  - 配置
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/f48c0144cd034f6ebaa1a5a9aab2a5b4.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+## 16. Gunicorn
+
+- 安装：`pip install gunicorn`
+
+- 配置：
+
+  ```
+  # runserver
+  location / {
+  	proxy_pass http://127.0.0.1:9000;
+  }
+  ```
+
+  - 这里的端口要与gunicorn 的端口一致
+
+- 启动gunicorn：`gunicorn -b 0.0.0.0:9000 GPAXF.wsgi`
+
+  - 指定启动地址：`-b`
+
+- 启动nginx：`sudo nginx -c /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/config_ubuntu.conf`
+
+- 重载nginx：`sudo nginx reload`
+
+- 启动runserver：` python3.5 manage.py runserver 9000`
 
 
 
@@ -1655,7 +1837,11 @@
 
 
 
-学到（要学）：P113 0636
+
+
+
+
+学到（要学）：P116
 
 ------
 
@@ -1663,5 +1849,6 @@
 - :snowflake: 我的博客园：https://www.cnblogs.com/lyjun/
 - :sunny: 我的Github：https://github.com/TinyHandsome
 - :rainbow:  我的bilibili：https://space.bilibili.com/8182822
+- :penguin: 粉丝交流群：1060163543，神秘暗号：为干饭而来
 
 碌碌谋生，谋其所爱。:ocean:              @李英俊小朋友
