@@ -1569,7 +1569,7 @@
 
     ![请添加图片描述](https://img-blog.csdnimg.cn/e65c9bf2e1824740a25b8def6ee728c7.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
 
-## 15. Nginx
+### 14.5 Nginx
 
 - Nginx简介
 
@@ -1800,7 +1800,7 @@
 
     ![在这里插入图片描述](https://img-blog.csdnimg.cn/f48c0144cd034f6ebaa1a5a9aab2a5b4.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
 
-## 16. Gunicorn
+### 14.6 Gunicorn
 
 - 安装：`pip install gunicorn`
 
@@ -1825,6 +1825,10 @@
 
 - 启动runserver：` python3.5 manage.py runserver 9000`
 
+## 15. RESTful
+
+1. RESTful：**Re**presentational **S**tate **T**ransfer，（资源的）表现层状态转化
+2. URI只代表资源的实体，不代表它的形式
 
 
 
@@ -1840,8 +1844,7 @@
 
 
 
-
-学到（要学）：P116
+学到（要学）：P120
 
 ------
 
