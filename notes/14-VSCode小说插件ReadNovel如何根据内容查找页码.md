@@ -1,4 +1,4 @@
-# VSCode小说插件ReadNovel根据内容查找页码
+# VSCode小说插件ReadNovel如何根据内容查找页码
 
 [TOC]
 
@@ -8,7 +8,7 @@
 
   - 平平无奇的vscode
 
-  - 插件ReadNovel（暗示）
+  - 插件ReadNovel
 
     ![在这里插入图片描述](https://img-blog.csdnimg.cn/58dcc9597f7e42a5a87dd648e494d9f8.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
 
@@ -21,7 +21,7 @@
 
   - 输入当前章节的关键字，查找到对应的 **页码** （注意这个页码是ReadNovel在小说文件上对应的页码， 不是对应的行数）
 
-    ![image-20211116173127371](E:\typora_pics_savepath\image-20211116173127371.png)
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/521531b269554d50a30f136036a6e07c.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
 
   - 进一步说明：
 
@@ -101,15 +101,9 @@
 
 3. 最后展示一下效果：
 
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/9455b957f8d84758b344f146da748091.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
    
-
-
-
-
-
-
-
-
 
 
 ------

@@ -1,6 +1,6 @@
 # TensorBoard可视化
 
-[TOC]
+[toc]
 
 ## 0. 写在前面
 
@@ -658,7 +658,7 @@ with open(path_for_mnist_metadata, 'w') as f:
 
 这里写点小tips关于**np.ceil**、**np.floor**、**enumerate**：
 
->  np.ceil：向上取整。
+> np.ceil：向上取整。
 >
 > np.floor：向下取整。
 >
@@ -672,7 +672,7 @@ with open(path_for_mnist_metadata, 'w') as f:
 
 ![img](https://img-blog.csdnimg.cn/20190513093045818.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
----
+------
 
 在生成好辅助数据之后，以下代码展示了如何使用TensorFlow代码生成PROJECTOR所需要的日志文件来可视化MNIST测试数据在最后的输出层向量。
 
@@ -847,14 +847,6 @@ if __name__ == '__main__':
 ![img](https://img-blog.csdnimg.cn/20190513145348618.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
 
 还是三围旋转的。。。旋转~ 跳跃~
-
-然后我把tensorflow和numpy的包升级之后，终于不卡了。。。
-
-可是：
-
-![img](https://img-blog.csdnimg.cn/20190513213945890.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
-
-这一片空白白是什么。。。你看我脸上是不是写满了快乐。。。
 
 ------
 

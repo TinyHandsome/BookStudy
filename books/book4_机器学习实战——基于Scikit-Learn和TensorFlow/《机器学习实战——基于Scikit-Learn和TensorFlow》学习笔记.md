@@ -4,7 +4,27 @@
 
 ## 写在前面
 
-- 本书的书评已更新，**不推荐看此书**，[传送门](https://blog.csdn.net/qq_21579045/article/details/108387907)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020090316425294.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
+
+- 读后感
+
+  - 先说结论：**不推荐**
+
+  - 讲道理，这本书的学习过程真的是超累。一直憋着一口气才能坚持下来。机器学习部分好说，原理和实践部分其实挺烂的，但我不是很想喷，因为跟后面的tensorflow部分比起来，真的是小巫见大巫。**为什么现在的书都喜欢省略代码呢？**我看过tensorflow的书不止一两本了，都是面对初学者的入门书籍。然是，我发现作者们都十分喜欢省略代码。之前写过的，之后就用省略号表示了，让你自己往前面翻，自己找。之前讲过的知识点，也用省略表示，让你自己复习。**就根本没有考虑过我们初学者的感受好吗！**可能对于一个熟手来说，知识已经成了体系，代码已经熟悉得不行了，以这样的角度写入门书或者实战书真的很过分，也是一种不负责任。（国内国外的作者都有这样的毛病，并且，国内的教程稍微会好一些）。
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200908104313447.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
+
+  - 除此之外，还有各种代码的缺陷，比如下面这种前后变量不一致的问题。
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200908173300343.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70#pic_center)
+
+  - 如果不想听我比比了，我对这本书给个总结吧。**烂到令人发指！**
+
+  - 开始接触这本书的契机，是要做RNN，所以直接从循环神经网络那一章看起，痛苦的很，但是好歹是挺过来了，不懂的最后不是靠书解决的，大部分是百度帮助了我。相反，本来很容易就能讲清楚的道理，书里给你整的云里雾里的，浪费时间。
+
+  - 关注我的朋友应该知道，我习惯了边学边做笔记，这本书是我遇到的唯一一本让我笔记完完全全写不下去的书。知识点杂乱无章、代码敷衍了事，整体的行文没有逻辑，想说啥就写点代码应付一下，整体给人的感觉就是在瞎写，前后的小节之间没有联系，特别是代码上没有联系，一会儿东一会儿西的。这点在机器学习部分还能忍受，但是到了深度学习部分，就十分令人气愤了。
+  
+  - 作为一个有始有终的人，我还是坚持把这本书看完了的，笔记就拉倒了。取其精华，弃其糟粕吧（主要是花了钱哈哈哈）。以上仅代表个人观点，本人表达能力理解能力都有限，如果感觉我言辞激烈，那肯定是你理解的问题哈哈哈哈。。。
 
 ## 1. 机器学习概览
 
@@ -1552,7 +1572,7 @@
 
             ```python
             from tensorflow.contrib.layers import fully_connected
-
+        
             with tf.name_scope("dnn"):
                 hidden1 = fully_connected(X, n_hidden1, scope="hidden_1")
                 hidden2 = fully_connected(hidden1, n_hidden2, scope="hidden_2")
@@ -1604,10 +1624,10 @@
         ```python
         from tensorflow.examples.tutorials.mnist import input_data
         mnist = input_data.read_data_sets("D:/李添的数据哦！！！/BookStudy/book4/MNIST_data/MNIST_data/")
-
+          
         n_epochs = 400
         batch_size = 50
-
+          
         with tf.Session() as sess:
             init.run()
             for epoch in range(n_epochs):
@@ -1651,7 +1671,6 @@
       - 深层网络比浅层网络有更高的参数效率：深层网络可以用非常少的神经元来建模复杂函数，因此训练起来更加快速。
       - 现实世界的数据往往会按照层次结构组织，而DNN天生的就很擅长处理这种数据：低级隐藏层用以建模低层结构，中级隐藏层组合这些低层结构来建模中层结构，高级隐藏层和输出层组合这些中层结构来构建高层结构。
       - 分层的架构不仅可以帮助DNN更快的归纳出好方案，还可以提高对于新数据集的泛化能力。
-      
   - 每个隐藏层中的神经元数
     - 输入输出层中的神经元数由任务要求的输入输出类型决定。
     - 对于隐藏层来说，一个常用的实践是以漏斗型来定义其尺寸，每层的神经元数依次减少：原因是许多低级功能可以合并成数量更少的高级功能。
@@ -1661,7 +1680,7 @@
   - 激活函数
     - 大多数情况下，你可以在隐藏层中使用ReLU激活函数（或者其变种），它比其他激活函数要快一些，因为梯度下降对于大输入值没有上限，会导致它无法终止（与逻辑函数或者双曲正切函数刚好相反，它们会在1处饱和）。
     - 对于输出层，softmax激活函数对于分类任务（如果分类是互斥的）来说是一个很不错的选择。对于回归任务，则完全可以不使用激活函数。
-
+  
 - 练习摘抄
   - 为什么通常更倾向用逻辑回归分类器而不是经典的感知器？如何调整一个感知器，让它与逻辑回归分类器等价？
 
@@ -4583,20 +4602,17 @@
 ## 16. 强化学习
 
 - [如代码所示](https://github.com/TinyHandsome/BookStudy/blob/master/books/book4_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8EScikit-Learn%E5%92%8CTensorFlow/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0.ipynb)
+- 懒得做笔记了，没什么好说的，强行看完了，很痛苦
+
+
+
 
 ------
 
-我的CSDN：https://blog.csdn.net/qq_21579045
+- :cloud: 我的CSDN：https://blog.csdn.net/qq_21579045
+- :snowflake: 我的博客园：https://www.cnblogs.com/lyjun/
+- :sunny: 我的Github：https://github.com/TinyHandsome
+- :rainbow: 我的bilibili：https://space.bilibili.com/8182822
+- :penguin: 粉丝交流群：1060163543，神秘暗号：为干饭而来
 
-我的博客园：https://www.cnblogs.com/lyjun/
-
-我的Github：https://github.com/TinyHandsome
-
-纸上得来终觉浅，绝知此事要躬行~
-
-欢迎大家过来OB~
-
-by 李英俊小朋友
-
-
-
+碌碌谋生，谋其所爱。:ocean:              @李英俊小朋友
