@@ -14,10 +14,24 @@
         2. 输入的书本名，就在当前路径中查找改书
 """
 
+# -----------------【可以删除】---------------------
+# 这里是获取vscode配置文件json，读取成dict的过程
+import sys
+sys.path.append("E:/1-Work/3-Code/tools/tools_py")
+from constants import get_vscode_json_dict
+vscode_json_dict = get_vscode_json_dict()
+# --------------------------------------------------
+
+
 from dataclasses import dataclass
 from math import ceil
 import os
 
+
+# 可以直接把文件路径粘到这里就行，不需要像我这样从vscode的配置文件中
+book_path = vscode_json_dict.get("thiefBook.filePath")
+current_single_page = vscode_json_dict.get("thiefBook.pageSize")
+book_name = os.path.split(book_path)[-1]
 
 @dataclass
 class XiaoshuoLocation:
@@ -85,9 +99,7 @@ def get_path_name_extension(file_path):
 
 if __name__ == '__main__':
 
-    current_file = 'E:/study_books/4-吞噬星空.txt'
-    current_single_page = 30
-    xsloc = XiaoshuoLocation(current_single_page, current_file)
+    xsloc = XiaoshuoLocation(current_single_page, book_path)
     xsloc.show_current_info()
 
     info = ''

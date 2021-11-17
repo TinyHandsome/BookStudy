@@ -2,14 +2,21 @@
 对vscode插件：ReadNovel提供内容查找和页码定位的操作
 """
 
+# -----------------【可以删除】---------------------
+# 这里是获取vscode配置文件json，读取成dict的过程
 import sys
 sys.path.append("E:/1-Work/3-Code/tools/tools_py")
 from constants import get_vscode_json_dict
+vscode_json_dict = get_vscode_json_dict()
+# --------------------------------------------------
 
+
+import os
 from dataclasses import dataclass
 
-vscode_json_dict = get_vscode_json_dict()
+# 可以直接把文件路径粘到这里就行，不需要像我这样从vscode的配置文件中
 book_path = vscode_json_dict.get("ReadNovel.filePath")
+book_name = os.path.split(book_path)[-1]
 
 
 @dataclass
@@ -38,7 +45,12 @@ class LocationReadNovel:
 
 def main():
     lrn = LocationReadNovel()
-    lrn.find_page('生命涅槃')
+    print('当前书名：', book_name)
+    while True:
+        find_words = input("请输入检索内容：（输入q退出）\n\r")
+        if find_words.strip() == 'q':
+            break
+        lrn.find_page(find_words)
 
 
 if __name__ == '__main__':
