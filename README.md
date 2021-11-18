@@ -2,13 +2,16 @@
 
 件件有着落，事事有回音，凡事有交代。
 
-——李英俊努力努力再努力 | *更新时间：20211110*
+——李英俊努力努力再努力 | *更新时间：20211117*
 
 [TOC]
 
 ## 写在前面 | Header
 
 - 笔记总览地址：https://github.com/TinyHandsome/BookStudy
+- 关于blog数量：**博客园** 比 **CSDN** 少 **3** 个是因为：
+  1. [difference-2]：两个java学习笔记csdn分别分了两个来写
+  2. [difference-1]：因为大家都懂的原因，阴阳师在CSDN写了两次
 
 ## 读书笔记 | Books
 
@@ -45,7 +48,7 @@
 
 ### 4. AI | Illustrator
 
-## 自研教程 | Practice
+## 钻研教程 | Practice
 
 1. [两步解决jetbrains-agent-latest.zip不能拖入工作区](https://blog.csdn.net/qq_21579045/article/details/108804218)
 
@@ -70,6 +73,10 @@
 11. [基于PythonMagick实现png、jpg批量转ico](https://blog.csdn.net/qq_21579045/article/details/117465485)
 
 12. [Cmder启动WSL中的Ubuntu出现复制粘贴异常](https://blog.csdn.net/qq_21579045/article/details/121230751)
+
+13. [在win10的pycharm使用wsl中的python进行开发](https://blog.csdn.net/qq_21579045/article/details/121335719)
+
+14. [VSCode小说插件ReadNovel如何根据内容查找页码](https://blog.csdn.net/qq_21579045/article/details/121371380)
 
     
 
