@@ -75,6 +75,9 @@ for ti in tis:
     t = Thread(target=thread_it, args=(content, question_num,))
     thread_list.append(t)
 
+# [Python多线程中阻塞(join)与锁(Lock)使用误区解析](https://blog.csdn.net/cd_xuyue/article/details/52052893)
 for t in thread_list:
     t.start()
+
+for t in thread_list:
     t.join()
