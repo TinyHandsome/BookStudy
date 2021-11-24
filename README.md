@@ -78,6 +78,8 @@
 
 14. [VSCode小说插件ReadNovel如何根据内容查找页码](https://blog.csdn.net/qq_21579045/article/details/121371380)
 
+15. [VSCode集成Cmder控制台输入中文乱码](https://blog.csdn.net/qq_21579045/article/details/121507825)
+
     
 
 ------
