@@ -1828,11 +1828,66 @@
 ## 15. RESTful
 
 1. RESTful：**Re**presentational **S**tate **T**ransfer，（资源的）表现层状态转化
+
 2. URI只代表资源的实体，不代表它的形式
+
 3. 到底什么是RESTful框架
    - 每一个URI代表一种资源
    - 客户端和服务器之间，传递这种资源的某种表现层
    - 客户端通过4个HTTP动词，对服务端资源进行操作，实现“表现层状态转换”
+   
+4. HTTP常用动词
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/0de642d9d4c440fea905fadcad726d10.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+5. 好的程序：高内聚，低耦合
+
+   - 高内聚：针对于一类事物的操作，封装在一块
+
+6. 过滤信息：如果记录数量过多，服务器不可能将它们返回给用户，API因该提供参数，过滤返回结果
+
+7. 状态码：服务器向用户返回的状态码和提示信息，常见的有以下一些：
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/0bc404c7e0c24657b20b8deced603131.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+8. RESTful API最好做到Hypermedia，即返回结果中提供链接，链向其他API方法，使得用户不查文档，也知道下一步应该做什么
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/ad761f6480f147a6a79eb126f71b8bbc.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5p2O6Iux5L-K5bCP5pyL5Y-L,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+9. 服务器返回的数据格式，应该尽量使用JSON
+
+10. API的身份认证应该使用OAuth2.0框架
+
+11. tips
+
+    1. 如果不对应用在settings中进行注册的话，不影响访问url，但是在models中建立的模型无法被makemigrations识别 
+    
+12. 问题：
+
+    1. 这里进行post测试之后返回的值总是500
+
+       - 看了下发现是 `request.POST.get` 没有获取到对应的参数
+
+       - 解决方案：[看这个链接的评论席中](https://blog.csdn.net/liuxingen/article/details/54176205)
+
+         ![在这里插入图片描述](https://img-blog.csdnimg.cn/2f6b1decc8b64caaa5d21738a4ea4c5c.png)
+
+    2. 在使用 `httpie` 进行操作的时候，又要换成如下代码了，我自己猜测的话，前者参数是因为放在了url链接后面，后者httpie是放在body中，所以对于django，两种获取参数的方式得不一样
+
+       ```python
+       # post = QueryDict(request.get_full_path().split('?')[1])
+       post = request.POST
+       
+       b_name = post.get('b_name')
+       b_price = post.get('b_price')
+       ```
+
+13. 视图函数
+
+    1. FBV
+       1. Function Base View
+    2. CBV
+       1. CLass Base View
 
 
 
@@ -1848,7 +1903,7 @@
 
 
 
-学到（要学）：P120
+学到（要学）：P125
 
 ------
 

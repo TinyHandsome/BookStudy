@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookCreate</title>
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("button").click(function () {
+                var b_name = $("#b_name").val();
+                var b_price = $("#b_price").val();
+                $.post('/api/books/', {'b_name': b_name, 'b_price': b_price}, function (data) {
+                    console.log(data);
+                    if (data['status'] === 201) {
+                        window.open('/static/html/BookList.html', target = "_self");
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+<div id="container">
+    <form action="#">
+        <span>BookName: </span><input type="text" id="b_name" placeholder="please input your book name">
+        <br>
+        <span>BookPrice: </span><input type="text" id="b_price" placeholder="please input your book price">
+    </form>
+    <button>Create</button>
+</div>
+</body>
+</html>

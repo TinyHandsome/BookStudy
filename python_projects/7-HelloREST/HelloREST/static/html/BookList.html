@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookList</title>
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript">
+        /**
+         $(function () {
+            $.getJSON("/api/books/", function (data) {
+                console.log(data);
+            })
+        })
+         */
+
+        $(function () {
+            //$("button").click(function () {
+                $.getJSON("/api/books/", function (data) {
+                    console.log(data);
+                    if (data['status'] === 200){
+                        var $ul = $("ul");
+                        var books = data['data'];
+                        for (var i=0; i < books.length; i++){
+                            var $li = $("<li></li>");
+                            $li.html(books[i]['b_name']);
+                            $li.appendTo($ul);
+                        }
+                    }
+                })
+            //})
+        })
+
+    </script>
+</head>
+<body>
+<div id="container">
+    <button>ClickToLoad</button>
+    <ul>
+
+    </ul>
+</div>
+
+</body>
+</html>
