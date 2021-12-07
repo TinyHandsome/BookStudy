@@ -1889,6 +1889,71 @@
     2. CBV
        1. CLass Base View
 
+14. 类视图
+
+    1. CBV
+    2. 继承自View
+    3. 注册的时候使用的 `as_view()`
+    4. 入口
+       1. 不能使用请求方法的名字作为参数的名字
+       2. 只能接收已经存在的属性对应的参数
+       3. 定义了一个view
+          1. 创建了一个类视图对象
+          2. 保留，拷贝传递进来的属性和参数
+          3. 调用dispatch方法
+             - 分发
+             - 如果请求方法在我们的允许的列表中
+               - 从自己这个对象中获取请求方法名字小写对应的属性，如果没有找到，会给一个默认：`http_method_not_allowed`
+             - 如果请求方法不在我们允许的列表中，直接就是 `http_method_not_allowed`
+             - 之后，将参数传递，调用函数
+    5. 默认实现了options方法
+       - 获取接口信息，可以获取接口都允许什么请求
+    6. 简化版的流程
+       - as_view
+       - dispatch
+       - 调用实现请求方法对应的函数名
+    7. TemplateView
+       - 多继承的子类
+       - VIew：
+         - 分发
+         - 函数 dispatch
+       - ContextMixin：
+         - 接受上下文
+         - 从视图函数传递到模板的内容
+         - 函数get_context_data
+       - TemplateResponseMixin
+         - 将内容渲染到模板中
+         - template_name
+         - template_engine
+         - response_class
+         - content_type
+         - 函数 render_to_response 
+    8. ListView
+       - MultipleObjectTemplateResponseMixin
+         - TemplateResponseMixin
+         - 获取模板名字
+           - 首先根据template_name
+           - 如果没找到
+             - 自己根据应用的名字，关联模型的名字，`_list.html` 去查找
+             - App/book_list.html
+       - BaseListView
+         - MultipleOBjectMixin
+           - ContextMixin
+           - get_queryset：获取查询结果集
+         - View
+         - 默认实现了get，渲染成了response
+    9. DetailView
+       - SingleObjectTemplateResponseMixin
+         - TemplateResponseMixin
+         - 重写了获取模板名字的方法
+       - BaseDetailView
+         - View
+         - SingleObjectMixin
+           - ContextMixin
+
+15. 小结
+
+    ![](https://img-blog.csdnimg.cn/a4aa6599404f4174930751990ad713a7.png)
 
 
 
@@ -1903,7 +1968,10 @@
 
 
 
-学到（要学）：P125
+
+
+
+学到（要学）：P128
 
 ------
 

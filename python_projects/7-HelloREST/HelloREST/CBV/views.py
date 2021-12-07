@@ -6,8 +6,10 @@ from CBV.models import Book
 
 
 class HelloCBV(View):
+    msg = None
+
     def get(self, request):
-        return HttpResponse('hahaha')
+        return HttpResponse('hahaha %s' % self.msg)
 
     def post(self, request):
         return HttpResponse('POST 666')
