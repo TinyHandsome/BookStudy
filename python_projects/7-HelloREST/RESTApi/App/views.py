@@ -21,6 +21,7 @@ class HelloListView(ListView):
 
 
 class HeDetailView(DetailView):
-    template_name = 'Book.html'
-    model = Book
+    # template_name = 'Book.html'
+    # model = Book
 
+    queryset = Book.objects.all()

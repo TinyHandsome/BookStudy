@@ -1951,7 +1951,38 @@
          - SingleObjectMixin
            - ContextMixin
 
-15. 小结
+15. 虚拟环境
+
+    - virtualenvwrapper：
+      - 对virtualenv的包装
+      - mkvirtualenv
+      - rmvirtualenv
+      - workon
+      - deactivate
+    - virtualenv
+      - virtualenv
+      - source /xx/xx/activate
+      - deactivate
+      - rm -rf xxx
+      - 指令在哪调用，虚拟环境就在哪生成
+
+16. 重量级RESTful
+
+    - django-rest-framework
+    - REST难点
+      - 模型序列化
+
+17. REST-Framework
+
+    - 序列化器：serializers
+
+18. Admin
+
+    - django内置后台管理
+    - User和Group
+    - 自带权限
+
+19. 小结
 
     ![](https://img-blog.csdnimg.cn/a4aa6599404f4174930751990ad713a7.png)
 
@@ -1971,7 +2002,7 @@
 
 
 
-学到（要学）：P128
+学到（要学）：P130
 
 ------
 

@@ -16,7 +16,10 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from REST.urls import router
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^cbv/', include('App.urls', namespace='cbv')),
+    url(r'rest/', include(router.urls, namespace='rest')),
 ]
