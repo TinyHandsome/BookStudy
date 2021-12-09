@@ -15,11 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from rest_framework.routers import DefaultRouter
 
-from REST.urls import router
+from REST.views import UserViewSet, GroupViewSet
+
+router = DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'groups', GroupViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^cbv/', include('App.urls', namespace='cbv')),
-    url(r'rest/', include(router.urls, namespace='rest')),
+    url(r'^', include(router.urls)),
 ]

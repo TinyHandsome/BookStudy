@@ -1976,13 +1976,47 @@
 
     - 序列化器：serializers
 
-18. Admin
+18. HelloREST
+
+    - 序列化器
+    - 视图函数
+      - viewsets.ModelViewSet
+      - CBV
+      - 视图集合
+    - 路由
+      - routers.DefaultRouter
+    - 记得在installed_apps添加 rest_framework
+    - runserver
+      - 所有api变成可视化
+      - 超链接
+        - HyperLinkedModelSerializer
+      - 对数据集合实现了
+        - 路由 /users/  /groups/
+        - get
+        - post
+      - 对单个实现了
+        - 路由  /users/id/  /groups/id/
+        - get
+        - post
+        - delete
+        - patch
+      - viewsets 做了视图函数的实现
+      - router 做了路由的注册
+
+19. 命名规范
+
+    - 拒绝 中文、空格、特殊字符、关键字、保留字在命名和路径中
+    - 拒绝 数字开头、拒绝 `$` 开头
+    - 小写字母或大写字母开头，驼峰命名
+    - 使用框架，注意远离框架的名字
+
+20. Admin
 
     - django内置后台管理
     - User和Group
     - 自带权限
 
-19. 小结
+21. 小结
 
     ![](https://img-blog.csdnimg.cn/a4aa6599404f4174930751990ad713a7.png)
 
