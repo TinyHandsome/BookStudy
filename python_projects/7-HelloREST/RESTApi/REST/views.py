@@ -4,7 +4,8 @@ from rest_framework import viewsets
 
 
 # Create your views here.
-from REST.serializers import UserSerializer, GroupSerializer
+from REST.models import Book
+from REST.serializers import UserSerializer, GroupSerializer, BookSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -15,3 +16,9 @@ class UserViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+

@@ -17,14 +17,18 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 
-from REST.views import UserViewSet, GroupViewSet
+from REST.views import UserViewSet, GroupViewSet, BookViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
+router.register(r'books', BookViewSet)
+
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^cbv/', include('App.urls', namespace='cbv')),
-    url(r'^', include(router.urls)),
+    # url(r'^admin/', admin.site.urls),
+    # url(r'^cbv/', include('App.urls', namespace='cbv')),
+    # url(r'^', include(router.urls)),
+
+    url(r'^ser/', include('RESTSerializer.urls')),
 ]

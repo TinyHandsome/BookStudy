@@ -1971,6 +1971,12 @@
     - django-rest-framework
     - REST难点
       - 模型序列化
+      - serialization
+        - 在模块serializers
+          - HyperLinkedModelSerializer
+            - 序列化模型，并添加超链接
+          - Serializer
+            - 手动序列化
 
 17. REST-Framework
 
