@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from RESTSerializer.models import Person
+from RESTSerializer.models import Person, Student
 
 
 class PersonSerializer(serializers.Serializer):
@@ -18,3 +18,9 @@ class PersonSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         Person.objects.create(**validated_data)
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ('s_name', 's_age')

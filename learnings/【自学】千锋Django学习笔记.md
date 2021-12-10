@@ -1971,18 +1971,37 @@
     - django-rest-framework
     - REST难点
       - 模型序列化
+        - 正向序列化：将模型转换成JSON
+        - 反向序列化：将JSON转换成模型
       - serialization
         - 在模块serializers
           - HyperLinkedModelSerializer
             - 序列化模型，并添加超链接
           - Serializer
             - 手动序列化
+      - 双R
+        - Request
+          - rest_framework.request
+        - Response
+      - APIView
+        - renderer_classes：渲染的类
+        - parser_classes：解析转换的类
+        - authentication_classes：认证的类
+        - throttle_classes：节流的类，控制请求频率的
+        - permission_classes：权限的类
+        - content_negotiate_class：内容过滤的类
+        - metadata_class：元信息的类
+        - versioning_class：版本控制的类
 
-17. REST-Framework
+17. Bug
+
+    - 将request内容转换为JSON数据出现bug
+
+18. REST-Framework
 
     - 序列化器：serializers
 
-18. HelloREST
+19. HelloREST
 
     - 序列化器
     - 视图函数
@@ -2009,20 +2028,20 @@
       - viewsets 做了视图函数的实现
       - router 做了路由的注册
 
-19. 命名规范
+20. 命名规范
 
     - 拒绝 中文、空格、特殊字符、关键字、保留字在命名和路径中
     - 拒绝 数字开头、拒绝 `$` 开头
     - 小写字母或大写字母开头，驼峰命名
     - 使用框架，注意远离框架的名字
 
-20. Admin
+21. Admin
 
     - django内置后台管理
     - User和Group
     - 自带权限
 
-21. 小结
+22. 小结
 
     ![](https://img-blog.csdnimg.cn/a4aa6599404f4174930751990ad713a7.png)
 
@@ -2042,7 +2061,7 @@
 
 
 
-学到（要学）：P130
+学到（要学）：P134 19 36
 
 ------
 
