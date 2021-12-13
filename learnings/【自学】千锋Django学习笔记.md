@@ -1982,6 +1982,19 @@
       - 双R
         - Request
           - rest_framework.request
+          - 将Django中的Request作为了自己的一个属性 `_request`
+          - 属性和方法：
+            - content_type
+            - stream
+            - query_params （实际上就是直接获取GET参数，`_request.GET`）
+            - data：同时兼容POST、PUT、PATCH
+            - user：
+              - 可以直接在请求上获取用户
+              - 相当于在请求上添加一个属性，用户对象
+            - auth：
+              - 认证
+              - 相当于在请求上添加了一个属性，属性的值就是token
+            - successfulauthenticator：认证成功
         - Response
       - APIView
         - renderer_classes：渲染的类
@@ -1992,6 +2005,27 @@
         - content_negotiate_class：内容过滤的类
         - metadata_class：元信息的类
         - versioning_class：版本控制的类
+        - as_view:()
+          - 调用父类中的 `as_view()` -> dispatch
+          - dispatch 被重写了
+          - `initialize_request()`：使用django的request构建了一个REST中的Request
+        - initial
+          - perform_authentication：
+            - 执行用户认证
+            - 遍历了我们的用户认证器
+              - 如果认证成功，返回一个元组
+              - 元组中的第一个元素就是 user
+              - 第二个元素就是 auth，也叫token
+          - check_permissons：
+            - 检查权限
+            - 遍历权限检测器
+              - 只要有一个权限不能验证通过
+              - 就直接显示权限被拒绝
+              - 当所有权限都满足，才算是拥有权限
+          - check_throttles：
+            - 检测频率
+            - 遍历频率限制器
+            - 如果验证不同，就需要等待
 
 17. Bug
 
@@ -2061,7 +2095,7 @@
 
 
 
-学到（要学）：P134 19 36
+学到（要学）：P136
 
 ------
 
