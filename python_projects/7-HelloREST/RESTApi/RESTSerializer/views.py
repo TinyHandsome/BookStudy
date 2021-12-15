@@ -2,11 +2,14 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 from django.views import View
+from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from RESTSerializer.models import Person, Student
-from RESTSerializer.serializers import PersonSerializer, StudentSerializer
+from RESTSerializer.serializers import PersonSerializer, StudentSerializer, BookSerializer
 
 
 class PersonView(View):
@@ -42,5 +45,25 @@ class StudentView(APIView):
         # student_serializer = StudentSerializer(student)
         # return JsonResponse(student_serializer.data)
 
-        data = JSONParser().parse(request)
-        return JsonResponse({'msg': 'ok'})
+        # data = JSONParser().parse(request)
+        # return JsonResponse({'msg': 'ok'})
+
+        return Response({'msg': 'ok'}, 201)
+
+
+@api_view(http_method_names=['GET', 'POST'])
+def books(request):
+    print(type(request))
+
+    if request.method == 'GET':
+        return Response(data={'msg': 'get ok'})
+    elif request.method == 'POST':
+        print(request.data)
+        book_serializer = BookSerializer(data=request.data)
+        if book_serializer.is_valid():
+            book_serializer.save()
+            return Response(book_serializer.data)
+
+        return Response(data={'msg': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+
+    return JsonResponse({'msg': '666'})

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from RESTSerializer.models import Person, Student
+from RESTSerializer.models import Person, Student, Book
 
 
 class PersonSerializer(serializers.Serializer):
@@ -24,3 +24,9 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ('s_name', 's_age')
+
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ('b_name', 'b_price')

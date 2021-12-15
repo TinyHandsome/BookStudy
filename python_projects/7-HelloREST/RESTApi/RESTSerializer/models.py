@@ -10,3 +10,8 @@ class Person(models.Model):
 class Student(models.Model):
     s_name = models.CharField(max_length=32)
     s_age = models.IntegerField(default=1)
+
+
+class Book(models.Model):
+    b_name = models.CharField(max_length=16)
+    b_price = models.FloatField(default=1)

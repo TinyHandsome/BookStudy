@@ -1996,6 +1996,13 @@
               - 相当于在请求上添加了一个属性，属性的值就是token
             - successfulauthenticator：认证成功
         - Response
+          - 依然是HttpResponse的子类
+          - 自己封装的
+            - data可以直接接受字典，并转为json
+            - status 可以直接指定状态码
+          - 属性
+            - rendered_content
+            - status_text
       - APIView
         - renderer_classes：渲染的类
         - parser_classes：解析转换的类
@@ -2026,6 +2033,16 @@
             - 检测频率
             - 遍历频率限制器
             - 如果验证不同，就需要等待
+        - csrf_exempt
+          - 所有APIView的子类都是csrf豁免的
+      - 错误码
+        - 封装在status模块中
+        - 实际上就是一个个常量类
+      - 针对视图函数的包装
+        - CBV：APIView
+        - FBV：
+          - 添加 `@api_view` 的装饰器
+          - 必须手动指定允许的请求方法
 
 17. Bug
 
@@ -2078,6 +2095,10 @@
 22. 小结
 
     ![](https://img-blog.csdnimg.cn/a4aa6599404f4174930751990ad713a7.png)
+    
+    ![](https://img-blog.csdnimg.cn/9ea815106f02482b84d747cd5559c7a3.png)
+    
+    
 
 
 
@@ -2095,7 +2116,7 @@
 
 
 
-学到（要学）：P136
+学到（要学）：P139
 
 ------
 
