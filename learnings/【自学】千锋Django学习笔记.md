@@ -2098,7 +2098,64 @@
     
     ![](https://img-blog.csdnimg.cn/9ea815106f02482b84d747cd5559c7a3.png)
     
-    
+
+## 16. APIView
+
+1. 子类
+   - generic包中
+     - GenericAPIView
+       - 增加模型的获取操作
+       - get_queryset
+       - get_object
+         - lookup_field：默认是主键
+       - get_serializer
+       - get_serializer_class
+       - get_serializer_context
+       - filter_queryset
+       - paginator
+       - paginate_queryset
+       - get_paginated_response
+     - CreateAPIView
+       - 创建的类视图
+       - 继承GenerateAPIView、CreateModelMixin
+       - 实现了POST进行创建
+     - ListAPIView
+       - 列表的类视图
+       - 继承GenerateAPIView、ListModelMixin
+     - RetrieveAPIView
+       - 查询单个数据的类视图
+       - 继承GenerateAPIView、RetrieveModelMixin
+       - 实现了get
+     - DestroyAPIView
+       - 销毁、删除数据的类视图
+       - 继承GenerateAPIView、DestroyModelMixin
+       - 实现了delete
+     - UpdateAPIView
+       - 更新数据的类视图
+       - 继承GenerateAPIView、UpdateModelMixin
+       - 实现了put和patch
+   - mixins
+     - CreateModelMixin
+       - create
+       - perform_create
+       - get_success_header
+     - ListModelMixin
+       - list
+         - 查询结果集
+         - 添加分页功能
+         - 序列化
+     - RetrieveModelMixin
+       - retrieve
+         - 获取单个对象，并序列化
+     - DestroyModelMixin
+       - destroy
+         - 获取单个对象
+         - 调用执行删除
+         - 返回 Response 状态码 204
+       - perform_destroy
+         - 默认是模型的delete
+         - 如果是数据的逻辑删除
+           - 重写进行保存
 
 
 
@@ -2116,7 +2173,7 @@
 
 
 
-学到（要学）：P139
+学到（要学）：P140
 
 ------
 
