@@ -1337,6 +1337,9 @@
    1. 重定向
    2. 跨域
 5. 价钱后端必算，前端选算
+6. PUT和PATCH
+   - PUT的时候需要提供所有字段，带有默认值的字段不提供也不会报错（最好还是提供）
+   - PATCH修改对象的部分字段
 
 
 ### 14.4 Note
@@ -2134,8 +2137,25 @@
        - 更新数据的类视图
        - 继承GenerateAPIView、UpdateModelMixin
        - 实现了put和patch
+     - ListCreateAPIView
+       - 获取列表数据
+       - 创建数据的类视图
+       - 继承GenerateAPIView、ListModelMixin、CreateModelMixin
+       - 实现了get、post
+     - RetrieveUpdateAPIView
+       - 获取单个对象、更新单个对象的类视图
+       - 继承GenerateAPIView、RetrieveModelMixin、UpdateModelMixin
+       - 实现了get、put、patch
+     - RetrieveDestroyAPIView
+       - 获取、删除单个数据的类视图
+       - 继承GenerateAPIView、RetrieveModelMixin、DestroyModelMixin
+       - 实现了get、delete
+     - RetrieveUpdateDestroyAPIView
+       - 获取、更新、删除单个数据的类视图
+       - 继承GenerateAPIView、RetrieveModelMixin、UpdateModelMixin、DestroyModelMixin
+       - 实现了get、put、delete
    - mixins
-     - CreateModelMixin
+     - CreateModelMixin 
        - create
        - perform_create
        - get_success_header
@@ -2156,6 +2176,13 @@
          - 默认是模型的delete
          - 如果是数据的逻辑删除
            - 重写进行保存
+     - UpdateModelMixin
+       - update
+         - 获取对象，进行合法验证
+         - 执行更新
+       - perform_update
+       - partical_update
+         - 差量更新，对应的就是patch
 
 
 
@@ -2173,7 +2200,7 @@
 
 
 
-学到（要学）：P140
+学到（要学）：P142
 
 ------
 
