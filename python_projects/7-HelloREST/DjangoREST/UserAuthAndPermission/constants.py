@@ -1,0 +1,3 @@
+
+HTTP_ACTION_LOGIN = "login"
+HTTP_ACTION_REGISTER = "register"

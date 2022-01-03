@@ -16,7 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from App.urls import router
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^app/', include('App.urls')),
+    # url(r'^app/', include('App.urls')),
+    url(r'^app/', include(router.urls)),
+    url(r'^up/', include('UserAuthAndPermission.urls')),
 ]
+

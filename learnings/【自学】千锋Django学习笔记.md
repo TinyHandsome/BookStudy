@@ -10,6 +10,7 @@
      - 松耦合、解耦合
      - 高内聚
   2. Django版本：1.1
+  3. rest_framework 最佳实践工程：[DjangoREST](https://github.com/TinyHandsome/BookStudy/tree/master/python_projects/7-HelloREST/DjangoREST)
 - 学习的时候遇到的问题：
   1. [PyCharm右键SQLite找不到As Data Source选项](#anchor)
   2. [如何让其他电脑访问到自己的Django项目](#anchor2)
@@ -2100,7 +2101,6 @@
     ![](https://img-blog.csdnimg.cn/a4aa6599404f4174930751990ad713a7.png)
     
     ![](https://img-blog.csdnimg.cn/9ea815106f02482b84d747cd5559c7a3.png)
-    
 
 ## 16. APIView
 
@@ -2183,6 +2183,54 @@
        - perform_update
        - partical_update
          - 差量更新，对应的就是patch
+   - viewsets
+     - ViewSetMixin
+       - 重写了as_view
+     - GenericViewset
+       - 继承GenericAPIView、ViewSetMixin
+     - ViewSet
+       - 继承APIView、ViewSetMixin
+       - 默认啥都不支持，需要自己手动实现
+     - ReadOnlyViewSet
+       - 只读的模型视图集合
+       - 继承RetrieveModelMixin、ListModelMixin、GenericViewSet
+     - ModelViewSet
+       - 直接封装对象的所有操作
+       - 继承GenericViewSet、CreateModelMixin、RetrieveModelMixin、UpdateModelMixin、DestroyModelMixin、ListModelMixin
+
+## 17. 用户模块
+
+1. 用户注册
+   - RESTful
+   - 数据开始
+     - 模型，数据库
+     - 创建用户
+       - 用户身份
+         - 管理员用户
+         - 普通用户
+         - 删除用户
+   - 注册实现
+     - 添加了超级管理员生成
+2. 用户登录
+   - 验证用户名密码
+   - 生成用户令牌
+   - 出现了和注册共用post冲突
+     - 添加action
+     - path/?action=login
+     - path/?action=register
+   - 异常捕获尽量精确
+3. 用户认证
+   - BaseAuthentication：authenticate
+     - 认证成功会返回一个元组
+       - 第一个元素是user
+       - 第二个元素是token、auth
+4. 用户权限
+   - BasePermission：has_permission
+     - 是否具有权限
+     - true：拥有权限
+     - false：未拥有权限
+5. 用户认证和权限
+   - 直接配置在视图函数上就ok了
 
 
 
@@ -2198,9 +2246,7 @@
 
 
 
-
-
-学到（要学）：P142
+学到（要学）：P148 0703
 
 ------
 
