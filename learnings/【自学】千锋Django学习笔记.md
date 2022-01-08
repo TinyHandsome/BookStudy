@@ -2211,6 +2211,7 @@
          - 删除用户
    - 注册实现
      - 添加了超级管理员生成
+   
 2. 用户登录
    - 验证用户名密码
    - 生成用户令牌
@@ -2219,18 +2220,101 @@
      - path/?action=login
      - path/?action=register
    - 异常捕获尽量精确
+   
 3. 用户认证
    - BaseAuthentication：authenticate
      - 认证成功会返回一个元组
        - 第一个元素是user
        - 第二个元素是token、auth
+   
 4. 用户权限
    - BasePermission：has_permission
      - 是否具有权限
      - true：拥有权限
      - false：未拥有权限
+   
 5. 用户认证和权限
    - 直接配置在视图函数上就ok了
+   
+6. 小结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/7ec47b5b8bdf4173b73bbcd970c844ee.png)
+
+## 18. 用户注册
+
+1. 需求
+   - 存在级联数据
+   - 用户和收货地址
+   - 节流
+2. 分析
+   - 数据开始
+     - 模型定义
+     - 用户和地址：一对多
+       - 用户表
+       - 地址表
+         - ForeignKey
+     - 序列化
+       - 级联数据如何实现序列化
+     - 节流
+
+## 19. 节流器
+
+- BaseThrottle
+  - allow_request：是否允许的核心
+  - get_ident：获取客户端唯一标识
+  - wait：等待多长时间，等待函数
+- SimpleRateThrottle
+  - get_cache_key：获取缓存的标识
+  - get_rate：获取频率
+  - parse_rate：转换频率，num/duration
+    - duration：s、m、h、d
+  - allow_request：是否允许请求，重写的方法
+  - throttle_success：允许请求，进行请求记录
+  - throttle_failure：请求失败，不允许请求
+  - wait：还有多少时间允许
+- AnonRateThrottle
+  - get_cache_key：获取缓存key的原则
+- UserRateThrottle
+  - 和上面一模一样
+- ScopedRateThrottle
+  - 和上面的一样
+  - 多写了从属性中获取频率
+
+## 20. RESTful
+
+- django-rest-framework
+  - serializers
+    - 序列化工具：序列化与反序列化
+  - APIView
+    - CBV，类视图
+    - 实现各种请求的处理
+  - mixins
+    - CRUDL
+    - 对模型操作
+  - viewsets
+    - 对APIView和Mixins的高度封装
+    - 可以对接router
+  - router
+    - DefaultRouter
+    - 可以直接批量注册路由
+  - authentication
+    - APIView中会自动认证
+    - 自己创建认证类，实现认证方法
+      - 认证成功返回元组，用户和令牌
+  - permission
+    - 添加权限控制
+    - 用户所拥有的权限
+
+## 99. 技能点
+
+- HTTP_X_FORWARDED_FOR
+  - 获取你的原始IP
+    - 通过普通的代理发送请求
+    - 如果获取REMOTE_ADDR获取到的是代理IP
+- 代理：
+  - 普通代理
+  - 高匿代理
+    - 效率月低，请求速度越慢
 
 
 
@@ -2244,9 +2328,7 @@
 
 
 
-
-
-学到（要学）：P148 0703
+学到（要学）：P154 0522
 
 ------
 
