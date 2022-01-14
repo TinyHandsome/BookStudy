@@ -54,7 +54,7 @@
 
 - MTV设计模式：
 
-  ![image-20210102101157811](E:\typora_pics_savepath\image-20210102101157811.png)
+  ![image-20210102101157811](https://img-blog.csdnimg.cn/7eb0f6cb7dff40f099d6ce29d050915f.png)
 
 ## 2. Django简介
 
@@ -535,7 +535,7 @@
 
            - get
 
-           - ###### getlist
+           - getlist
 
          - POST
 
@@ -1567,7 +1567,7 @@
 
 13. 通过配置pycharm实现远程写代码
 
-    ![image-20211115110423881](E:\typora_pics_savepath\image-20211115110423881.png)
+    ![](https://img-blog.csdnimg.cn/9ac32fe200a04d0e82028766e375ce4d.png)
 
 14. 总结
 
@@ -2102,7 +2102,7 @@
     
     ![](https://img-blog.csdnimg.cn/9ea815106f02482b84d747cd5559c7a3.png)
 
-## 16. APIView
+### 15.1 APIView
 
 1. 子类
    - generic包中
@@ -2198,7 +2198,7 @@
        - 直接封装对象的所有操作
        - 继承GenericViewSet、CreateModelMixin、RetrieveModelMixin、UpdateModelMixin、DestroyModelMixin、ListModelMixin
 
-## 17. 用户模块
+### 15.2 用户模块
 
 1. 用户注册
    - RESTful
@@ -2240,7 +2240,7 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/7ec47b5b8bdf4173b73bbcd970c844ee.png)
 
-## 18. 用户注册
+### 15.3 用户注册
 
 1. 需求
    - 存在级联数据
@@ -2257,7 +2257,7 @@
        - 级联数据如何实现序列化
      - 节流
 
-## 19. 节流器
+### 15.4 节流器
 
 - BaseThrottle
   - allow_request：是否允许的核心
@@ -2280,11 +2280,17 @@
   - 和上面的一样
   - 多写了从属性中获取频率
 
-## 20. RESTful
+### 15.6 RESTful总结
 
 - django-rest-framework
   - serializers
     - 序列化工具：序列化与反序列化
+    - 级联模型
+      - 添加级联字段
+      - nested
+      - 级联字段的key必须就是原来存在的
+        - 隐形属性
+        - 自定义related_name
   - APIView
     - CBV，类视图
     - 实现各种请求的处理
@@ -2304,8 +2310,56 @@
   - permission
     - 添加权限控制
     - 用户所拥有的权限
+  - throttle
+    - 节流
+    - 控制访问频率
 
-## 99. 技能点
+## 16. Celery
+
+1. 消息队列
+
+   1. 异步任务
+   2. 定时任务
+
+2. 需要了解的知识
+
+   - 选择并安装消息容器（载体）
+   - 安装Celery并创建爱你第一个任务
+   - 开启工作进程，并调用任务
+   - 记录工作状态和返回的结果
+
+3. Log级别
+
+   - info
+   - debug
+   - warning
+   - error
+   - critical
+
+4. 端
+
+   - 用户端
+   - 公司自己的后台
+   - 商家端
+
+5. 后台管理
+
+   - 快速实现自己的后台
+   - 内置了一个admin
+   - 也有第三方的：
+     - xadmin
+     - suit
+
+6. Django内置模型
+
+   - 用户
+   - 组
+
+7. 小结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/ebcefcd434f84edd8d1498e1ff627bc9.png)
+
+## 90. 技能点
 
 - HTTP_X_FORWARDED_FOR
   - 获取你的原始IP
@@ -2314,21 +2368,7 @@
 - 代理：
   - 普通代理
   - 高匿代理
-    - 效率月低，请求速度越慢
-
-
-
-
-
-
-
-
-
-
-
-
-
-学到（要学）：P154 0522
+    - 效率越低，请求速度越慢
 
 ------
 
