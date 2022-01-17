@@ -10,8 +10,8 @@
 
 - 笔记总览地址：https://github.com/TinyHandsome/BookStudy
 - 关于blog数量：**博客园** 比 **CSDN** 少 **3** 个是因为：
-  1. [difference-2]：两个java学习笔记csdn分别分了两个来写
-  2. [difference-1]：因为大家都懂的原因，阴阳师在CSDN写了两次
+  1. 两个java学习笔记csdn分别分了两个来写
+  2. 因为大家都懂的原因，阴阳师在CSDN写了两次
 
 ## 读书笔记 | Books
 
@@ -37,6 +37,7 @@
 6. [JDBC学习笔记](https://blog.csdn.net/qq_21579045/article/details/105386353)
 7. [JSON学习笔记](https://blog.csdn.net/qq_21579045/article/details/108577716)
 8. [Python多线程编程学习笔记](https://blog.csdn.net/qq_21579045/article/details/113741647)
+9. [Django学习笔记](https://blog.csdn.net/qq_21579045/article/details/122486699)
 
 ## 设计笔记 | Designs
 
