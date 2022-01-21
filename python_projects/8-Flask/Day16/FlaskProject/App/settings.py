@@ -1,4 +1,7 @@
+import os
 from App.password import password
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def get_db_uri(dbinfo):
@@ -53,7 +56,6 @@ class TestConfig(Config):
 
 
 class StagingConfig(Config):
-
     dbinfo = {
         'ENGINE': 'mysql',
         "DRIVER": 'pymysql',
@@ -68,7 +70,6 @@ class StagingConfig(Config):
 
 
 class ProductConfig(Config):
-
     dbinfo = {
         'ENGINE': 'mysql',
         "DRIVER": 'pymysql',
