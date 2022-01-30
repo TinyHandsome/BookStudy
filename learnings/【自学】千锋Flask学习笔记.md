@@ -73,6 +73,18 @@
        - 代表的一种规划
      - 路由的规划
    - flask-blueprint
+     - 使用过程
+       - 安装
+         - pip install flask-blueprint
+       - 初始化
+         - 需要创建蓝图对象
+           - name
+           - 导入名字 `__name__`
+         - 需要使用app进行初始化
+           - 注册在App上
+       - 使用
+         - 和Flask对象差不多
+         - 直接作为装饰器用来注册路由
 
 10. 数据库
 
@@ -80,6 +92,29 @@
     - ORM
       - SQLAlchemy
     - flask-sqlalchemy
+      - 使用过程
+        - 安装
+          - `pip install flask-sqlalchemy`
+        - 初始化
+          - 需要使用app进行SQLAlchemy对象的创建
+            - 使用懒加载方式 init_app 方法搞定
+          - SQLALCHEMY_DATABASE_URI
+            - 连接数据库的路径
+            - URI格式
+              - 数据库+驱动://用户名:密码@主机:端口/库
+          - SQLALCHEMY_TRACK_MODIFICATIONS
+            - 将来被添加进来的一个特性
+            - 默认是False
+        - 使用
+          - 定制模型
+            - 继承自Model
+            - 创建字段
+          - 创建库，创建表
+            - 库需要手动创建
+            - 表
+              - SQLAlchemy对象.create_all
+              - 删除 .drop_all
+              - 不能差量更新
 
 11. 关系图
 

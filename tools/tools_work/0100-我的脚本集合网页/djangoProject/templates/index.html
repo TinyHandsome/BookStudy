@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+
+<h1>꧁༺༽༈༒❀ 脚本集合 ❀༒༈༼༻꧂</h1>
+<p style="color: red">注意：仅内部使用。</p>
+<p>作者：李英俊小朋友 <br> 联系方式：litian@whchem.com</p>
+<h2>目录</h2>
+<ol>
+    <li><a href="/func1/"><b>MYSQL</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
+    <li><a href="/func2/"><b>HANA</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
+    <li><a href="/func3/">LeapHD离线批处理自动提交 <b>流程保存</b></a></li>
+    <li><a href="/func4/">给SELECT语句中每一列的字段加双引号</a></li>
+</ol>
+<br>
+<br>
+<br>
+<h2>当前使用用户</h2>
+<table border="1" align="left">
+    <tr>
+        <th>序号</th>
+        <th style="width: 150px">IP地址</th>
+        <th style="width: 200px">用户名</th>
+        <th>访问计数</th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.ip }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.count }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

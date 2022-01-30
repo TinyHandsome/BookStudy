@@ -27,6 +27,11 @@ python_projects/6-AXFProject/axf
 *.sqlite
 *.spec
 *.pyc
+*.sqlite3
+*.jpg
+*.ico
+*.png
+
 
 !.gitignore
 

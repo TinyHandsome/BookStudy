@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}默认标题{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+    {% block ext_css %}
+    {% endblock %}
+</head>
+<body>
+<a href="/" style="color: cadetblue">返回首页</a>
+<br>
+<br>
+{% block header %}
+{% endblock %}
+{% block content %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
+{# axf项目导入 #}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+{#<script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>#}
+{#<script type="text/javascript" src="{% static 'js/base.js' %}"></script>#}
+{% block ext_js %}
+{% endblock %}
+
+</body>
+</html>
