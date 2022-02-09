@@ -6,9 +6,9 @@
 @author: Liyingjun
 @contact: 694317828@qq.com
 @software: pycharm
-@file: base_func1.py
+@file: str_funcs.py
 @time: 2022/1/28 16:56
-@desc: 一些基础函数
+@desc: 一些关于字符串的基础函数
 """
 
 

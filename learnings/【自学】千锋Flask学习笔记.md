@@ -115,8 +115,31 @@
               - SQLAlchemy对象.create_all
               - 删除 .drop_all
               - 不能差量更新
+          - 数据操作
+            - 存储
+              - 创建对象
+              - SQLAlchemy对象.session.add()
+              - 添加完成还要进行commit()
+    - Flask-Migrate
+      - 迁移插件
+      - 在FLask中像Django中一样进行模型迁移
+      - 使用流程
+        - 安装
+          - pip install flask-migrate
+        - 初始化
+          - 使用app和db进行初始化
+          - 可以使用懒加载方式
+        - 使用
+          - flask db 指令
+            - init
+            - migrate
+            - upgrade
+          - 结合flask-script使用
+            - 在manager添加一个管理指令
+              - manager.add_command('db', MigrateCommand)
+            - python manage db 指令
 
-11. 关系图
+11. 二阶拆分
 
     ![在这里插入图片描述](https://img-blog.csdnimg.cn/f3ae1c050b34428b9454b98c66246823.png)
 
@@ -133,6 +156,39 @@
       - 真实环境
       - 给用户看的
 
+13. 项目结构
+
+    - 原版
+      - HelloFlask.py
+    - 改良
+      - 三阶改装
+      - manage.py
+        - 项目管理文件
+      - App
+        - `__init__`
+          - 初始化文件
+          - 天然的单例
+          - 调用的顺序是最高的
+        - settings
+          - config
+          - 全局项目配置
+        - ext
+          - extension 扩展库
+          - 除了和路由相关
+        - views
+          - apis
+          - 路由，视图函数
+        - models
+          - 定制模型
+
+14. ODOO
+
+    - 比django还重的Web框架
+    - 可以快速生成网站
+
+15. 三阶拆分
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/b6aee89dcafb44ae8674b930ed8f174a.png)
 
 
 
@@ -144,8 +200,7 @@
 
 
 
-
-学到 P8
+学到 P10
 
 
 ------
