@@ -190,6 +190,43 @@
 
     ![在这里插入图片描述](https://img-blog.csdnimg.cn/b6aee89dcafb44ae8674b930ed8f174a.png)
 
+## 2. VIews
+
+1. 路由
+   - 路由参数获取
+   - <>
+     - 语法：`<converter:name>`
+     - converter
+       - int
+       - float
+       - string
+         - 以`/`作为结尾的
+       - path
+         - 从path修饰开始，后面的东西都是我们的
+         - `/` 没有作用了
+       - uuid
+         - any
+
+2. 视图函数
+   - 默认支持GET、HEAD、OPTIONS
+   - 其余请求不支持
+   - 想支持其余请求需要手动注册
+
+3. Flask有四大内置对象
+
+   - Request
+     - request
+   - Session
+     - session
+   - G
+     - g
+   - Config
+     - 在模板中config
+     - 在python代码中，app.config
+
+4. 小结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/07fbd20a21354386b1e2d43097c251e4.png)
 
 
 
@@ -200,7 +237,8 @@
 
 
 
-学到 P10
+
+学到 P13
 
 
 ------
