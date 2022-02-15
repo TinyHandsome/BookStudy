@@ -16,10 +16,10 @@ from app.models import User
 
 
 def index(request):
-    users = User.objects.all()
+    users = User.objects.all().order_by('-count')
 
     data = {
-        'users': users
+        'users': enumerate(users, 1)
     }
 
     return render(request, 'index.html', context=data)

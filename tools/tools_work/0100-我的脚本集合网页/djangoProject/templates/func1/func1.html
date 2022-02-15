@@ -9,7 +9,7 @@
 
 {% block content %}
     <h1><b>MYSQL</b> 建表语句 -> Hive建表语句 + 选择字段语句</h1>
-    <form action="/func1/" method="post">
+    <form action="{% url '1:func1' %}" method="post">
         {% csrf_token %}
         输入你的sql: <input type="submit" style="background-color: orange; margin-left: 10px" value="提交"/>
         <button id="clear_button" type="button" style="margin-left: 20px">清空</button>

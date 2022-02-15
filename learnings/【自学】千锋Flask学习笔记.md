@@ -190,7 +190,7 @@
 
     ![在这里插入图片描述](https://img-blog.csdnimg.cn/b6aee89dcafb44ae8674b930ed8f174a.png)
 
-## 2. VIews
+## 2. Views
 
 1. 路由
    - 路由参数获取
@@ -228,6 +228,21 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/07fbd20a21354386b1e2d43097c251e4.png)
 
+## 3. Request
+
+1. args
+   - 请求参数
+   - query_string
+   - query_params
+   - get请求参数
+   - 它并不是get专属，所有请求都能获取这个参数
+2. form
+   - 表单数据
+   - post请求参数
+     - 直接支持put，patch
+3. ImmutableMultiDict
+   - args和form都是这个类型
+   - dict子类
 
 
 
@@ -238,7 +253,14 @@
 
 
 
-学到 P13
+
+
+
+
+
+
+
+学到 P15 0742
 
 
 ------

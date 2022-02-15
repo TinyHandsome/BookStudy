@@ -17,7 +17,8 @@ from django.db import models
 class DMPTbls(models.Model):
     db_name = models.CharField(max_length=32, verbose_name='数据库')
     table_name = models.CharField(max_length=32, verbose_name='表名')
-    table_des = models.CharField(max_length=255, verbose_name='表描述')
+    table_des = models.CharField(max_length=255, verbose_name='表描述', blank=True, null=True)
 
     class Meta:
         db_table = 'DMPTbls'
+

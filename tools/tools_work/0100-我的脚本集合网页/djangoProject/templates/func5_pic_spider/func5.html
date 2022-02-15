@@ -8,8 +8,9 @@
 {% endblock %}
 
 {% block content %}
+    <h1 style="color: blue">开发中。。。</h1>
     <h1>网页图片 <b>爬虫</b></h1>
-    <form action="/func5/" method="post">
+    <form action="{% url '1:func5' %}" method="post">
         {% csrf_token %}
 
         <div>
