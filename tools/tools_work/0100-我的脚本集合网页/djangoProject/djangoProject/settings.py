@@ -117,6 +117,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
 if DEBUG:
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
@@ -129,6 +130,7 @@ else:
 
 MY_IMG_URL = os.path.join(BASE_DIR, 'static/img')
 MY_TEMP_IMG_URL = os.path.join(MY_IMG_URL, 'temp')
+MY_RESOURCE_URL = os.path.join(BASE_DIR, 'resources')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

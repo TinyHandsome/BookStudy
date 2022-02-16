@@ -1,0 +1,300 @@
+{
+	"states": {
+		"rect1": {
+			"type": "start",
+			"text": {
+				"text": "Start"
+			},
+			"attr": {
+				"x": 600,
+				"y": 98,
+				"width": 48,
+				"height": 44
+			},
+			"props": {
+				"text": {
+					"value": "Start"
+				}
+			}
+		},
+		"rect2": {
+			"type": "end",
+			"text": {
+				"text": "End"
+			},
+			"attr": {
+				"x": 600,
+				"y": 426,
+				"width": 48,
+				"height": 44
+			},
+			"props": {
+				"text": {
+					"value": "End"
+				}
+			}
+		},
+		"rect3": {
+			"type": "hive",
+			"text": {
+				"text": "创建ods层表"
+			},
+			"attr": {
+				"x": 600,
+				"y": 203,
+				"width": 135,
+				"height": 44
+			},
+			"props": {
+				"componentName": {
+					"value": "创建ods层表"
+				},
+				"taskId": {
+					"value": "{my_component_id_1}"
+				},
+				"taskName": {
+					"value": "创建ods层表"
+				},
+				"appId": {
+					"value": "leap_84"
+				},
+				"hiveDB": {
+					"value": "default"
+				},
+				"hsql": {
+					"value": "{my_hivesql_1}"
+				},
+				"out": {
+					"value": ""
+				},
+				"retryTimes": {
+					"value": "0"
+				},
+				"disabled": {
+					"value": "false"
+				}
+			}
+		},
+		"rect4": {
+			"type": "transfer",
+			"text": {
+				"text": "全量抽取"
+			},
+			"attr": {
+				"x": 600,
+				"y": 316,
+				"width": 135,
+				"height": 44
+			},
+			"props": {
+				"componentName": {
+					"value": "全量抽取"
+				},
+				"taskId": {
+					"value": "{my_component_id_2}"
+				},
+				"taskName": {
+					"value": "全量抽取"
+				},
+				"appId": {
+					"value": "leap_84"
+				},
+				"transferMode": {
+					"value": "O2H"
+				},
+				"hiveDB": {
+					"value": "default"
+				},
+				"rdbmsDB": {
+					"value": "ODS_BPM_ORACLE"
+				},
+				"sourceData": {
+					"value": "{my_hivesql_2}"
+				},
+				"stored": {
+					"value": "parquet"
+				},
+				"overWrite": {
+					"value": "Y"
+				},
+				"primaryKey": {
+					"value": ""
+				},
+				"maps": {
+					"value": ""
+				},
+				"isDirect": {
+					"value": "N"
+				},
+				"delimsRep": {
+					"value": ""
+				},
+				"isQuery": {
+					"value": "Y"
+				},
+				"destData": {
+					"value": "{my_target}"
+				},
+				"customParams": {
+					"value": ""
+				},
+				"retryTimes": {
+					"value": "0"
+				},
+				"disabled": {
+					"value": "false"
+				}
+			}
+		}
+	},
+	"paths": {
+		"path5": {
+			"from": "rect1",
+			"to": "rect3",
+			"dots": [],
+			"text": {
+				"text": ""
+			},
+			"textPos": {
+				"x": 0,
+				"y": -10
+			},
+			"props": {
+				"text": {
+					"value": ""
+				}
+			}
+		},
+		"path6": {
+			"from": "rect3",
+			"to": "rect4",
+			"dots": [],
+			"text": {
+				"text": ""
+			},
+			"textPos": {
+				"x": 0,
+				"y": -10
+			},
+			"props": {
+				"text": {
+					"value": ""
+				}
+			}
+		},
+		"path7": {
+			"from": "rect4",
+			"to": "rect2",
+			"dots": [],
+			"text": {
+				"text": ""
+			},
+			"textPos": {
+				"x": 0,
+				"y": -10
+			},
+			"props": {
+				"text": {
+					"value": ""
+				}
+			}
+		}
+	},
+	"props": {
+		"props": {
+			"processId": {
+				"value": ""
+			},
+			"versionNo": {
+				"value": ""
+			},
+			"processName": {
+				"value": "{my_schedule_name}"
+			},
+			"appName": {
+				"value": "leap_84"
+			},
+			"processDesc": {
+				"value": ""
+			},
+			"scope": {
+				"value": "private"
+			},
+			"validate": {
+				"value": ""
+			},
+			"priority": {
+				"value": "N"
+			},
+			"processBelongs": {
+				"value": "J"
+			},
+			"cronParam": {
+				"value": "{\"scheduleType\":\"D\",\"freqType\":\"O\",\"interval\":\"1\",\"selectDay\":\"\",\"intervalDay\":\"\",\"scheduleDate\":\"2022-02-25 13:29:16\",\"scheduleTime\":\"01:00:00\",\"scheduleEndDate\":\"\",\"scheduleEndTime\":\"\",\"scheduleSettings\":\"2\"}"
+			},
+			"cronState": {
+				"value": ""
+			},
+			"alermMethod": {
+				"value": ""
+			},
+			"warnTime": {
+				"value": ""
+			},
+			"alarmGroup": {
+				"value": ""
+			},
+			"alarmGroupMember": {
+				"value": ""
+			},
+			"alermPerson": {
+				"value": ""
+			},
+			"emailTitle": {
+				"value": ""
+			},
+			"processVariables": {
+				"value": ""
+			},
+			"appVariables": {
+				"value": ""
+			},
+			"isPublish": {
+				"value": "N"
+			},
+			"is2draft": {
+				"value": "false"
+			},
+			"scheduleType": {
+				"value": "D"
+			},
+			"freqType": {
+				"value": "O"
+			},
+			"interval": {
+				"value": "1"
+			},
+			"selectDay": {
+				"value": ""
+			},
+			"intervalDay": {
+				"value": ""
+			},
+			"scheduleDate": {
+				"value": "2022-02-25 13:29:16"
+			},
+			"scheduleTime": {
+				"value": "00:20:00"
+			},
+			"scheduleEndDate": {
+				"value": ""
+			},
+			"scheduleEndTime": {
+				"value": ""
+			},
+			"scheduleSettings": {
+				"value": "2"
+			}
+		}
+	}
+}

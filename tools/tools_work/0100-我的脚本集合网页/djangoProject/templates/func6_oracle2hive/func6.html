@@ -5,11 +5,11 @@
 {% block ext_js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/func1/func1_clear.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/func1/func6_create.js' %}"></script>
 {% endblock %}
 
 {% block content %}
     <h1><b>ORACLE</b> 建表语句 -> Hive建表语句 + 选择字段语句</h1>
-    <p><a href="{% url '1:func3' %}">点我跳转到工具3：LeapHD离线批处理自动提交 <b>流程保存</b></a></p>
 
     <form action="{% url '1:func6' %}" method="post">
         {% csrf_token %}
@@ -22,13 +22,30 @@
             <br>
         </div>
         <textarea name="sql" id="sql" cols="100" rows="10" placeholder="输入：请粘贴sql">{{ sql }}</textarea>
+
+        <div>
+            <span><b>结果输出：</b></span>
+            <textarea name="result1" id="result1" cols="100" rows="10"
+                      placeholder="输出：Hive建表语句">{{ result1 }}</textarea><br>
+            <textarea name="result2" id="result2" cols="100" rows="10"
+                      placeholder="输出：HANA选择语句">{{ result2 }}</textarea>
+        </div>
+
+        <span>
+        <b>根据上述结果创建Hive的新流程：</b>
+        <input type="text" id="schema_table_name" name="schema_table_name" value="{{ schema_table_name }}"
+               style="width: 417px">
+{#        <input type="submit" name="my_create" id="my_create" style="background-color: orange; margin-left: 10px" value="创建"/>#}
+        </span>
+
+        <textarea name="my_cookie" id="my_cookie" cols="100" rows="10"
+                  placeholder="输入：my_cookie">{{ my_cookie }}</textarea>
     </form>
-    <div>
-        <span><b>结果输出：</b></span><br>
-        <textarea name="result1" id="result1" cols="100" rows="10"
-                  placeholder="输出：Hive建表语句">{{ result1 }}</textarea><br>
-        <textarea name="result2" id="result2" cols="100" rows="10" placeholder="输出：HANA选择语句">{{ result2 }}</textarea>
-    </div>
+
+    <span style="font-size: x-large">创建流程<b>【{{ schedule_name }}】</b>
+        <button id="create_procedule" style="background-color: orange; font-size: x-large; width: 80px; border-width: 3px; border-style: wave">创建</button>
+    </span>
+
 
 {% endblock %}
 </html>

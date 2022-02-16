@@ -75,9 +75,10 @@ def analyse_sql(sql: str):
 
     # 3. 获取列
     column_names = re.findall(r'^(?:[\(\s]+)?\"(.*?)\"', sql, re.I | re.M)
+    # column_names = re.findall(r'^(?:[\(\s]+)?(?:\")?(.*?)(?:\")?', sql, re.I | re.M)
 
     # 4. 获取列和comment
-    column_names_set = re.findall(r'\.([^\.]*?)\s+is\s+\'(.*?)\'', sql, re.I | re.M)
+    column_names_set = re.findall(r'\.(?:\")?([^\.]*?)(?:\")?\s+is\s+\'(.*?)\'', sql, re.I | re.M)
     # 组装列和comment
     column_names = assemble(column_names, column_names_set)
     # 处理列名
@@ -103,7 +104,7 @@ def analyse_sql(sql: str):
         new_rows) + '\n) ' + last_row + '\nSTORED AS PARQUET TBLPROPERTIES ("orc.compress"="SNAPPY");'
     result2 = 'select\n\t' + ',\n\t'.join(result2_columns) + '\nfrom ' + table_schema + '.' + table_name
 
-    return result1, result2
+    return result1, result2, 'ods_bpm.' + table_name
 
 
 def test():

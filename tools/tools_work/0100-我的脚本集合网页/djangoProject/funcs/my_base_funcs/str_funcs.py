@@ -10,6 +10,7 @@
 @time: 2022/1/28 16:56
 @desc: 一些关于字符串的基础函数
 """
+import re
 
 
 def is_None_or_nullstr(s):
@@ -18,3 +19,16 @@ def is_None_or_nullstr(s):
         return True
     else:
         return False
+
+
+def reduce_space(s, keep_enter=True):
+    """缩减格"""
+    if not keep_enter:
+        s = s.replace('\n', '')
+    return re.sub(r'[ \t]+', ' ', s)
+
+
+if __name__ == '__main__':
+    # 测试remove_space
+    s = """   a  s \n asd"""
+

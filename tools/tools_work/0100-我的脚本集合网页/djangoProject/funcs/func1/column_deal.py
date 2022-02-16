@@ -21,7 +21,7 @@ def columns_deal(columns, is_select=False):
 
 
 def column_deal(column):
-    if column.lower() == 'timestamp':
+    if column.lower() in ['timestamp', 'application']:
         column = '`' + column + '`'
 
     if '/' in column or column.startswith('_'):

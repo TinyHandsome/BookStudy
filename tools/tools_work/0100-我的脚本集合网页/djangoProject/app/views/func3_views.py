@@ -8,7 +8,10 @@
 @software: pycharm
 @file: func3_views.py
 @time: 2022/1/27 14:23
-@desc: 
+@desc: LeapHD自动保存
+        0. 可以添加替换字段
+        1. 组件id是获取的：http://dmpqas.whchem.com/TaskScheduler/idGen/genId.do?idType=T
+        2. 流程id是自动生成的，流程id和版本号需要置空
 """
 from django.shortcuts import render
 
