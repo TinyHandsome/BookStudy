@@ -1,62 +1,82 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>首页</title>
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+
+{% block header %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-</head>
-<body>
+{% endblock %}
 
-<h1>꧁༺༽༈༒❀ 脚本集合 ❀༒༈༼༻꧂</h1>
-<p style="color: red">注意：仅内部使用。</p>
-<p>作者：李英俊小朋友 <br> 联系方式：litian@whchem.com</p>
-<h2>目录</h2>
-<ul>
-    <li>
-        <h3>数据库处理</h3>
-        <ol>
-            <li><a href="{% url '1:func1' %}"><b>MYSQL</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
-            <li><a href="{% url '1:func2' %}"><b>HANA</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
-            <li><a href="{% url '1:func6' %}"><b>ORACLE</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
-            <li><a href="{% url '1:func4' %}">给SELECT语句中每一列的字段加双引号</a></li>
-        </ol>
-    </li>
-    <li>
-        <h3>LeapHD</h3>
-        <ol>
-            <li><a href="{% url '1:func3' %}">LeapHD离线批处理自动提交 <b>流程保存</b></a></li>
-        </ol>
-    </li>
-    <li>
-        <h3>网页爬虫</h3>
-        <ol>
-            <li><a href="{% url '1:func5' %}"><b style="color: red">【开发中】</b>网页图片集爬虫竖向拼接</a></li>
-        </ol>
-    </li>
-</ul>
-<br>
-<br>
-<br>
-<h2>当前使用用户</h2>
-<table border="1" align="left">
-    <tr>
-        <th>序号</th>
-        <th style="width: 150px">IP地址</th>
-        <th style="width: 200px">用户名</th>
-        <th>访问计数</th>
-    </tr>
-    {% for c, user in users %}
+{% block title %}
+    首页
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+            <div class="page-header">
+                <h1>꧁༺༽❀ 脚本集合 ❀༼༻꧂</h1>
+            </div>
+            <br>
+            <br>
+            <p style="color: red; font-weight: bold">注意：仅限内部使用。</p>
+            <p>作者：李英俊小朋友 &nbsp;&nbsp;&nbsp;&nbsp; 联系方式：litian@whchem.com</p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+        </div>
+    </div>
+
+    <h2>目录</h2>
+    <ul>
+        <li>
+            <h3>数据库处理</h3>
+            <ol>
+                <li><a href="{% url '1:func1' %}"><b>MYSQL</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
+                <li><a href="{% url '1:func2' %}"><b>HANA</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
+                <li><a href="{% url '1:func6' %}"><b>ORACLE</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
+                <li><a href="{% url '1:func4' %}">给SELECT语句中每一列的字段加双引号</a></li>
+            </ol>
+        </li>
+        <li>
+            <h3>LeapHD</h3>
+            <ol>
+                <li><a href="{% url '1:func3' %}">LeapHD离线批处理自动提交 <b>流程保存</b></a></li>
+            </ol>
+        </li>
+        <li>
+            <h3>网页爬虫</h3>
+            <ol>
+                <li>
+                    <a href="{% url '1:func5' %}">网页图片集爬虫竖向拼接</a>
+                    <span class="label label-default" style="background-color: palevioletred">开发中</span>
+                </li>
+            </ol>
+        </li>
+    </ul>
+    <br>
+    <br>
+    <br>
+
+
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading"><h2>当前使用用户</h2></div>
+    </div>
+
+    <!-- Table -->
+    <table class="table">
         <tr>
-            <td>{{ c }}</td>
-            <td>{{ user.ip }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.count }}</td>
+            <th>序号</th>
+            <th style="width: 150px">IP地址</th>
+            <th style="width: 200px">用户名</th>
+            <th>访问计数</th>
         </tr>
-    {% endfor %}
-</table>
-
-</body>
-</html>
+        {% for c, user in users %}
+            <tr>
+                <td>{{ c }}</td>
+                <td>{{ user.ip }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.count }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+{% endblock %}

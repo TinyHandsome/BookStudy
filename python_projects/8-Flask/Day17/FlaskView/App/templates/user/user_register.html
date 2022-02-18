@@ -1,0 +1,17 @@
+{% extends 'user/base_user.html' %}
+
+{% block header %}
+    {% include 'banner.html' %}
+{% endblock %}
+
+{% block content %}
+    <h2>这是用户注册的内容</h2>
+    {% macro hello() %}
+        <h3>这是一个macro</h3>
+    {% endmacro %}
+
+    {{ hello() }}
+    {{ hello() }}
+    {{ hello() }}
+
+{% endblock %}

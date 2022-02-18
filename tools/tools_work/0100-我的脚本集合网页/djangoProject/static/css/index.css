@@ -1,10 +1,13 @@
 th {
     color: navy;
-    width: 100px;
     text-align: center;
     font-size: 20px;
 }
 
 td {
+    text-align: center;
+}
+
+h1 {
     text-align: center;
 }

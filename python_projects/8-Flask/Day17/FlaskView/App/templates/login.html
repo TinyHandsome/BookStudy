@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<form action="{{ url_for('blue.login') }}" method="post">
+    <span>用户名：</span><input type="text" name="username" placeholder="请输入用户名">
+    <br>
+    <button>登录</button>
+</form>
+</body>
+</html>

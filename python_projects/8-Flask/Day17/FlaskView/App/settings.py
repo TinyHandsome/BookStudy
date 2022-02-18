@@ -6,6 +6,11 @@ class Config:
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    SECRET_KEY = "Rock"
+    SESSION_TYPE = 'redis'
+    SESSION_COOKIE_SECURE = True
+    SESSION_USE_SIGNER = True
+
 
 def get_db_uri(dbinfo):
     engine = dbinfo.get("ENGINE")

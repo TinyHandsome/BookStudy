@@ -244,6 +244,88 @@
    - args和form都是这个类型
    - dict子类
 
+## 4. Response
+
+1. 创建Response的三种方式
+   - 直接返回字符串
+   - make_response
+   - 直接构建Response
+2. 参数设置
+   - 内容
+   - 状态码
+3. render_template
+   - 帮助把模板变成html字符串
+4. 重定向
+   - redirect
+   - 反向解析：url_for
+5. 终止处理
+   - abort：本质上就是一个exception
+   - HttpException：
+     - 子类指定两个属性即可实现
+     - code
+     - description
+6. 异常捕获
+   - 可以提升程序交互
+   - 让程序变得友好
+   - 注册errorhandler
+
+## 5. 会话技术
+
+1. 跨请求共享数据
+
+2. 出现原因
+
+   - web开发中http都是短连接
+   - http请求是无状态的
+   - 请求从request开始，到response就结束了
+
+3. Cookie
+
+   - 客户端会话技术
+   - 数据存储在客户端
+   - key-value
+   - flask中的cookie默认对中文等进行了处理，直接可以使用中文
+
+4. Session
+
+   - 服务端会话技术
+   - 数据存储在服务器
+   - key-value
+   - flask中
+     - 将session存储在cookie中
+     - 对数据进行序列化
+     - 还进行了base64
+     - 还进行了zlib压缩
+     - 还传递了hash
+   - session的时间是31天
+
+5. Token
+
+6. flask-session
+
+   - 实现了服务端session
+   - 将数据存储在服务端，将数据对应的key存储在cookie中
+   - RedisSessionInterface
+     - save_session：将数据进行了pickle序列化
+
+7. flask-bootstrap
+
+   - bootstrap/base.html
+     - html_attribs：给整个html添加属性
+     - html
+       - head
+         - title
+         - metas
+         - styles
+       - body_attribs
+         - body
+           - navbar：导航条
+           - content：内容
+           - scripts
+
+8. 小结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/9ee64384a3b84142880e45b37f2081e8.png)
 
 
 
@@ -259,8 +341,7 @@
 
 
 
-
-学到 P15 0742
+学到 P23
 
 
 ------

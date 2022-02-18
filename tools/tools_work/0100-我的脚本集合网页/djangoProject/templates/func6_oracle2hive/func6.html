@@ -19,9 +19,11 @@
             <button id="copy_result1" type="button">复制结果1</button>
             <button id="copy_result2" type="button">复制结果2</button>
             <span id="copy_result" style="color: red">{{ result }}</span>
-            <br>
         </div>
-        <textarea name="sql" id="sql" cols="100" rows="10" placeholder="输入：请粘贴sql">{{ sql }}</textarea>
+
+        <div>
+            <textarea name="sql" id="sql" cols="100" rows="10" placeholder="输入：请粘贴sql">{{ sql }}</textarea>
+        </div>
 
         <div>
             <span><b>结果输出：</b></span>
@@ -43,7 +45,8 @@
     </form>
 
     <span style="font-size: x-large">创建流程<b>【{{ schedule_name }}】</b>
-        <button id="create_procedule" style="background-color: orange; font-size: x-large; width: 80px; border-width: 3px; border-style: wave">创建</button>
+        <button id="create_procedule"
+                style="background-color: orange; font-size: x-large; width: 80px; border-width: 3px; border-style: wave">创建</button>
     </span>
 
 
