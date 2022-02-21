@@ -24,59 +24,53 @@
         </div>
     </div>
 
-    <h2>目录</h2>
-    <ul>
-        <li>
-            <h3>数据库处理</h3>
-            <ol>
-                <li><a href="{% url '1:func1' %}"><b>MYSQL</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
-                <li><a href="{% url '1:func2' %}"><b>HANA</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
-                <li><a href="{% url '1:func6' %}"><b>ORACLE</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></li>
-                <li><a href="{% url '1:func4' %}">给SELECT语句中每一列的字段加双引号</a></li>
-            </ol>
-        </li>
-        <li>
-            <h3>LeapHD</h3>
-            <ol>
-                <li><a href="{% url '1:func3' %}">LeapHD离线批处理自动提交 <b>流程保存</b></a></li>
-            </ol>
-        </li>
-        <li>
-            <h3>网页爬虫</h3>
-            <ol>
-                <li>
-                    <a href="{% url '1:func5' %}">网页图片集爬虫竖向拼接</a>
-                    <span class="label label-default" style="background-color: palevioletred">开发中</span>
-                </li>
-            </ol>
-        </li>
-    </ul>
-    <br>
-    <br>
-    <br>
+    {% for topic, funcs in funcs_dict.items %}
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="my_index_title">{{ topic.func_type_name }}</span></div>
+            <div class="panel-body">
+                <p>{{ topic.func_type_des }}</p>
+            </div>
 
+            <!-- List group -->
+            <ul class="list-group">
+                {% for f in funcs %}
+                    <li class="list-group-item">
+                        <span>{{ forloop.counter }}. </span>
+                        {% ifnotequal f.func_label 1 %}
+                            <span class="label label-default"
+                                  style="background-color: palevioletred; margin-right: 10px">
+                                {{ f.get_func_label_display }}
+                            </span>
+                        {% endifnotequal %}
+                        <a href="{{ f.func_url }}">{{ f.func_name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
 
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading"><h2>当前使用用户</h2></div>
-    </div>
+        <div class="panel-heading"><span class="my_index_title">当前使用用户</span></div>
 
-    <!-- Table -->
-    <table class="table">
-        <tr>
-            <th>序号</th>
-            <th style="width: 150px">IP地址</th>
-            <th style="width: 200px">用户名</th>
-            <th>访问计数</th>
-        </tr>
-        {% for c, user in users %}
+        <!-- Table -->
+        <table class="table table-striped">
             <tr>
-                <td>{{ c }}</td>
-                <td>{{ user.ip }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.count }}</td>
+                <th>序号</th>
+                <th style="width: 150px">IP地址</th>
+                <th style="width: 200px">用户名</th>
+                <th>访问计数</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for c, user in users %}
+                <tr>
+                    <td>{{ c }}</td>
+                    <td>{{ user.ip }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.count }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 {% endblock %}

@@ -1,7 +1,5 @@
 th {
-    color: navy;
     text-align: center;
-    font-size: 20px;
 }
 
 td {
@@ -10,4 +8,9 @@ td {
 
 h1 {
     text-align: center;
+}
+
+.my_index_title {
+    font-weight: bolder;
+    font-size: x-large;
 }
