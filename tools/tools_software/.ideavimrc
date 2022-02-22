@@ -1,0 +1,104 @@
+" 让tab和shift-tab变为缩进，怎么都能缩进的那种
+nmap <tab> V>
+nmap <s-tab> V<
+vmap <tab> >gv
+vmap <s-tab> <gv
+
+" 让键盘映射jk为Esc，所以就是jk一起按，就为Esc
+imap jk <Esc>
+imap kj <Esc>
+set timeoutlen=300
+
+" 参考配置 https://blog.csdn.net/dlx_handsome/article/details/107871789
+set showmode
+set clipborad=unamed
+set number
+" set relativenumber
+set history=2000
+set nocompatible
+syntax enable
+syntax on
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+" vim自身命令行模式智能补全
+set laststatus=2
+set ruler
+set cursorline
+"set cursorcolumn
+let mapleader=";"
+" built in search looks better
+nnoremap / :action Find<CR>
+nnoremap <Leader>cc :action CommentByLineComment<CR>
+
+nnoremap <Leader>bb :action ToggleLineBreakpoint<CR>
+nnoremap <Leader>br :action ViewBreakpoints<CR>
+
+nnoremap <Leader>cv :action ChangeView<CR>
+
+nnoremap <Leader>cd :action ChooseDebugConfiguration<CR>
+
+nnoremap ga :action GotoAction<CR>
+nnoremap gc :action GotoClass<CR>
+nnoremap gd :action GotoDeclaration<CR>
+nnoremap gf :action GotoFile<CR>
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gs :action GotoSymbol<CR>
+
+nnoremap <Leader>ga :action GotoAction<CR>
+nnoremap <Leader>gc :action GotoClass<CR>
+nnoremap <Leader>gd :action GotoDeclaration<CR>
+nnoremap <Leader>gf :action GotoFile<CR>
+nnoremap <Leader>gi :action GotoImplementation<CR>
+nnoremap <Leader>gs :action GotoSymbol<CR>
+nnoremap <Leader>gt :action GotoTest<CR>
+
+nnoremap <Leader>fp :action ShowFilePath<CR>
+
+nnoremap <Leader>ic :action InspectCode<CR>
+nnoremap <Leader>ff :action ReformatCode<CR>
+nnoremap <Leader>mv :action ActivateMavenProjectsToolWindow<CR>
+
+nnoremap <Leader>oi :action OptimizeImports<CR>
+
+nnoremap <Leader>pm :action ShowPopupMenu<CR>
+
+nnoremap <Leader>rc :action RunToCursor<CR>
+nnoremap <Leader>rC :action ChooseRunConfiguration<CR>
+nnoremap <Leader>re :action RenameElement<CR>
+nnoremap <Leader>rf :action RenameFile<CR>
+nnoremap <Leader>rr :action Rerun<CR>
+
+nnoremap <Leader>se :action SearchEverywhere<CR>
+nnoremap <Leader>su :action ShowUsages<CR>
+nnoremap <Leader>tc :action CloseActiveTab<CR>
+nnoremap <Leader>si :action StepInto<CR>
+" 设置debug为 zd
+:nnoremap <Leader>fd :action Debug<CR>
+" 设置run 为 zr
+:nnoremap <Leader>fr :action RunClass<CR>
+:nnoremap <Leader>rn :action Run<CR>
+nnoremap <Leader>tb :action ToggleLineBreakpoint<CR>
+
+nnoremap <Leader>tl Vy<CR>:action ActivateTerminalToolWindow<CR>
+vnoremap <Leader>tl y<CR>:action ActivateTerminalToolWindow<CR>
+" 让ideavim支持将缓冲区内文本复制到系统缓冲区
+vmap! <C-c> "+y
+
+"快速打开tab
+nnoremap <Leader>1 1gt
+nnoremap <Leader>2 2gt
+nnoremap <Leader>3 3gt
+nnoremap <Leader>4 4gt
+nnoremap <Leader>5 5gt
+nnoremap <Leader>6 6gt
+nnoremap <Leader>7 7gt
+nnoremap <Leader>8 8gt
+nnoremap <Leader>9 9gt
+
+" 我的映射
+" 单词大写
+nnoremap <Leader>u bgUw
+" 单词小写
+nnoremap <Leader>l bguw
