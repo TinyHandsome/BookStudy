@@ -8,8 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1 style="color: blue">开发中。。。</h1>
-    <h1>网页图片 <b>爬虫</b></h1>
+    {{ block.super }}
     <form action="{% url '1:func5' %}" method="post">
         {% csrf_token %}
 
@@ -57,6 +56,5 @@
                 <li><span style="color: red; font-weight: bold">功能3属于内测状态</span>，只有管理员能实现，因为不知道如何让用户获取多个图片</li>
             </ol>
         </div>
-        <img src="{% static 'img/favicon.png' %}" alt="">
     </form>
 {% endblock %}

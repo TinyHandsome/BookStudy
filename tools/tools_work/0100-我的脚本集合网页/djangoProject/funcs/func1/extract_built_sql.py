@@ -126,7 +126,7 @@ def extract_built_sql(sql):
     try:
         return se.analyse_sql()
     except:
-        return -1, -1
+        return '', ''
 
 
 if __name__ == '__main__':

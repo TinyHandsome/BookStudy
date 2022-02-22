@@ -3,6 +3,6 @@ $(function () {
     $("#clear_button").click(function () {
         $("#my_str").val("");
         $("#output").val("");
-        document.getElementById("copy_result").innerHTML = "清空成功";
+        alert_green("清空成功");
     })
 })

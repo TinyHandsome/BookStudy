@@ -16,6 +16,7 @@
 from django.shortcuts import render
 
 from funcs.func3.leaphd_deal import save_hd_taskschedule
+from supports.topc_title_search import search_title
 
 
 def func3(request):
@@ -30,6 +31,7 @@ def func3(request):
     }
 
     data = {
+        'title': search_title(request),
         'my_cookie': '',
         'defjson': '',
         'result': '',
@@ -53,7 +55,7 @@ def func3(request):
             print(repr(e))
             data['result'] = '运行报错，请检查你的cookie和defjson，或者联系@李英俊小朋友'
         finally:
-            return render(request, 'func3/func3.html', context=data)
+            return render(request, 'func3_leaphddosave/func3.html', context=data)
 
     elif request.method == 'GET':
-        return render(request, 'func3/func3.html', context=data)
+        return render(request, 'func3_leaphddosave/func3.html', context=data)

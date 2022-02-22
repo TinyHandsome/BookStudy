@@ -4,13 +4,11 @@
 <head>
     {% block header %}
         <meta charset="UTF-8">
-        <title>{% block title %}默认标题{% endblock %}</title>
+        <title>{% block title %}{{ title }}{% endblock %}</title>
         <link rel="shortcut icon" href="{% static 'img/favicon.png' %}"/>
         <link rel="stylesheet" href="{% static 'bootstrap-3.4.1-dist/css/bootstrap.css' %}">
         <link rel="stylesheet" href="{% static 'bootstrap-3.4.1-dist/css/bootstrap-theme.css' %}">
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
-        {% block ext_css %}
-        {% endblock %}
     {% endblock %}
 </head>
 
@@ -30,7 +28,7 @@
                 </button>
                 <a class="navbar-brand" href="/admin">
                     <span>
-                        <img alt="Brand" src="{% static 'img/favicon.png' %}" height="175%">
+                        <img class="img-rounded" alt="Brand" src="{% static 'img/favicon.png' %}" height="175%">
                     </span>
                     李英俊小朋友
                 </a>
@@ -87,6 +85,9 @@
 
 <div class="container">
     {% block content %}
+        {% block topcic %}
+            <h2>{{ title }}</h2>
+        {% endblock %}
     {% endblock %}
 </div>
 

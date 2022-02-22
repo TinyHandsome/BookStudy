@@ -13,7 +13,7 @@
 import requests
 
 from funcs.func3.my_leaphd_template import QuanLiang
-from funcs.my_base_funcs.str_funcs import reduce_space
+from supports.str_funcs import reduce_space
 
 
 def generate_headers_by_cookies(cookie):

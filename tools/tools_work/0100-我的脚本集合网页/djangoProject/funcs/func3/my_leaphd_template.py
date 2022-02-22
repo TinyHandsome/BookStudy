@@ -45,7 +45,7 @@ class MYLeapHDTemplate:
 
 
 class QuanLiang(MYLeapHDTemplate):
-    json_url = 'func3/全量模板.json'
+    json_url = 'func3_leaphddosave/全量模板.json'
 
     def __init__(self):
         with open(os.path.join(MY_RESOURCE_URL, self.json_url), 'r', encoding='utf-8') as f:

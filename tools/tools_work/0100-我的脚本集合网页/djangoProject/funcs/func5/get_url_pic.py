@@ -23,10 +23,10 @@ from PIL import Image
 from PIL import ImageFile, UnidentifiedImageError
 
 from djangoProject.settings import MY_TEMP_IMG_URL
-from funcs.my_base_funcs.file_folder_funcs import if_path_not_exists_create_path
+from supports.file_folder_funcs import if_path_not_exists_create_path
 
 # 可能存在数据丢失的情况，报错：【OSError: image file is truncated】，这里设置加载截断的图片
-from funcs.my_base_funcs.time_funcs import get_now_year_month_day, get_now_hour_minute_second, \
+from supports.time_funcs import get_now_year_month_day, get_now_hour_minute_second, \
     sleep_random_and_base_pause_time
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True

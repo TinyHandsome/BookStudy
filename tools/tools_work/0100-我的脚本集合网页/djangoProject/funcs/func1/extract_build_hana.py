@@ -14,7 +14,7 @@ import re
 
 from app.mymodels.func2.hana2hive import DMPTbls
 from funcs.func1.column_deal import columns_deal
-from funcs.my_base_funcs.str_funcs import is_None_or_nullstr
+from supports.str_funcs import is_None_or_nullstr
 from funcs.test.hana_test import hana_data
 
 

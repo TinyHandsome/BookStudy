@@ -1,54 +1,53 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}工具2{% endblock %}
 
 {% block ext_js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'js/func1/func1_clear.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/func1/func6_create.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/func1/clear_io_and_copy_result_1_2.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/func6/func6_create.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/func6.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1><b>ORACLE</b> 建表语句 -> Hive建表语句 + 选择字段语句</h1>
-
-    <form action="{% url '1:func6' %}" method="post">
+    {{ block.super }}
+    <form class="form-inline" action="{% url '1:func6' %}" method="post">
         {% csrf_token %}
         <div>
-            输入你的sql: <input type="submit" style="background-color: orange; margin-left: 10px" value="提交"/>
-            <button id="clear_button" type="button" style="margin-left: 20px">清空</button>
-            <button id="copy_result1" type="button">复制结果1</button>
-            <button id="copy_result2" type="button">复制结果2</button>
+            <label>输入你的sql: </label>
+            <input class="btn btn-primary" type="submit" style="margin-left: 10px" value="提交"/>
+            <button class="btn btn-default" id="clear_button" type="button" style="margin-left: 20px">清空</button>
+            <button class="btn btn-default" id="copy_result1" type="button">复制结果1</button>
+            <button class="btn btn-default" id="copy_result2" type="button">复制结果2</button>
             <span id="copy_result" style="color: red">{{ result }}</span>
         </div>
 
-        <div>
-            <textarea name="sql" id="sql" cols="100" rows="10" placeholder="输入：请粘贴sql">{{ sql }}</textarea>
-        </div>
+        <textarea class="form-control" name="sql" id="sql" rows="10" placeholder="输入：请粘贴sql">{{ sql }}</textarea>
+        <br>
+        <br>
 
         <div>
-            <span><b>结果输出：</b></span>
-            <textarea name="result1" id="result1" cols="100" rows="10"
+            <label>结果输出：</label>
+            <textarea class="form-control" name="result1" id="result1" rows="10"
                       placeholder="输出：Hive建表语句">{{ result1 }}</textarea><br>
-            <textarea name="result2" id="result2" cols="100" rows="10"
+            <textarea class="form-control" name="result2" id="result2" rows="10"
                       placeholder="输出：HANA选择语句">{{ result2 }}</textarea>
         </div>
+        <br>
 
-        <span>
-        <b>根据上述结果创建Hive的新流程：</b>
-        <input type="text" id="schema_table_name" name="schema_table_name" value="{{ schema_table_name }}"
-               style="width: 417px">
-{#        <input type="submit" name="my_create" id="my_create" style="background-color: orange; margin-left: 10px" value="创建"/>#}
-        </span>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">根据上述结果创建Hive的新流程：</div>
+                <input class="form-control" type="text" id="schedule_name" name="schedule_name"
+                       value="{{ schedule_name }}">
+                <div class="input-group-addon">表名：</div>
+                <input class="form-control" type="text" id="schema_table_name" name="schema_table_name"
+                       value="{{ schema_table_name }}">
+            </div>
+            <button type="button" class="btn btn-primary" id="create_procedule">创建</button>
+        </div>
 
-        <textarea name="my_cookie" id="my_cookie" cols="100" rows="10"
+        <textarea class="form-control" name="my_cookie" id="my_cookie" rows="10"
                   placeholder="输入：my_cookie">{{ my_cookie }}</textarea>
     </form>
-
-    <span style="font-size: x-large">创建流程<b>【{{ schedule_name }}】</b>
-        <button id="create_procedule"
-                style="background-color: orange; font-size: x-large; width: 80px; border-width: 3px; border-style: wave">创建</button>
-    </span>
-
-
 {% endblock %}
 </html>

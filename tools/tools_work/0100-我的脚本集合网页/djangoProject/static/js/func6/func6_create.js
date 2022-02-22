@@ -17,10 +17,14 @@ $(function () {
                 my_cookie: my_cookie
             },
             success: function (res) {
-                alert('创建成功！');
+                if (res == -1) {
+                    alert_red("运行中出现错误");
+                } else {
+                    alert_green('创建成功！');
+                }
             },
             error: function () {
-                alert("出现错误");
+                alert_red("出现错误");
             }
         });
     })

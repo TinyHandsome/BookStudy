@@ -7,17 +7,15 @@
 {% endblock %}
 
 {% block title %}
-    首页
+    李英俊小朋友
 {% endblock %}
 
 {% block content %}
     <div class="jumbotron">
         <div class="container">
             <div class="page-header">
-                <h1>꧁༺༽❀ 脚本集合 ❀༼༻꧂</h1>
+                <h2>꧁༺༽❀ 脚本集合 ❀༼༻꧂</h2>
             </div>
-            <br>
-            <br>
             <p style="color: red; font-weight: bold">注意：仅限内部使用。</p>
             <p>作者：李英俊小朋友 &nbsp;&nbsp;&nbsp;&nbsp; 联系方式：litian@whchem.com</p>
             <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
@@ -39,8 +37,7 @@
                     <li class="list-group-item">
                         <span>{{ forloop.counter }}. </span>
                         {% ifnotequal f.func_label 1 %}
-                            <span class="label label-default"
-                                  style="background-color: palevioletred; margin-right: 10px">
+                            <span class="label label-default">
                                 {{ f.get_func_label_display }}
                             </span>
                         {% endifnotequal %}

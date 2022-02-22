@@ -13,10 +13,13 @@
 from django.shortcuts import render
 
 from funcs.func4.add_double_quatation import add_double_quatation
+from supports.str_funcs import is_None_or_nullstr
+from supports.topc_title_search import search_title
 
 
 def func4(request):
     data = {
+        'title': search_title(request),
         'choose': '',
         'end_symbol': '',
         'prefix': '',
@@ -33,8 +36,8 @@ def func4(request):
         prefix = request.POST.get('prefix')
         case = request.POST.get('case')
 
-        if my_str is None or my_str == '':
-            return render(request, 'func4/func4.html', context=data)
+        if is_None_or_nullstr(my_str):
+            return render(request, 'func4_quotewords/func4.html', context=data)
 
         if choose is None or choose == '':
             choose = '"'
@@ -56,8 +59,6 @@ def func4(request):
             print('报错：', end='')
             print(repr(e))
             data['result'] = '运行报错，请自查或者联系@李英俊小朋友'
-        finally:
-            return render(request, 'func4/func4.html', context=data)
-
     elif request.method == 'GET':
-        return render(request, 'func4/func4.html', context=data)
+        ...
+    return render(request, 'func4_quotewords/func4.html', context=data)

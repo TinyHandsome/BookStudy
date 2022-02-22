@@ -17,11 +17,13 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from funcs.func5.get_url_pic import GetUrlPic
-from funcs.my_base_funcs.str_funcs import is_None_or_nullstr
+from supports.str_funcs import is_None_or_nullstr
+from supports.topc_title_search import search_title
 
 
 def func5(request):
     data = {
+        'title': search_title(request),
         'root_url': '',
         'chapter': '',
         'page': '',
@@ -72,8 +74,9 @@ def func5(request):
             return HttpResponse(base64.b64encode(img))
         except Exception as e:
             data['result'] = '运行报错，请自查或者联系@李英俊小朋友'
-            print(traceback.format_exc())
-            return render(request, 'func5_pic_spider/func5.html', context=data)
+            traceback.format_exc()
 
     elif request.method == 'GET':
-        return render(request, 'func5_pic_spider/func5.html', context=data)
+        ...
+
+    return render(request, 'func5_pic_spider/func5.html', context=data)

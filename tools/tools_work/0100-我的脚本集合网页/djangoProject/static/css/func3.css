@@ -1,10 +1,9 @@
-th {
-    color: navy;
-    width: 200px;
+th, td {
     text-align: center;
-    font-size: 20px;
 }
 
-td {
+.panel-heading {
     text-align: center;
+    font-weight: bolder;
+    font-size: large;
 }

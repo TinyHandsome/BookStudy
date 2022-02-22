@@ -7,4 +7,10 @@ admin.site.site_header = '李英俊小朋友'
 admin.site.site_title = '李英俊小朋友'
 admin.site.index_title = '后台管理'
 
-admin.site.register([User, UrlManage, FuncType, MyRole])
+
+class UrlManageAdmin(admin.ModelAdmin):
+    list_display = ('func_name', 'func_url', 'func_url_name', 'func_type')
+
+
+admin.site.register(UrlManage, UrlManageAdmin)
+admin.site.register([User, FuncType, MyRole])

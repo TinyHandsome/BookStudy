@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block ext_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/func3/func3_clear.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/func3.css' %}">
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <p><a href="{% url '1:func2' %}">点我跳转到工具2：<b>HANA</b> 建表语句 -> Hive建表语句 + 选择字段语句</a></p>
+
+    <form action="{% url '1:func3' %}" method="post">
+        {% csrf_token %}
+        <div class="panel panel-default">
+            <div class="panel-heading">defjson替换内容</div>
+            <table class="table table-striped">
+                <tr>
+                    <th>替换前</th>
+                    <th>替换后</th>
+                </tr>
+                {% for k, v in aim_dict.items %}
+                    <tr>
+                        <td>{{ k }}</td>
+                        <td>{{ v }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="-button-group">
+            <label>粘贴你的cookie和流程的defjson:</label>
+            <input class="btn btn-primary" type="submit" value="提交"/>
+            <button class="btn btn-default" id="clear_button" type="button">清空</button>
+            <span id="copy_result" style="color: red">{{ result }}</span>
+        </div>
+
+        <textarea class="form-control" name="my_cookie" id="my_cookie" rows="5"
+                  placeholder="输入：请粘贴cookie">{{ my_cookie }}</textarea>
+        <textarea class="form-control" name="defjson" id="defjson" rows="5"
+                  placeholder="输入：请粘贴defjson">{{ defjson }}</textarea>
+    </form>
+{% endblock %}
