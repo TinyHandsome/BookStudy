@@ -26,11 +26,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# 环境检测，如果是要传到linux，则需要放弃一些东西
+if os.environ.get('HOME') == '/root':
+    env_linux = True
+else:
+    env_linux = False
+
 # Application definition
 
 INSTALLED_APPS = [
     'simpleui',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app.apps.AppConfig',
 ]
+INSTALLED_APPS.remove('simpleui') if env_linux else ...
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -130,7 +136,6 @@ MY_RESOURCE_URL = os.path.join(BASE_DIR, 'resources')
 
 LANGUAGE_CODE = 'zh-hans'
 SIMPLEUI_HOME_INFO = False
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
