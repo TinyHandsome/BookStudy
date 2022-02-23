@@ -5,10 +5,17 @@
 ## 写在前面
 
 - 学习链接：[Python 900集（学完可就业/2019版）](https://www.bilibili.com/video/BV15J411T7WQ)：`[359集: 451集]，共93集`
+
 - 感想 | 摘抄
+
 - 学习时遇到的问题
   - Flask用pycharm启动的时候无法按代码中的设置启动（debug设置为True也没辙）
+  
   - 开发模式的环境配置在wsl的ubuntu中，bashrc和zshrc设置FLASK_ENV都没用，只有在windows的系统环境中配置了才有用
+  
+  - 使用 `python manage.py db init`没有迁移数据库，而是启动了服务器，并且还没有启动debug
+  
+    答：注意你 `manage.py` 中的主程序，是app不是manager吧憨憨~
 
 
 ## 1. Flask介绍
@@ -339,9 +346,7 @@
 
 
 
-
-
-学到 P23 1059
+学到 P24 0254
 
 
 ------

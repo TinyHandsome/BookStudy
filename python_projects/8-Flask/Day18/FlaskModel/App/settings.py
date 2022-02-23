@@ -28,8 +28,60 @@ class DevelopConfig(Config):
         "USER": "root",
         "PASSWORD": os.environ.get("MYPASSWORD"),
         "HOST": "localhost",
+        "PORT": "3307",
+        "NAME": "GP1FLaskModel"
+    }
+
+    SQLALCHEMY_DATABASE_URI = get_db_uri(dbinfo)
+
+
+class TestConfig(Config):
+    TESTING = True
+    dbinfo = {
+        'ENGINE': "mysql",
+        "DRIVER": "pymysql",
+        "USER": "root",
+        "PASSWORD": os.environ.get("MYPASSWORD"),
+        "HOST": "localhost",
         "PORT": "3306",
         "NAME": "GP1FlaskModel"
     }
 
     SQLALCHEMY_DATABASE_URI = get_db_uri(dbinfo)
+
+
+class StagineConfig(Config):
+    dbinfo = {
+        'ENGINE': "mysql",
+        "DRIVER": "pymysql",
+        "USER": "root",
+        "PASSWORD": os.environ.get("MYPASSWORD"),
+        "HOST": "localhost",
+        "PORT": "3306",
+        "NAME": "GP1FlaskModel"
+    }
+
+    SQLALCHEMY_DATABASE_URI = get_db_uri(dbinfo)
+
+
+class ProductConfig(Config):
+    dbinfo = {
+        'ENGINE': "mysql",
+        "DRIVER": "pymysql",
+        "USER": "root",
+        "PASSWORD": os.environ.get("MYPASSWORD"),
+        "HOST": "localhost",
+        "PORT": "3306",
+        "NAME": "GP1FlaskModel"
+    }
+
+    SQLALCHEMY_DATABASE_URI = get_db_uri(dbinfo)
+
+
+envs = {
+    'develop': DevelopConfig,
+    'testing': TestConfig,
+    'staging': StagineConfig,
+    'product': ProductConfig,
+    'default': DevelopConfig,
+}
