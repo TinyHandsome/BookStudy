@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生列表</title>
+{#    <link rel="stylesheet" href="/static/css/students.css">#}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/students.css') }}">
+</head>
+<body>
+<ul>
+    {% for student in students %}
+        <li>{{ student.name }}</li>
+    {% endfor %}
+
+</ul>
+</body>
+</html>

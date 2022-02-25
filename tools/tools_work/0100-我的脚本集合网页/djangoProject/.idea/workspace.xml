@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d4f7a02a-f6be-4019-b93b-11033235656a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/funcs/xue1/epidemic_prevention_info_get.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/xue/views/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/xue/views/epidemic_prevention_info_get.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+        <option value="CSS File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
+  </component>
+  <component name="JupyterTrust" id="b7118af6-0c29-4354-a1da-aea6797efa12" />
+  <component name="ProjectId" id="24BM8Bc4W18Qg7xfiDnuC9mTab4" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DatabaseDriversLRU" value="sqlite" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/static/img/temp/2022/02/07/temp.png&#10;E:/1-Work/3-Code/tools/tools_work/0100-我的脚本集合网页/djangoProject/funcs/func5/temp.png" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/funcs/xue_epidemic_prevention_info_get" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="editing.templates" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\funcs\xue_epidemic_prevention_info_get" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\static\css" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\app\static\img" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\static\img" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\static" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\static\js\func6" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\app\mymodels\func2" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\static\js" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\static\js\func1" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.epidemic_prevention_info_get">
+    <configuration name="epidemic_prevention_info_get" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="djangoProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/funcs/xue_1" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/funcs/xue_1/epidemic_prevention_info_get.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="extract_build_hana" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="djangoProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/funcs/func1" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/funcs/func1/extract_build_hana.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="get_url_pic" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="djangoProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/funcs/func5" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/funcs/func5/get_url_pic.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="my_leaphd_template" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="djangoProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/funcs/func3" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\funcs\func3\my_leaphd_template.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="str_funcs" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="djangoProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/funcs/my_base_funcs" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/funcs/my_base_funcs/str_funcs.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="djangoProject" type="Python.DjangoServer" factoryName="Django server">
+      <module name="djangoProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="djangoProject.settings" />
+      </envs>
+      <option name="SDK_HOME" value="D:\python3.78\python.exe" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="0.0.0.0" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Django Server.djangoProject" />
+      <item itemvalue="Python.extract_build_hana" />
+      <item itemvalue="Python.get_url_pic" />
+      <item itemvalue="Python.my_leaphd_template" />
+      <item itemvalue="Python.str_funcs" />
+      <item itemvalue="Python.epidemic_prevention_info_get" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.epidemic_prevention_info_get" />
+        <item itemvalue="Python.my_leaphd_template" />
+        <item itemvalue="Python.str_funcs" />
+        <item itemvalue="Python.get_url_pic" />
+        <item itemvalue="Python.extract_build_hana" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d4f7a02a-f6be-4019-b93b-11033235656a" name="Default Changelist" comment="" />
+      <created>1643099364712</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1643099364712</updated>
+      <workItem from="1643099367989" duration="36238000" />
+      <workItem from="1643252514201" duration="34093000" />
+      <workItem from="1644194119657" duration="19730000" />
+      <workItem from="1644277999708" duration="4447000" />
+      <workItem from="1644301861169" duration="9017000" />
+      <workItem from="1644384178283" duration="46000" />
+      <workItem from="1644970505127" duration="29249000" />
+      <workItem from="1645062592201" duration="566000" />
+      <workItem from="1645168951167" duration="7433000" />
+      <workItem from="1645402371204" duration="28476000" />
+      <workItem from="1645434933318" duration="1144000" />
+      <workItem from="1645491151323" duration="12247000" />
+      <workItem from="1645515773061" duration="1373000" />
+      <workItem from="1645517428067" duration="44000" />
+      <workItem from="1645590030086" duration="1720000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="617" y="205" key="#Inspections" timestamp="1644972948797">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="617" y="205" key="#Inspections/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1644972948797" />
+    <state x="74" y="59" key="#Live_Templates" timestamp="1645410758657">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="74" y="59" key="#Live_Templates/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645410758657" />
+    <state x="643" y="327" key="#com.intellij.codeInsight.template.impl.EditVariableDialog" timestamp="1645410612024">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="643" y="327" key="#com.intellij.codeInsight.template.impl.EditVariableDialog/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645410612024" />
+    <state x="445" y="188" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1645425691736">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="445" y="188" key="#com.intellij.execution.impl.EditConfigurationsDialog/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425691736" />
+    <state x="449" y="188" key="#com.intellij.execution.impl.EditConfigurationsDialog/67.1080.1853.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1643182572758" />
+    <state x="659" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1645424004097">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="659" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645424004097" />
+    <state x="662" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/67.1080.1853.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1643175482419" />
+    <state x="580" y="233" key="FileChooserDialogImpl" timestamp="1645425690888">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="580" y="233" key="FileChooserDialogImpl/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425690888" />
+    <state x="584" y="233" key="FileChooserDialogImpl/67.1080.1853.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1643182566782" />
+    <state width="1803" height="211" key="GridCell.Tab.0.bottom" timestamp="1645593818236">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1803" height="282" key="GridCell.Tab.0.bottom/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644226546386" />
+    <state width="1865" height="212" key="GridCell.Tab.0.bottom/62.0.1858.1080/0.-1080.1920.1080@0.-1080.1920.1080" timestamp="1645517148434" />
+    <state width="1803" height="211" key="GridCell.Tab.0.bottom/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645593818236" />
+    <state width="1803" height="199" key="GridCell.Tab.0.bottom/62.0.1858.1080@62.0.1858.1080" timestamp="1644294667803" />
+    <state width="1865" height="194" key="GridCell.Tab.0.bottom/62.1080.1858.1080/62.0.1858.1080@62.1080.1858.1080" timestamp="1644312378823" />
+    <state width="1798" height="152" key="GridCell.Tab.0.bottom/67.1080.1853.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1643264051409" />
+    <state width="1865" height="239" key="GridCell.Tab.0.bottom/67.1080.1853.1080/67.0.1853.1080@67.1080.1853.1080" timestamp="1643362278051" />
+    <state width="1803" height="211" key="GridCell.Tab.0.center" timestamp="1645593818235">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1803" height="282" key="GridCell.Tab.0.center/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644226546386" />
+    <state width="1865" height="212" key="GridCell.Tab.0.center/62.0.1858.1080/0.-1080.1920.1080@0.-1080.1920.1080" timestamp="1645517148434" />
+    <state width="1803" height="211" key="GridCell.Tab.0.center/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645593818235" />
+    <state width="1803" height="199" key="GridCell.Tab.0.center/62.0.1858.1080@62.0.1858.1080" timestamp="1644294667803" />
+    <state width="1865" height="194" key="GridCell.Tab.0.center/62.1080.1858.1080/62.0.1858.1080@62.1080.1858.1080" timestamp="1644312378823" />
+    <state width="1798" height="152" key="GridCell.Tab.0.center/67.1080.1853.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1643264051409" />
+    <state width="1865" height="239" key="GridCell.Tab.0.center/67.1080.1853.1080/67.0.1853.1080@67.1080.1853.1080" timestamp="1643362278051" />
+    <state width="1803" height="211" key="GridCell.Tab.0.left" timestamp="1645593818235">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1803" height="282" key="GridCell.Tab.0.left/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644226546386" />
+    <state width="1865" height="212" key="GridCell.Tab.0.left/62.0.1858.1080/0.-1080.1920.1080@0.-1080.1920.1080" timestamp="1645517148434" />
+    <state width="1803" height="211" key="GridCell.Tab.0.left/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645593818235" />
+    <state width="1803" height="199" key="GridCell.Tab.0.left/62.0.1858.1080@62.0.1858.1080" timestamp="1644294667803" />
+    <state width="1865" height="194" key="GridCell.Tab.0.left/62.1080.1858.1080/62.0.1858.1080@62.1080.1858.1080" timestamp="1644312378823" />
+    <state width="1798" height="152" key="GridCell.Tab.0.left/67.1080.1853.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1643264051409" />
+    <state width="1865" height="239" key="GridCell.Tab.0.left/67.1080.1853.1080/67.0.1853.1080@67.1080.1853.1080" timestamp="1643362278051" />
+    <state width="1803" height="211" key="GridCell.Tab.0.right" timestamp="1645593818235">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1803" height="282" key="GridCell.Tab.0.right/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644226546386" />
+    <state width="1865" height="212" key="GridCell.Tab.0.right/62.0.1858.1080/0.-1080.1920.1080@0.-1080.1920.1080" timestamp="1645517148434" />
+    <state width="1803" height="211" key="GridCell.Tab.0.right/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645593818235" />
+    <state width="1803" height="199" key="GridCell.Tab.0.right/62.0.1858.1080@62.0.1858.1080" timestamp="1644294667803" />
+    <state width="1865" height="194" key="GridCell.Tab.0.right/62.1080.1858.1080/62.0.1858.1080@62.1080.1858.1080" timestamp="1644312378823" />
+    <state width="1798" height="152" key="GridCell.Tab.0.right/67.1080.1853.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1643264051409" />
+    <state width="1865" height="239" key="GridCell.Tab.0.right/67.1080.1853.1080/67.0.1853.1080@67.1080.1853.1080" timestamp="1643362278051" />
+    <state x="379" y="100" key="SettingsEditor" timestamp="1645427609754">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="379" y="100" key="SettingsEditor/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644213267108" />
+    <state x="379" y="100" key="SettingsEditor/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645427609754" />
+    <state x="794" y="402" width="393" height="289" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1645425129853">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="794" y="402" width="393" height="289" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425129853" />
+    <state x="472" y="113" key="com.intellij.database.dbimport.ImportDialog" timestamp="1645425525005">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="472" y="113" key="com.intellij.database.dbimport.ImportDialog/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425525005" />
+    <state x="258" y="238" width="1525" height="824" key="dock-window-1" timestamp="1644972391666">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="258" y="238" width="1525" height="824" key="dock-window-1/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1644972391666" />
+    <state x="570" y="45" width="840" height="1034" key="search.everywhere.popup" timestamp="1645415654026">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="570" y="45" width="840" height="1034" key="search.everywhere.popup/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644224744781" />
+    <state x="570" y="45" width="840" height="1034" key="search.everywhere.popup/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645415654026" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/djangoProject$get_url_pic.coverage" NAME="get_url_pic Coverage Results" MODIFIED="1644309937643" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/funcs/func5" />
+    <SUITE FILE_PATH="coverage/djangoProject$precedure_template.coverage" NAME="precedure_template Coverage Results" MODIFIED="1644992561003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/funcs/func3" />
+    <SUITE FILE_PATH="coverage/djangoProject$extract_build_hana.coverage" NAME="extract_build_hana Coverage Results" MODIFIED="1643188847883" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/funcs/func1" />
+    <SUITE FILE_PATH="coverage/djangoProject$epidemic_prevention_info_get.coverage" NAME="epidemic_prevention_info_get Coverage Results" MODIFIED="1645593293126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/funcs/xue_1" />
+    <SUITE FILE_PATH="coverage/djangoProject$str_funcs.coverage" NAME="str_funcs Coverage Results" MODIFIED="1644979992077" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/funcs/my_base_funcs" />
+  </component>
+</project>

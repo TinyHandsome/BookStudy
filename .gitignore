@@ -34,7 +34,8 @@ python_projects/6-AXFProject/axf
 
 
 !.gitignore
-!.ideavimrc
+# 我的项目
+!tools/tools_work/0100-我的脚本集合网页/djangoProject/**
 
 # 工作需要
 **/info_py_ini.py

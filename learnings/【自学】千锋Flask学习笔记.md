@@ -334,6 +334,83 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/9ee64384a3b84142880e45b37f2081e8.png)
 
+## 6. 模型和模板
+
+1. 模板路径默认在Flask(app)创建的路径下
+2. 如果想自己指定模板路径
+   - 在Flask创建的时候，指定template_folder
+   - 在蓝图创建的时候，也可以指定template_folder
+   - 蓝图指定此蓝图同意前缀：`/xxx`
+   - 模板中使用反向解析和在Python代码中一样
+     - url_for
+3. 静态资源
+   - 静态资源在flask中是默认支持的
+   - 默认路径在和flask同级别的static中
+   - 想要自己指定
+     - 可以Flask创建的时候指定 static_folder
+     - 也可以在蓝图中指定
+   - 静态资源也是有路由的
+     - endpoint是static
+     - 参数有一个filename
+   - `{{ for_for('static', filename='xxx') }}`
+4. flask-debugtoolbar
+   - 从Django中借鉴
+   - 样式基本一致
+   - 使用方式更简单
+     - 安装
+     - 使用app初始化
+5. 模型
+   - 约束
+   - 模型信息指定
+     - 表名映射
+       - \__tablename__
+     - 模型继承
+       - 默认继承并不会报错，它会将多个模型的数据映射到一张表中，导致数据混乱，不能满足基本使用
+       - 抽象的模型是不会在数据库中产生映射的
+         - \__abstract__ = True
+   - 文档
+     - falsk-sqlalchemy
+     - sqlalchemy
+   - 项目中数据库优化
+     - 怎么连接
+     - 连接多少个
+     - django和flask
+       - 默认都是有数据库连接池的
+   - 数据查询
+     - 获取单个对象
+       - first
+       - get
+       - get_or_404
+     - 获取结果集
+       - all
+         - 特殊、特例
+         - 列表：list
+       - filter
+         - BaseQuery对象
+           - \__str__ 输出的是这个对象数据的SQL
+         - 条件
+           - 类名.属性名.魔术方法(临界值)
+           - 类名.属性名  操作符运算符  临界值
+           - contains
+           - startswith
+           - endswith
+           - in_
+           - link
+           - \__gt__
+           - \__ge__
+           - \__lt__
+           - \__le__
+         - 筛选
+           - filter_by()
+           - offset()
+           - limit()
+           - order_by()
+           - get()
+           - first()
+           - paginate()
+           - offset和limit不区分顺序，都是先执行offset
+           - order_by调用必须在offset和limit之前
+       - 筛选在flask-sqlalchemy中，all如果使用，只能放在最后
 
 
 
@@ -345,8 +422,7 @@
 
 
 
-
-学到 P24 0254
+学到 P28 1101
 
 
 ------

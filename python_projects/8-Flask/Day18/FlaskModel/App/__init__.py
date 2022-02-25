@@ -6,7 +6,8 @@ from App.views import init_blue
 
 
 def create_app(env):
-    app = Flask(__name__)
+    # app = Flask(__name__, template_folder='../templates')
+    app = Flask(__name__, static_folder='../static')
 
     # 初始化整个项目的配置
     app.config.from_object(envs.get(env))
