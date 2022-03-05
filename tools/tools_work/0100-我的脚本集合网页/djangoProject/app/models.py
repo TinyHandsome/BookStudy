@@ -37,6 +37,7 @@ class FuncType(models.Model):
     """模型类型"""
     func_type_name = models.CharField(max_length=64, verbose_name='功能类型')
     func_type_des = models.CharField(max_length=255, default=None, verbose_name='功能类型描述')
+    shown_index = models.BooleanField(default=True, verbose_name='是否展示在主页')
 
     class Meta:
         db_table = 'MyFunc'

@@ -25,3 +25,16 @@ class Dog(Animal):
 
 class Cat(Animal):
     c_eat = db.Column(db.String(32), default='fish')
+
+
+class Customer(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    c_name = db.Column(db.String(16))
+
+    address = db.relationship('Address', backref='customer', lazy=True)
+
+
+class Address(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    a_position = db.Column(db.String(128))
+    a_customer_id = db.Column(db.Integer, db.ForeignKey(Customer.id))

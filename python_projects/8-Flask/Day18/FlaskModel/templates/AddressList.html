@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地址列表</title>
+</head>
+<body>
+
+<ul>
+    {% for addr in address %}
+        <li>{{ addr.a_position }}</li>
+    {% endfor %}
+
+</ul>
+
+</body>
+</html>

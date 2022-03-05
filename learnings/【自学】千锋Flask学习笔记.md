@@ -16,6 +16,20 @@
   - 使用 `python manage.py db init`没有迁移数据库，而是启动了服务器，并且还没有启动debug
   
     答：注意你 `manage.py` 中的主程序，是app不是manager吧憨憨~
+    
+  - 在使用sqlalchemy的order_by的时候报错：
+  
+    > sqlalchemy.exc.CompileError: Can't resolve label reference for ORDER BY ...
+  
+    答：这里需要给 `-id`加上一个text函数
+  
+    `Customer.query.order_by(text("-id")).first().id`
+    
+  - 更换flask为0.13.1之后报错：
+  
+    > ImportError: cannot import name 'import_string'
+  
+    答：werkzeug版本兼容问题，安装 `pip install werkzeug==0.15.2` 就行了
 
 
 ## 1. Flask介绍
@@ -337,12 +351,14 @@
 ## 6. 模型和模板
 
 1. 模板路径默认在Flask(app)创建的路径下
+
 2. 如果想自己指定模板路径
    - 在Flask创建的时候，指定template_folder
    - 在蓝图创建的时候，也可以指定template_folder
    - 蓝图指定此蓝图同意前缀：`/xxx`
    - 模板中使用反向解析和在Python代码中一样
      - url_for
+
 3. 静态资源
    - 静态资源在flask中是默认支持的
    - 默认路径在和flask同级别的static中
@@ -353,12 +369,14 @@
      - endpoint是static
      - 参数有一个filename
    - `{{ for_for('static', filename='xxx') }}`
+
 4. flask-debugtoolbar
    - 从Django中借鉴
    - 样式基本一致
    - 使用方式更简单
      - 安装
      - 使用app初始化
+
 5. 模型
    - 约束
    - 模型信息指定
@@ -410,8 +428,34 @@
            - paginate()
            - offset和limit不区分顺序，都是先执行offset
            - order_by调用必须在offset和limit之前
+         - 与或非
+           - \_and
+           - \_or
+           - \_not
+       - filter_by
+         - 用在级联数据上
+         - 条件语法精准
+         - 字段 = 值
+       - 级联数据
+         - 获取
+           - 手动实现获取
+           - 使用关系 relationship 进行级联查询
+             - 反向引用
+         - 关系
+           - 1:1
+             - ForeignKey + Unique
+           - 1:M
+             - ForeignKey 
+           - M:N
+             - 额外关系表
+             - 两个 ForeignKey 
        - 筛选在flask-sqlalchemy中，all如果使用，只能放在最后
 
+6. 小结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/14701a9a481f47d595f2d79556ef7466.png)
+
+## 7. 
 
 
 
@@ -422,7 +466,8 @@
 
 
 
-学到 P28 1101
+
+学到 P32
 
 
 ------

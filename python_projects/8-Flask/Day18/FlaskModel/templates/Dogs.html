@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dogs</title>
+</head>
+<body>
+<h2>这是一群二哈</h2>
+<ul>
+    {% for dog in dogs %}
+        <li>{{ dog.a_name }}</li>
+    {% endfor %}
+
+</ul>
+
+<hr>
+
+<ul>
+    {% for dog in pagination.items %}
+        <li>{{ dog.a_name }}</li>
+    {% endfor %}
+
+</ul>
+
+
+<div class=pagination>
+    {%- for page in pagination.iter_pages(left_edge=5,left_current=5,right_current=5,right_edge=5) %}
+        {% if page %}
+            {% if page != pagination.page %}
+                <a href="{{ url_for('blue.get_dogs_with_page') }}?page={{ page }}&per_page={{ per_page }}">{{ page }}</a>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+    {%- endfor %}
+</div>
+
+
+</body>
+</html>

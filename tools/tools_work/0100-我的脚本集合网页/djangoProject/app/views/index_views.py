@@ -17,8 +17,10 @@ from app.models import User, UrlManage, FuncType
 
 def index(request):
     users = User.objects.all().order_by('-count')
-    functypes = FuncType.objects.all()
-    funcs = UrlManage.objects.all()
+    functypes = FuncType.objects.filter(shown_index=True)
+    funcs = UrlManage.objects.filter(func_type__shown_index=True)
+
+    # index中不显示功能：周队专用的数据
 
     funcs_dict = {}
 
