@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NewsList</title>
+</head>
+<body>
+
+<h2>今日新闻</h2>
+<ul>
+    {% for news in news_list %}
+        <li>{{ news.n_content }}</li>
+    {% endfor %}
+
+</ul>
+
+<script type="text/javascript">
+    document.write("<h2>动态的</h2>");
+</script>
+
+</body>
+</html>
