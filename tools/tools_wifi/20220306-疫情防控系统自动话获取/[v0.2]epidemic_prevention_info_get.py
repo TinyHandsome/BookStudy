@@ -96,7 +96,7 @@ class EpidemicPrevention:
         else:
             str_all = str_all + '    【周队快处理啦~】\n'
         print(str_all)
-        print('\n'.join(self.output))
+        print('\n'.join([str(op.values()) for op in self.output]))
 
 
         self.clear_after_run()
