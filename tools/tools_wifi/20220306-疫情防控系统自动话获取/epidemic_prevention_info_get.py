@@ -12,12 +12,10 @@
 """
 
 import requests
-import time
-import sched
 import pandas as pd
 from dataclasses import dataclass
 
-from config_check_list import *
+from config import *
 from my_factory import Factory
 from my_models import UnRevised, UnVerified
 from tools import get_annotations_keys_dict_from_dict
@@ -29,7 +27,6 @@ pd.set_option('max_colwidth', None)
 @dataclass
 class EpidemicPrevention:
     authorization: str
-    scheduler_gap: int = 600
 
     def __post_init__(self):
         self.run_state = True

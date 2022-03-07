@@ -12,7 +12,7 @@
 """
 from dataclasses import dataclass
 
-from config_check_list import CHECK_LIST
+from config import CHECK_LIST
 from tools import deal_int_time_13
 
 
