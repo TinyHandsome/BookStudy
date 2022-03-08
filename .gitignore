@@ -16,6 +16,7 @@
 **/password.py
 
 practice_data
+mytoken
 python_projects/6-AXFProject/axf
 
 
@@ -24,7 +25,6 @@ python_projects/6-AXFProject/axf
 
 .*
 *.plk
-*.mytoken
 *.sqlite
 *.spec
 *.pyc
