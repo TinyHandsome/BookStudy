@@ -12,8 +12,8 @@
 """
 from dataclasses import dataclass
 
-from config import CHECK_LIST
-from tools import deal_int_time_13
+from config.config import CHECK_LIST
+from support.tools import deal_int_time_13
 
 
 class MyModel:

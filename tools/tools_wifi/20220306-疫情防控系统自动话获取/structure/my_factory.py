@@ -12,7 +12,7 @@
 """
 
 from dataclasses import dataclass
-from my_models import UnRevised, UnVerified
+from structure.my_models import UnRevised, UnVerified
 
 
 @dataclass

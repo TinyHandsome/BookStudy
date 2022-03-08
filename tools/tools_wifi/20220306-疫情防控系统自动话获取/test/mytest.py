@@ -12,7 +12,7 @@
 """
 import json
 
-from my_models import UnRevised, UnVerified
+from structure.my_models import UnVerified
 
 
 def mytest1():

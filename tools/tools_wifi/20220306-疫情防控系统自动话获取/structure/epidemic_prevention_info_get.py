@@ -15,23 +15,35 @@ import requests
 import pandas as pd
 from dataclasses import dataclass
 
-from config import *
-from my_factory import Factory
-from my_models import UnRevised, UnVerified
-from tools import get_annotations_keys_dict_from_dict
+from support.cmd_decorate import print_black_white, print_white_red
+from config.config import *
+from structure.my_factory import Factory
+from structure.my_models import UnRevised, UnVerified
+from support.tools import get_annotations_keys_dict_from_dict, decorate_dataframe, get_current_time, \
+    get_mytoken, write_mytoken
 
 pd.set_option('display.max_columns', None)
 pd.set_option('max_colwidth', None)
 
 
+class MyException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+    def __str__(self):
+        return self.msg
+
+
 @dataclass
 class EpidemicPrevention:
-    authorization: str
 
     def __post_init__(self):
+
         self.run_state = True
         self.current_str = ''
-        self.update_authorization(self.authorization)
+
+        authorization = get_mytoken()
+        self.update_authorization(authorization)
 
         # 工厂类初始化一个实例
         self.f = Factory.new_a_factory()
@@ -54,6 +66,9 @@ class EpidemicPrevention:
         """
         resp = requests.get(url, headers=self.headers)
         result = resp.json()
+
+        if result.get('code') == 401:
+            raise MyException("401")
 
         # 获取数据list和num
         rows = result.get('rows')
@@ -79,7 +94,7 @@ class EpidemicPrevention:
         return unrevised_df, unverified_df
 
     def get_num_str(self, df, df_type):
-        """根据dataframe获取数量"""
+        """格式化输出最终结果"""
         if df.empty:
             my_str = '0'
             empty = True
@@ -94,18 +109,46 @@ class EpidemicPrevention:
             my_str += '/' + self.f.get_unverified_num_str()
             prefix = '未审核'
 
-        print(prefix + ': ' + my_str)
+        output1 = prefix + ': ' + my_str
         if not empty:
-            print(df)
+            output2 = decorate_dataframe(df)
+        else:
+            output2 = ''
+
+        return output1, output2
 
     def deal_result(self):
         """根据结果处理数据"""
         unrevised_df, unverified_df = self.get_info_from_urls()
-        self.get_num_str(unrevised_df, 1)
-        self.get_num_str(unverified_df, 2)
+        r1, r2 = self.get_num_str(unrevised_df, 1)
+        v1, v2 = self.get_num_str(unverified_df, 2)
+
+        print('【' + get_current_time() + '】  ', end='')
+        head_msg = r1 + '  ' + v1
+        if self.f.unrevised_num + self.f.unverified_num == 0:
+            print_black_white(head_msg)
+        else:
+            print_white_red(head_msg)
+        print(r2)
+        print(v2)
+        print()
+
+    def reset_input_bearer(self):
+        """获取输入的数据，bearer"""
+        a = input('Bearer验证已失效，请重新粘贴bearer数据：（如果不知道bearer是啥，请联系李英俊小朋友~）\n')
+        self.update_authorization(a)
+        write_mytoken(a)
+
+    def setup(self):
+        """运行主程序"""
+        try:
+            self.deal_result()
+        except MyException:
+            self.reset_input_bearer()
+            self.deal_result()
 
 
 if __name__ == '__main__':
-    test = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImY0MjVmODQ5LTdhZTctNDQ1Mi04MDFjLTI4ZmRkNzhjOGYwOSJ9.bLS1Y7obdI_K25FvliX-iUJEr78HmxPSVftnOV8mDJZ5bGY5Su7L9vc_aksgf817pgHMnsXOyuLcFBN1QUxGnA'
-    ep = EpidemicPrevention(test)
-    ep.deal_result()
+    test = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjYxYWY0NGEyLTkyOGYtNDlmNy1hZjQ0LTZmNDkzNDRmOGNlNSJ9.eqwDaBr-d09y7Yj8mCh-owXy-514cNOtq5OQm1vp_YhbHxIi8w9Om2oN6U1GrCWipdT6TSNErMd3Te4ghEGOOw'
+    ep = EpidemicPrevention()
+    ep.setup()
