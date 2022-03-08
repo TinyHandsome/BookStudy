@@ -113,7 +113,7 @@ def get_mytoken():
 
 def write_mytoken(t):
     """写入mytoken"""
-    with open('../config/mytoken', 'w', encoding='utf-8') as f:
+    with open('config/mytoken', 'w', encoding='utf-8') as f:
         f.write(t)
 
 
