@@ -21,4 +21,4 @@ SHOW_SET = 'default'
 # 未修正
 UNREVISED_URL = 'http://lsqzdrqgkxt.ytlaishan.gov.cn:18081/key/area/personnel/re/xz/list?pageNum=1&pageSize=1000&auditStatus=0'
 # 未审核
-UNVERIFIED_URL = 'http://lsqzdrqgkxt.ytlaishan.gov.cn:18081/system/declare/list?pageNum=1&pageSize=100&declarationStatus=0'
+UNVERIFIED_URL = 'http://lsqzdrqgkxt.ytlaishan.gov.cn:18081/system/declare/list?pageNum=1&pageSize=1000&declarationStatus=0'

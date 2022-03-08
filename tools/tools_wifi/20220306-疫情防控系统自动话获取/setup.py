@@ -34,8 +34,8 @@ class Epidemic:
         self.ep = EpidemicPrevention()
         self.tm = ThreadManagement()
         self.hk = SystemHotkey()
-        self.hk.register(('q',), callback=lambda x: self.q())
-        self.hk.register(('s',), callback=lambda x: self.s())
+        self.hk.register(('control', 'q'), callback=lambda x: self.q())
+        self.hk.register(('control', 'w'), callback=lambda x: self.s())
 
     def run(self):
         self.tm.build_thread(self.ep.setup, is_schdule=True)
