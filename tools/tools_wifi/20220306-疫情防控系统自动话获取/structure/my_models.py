@@ -9,6 +9,9 @@
 @file: my_models.py
 @time: 2022/3/6 7:55
 @desc: 建立模型
+        参考链接：
+            1. [Pandas 中Dataframe的 Insert函数详解](https://blog.csdn.net/qq_39954916/article/details/106152411)
+            2. [DataFrame在任意处添加一列或者多列的方法](https://www.cnblogs.com/cgmcoding/p/13930464.html)
 """
 from dataclasses import dataclass
 
@@ -33,6 +36,17 @@ class MyModel:
     def get_values(self):
         """返回所有成员变量的值"""
         return list(self.__dict__.values())
+
+    def get_excel_info_list(self):
+        """获取需要excel输出的列"""
+        ...
+
+    @staticmethod
+    def get_excel_compose_extra_columns():
+        return [0], ['姓名+身份证号/护照']
+
+    def get_name_id_phone(self):
+        return self.name + self.cardId + ' ' + self.phone
 
 
 @dataclass

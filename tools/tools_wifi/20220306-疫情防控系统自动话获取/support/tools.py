@@ -13,6 +13,8 @@
         1. rich参考链接：
             1. https://blog.csdn.net/qq_43954124/article/details/112772262
 """
+import base64
+import json
 import os
 import time
 
@@ -59,9 +61,13 @@ def deal_int_time_13(my_time):
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(my_time / 1000))
 
 
-def get_current_time():
+def get_current_time(remove_colon=False):
     """获取当前时间的字符串"""
-    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    if remove_colon:
+        # 不要冒号格式的
+        return time.strftime("%Y-%m-%d %H_%M_%S", time.localtime())
+    else:
+        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
 
 def decorate_dataframe(df: DataFrame, t='prettytable'):
@@ -89,15 +95,33 @@ def decorate_dataframe(df: DataFrame, t='prettytable'):
     return tb
 
 
-def check_file_exist(file_path, build=True):
+def check_file_exist(file_path, build=True, plain=True):
     """检查文件是否存在，否则创建该文件（暂时不创建目录）"""
     if not os.path.exists(file_path):
         if build:
-            f = open(file_path, 'w', encoding='utf-8')
-            f.close()
+            # 分隔文件夹和文件名
+            p, f = os.path.split(file_path)
+            # 检查文件夹，没有就创建
+            check_filefolder_exist(p)
+
+            if plain:
+                # 如果是纯文本，创建文件，啥也不写
+                f = open(file_path, 'w', encoding='utf-8')
+                f.close()
         return False
     else:
         return True
+
+
+def check_filefolder_exist(filefolder, build=True):
+    """检查文件夹是否存在，否则创建该目录"""
+    if not os.path.exists(filefolder):
+        if build:
+            os.makedirs(filefolder)
+        else:
+            ...
+        return False
+    return True
 
 
 def get_mytoken():
@@ -114,6 +138,10 @@ def get_mytoken():
 def write_mytoken(t):
     """写入mytoken"""
     with open('config/mytoken', 'w', encoding='utf-8') as f:
+        # 将指针放到开头，清空文件
+        f.seek(0)
+        f.truncate()
+        # 写入数据
         f.write(t)
 
 
@@ -149,3 +177,58 @@ def init_print():
     with open('config/init_print', 'r', encoding='utf-8') as f:
         s = f.read()
     print_yello_cyan(s)
+
+
+def generate_str_concat_two_column_excel(df: DataFrame, cls):
+    """将结果输出为excel，当前列加额外的列, 额外的列是由列名组合而来，字符串拼接"""
+    indexs, column_names = cls.get_excel_compose_extra_columns()
+    for i, c in zip(indexs, column_names):
+        cs = c.split('+')
+        values = df.apply(lambda x: str(x[cs[0]]) + str(x[cs[1]]), axis=1).tolist()
+        df.insert(i, c, values)
+
+    return df
+
+
+def save_df2excel(df: DataFrame, path):
+    """保存非空的df到Excel"""
+    if not df.empty:
+        # 检查路径
+        check_file_exist(path, plain=False)
+        # 保存
+        df.to_excel(path, index=None, encoding='utf-8')
+        return True
+
+    return False
+
+
+def base64_encode_str(s):
+    """用base64加密数据"""
+    s_bt = s.encode()
+    s_b64 = base64.b64encode(s_bt)
+    s_b64_str = s_b64.decode()
+    return s_b64_str
+
+
+def base64_decode_str(s):
+    """用base64解密数据"""
+    untie_s = base64.b64decode(s)
+    return untie_s.decode()
+
+
+def base64_encode_dict2json(s: dict, file_name=None):
+    """加密的是dict数据，变成json后加密"""
+    s_json = json.dumps(s)
+    s_base64 = base64_encode_str(s_json)
+
+    if file_name is not None:
+        with open(file_name, 'w', encoding='utf-8') as f:
+            f.write(s_base64)
+
+    return s_base64
+
+
+def base64_decode_json2dict(s: str):
+    """加密的是json数据，解码并返回dict"""
+    s_json = base64_decode_str(s)
+    return json.loads(s_json)

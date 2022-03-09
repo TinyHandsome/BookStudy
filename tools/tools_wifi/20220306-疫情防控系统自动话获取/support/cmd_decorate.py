@@ -94,6 +94,11 @@ def print_yello_cyan(msg):
     print(Fore.YELLOW + Back.CYAN + msg + Fore.RESET + Back.RESET)
 
 
+def print_cyan_magenta(msg):
+    """青洋红"""
+    print(Fore.CYAN + Back.MAGENTA + msg + Fore.RESET + Back.RESET)
+
+
 if __name__ == '__main__':
     print_black_null('黑空')
     print_blue_null('蓝空')
@@ -107,3 +112,6 @@ if __name__ == '__main__':
     print_white_red('白红')
     print_black_white('黑白')
     print_white_black('白黑')
+    print_yello_magenta('黄洋红')
+    print_yello_cyan('黄青')
+    print_cyan_magenta('青洋红')

@@ -33,6 +33,23 @@ def get_files_names(files):
         print('咋肥四鸭？')
 
 
+def check_file_exist(file_path, build=True):
+    """检查文件是否存在，否则创建该文件（暂时不创建目录）"""
+    if not os.path.exists(file_path):
+        if build:
+            # 分隔文件夹和文件名
+            p, f = os.path.split(file_path)
+            # 检查文件夹，没有就创建
+            check_filefolder_exist(p)
+
+            # 创建文件，啥也不写
+            f = open(file_path, 'w', encoding='utf-8')
+            f.close()
+        return False
+    else:
+        return True
+
+
 def check_filefolder_exist(filefolder, build=True):
     """检查文件夹是否存在，否则创建该目录"""
     if not os.path.exists(filefolder):
@@ -42,18 +59,6 @@ def check_filefolder_exist(filefolder, build=True):
             ...
         return False
     return True
-
-
-def check_file_exist(file_path, build=True):
-    """检查文件是否存在，否则创建该文件（暂时不创建目录）"""
-    if not check_filefolder_exist(file_path, False):
-        if build:
-            f = open(file_path, 'w', encoding='utf-8')
-            f.close()
-        return False
-    else:
-        return True
-
 
 if __name__ == '__main__':
     x = get_files_names(r'E:\test\gouzei.md')
