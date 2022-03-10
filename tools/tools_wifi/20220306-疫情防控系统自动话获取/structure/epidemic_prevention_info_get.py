@@ -173,15 +173,15 @@ class EpidemicPrevention:
         else:
             output2 = ''
 
-        return output1, output2
+        return output1, output2, empty
 
     def print_and_deal_result(self, if_send_email):
         """获取数据，筛选数据，处理数据，输出dos"""
         # 获取数据，筛选数据，计算最终的输出df
         self.get_info_from_urls()
 
-        r1, r2 = self.get_print_from_df_in_dos(self.unrevised_df, 1)
-        v1, v2 = self.get_print_from_df_in_dos(self.unverified_df, 2)
+        r1, r2, r3 = self.get_print_from_df_in_dos(self.unrevised_df, 1)
+        v1, v2, v3 = self.get_print_from_df_in_dos(self.unverified_df, 2)
 
         time_header = '【' + get_current_time() + '】  '
         head_msg = r1 + '  ' + v1
@@ -198,7 +198,7 @@ class EpidemicPrevention:
         print()
 
         # 发送邮件
-        if self.email_flag and if_send_email:
+        if self.email_flag and if_send_email and (r3 + v3 != 2):
             header_msg = head_msg + time_header
             body_msg = header_msg + '\n' + str(r2) + '\n' + str(v2)
             self.send_email(header_msg, body_msg)
