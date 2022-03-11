@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>NewsList</title>
+    {#    <script type="text/javascript" src="{{ url_for('static', filename='js/show.js') }}"></script>#}
+    {#    <script type="text/javascript" src="{{ url_for('blue.get_show') }}"></script>#}
+    <script type="text/javascript">
+        document.write('<script type="text/javascript" src="/getshow/?t=' + Date.parse(new Date()) + '"><\/script>');
+    </script>
+
+
 </head>
 <body>
 
 <h2>今日新闻</h2>
-<ul>
-    {% for news in news_list %}
-        <li>{{ news.n_content }}</li>
-    {% endfor %}
-
-</ul>
-
 <script type="text/javascript">
-    document.write("<h2>动态的</h2>");
+    {#document.write("<h2>动态的</h2>");#}
+    {#document.write("{{ news_content|safe }}");#}
+    document.write(showDeHtml("{{ encode_content_twice }}"));
 </script>
+{#{{ news_content|safe }}#}
 
 </body>
 </html>
