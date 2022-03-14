@@ -468,6 +468,38 @@
      - 浏览器还是可破解的
      - Android或IOS移动端，破解率基本为零
 
+## 8. 钩子函数
+
+1.  面向切面编程
+   - 动态介入请求流程
+   - before_request
+   - after_request
+2. Django请求流程
+   - urls -> views
+   - views -> models
+   - models -> views
+   - views -> response
+3. 添加中间件
+   1. client -> process_request: list
+   2. 逐一进行process_request
+   3. process_request -> urls
+   4. urls -> process_view: list
+   5. 逐一进行process_view
+   6. process_view -> views
+   7. views -> models
+   8. models -> views
+   9. views -> response
+   10. response -> process_response: list
+   11. 逐一进行process_response
+4. 四大内置对象
+   1. request
+   2. session
+   3. g
+      - 跨函数传递数据
+      - 设置全局变量
+   4. config (app)
+      - python flask：current_app.config
+      - 一定是在项目启动之后
 
 
 
@@ -476,7 +508,14 @@
 
 
 
-学到 P35
+
+
+
+
+
+
+
+学到 P37 13 45
 
 
 ------

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StudentRegister</title>
+</head>
+<body>
+<form action="{{ url_for('blue.student_register') }}" method="post">
+    <span>用户名：</span><input type="text" name="username" placeholder="请输入用户名">
+    <br>
+    <span>密码：</span><input type="password" name="password" placeholder="请输入密码">
+    <br>
+    <button>注册</button>
+</form>
+</body>
+</html>

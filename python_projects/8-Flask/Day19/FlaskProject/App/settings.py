@@ -21,6 +21,7 @@ class Config:
     TESTING = False
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = 'abaaba'
 
 
 class DevelopConfig(Config):
