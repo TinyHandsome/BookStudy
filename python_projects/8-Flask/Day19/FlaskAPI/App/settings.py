@@ -36,7 +36,7 @@ class DevelopConfig(Config):
         'PASSWORD': password,
         'HOST': 'localhost',
         'PORT': 3307,
-        'NAME': 'GP1FlaskDay04',
+        'NAME': 'GP1FlaskAPI',
     }
 
     with open('App/email/myemail', 'r', encoding='utf-8') as f:

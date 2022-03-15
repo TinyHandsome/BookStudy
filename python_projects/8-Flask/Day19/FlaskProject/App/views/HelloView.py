@@ -3,13 +3,14 @@ import os
 import random
 import time
 
-from flask import Blueprint, render_template, request, g, current_app, redirect, url_for, flash
+from flask import Blueprint, render_template, request, g, current_app, redirect, url_for, flash, jsonify
+from flask_mail import Message
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from App.ext import db
+from App.ext import db, mail, cache
 from App.models import News, Student
 from App.settings import BASE_DIR
-from App.utils import make_data_secret
+from App.utils import make_data_secret, send_verify_code
 
 blue = Blueprint('blue', __name__)
 
@@ -88,11 +89,13 @@ def student_register():
     elif request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        phone = request.form.get('phone')
         # hash_pwd = generate_password_hash(password)
 
         student = Student()
         student.s_name = username
         student.s_password = password
+        student.s_phone = phone
         db.session.add(student)
         db.session.commit()
 
@@ -106,6 +109,11 @@ def student_login():
     elif request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        code = request.form.get('code')
+
+        cache_code = cache.get(username)
+        if code != cache_code:
+            return '验证失败'
 
         student = Student.query.filter(Student.s_name.__eq__(username)).first()
         # if student and check_password_hash(student.s_password, password):
@@ -114,3 +122,37 @@ def student_login():
         flash("用户名或密码错误")
 
         return redirect(url_for('blue.student_login'))
+
+
+@blue.route('/sendmail/')
+def send_mail():
+    msg = Message('Flask Email', recipients=['694317828@qq.com', ])
+    msg.body = '哈哈Flask不过如此~'
+    msg.html = "<h2>你真是一个小天才</h2>"
+    mail.send(message=msg)
+    return '邮件发送成功'
+
+
+@blue.route('/sendcode/')
+def send_code():
+    phone = request.args.get("phone")
+    username = request.args.get("username")
+    resp = send_verify_code(phone)
+    result = resp.json()
+
+    if result.get("code") == 200:
+        obj = result.get("obj")
+        cache.set(username, obj)
+
+        data = {
+            "msg": 'ok',
+            'status': 200
+        }
+        return jsonify(data)
+
+    data = {
+        "msg": "fail",
+        "status": 400
+    }
+
+    return jsonify(data)

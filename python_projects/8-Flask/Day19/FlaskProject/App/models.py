@@ -13,6 +13,7 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     s_name = db.Column(db.String(16), unique=True)
     _s_password = db.Column(db.String(256))
+    s_phone = db.Column(db.String(32), unique=True)
 
     @property
     def s_password(self):

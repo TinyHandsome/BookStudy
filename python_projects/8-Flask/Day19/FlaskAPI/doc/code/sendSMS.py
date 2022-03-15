@@ -1,19 +1,10 @@
-import base64
 import hashlib
 import time
 
 import requests
 
 
-def make_data_secret(source):
-    encode_content = base64.standard_b64encode(source.encode("utf-8")).decode("utf-8")
-    add_content_encode_content = "CHKa2GFL1twhMDhEZVfDfU2DoZHCLZk" + encode_content + "qOq3kRIxs26rmRtsUTJvBn9Z"
-    encode_content_twice = base64.standard_b64encode(add_content_encode_content.encode("utf-8")).decode("utf-8")
-
-    return encode_content_twice
-
-
-def send_verify_code(phone):
+def send_code():
     url = 'https://api.netease.im/sms/sendcode.action'
     nonce = hashlib.new("sha512", str(time.time()).encode('utf-8')).hexdigest()
     curtime = str(int(time.time()))
@@ -29,8 +20,12 @@ def send_verify_code(phone):
         "CheckSum": check_sum
     }
     post_data = {
-        'mobile': phone,
+        'mobile': '12344446666',
     }
     response = requests.post(url, data=post_data, headers=headers)
 
-    return response
+    print(response.content)
+
+
+if __name__ == '__main__':
+    send_code()
