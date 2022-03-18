@@ -15,6 +15,15 @@ class BaseModel(db.Model):
             print(e)
             return False
 
+    def delete(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
 
 class Goods(BaseModel):
     g_name = db.Column(db.String(64))
