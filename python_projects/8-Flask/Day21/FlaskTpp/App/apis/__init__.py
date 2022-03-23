@@ -1,12 +1,9 @@
-from flask_restful import Api
-
-from App.apis.movie_user.hello_api import HelloResource
-
-api = Api()
+from App.apis.admin import admin_api
+from App.apis.movie_admin import movie_client_api
+from App.apis.movie_user import client_api
 
 
 def init_api(app):
-    api.init_app(app)
-
-
-api.add_resource(HelloResource, '/hello/')
+    client_api.init_app(app)
+    movie_client_api.init_app(app)
+    admin_api.init_app(app)

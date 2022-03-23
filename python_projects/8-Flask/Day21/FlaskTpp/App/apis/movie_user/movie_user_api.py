@@ -1,9 +1,8 @@
 from flask_restful import Resource
 
 
-class HelloResource(Resource):
+class MovieUsersResource(Resource):
 
-    def get(self):
+    def post(self):
         return {'msg': 'ok'}
-
 

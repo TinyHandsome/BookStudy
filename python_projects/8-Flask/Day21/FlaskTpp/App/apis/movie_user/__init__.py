@@ -1,12 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# coding=utf-8 
+from flask_restful import Api
 
-"""
-@author: Liyingjun
-@contact: 694317828@qq.com
-@software: pycharm
-@file: __init__.py.py
-@time: 2022/3/22 16:47
-@desc: 
-"""
+from App.apis.movie_user.movie_user_api import MovieUsersResource
+
+client_api = Api(prefix='/user')
+
+client_api.add_resource(MovieUsersResource, '/hello/')
