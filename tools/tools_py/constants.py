@@ -20,3 +20,4 @@ def get_vscode_json_dict():
     vscode_json_dict = json.loads(str_json)
 
     return vscode_json_dict
+
