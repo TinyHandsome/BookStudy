@@ -1,10 +1,9 @@
-from flask import request
+from flask import request, g
 
 
 def load_middleware(app):
     @app.before_request
     def before():
-        print('中间件：', request.url)
 
         """
             统计

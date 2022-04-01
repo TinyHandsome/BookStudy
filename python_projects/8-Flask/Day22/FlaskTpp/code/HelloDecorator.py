@@ -1,3 +1,4 @@
+import random
 from time import sleep, time
 
 
@@ -21,5 +22,22 @@ def play(name_game, t=3, level=20):
     return 'Happy'
 
 
+def can_play(can):
+    def can_play_wrapper(fun):
+        def wrapper():
+            if random.randrange(10) > can:
+                fun()
+            else:
+                print("do homework")
+
+        return wrapper
+    return can_play_wrapper
+
+
+@can_play(10)
+def play_game():
+    print("Happy to play")
+
+
 if __name__ == '__main__':
-    play("阴阳师")
+    play_game()
