@@ -1,7 +1,7 @@
 from App.models.movie_user import MovieUser
 
 
-def get_user(user_id):
+def get_movie_user(user_id):
     if not user_id:
         return None
 

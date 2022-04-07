@@ -1,6 +1,6 @@
 from flask import request, g
 from flask_restful import abort
-from App.apis.movie_user.model_utils import get_user
+from App.apis.movie_user.model_utils import get_movie_user
 from App.ext import cache
 
 
@@ -14,7 +14,7 @@ def _verify():
     if not user_id:
         abort(401, msg='user not available')
 
-    user = get_user(user_id)
+    user = get_movie_user(user_id)
 
     if not user:
         abort(401, msg='user not available')

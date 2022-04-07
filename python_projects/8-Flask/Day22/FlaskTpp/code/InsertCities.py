@@ -24,17 +24,16 @@ def insert_cities(cities_dict):
         for city in v:
             print(city)
             c_id = city.get('id')
-            c_parent_id = city.get('parent_id')
-            c_region_name = city.get('region_name')
-            c_id = city.get('id')
-            c_id = city.get('id')
-            c_id = city.get('id')
-
-
+            c_parent_id = city.get('parentId')
+            c_region_name = city.get('regionName')
+            c_city_code = city.get('cityCode')
+            c_pinyin = city.get('pinYin')
 
             cursor.execute(
                 "insert into city(letter_id, c_id, c_parent_id, c_region_name, c_city_code, c_pinyin) values (%d, %d, %d, '%s', %d, '%s');"
-                % (letter_id, ))
+                % (letter_id, c_id, c_parent_id, c_region_name, c_city_code, c_pinyin))
+
+            db.commit()
 
 
 if __name__ == '__main__':

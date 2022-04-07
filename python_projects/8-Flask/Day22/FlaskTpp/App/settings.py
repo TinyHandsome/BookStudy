@@ -103,3 +103,9 @@ envs = {
     'product': ProductConfig,
     'default': DevelopConfig
 }
+
+
+ADMINS = (
+    'Rock',
+    'Tom',
+)
