@@ -8,6 +8,7 @@ from App.apis.movie_user.model_utils import get_movie_user
 from App.ext import cache
 from App.models.admin.admin_user_model import AdminUser
 from App.settings import ADMINS
+from App.utils import generate_admin_user_token
 
 parse_base = reqparse.RequestParser()
 parse_base.add_argument('password', type=str, required=True, help='请输入密码')
@@ -72,7 +73,7 @@ class AdminUsersResource(Resource):
             if user.is_delete:
                 abort(401, msg="用户不存在")
 
-            token = uuid.uuid4().hex
+            token = generate_admin_user_token()
             cache.set(token, user.id, timeout=60 * 60 * 24 * 7)
 
             data = {

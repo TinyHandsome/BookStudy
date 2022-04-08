@@ -1,8 +1,9 @@
 from flask import request, g
 from flask_restful import abort
-from App.apis.movie_user.model_utils import get_movie_user
+
+from App.apis.admin.admin_utils import get_admin_user
 from App.ext import cache
-from App.utils import MOVIE_USER
+from App.utils import ADMIN_USER
 
 
 def _verify():
@@ -11,14 +12,14 @@ def _verify():
     if not token:
         abort(401, msg='not login')
 
-    if not token.startswith(MOVIE_USER):
+    if not token.startswith(ADMIN_USER):
         abort(403, msg='no access')
 
     user_id = cache.get(token)
     if not user_id:
         abort(401, msg='user not available')
 
-    user = get_movie_user(user_id)
+    user = get_admin_user(user_id)
 
     if not user:
         abort(401, msg='user not available')
