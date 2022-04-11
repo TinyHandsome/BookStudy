@@ -10,6 +10,7 @@
 @time: 2022/1/26 10:19
 @desc: 
 """
+
 from django.shortcuts import render
 
 from app.models import User, UrlManage, FuncType
@@ -17,15 +18,29 @@ from app.models import User, UrlManage, FuncType
 
 def index(request):
     users = User.objects.all().order_by('-count')
+
+    # 在主页中只展示想要展示的功能类型
+    # index中不显示功能：周队专用的数据
     functypes = FuncType.objects.filter(shown_index=True)
     funcs = UrlManage.objects.filter(func_type__shown_index=True)
 
-    # index中不显示功能：周队专用的数据
+    # 获取最新更新的功能
+    update_func = UrlManage.objects.order_by('-update_time').first()
 
     funcs_dict = {}
 
     for functype in functypes:
-        funcs_dict[functype] = funcs.filter(func_type=functype)
+        onetype_funcs = funcs.filter(func_type=functype)
+        output_funcs = []
+        for t_func in onetype_funcs:
+            if t_func == update_func:
+                update_flag = 1
+            else:
+                update_flag = 0
+            t_func.update_flag = update_flag
+            output_funcs.append(t_func)
+
+        funcs_dict[functype] = output_funcs
 
     data = {
         'users': enumerate(users, 1),
@@ -33,3 +48,7 @@ def index(request):
     }
 
     return render(request, 'index.html', context=data)
+
+
+class ShowFunc:
+    ...

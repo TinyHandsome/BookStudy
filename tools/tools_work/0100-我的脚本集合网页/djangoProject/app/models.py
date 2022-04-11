@@ -49,11 +49,6 @@ class FuncType(models.Model):
 
 class UrlManage(models.Model):
     """地址管理模型"""
-    func_name = models.CharField(max_length=255, unique=True, verbose_name='功能')
-    func_url = models.CharField(max_length=64, unique=True, verbose_name='地址')
-    func_url_name = models.CharField(max_length=64, default='', verbose_name='地址别名')
-    func_type = models.ForeignKey(FuncType, default=0, on_delete=models.SET_DEFAULT, verbose_name='功能类型')
-    func_des = models.CharField(max_length=255, default=None, verbose_name='功能描述')
 
     labels = (
         (1, '正常使用'),
@@ -61,6 +56,14 @@ class UrlManage(models.Model):
         (3, '开发者使用'),
         (4, '特定用户使用'),
     )
+
+    func_name = models.CharField(max_length=255, unique=True, verbose_name='功能')
+    func_url = models.CharField(max_length=64, unique=True, verbose_name='地址')
+    func_url_name = models.CharField(max_length=64, default='', verbose_name='地址别名')
+    func_type = models.ForeignKey(FuncType, default=0, on_delete=models.SET_DEFAULT, verbose_name='功能类型')
+    func_des = models.CharField(max_length=255, default=None, verbose_name='功能描述')
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
     func_label = models.IntegerField(default=1, choices=labels, verbose_name='状态')
     auth_role = models.ForeignKey(MyRole, default=2, verbose_name='访问角色权限', on_delete=models.PROTECT)
 

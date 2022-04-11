@@ -35,13 +35,24 @@
             <ul class="list-group">
                 {% for f in funcs %}
                     <li class="list-group-item">
+
+                        <!-- 编号 -->
                         <span>{{ forloop.counter }}. </span>
+
+                        <!-- 是否显示为开发中 -->
                         {% ifnotequal f.func_label 1 %}
-                            <span class="label label-default">
+                            <span class="label label-default" style="background-color: dodgerblue">
                                 {{ f.get_func_label_display }}
                             </span>
                         {% endifnotequal %}
+
+                        <!-- 显示链接 -->
                         <a href="{{ f.func_url }}">{{ f.func_name }}</a>
+
+                        <!-- 是否为最新 -->
+                        {% ifequal f.update_flag 1 %}
+                            <span class="label label-default">新</span>
+                        {% endifequal %}
                     </li>
                 {% endfor %}
             </ul>

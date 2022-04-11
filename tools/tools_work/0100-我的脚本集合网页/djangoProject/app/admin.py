@@ -9,7 +9,7 @@ admin.site.index_title = '后台管理'
 
 
 class UrlManageAdmin(admin.ModelAdmin):
-    list_display = ('func_name', 'func_url', 'func_url_name', 'func_type')
+    list_display = ('func_name', 'func_url', 'func_url_name', 'func_type', 'update_time', 'create_time')
 
 
 admin.site.register(UrlManage, UrlManageAdmin)
