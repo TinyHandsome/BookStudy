@@ -109,3 +109,6 @@ ADMINS = (
     'Rock',
     'Tom',
 )
+
+
+UPLOADS_DIR = os.path.join(BASE_DIR, 'static/uploads/icons')

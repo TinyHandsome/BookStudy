@@ -23,7 +23,6 @@ from djangoProject.settings import STATIC_ROOT
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('app.urls', 'app'), namespace='1')),
-    path('xue/', include(('xue.urls', 'xue'), namespace='2')),
 
 
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),

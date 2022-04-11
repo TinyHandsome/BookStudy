@@ -1,7 +1,9 @@
-from flask_restful import Resource, reqparse, abort
+from flask_restful import Resource, reqparse, abort, marshal, fields
 
 from App.apis.admin.utils import login_required
+from App.apis.api_constant import HTTP_CREATE_OK
 from App.models.common.movie_model import Movie
+from App.settings import UPLOADS_DIR
 
 parse = reqparse.RequestParser()
 parse.add_argument("showname", required=True, help="must supply showname")
@@ -15,6 +17,20 @@ parse.add_argument("duration", required=True, help="must supply duration")
 parse.add_argument("screeningmodel", required=True, help="must supply screeningmodel")
 parse.add_argument("openday", required=True, help="must supply openday")
 parse.add_argument("backgroundpicture", required=True, help="must supply backgroundpicture")
+
+movie_fields = {
+    "showname": fields.String,
+    "shownamene": fields.String,
+    "director": fields.String,
+    "leadingRole": fields.String,
+    "type": fields.String,
+    "country": fields.String,
+    "language": fields.String,
+    "duration": fields.String,
+    "screeningmodel": fields.String,
+    "openday": fields.String,
+    "backgroundpicture": fields.String,
+}
 
 
 class MoviesResource(Resource):
@@ -37,10 +53,29 @@ class MoviesResource(Resource):
         backgroundpicture = args.get('backgroundpicture')
 
         movie = Movie()
-        if not movie.save():
-            abort(400, )
+        movie.showname = showname
+        movie.shownameen = shownameen
+        movie.director = director
+        movie.leadingRole = leadingRole
+        movie.type = type
+        movie.country = country
+        movie.language = language
+        movie.duraion = duration
+        movie.screeningmodel = screeningmodel
+        movie.openday = openday
 
-        return {'msg': 'post ok'}
+        filepath = UPLOADS_DIR + backgroundpicture.name
+        backgroundpicture.save()
+
+        if not movie.save():
+            abort(400, msg="can't create movie")
+
+        data = {
+            "msg": "create success",
+            "status": HTTP_CREATE_OK,
+            "data": marshal(movie, movie_fields)
+        }
+        return data
 
 
 class MovieResource(Resource):
