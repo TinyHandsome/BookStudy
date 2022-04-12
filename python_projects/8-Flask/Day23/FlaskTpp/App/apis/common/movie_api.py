@@ -99,7 +99,17 @@ class MoviesResource(Resource):
 
 class MovieResource(Resource):
     def get(self):
-        return {'msg': 'get ok'}
+        movie = Movie.query.get(id)
+        if not movie:
+            abort(404, msg="movie is not exist")
+
+        data = {
+            'msg': 'ok',
+            'status': HTTP_OK,
+            'data': marshal(movie, movie_fields)
+        }
+
+        return data
 
     @login_required
     def patch(self):
