@@ -44,11 +44,13 @@ class CinemaAddressesResource(Resource):
         cinema_address.c_user_id = g.user.id
         cinema_address.name = name
         cinema_address.phone = phone
-        cinema_address.city = name
+        cinema_address.city = city
         cinema_address.district = district
         cinema_address.address = address
 
-        if cinema_address.save():
+        cinema_address.save()
+
+        if not cinema_address.save():
             abort(400, msg="cinema can't save")
 
         data = {

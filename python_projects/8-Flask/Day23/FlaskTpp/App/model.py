@@ -12,7 +12,6 @@ class BaseModel(db.Model):
             db.session.commit()
             return True
         except Exception as e:
-            print(e)
             return False
 
     def delete(self):
