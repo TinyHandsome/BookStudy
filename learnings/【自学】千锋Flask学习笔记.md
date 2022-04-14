@@ -1079,6 +1079,15 @@
        - 下单（锁单）
        - 支付
 
+27. 模型图
+
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/0feec83009de43fb86c7a21d867d910c.png)
+
+28. 电影院模型图
+
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/5f969688f8a04bf7a2f10cfe671a8cd7.png)
+
+29. 
 
 
 
@@ -1093,7 +1102,8 @@
 
 
 
-学到 P76
+
+学到 P78
 
 
 ------
