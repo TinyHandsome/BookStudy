@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse, fields, marshal
 
 from App.apis.api_constant import HTTP_OK
+from App.apis.movie_user.utils import login_required
 from App.models.cinema_admin.cinema_address_model import CinemaAddress
 from App.models.cinema_admin.cinema_hall_model import Hall
 from App.models.cinema_admin.cinema_hall_movie_model import HallMovie
@@ -11,6 +12,7 @@ parse.add_argument("district")
 parse.add_argument("movie_id")
 
 hall_movie_fields = {
+    "id": fields.Integer,
     "h_movie_id": fields.Integer,
     "h_hall_id": fields.Integer,
     "h_time": fields.DateTime
@@ -47,3 +49,25 @@ class UserMovieHallsResource(Resource):
         }
 
         return marshal(data, multi_hall_movie_fields)
+
+
+hall_fields = {
+    "h_address_id": fields.Integer,
+    "h_num": fields.Integer,
+    "h_seats": fields.String
+}
+
+
+class UserMovieHallResource(Resource):
+    @login_required
+    def get(self, id):
+        hall_movie = HallMovie.query.get(id)
+        hall = Hall.query.get(hall_movie.h_hall_id)
+
+        data = {
+            "msg": "ok",
+            "status": HTTP_OK,
+            "data": marshal(hall, hall_fields)
+        }
+
+        return data
