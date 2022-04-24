@@ -6,6 +6,7 @@ from sqlalchemy import or_
 
 from App.apis.api_constant import HTTP_CREATE_OK
 from App.apis.movie_user.utils import login_required, require_permission
+from App.ext import db
 from App.models.cinema_admin.cinema_hall_model import Hall
 from App.models.cinema_admin.cinema_hall_movie_model import HallMovie
 from App.models.movie_user import VIP_USER, COMMON_USER
@@ -69,6 +70,30 @@ class MovieOrdersResource(Resource):
         movie_order.o_seats = o_seats
         movie_order.o_user_id = user.id
         movie_order.o_time = datetime.datetime.now() + datetime.timedelta(minutes=15)
+
+        # 悲观加锁
+        # db.session.with_lockmode("update")
+        # 针对此次操作加锁
+        # db.session.Query(MovieOrder).with_lockmode("update")
+        # db.session.commit()
+
+        # 事务
+        # 保证代码完整执行
+        # 事务开启、提交、回滚
+
+        # db.session.rollback()
+
+        # try:
+        #     movie_order = MovieOrder.query.get(1)
+        #     movie_order2 = MovieOrder.query.get(2)
+        #
+        #     db.session.delete(movie_order)
+        #     db.session.delete(movie_order2)
+        # except Exception as e:
+        #     print(e)
+        #     db.session.rollback()
+        # else:
+        #     db.session.commit()
 
         if not movie_order.save():
             abort(400, msg="下单失败")

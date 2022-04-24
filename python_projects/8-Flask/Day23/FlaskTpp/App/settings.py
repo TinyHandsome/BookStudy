@@ -4,6 +4,13 @@ from App.email.base64_encode_decode import base64_decode_json2dict
 from App.password import password
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ALIPAY_APPID = "2021000118642346"
+RAS_START = '-----BEGIN RSA PRIVATE KEY-----\n\r'
+RAS_END = '\n\r-----END RSA PRIVATE KEY-----'
+APP_PRIVATE_KEY = RAS_START + open(os.path.join(BASE_DIR, 'alipay_config/app_rsa2_private_key.txt'),
+                                   'r').read() + RAS_END
+ALIPAY_PUBLIC_KEY = RAS_START + open(os.path.join(BASE_DIR, 'alipay_config/alipay_rsa2_public_key.txt'),
+                                     'r').read() + RAS_END
 
 
 def get_db_uri(dbinfo):
@@ -103,7 +110,6 @@ envs = {
     'product': ProductConfig,
     'default': DevelopConfig
 }
-
 
 ADMINS = (
     'Rock',
