@@ -1,0 +1,204 @@
+*** Starting uWSGI 2.0.20 (64bit) on [Tue Apr 26 15:25:26 2022] ***
+compiled with version: 7.5.0 on 08 November 2021 01:09:24
+os: Linux-4.4.0-17763-Microsoft #1432-Microsoft Mon Aug 18 18:18:00 PST 2020
+nodename: L511900749908
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+writing pidfile to uwsgi.pid
+detected binary path: /home/litian/.pyenv/versions/3.5.4/bin/uwsgi
+chdir() to /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+your processes number limit is 7823
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uwsgi socket 0 bound to TCP address 0.0.0.0:8888 fd 3
+Python version: 3.5.4 (default, Nov  5 2021, 10:25:44)  [GCC 7.5.0]
+Python main interpreter initialized at 0x7fffb7ba03d0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 835120 bytes (815 KB) for 40 cores
+*** Operational MODE: preforking+threaded ***
+/home/litian/.pyenv/versions/3.5.4/lib/python3.5/site-packages/OpenSSL/crypto.py:12: CryptographyDeprecationWarning: Python 3.5 support will be dropped in the next release of cryptography. Please upgrade your Python.
+  from cryptography import x509
+unable to find "application" callable in file manage.py
+unable to load app 0 (mountpoint='') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 4874)
+spawned uWSGI worker 1 (pid: 4896, cores: 10)
+spawned uWSGI worker 2 (pid: 4906, cores: 10)
+spawned uWSGI worker 3 (pid: 4916, cores: 10)
+spawned uWSGI worker 4 (pid: 4926, cores: 10)
+--- no python application found, check your startup logs for errors ---
+[pid: 4896|app: -1|req: -1/1] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:38:18 2022] POST /user/movieusers/?action=login => generated 21 bytes in 1 msecs (HTTP/1.1 500) 2 headers in 83 bytes (0 switches on core 0)
+--- no python application found, check your startup logs for errors ---
+[pid: 4896|app: -1|req: -1/2] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:38:30 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 1)
+*** Starting uWSGI 2.0.20 (64bit) on [Tue Apr 26 15:39:35 2022] ***
+compiled with version: 7.5.0 on 08 November 2021 01:09:24
+os: Linux-4.4.0-17763-Microsoft #1432-Microsoft Mon Aug 18 18:18:00 PST 2020
+nodename: L511900749908
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+writing pidfile to uwsgi.pid
+detected binary path: /home/litian/.pyenv/versions/3.5.4/bin/uwsgi
+chdir() to /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+your processes number limit is 7823
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uwsgi socket 0 bound to TCP address 0.0.0.0:8888 fd 3
+Python version: 3.5.4 (default, Nov  5 2021, 10:25:44)  [GCC 7.5.0]
+Python main interpreter initialized at 0x7fffda3103d0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 835120 bytes (815 KB) for 40 cores
+*** Operational MODE: preforking+threaded ***
+/home/litian/.pyenv/versions/3.5.4/lib/python3.5/site-packages/OpenSSL/crypto.py:12: CryptographyDeprecationWarning: Python 3.5 support will be dropped in the next release of cryptography. Please upgrade your Python.
+  from cryptography import x509
+unable to find "application" callable in file manage.py
+unable to load app 0 (mountpoint='') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 5525)
+spawned uWSGI worker 1 (pid: 5547, cores: 10)
+spawned uWSGI worker 2 (pid: 5557, cores: 10)
+spawned uWSGI worker 3 (pid: 5567, cores: 10)
+spawned uWSGI worker 4 (pid: 5577, cores: 10)
+--- no python application found, check your startup logs for errors ---
+[pid: 4906|app: -1|req: -1/3] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:40:00 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 0)
+*** Starting uWSGI 2.0.20 (64bit) on [Tue Apr 26 15:40:32 2022] ***
+compiled with version: 7.5.0 on 08 November 2021 01:09:24
+os: Linux-4.4.0-17763-Microsoft #1432-Microsoft Mon Aug 18 18:18:00 PST 2020
+nodename: L511900749908
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+writing pidfile to uwsgi.pid
+detected binary path: /home/litian/.pyenv/versions/3.5.4/bin/uwsgi
+chdir() to /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+your processes number limit is 7823
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uwsgi socket 0 bound to TCP address 0.0.0.0:8888 fd 3
+Python version: 3.5.4 (default, Nov  5 2021, 10:25:44)  [GCC 7.5.0]
+Python main interpreter initialized at 0x7ffff8af73d0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 835120 bytes (815 KB) for 40 cores
+*** Operational MODE: preforking+threaded ***
+/home/litian/.pyenv/versions/3.5.4/lib/python3.5/site-packages/OpenSSL/crypto.py:12: CryptographyDeprecationWarning: Python 3.5 support will be dropped in the next release of cryptography. Please upgrade your Python.
+  from cryptography import x509
+unable to find "application" callable in file manage.py
+unable to load app 0 (mountpoint='') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 5597)
+spawned uWSGI worker 1 (pid: 5619, cores: 10)
+spawned uWSGI worker 2 (pid: 5629, cores: 10)
+spawned uWSGI worker 3 (pid: 5639, cores: 10)
+spawned uWSGI worker 4 (pid: 5649, cores: 10)
+--- no python application found, check your startup logs for errors ---
+[pid: 4896|app: -1|req: -1/4] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:40:35 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 2)
+SIGINT/SIGTERM received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+SIGINT/SIGTERM received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+SIGINT/SIGTERM received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+*** Starting uWSGI 2.0.20 (64bit) on [Tue Apr 26 15:42:39 2022] ***
+compiled with version: 7.5.0 on 08 November 2021 01:09:24
+os: Linux-4.4.0-17763-Microsoft #1432-Microsoft Mon Aug 18 18:18:00 PST 2020
+nodename: L511900749908
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 8
+current working directory: /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+writing pidfile to uwsgi.pid
+detected binary path: /home/litian/.pyenv/versions/3.5.4/bin/uwsgi
+chdir() to /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+your processes number limit is 7823
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+TCP_DEFER_ACCEPT setsockopt(): Protocol not available [core/socket.c line 744]
+uwsgi socket 0 bound to TCP address 0.0.0.0:8888 fd 3
+Python version: 3.5.4 (default, Nov  5 2021, 10:25:44)  [GCC 7.5.0]
+Python main interpreter initialized at 0x7fffe5adc3d0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 835120 bytes (815 KB) for 40 cores
+*** Operational MODE: preforking+threaded ***
+/home/litian/.pyenv/versions/3.5.4/lib/python3.5/site-packages/OpenSSL/crypto.py:12: CryptographyDeprecationWarning: Python 3.5 support will be dropped in the next release of cryptography. Please upgrade your Python.
+  from cryptography import x509
+unable to find "application" callable in file manage.py
+unable to load app 0 (mountpoint='') (callable not found or import error)
+*** no app loaded. going in full dynamic mode ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 5881)
+spawned uWSGI worker 1 (pid: 5903, cores: 10)
+spawned uWSGI worker 2 (pid: 5913, cores: 10)
+spawned uWSGI worker 3 (pid: 5923, cores: 10)
+spawned uWSGI worker 4 (pid: 5933, cores: 10)
+--- no python application found, check your startup logs for errors ---
+[pid: 5913|app: -1|req: -1/1] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:42:44 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 0)
+--- no python application found, check your startup logs for errors ---
+[pid: 5923|app: -1|req: -1/2] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:43:27 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 0)
+--- no python application found, check your startup logs for errors ---
+[pid: 5913|app: -1|req: -1/3] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:43:28 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 1)
+--- no python application found, check your startup logs for errors ---
+[pid: 5903|app: -1|req: -1/4] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:43:29 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 0)
+--- no python application found, check your startup logs for errors ---
+[pid: 5923|app: -1|req: -1/5] 127.0.0.1 () {42 vars in 751 bytes} [Tue Apr 26 15:43:29 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 2)
+--- no python application found, check your startup logs for errors ---
+[pid: 5903|app: -1|req: -1/6] 10.16.30.12 () {42 vars in 755 bytes} [Tue Apr 26 15:44:18 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 4)
+--- no python application found, check your startup logs for errors ---
+[pid: 5903|app: -1|req: -1/7] 10.16.30.12 () {42 vars in 755 bytes} [Tue Apr 26 15:44:18 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 6)
+--- no python application found, check your startup logs for errors ---
+[pid: 5903|app: -1|req: -1/8] 10.16.30.12 () {42 vars in 755 bytes} [Tue Apr 26 15:44:20 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (0 switches on core 1)
+--- no python application found, check your startup logs for errors ---
+[pid: 5913|app: -1|req: -1/9] 127.0.0.1 () {42 vars in 749 bytes} [Tue Apr 26 15:45:18 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 3)
+--- no python application found, check your startup logs for errors ---
+[pid: 5903|app: -1|req: -1/10] 127.0.0.1 () {42 vars in 749 bytes} [Tue Apr 26 15:45:19 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (0 switches on core 7)
+--- no python application found, check your startup logs for errors ---
+[pid: 5923|app: -1|req: -1/11] 127.0.0.1 () {42 vars in 749 bytes} [Tue Apr 26 15:45:21 2022] POST /user/movieusers/?action=login => generated 21 bytes in 0 msecs (HTTP/1.1 500) 2 headers in 83 bytes (1 switches on core 3)
+--- no python application found, check your startup logs for errors ---
+[pid: 5923|app: -1|req: -1/12] 127.0.0.1 () {42 vars in 749 bytes} [Tue Apr 26 15:45:22 2022] POST /user/movieusers/?action=login => generated 21 bytes in 1 msecs (HTTP/1.1 500) 2 headers in 83 bytes (0 switches on core 8)
+SIGINT/SIGTERM received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.

@@ -1228,6 +1228,123 @@
 
        - 只要有一个存在，即存在
 
+## 13. nginx
+
+1. nginx
+
+   1. 测试：`sudo nginx -t -c /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp/config_ubuntu.conf`
+
+   2. 运行：`sudo nginx -c /mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp/config_ubuntu.conf`
+
+   3. 查看：`ps -ef|grep nginx`
+
+   4. 文件：
+
+      ```conf
+      #user  nobody;
+      worker_processes  1;
+      
+      #error_log  logs/error.log;
+      #error_log  logs/error.log  notice;
+      #error_log  logs/error.log  info;
+      
+      #pid        logs/nginx.pid;
+      
+      
+      events {
+          worker_connections  1024;
+      }
+      
+      
+      http {
+          include       /etc/nginx/mime.types;
+          default_type  application/octet-stream;
+      
+          sendfile        on;
+          #tcp_nopush     on;
+      
+          #keepalive_timeout  0;
+          keepalive_timeout  65;
+      
+          #gzip  on;
+      
+          # 负载均衡
+          # upstream my_server{
+          #     server 10.0.122.64:8000 weight=1;
+          #     server 10.0.122.64:8000 weight=1;
+          # }
+      
+          server {
+              listen       80;
+              server_name  10.16.30.12;
+              #root  /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF;
+      
+              #charset koi8-r;
+      
+              #access_log  logs/host.access.log  main;
+      
+              #location /static {
+              #    alias /mnt/e/1-Work/3-Code/python_projects/6-AXFProject/GPAXF/static;
+                  # root   html;
+                  # index  index.html index.htm;
+              #}
+      
+              
+              location / {
+      			# uwsgi
+                  include /etc/nginx/uwsgi_params;
+                  uwsgi_pass 0.0.0.0:8888;
+      			
+      			# runserver
+      			# proxy_pass http://127.0.0.1:5000;
+      			# 负载均衡配置
+                  # proxy_pass http://my_server;
+              }
+      
+              error_page   500 502 503 504  /50x.html;
+              location = /50x.html {
+                  root   html;
+              }
+          }
+      }
+      ```
+
+2. uwsgi
+
+   1. 初始化：`uwsgi --ini uwsgi.ini`
+
+   2. 停止：`uwsgi --stop uwsgi.pid`
+
+   3. 重启：`uwsgi –reload uwsgi.pid`
+
+   4. 文件
+
+      ```ini
+      [uwsgi]
+      # 使用nginx连接时，使用
+      socket=0.0.0.0:8888
+      # 直接作为web服务器使用
+      # http=0.0.0.0:8888
+      
+      # 配置工程目录
+      chdir=/mnt/e/1-Work/3-Code/python_projects/8-Flask/Day23/FlaskTpp
+      
+      # 配置项目的wsgi目录，相对工程路径
+      wsgi-file=manage.py
+      #router
+      callable=app
+      
+      # 配置进程，线程信息
+      processes=4
+      threads=10
+      enable-threads=True
+      master=True
+      # 进程id存储文件
+      pidfile=uwsgi.pid
+      daemonize=uwsgi.log
+      ```
+
+      
 
 
 
@@ -1242,7 +1359,8 @@
 
 
 
-学到 P88 1144
+
+学到 P89
 
 
 ------
