@@ -1,0 +1,12 @@
+CRITICAL - 2022-05-02 14:49:36,592 - Critical? Oh Critical.
+ERROR - 2022-05-02 14:49:36,592 - Error? Oh Error.
+WARNING - 2022-05-02 14:49:36,593 - Warning? Oh Warning.
+INFO - 2022-05-02 14:49:36,593 - Info? Oh Info.
+CRITICAL - 2022-05-02 14:52:04,535 - MainThread - Critical? Oh Critical.
+ERROR - 2022-05-02 14:52:04,535 - MainThread - Error? Oh Error.
+WARNING - 2022-05-02 14:52:04,535 - MainThread - Warning? Oh Warning.
+INFO - 2022-05-02 14:52:04,535 - MainThread - Info? Oh Info.
+CRITICAL - 2022-05-02 15:36:00,258 - MainThread - Critical? Oh Critical.
+ERROR - 2022-05-02 15:36:00,258 - MainThread - Error? Oh Error.
+WARNING - 2022-05-02 15:36:00,258 - MainThread - Warning? Oh Warning.
+INFO - 2022-05-02 15:36:00,258 - MainThread - Info? Oh Info.

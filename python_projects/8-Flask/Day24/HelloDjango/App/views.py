@@ -1,3 +1,6 @@
+import logging
+
+from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -28,3 +31,16 @@ def welcome_transaction(request):
         transaction.savepoint_commit(save_point)
 
     return HttpResponse('Welcome')
+
+
+def hello_sql(request):
+    # defer  不要哪些字段
+    # only  要哪些字段
+    result = User.objects.raw('select  * from user')
+    return HttpResponse("sql")
+
+
+def hello_log(request):
+    logger = logging.getLogger('django')
+    logger.error("哈哈 error了")
+    return HttpResponse('hello log')
