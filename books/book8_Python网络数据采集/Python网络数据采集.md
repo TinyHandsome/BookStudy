@@ -10,6 +10,8 @@
 
 - 读后感
 
+  1. 读到3.4scrapy的我跑来描述一下我的感想：再次确定了国外的书真的很不适合中国人，因为某些懂的都懂的原因，书中涉及到的很多链接都无法访问，对于一本爬虫的书来说，简直就是硬伤；其次，这本书并没有指定例子使用的Python的版本，各个库的版本，这对一门非常注中实践的学科来说，简直就是可以直接判定这本书的死开刂，我在 scrapy 中找 SgmlLinkExtractor 的时候真的人麻了，麻的透透的。
+
 - 传送门
 
 ## 1. 初见网络爬虫
@@ -392,6 +394,46 @@
 
 4. 用Scrapy采集
 
+   - 日志一共有5种等级
+
+     - CRITICAL
+     - ERROR
+     - WARNING
+     - DEBUG
+     - INFO
+
+   - 在setting中设置日志等级
+
+     ```
+     LOG_LEVEL = 'ERROR'
+     ```
+
+   - 通过下面命令输出到一个独立的文件中
+
+     `scrapy crawl article -s LOG_FILE=wiki.log`
+   
+   - Scrapy 用 Item 对象决定要从它浏览的页面中提取哪些信息。Scrapy 支持用不同的输出格式来保存这些信息，比如 CSV、JSON 或 XML 文件格式：
+   
+     ```
+     $ scrapy crawl article -o articles.csv -t csv
+     $ scrapy crawl article -o articles.json -t json
+     $ scrapy crawl article -o articles.xml -t xml
+     ```
+
+## 4. 使用API
+
+1. 利用 HTTP 从网络服务获取信息有四种方式：
+   - GET
+   - POST
+   - PUT
+   - DELETE
+2. 集合查找速度更快（确定一个对象是否在集合中）：因为 Python 集合就是值为 None 的词典，用的是哈希表结构，查询速度为O(1)。
+
+## 5. 存储数据
+
+1. 存储媒体文件有两种主要的方式：
+   - 只获取文件 URL 链接
+   - 把源文件下载下来
 
 
 
@@ -410,11 +452,8 @@
 
 
 
-学到 P38
 
-
-
-
+学到 P64
 
 
 
