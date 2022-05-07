@@ -70,7 +70,31 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/1c21856c85c146fb86109fbb5c17d021.png)
 
-5. 
+5. 规则：
+
+   1. 文件名全部使用小写字母，用短横线分隔单词，用 .html 作为扩展名；混合使用大小写字母会增加访问者输入正确地址以及找到页面的难度
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/4f55c72fdb19419c9ebce6902e02335b.png)
+
+   2. 文件名采用小写字母
+
+   3. 使用正确的扩展名
+
+   4. 用短横线分隔单词
+
+6. URL：Uniform Resource Locator，统一资源定位符
+
+   1. URL 的第一个部分称为模式（scheme）
+
+      - 模式告诉浏览器如何处理需要打开的文件
+
+      - 最 常 见 的 模 式 是 HTTP（Hypertext Transfer Protocol，超文本传输协议）
+
+        ![在这里插入图片描述](https://img-blog.csdnimg.cn/0b6619d09f544b8e91047ff6f807bfed.png)
+
+   2. 对于 FTP 站点以及几乎所有不使用 HTTP 协议的 URL，都应该使用绝对 URL
+
+7. ftp：File Transfer Protocol，文件传输协议
 
 
 
@@ -92,7 +116,7 @@
 
 
 
-学到 
+学到  11
 
 
 ------
