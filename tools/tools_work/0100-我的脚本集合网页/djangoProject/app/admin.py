@@ -12,5 +12,5 @@ class UrlManageAdmin(admin.ModelAdmin):
     list_display = ('func_name', 'func_url', 'func_url_name', 'func_type', 'update_time', 'create_time')
 
 
-admin.site.register(UrlManage, UrlManageAdmin)
-admin.site.register([User, FuncType, MyRole])
+admin.site.register(Url, UrlManageAdmin)
+admin.site.register([IP, FuncType, Role])

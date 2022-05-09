@@ -5,15 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4f7a02a-f6be-4019-b93b-11033235656a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/views/func8_idcard_code_country_view.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/funcs/func8_idcard_code_country/spider_code.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/func8.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/func8_idcard_code_country/func8.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sqlite_backup/backup_20220509.sqlite3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supports/password_management.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ee17ea39-4d8d-42b8-9356-27b5b2fc4d47.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ee17ea39-4d8d-42b8-9356-27b5b2fc4d47.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/func7_get_columns.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/func7_get_columns_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/middlewares.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/middlewares.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/mymodels/func2/hana2hive.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/mymodels/func2/hana2hive.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/index_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/index_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/base.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/supports/topc_title_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/supports/topc_title_search.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,8 +32,8 @@
       <list>
         <option value="JavaScript File" />
         <option value="HTML File" />
-        <option value="Python Script" />
         <option value="CSS File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -61,9 +65,10 @@
     <property name="DatabaseDriversLRU" value="sqlite" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/static/img/temp/2022/02/07/temp.png&#10;E:/1-Work/3-Code/tools/tools_work/0100-我的脚本集合网页/djangoProject/funcs/func5/temp.png" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -79,11 +84,11 @@
       <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\app\mymodels\func2" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject" />
+      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\sqlite_backup" />
       <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\templates" />
       <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\app\views" />
       <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\funcs\func8_idcard_code_country" />
-      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\static\css" />
-      <recent name="E:\1-Work\3-Code\tools\tools_work\0100-我的脚本集合网页\djangoProject\funcs\xue_epidemic_prevention_info_get" />
     </key>
   </component>
   <component name="RunManager" selected="Django Server.djangoProject">
@@ -170,7 +175,7 @@
       <workItem from="1646119363870" duration="10000" />
       <workItem from="1649638373554" duration="8323000" />
       <workItem from="1651732347444" duration="188000" />
-      <workItem from="1652063714142" duration="7337000" />
+      <workItem from="1652063714142" duration="13251000" />
     </task>
     <servers />
   </component>
@@ -190,81 +195,101 @@
       <screen x="62" y="0" width="1858" height="1080" />
     </state>
     <state x="643" y="327" key="#com.intellij.codeInsight.template.impl.EditVariableDialog/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645410612024" />
-    <state x="396" y="181" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1649638408148">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="396" y="1261" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1652083370798">
+      <screen x="0" y="1080" width="1920" height="1040" />
     </state>
     <state x="396" y="181" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1649638408148" />
+    <state x="396" y="1261" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652083370798" />
     <state x="445" y="188" key="#com.intellij.execution.impl.EditConfigurationsDialog/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425691736" />
     <state x="659" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1645424004097">
       <screen x="62" y="0" width="1858" height="1080" />
     </state>
     <state x="659" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645424004097" />
-    <state x="580" y="233" key="FileChooserDialogImpl" timestamp="1645425690888">
-      <screen x="62" y="0" width="1858" height="1080" />
-    </state>
-    <state x="580" y="233" key="FileChooserDialogImpl/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425690888" />
-    <state width="1865" height="87" key="GridCell.Tab.0.bottom" timestamp="1652075235252">
+    <state x="535" y="1304" key="FileChooserDialogImpl" timestamp="1652083370075">
       <screen x="0" y="1080" width="1920" height="1040" />
+    </state>
+    <state x="535" y="1304" key="FileChooserDialogImpl/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652083370075" />
+    <state x="580" y="233" key="FileChooserDialogImpl/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425690888" />
+    <state width="1865" height="501" key="GridCell.Tab.0.bottom" timestamp="1652078679369">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1803" height="282" key="GridCell.Tab.0.bottom/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644226546386" />
     <state width="1865" height="221" key="GridCell.Tab.0.bottom/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1649654962168" />
     <state width="1921" height="277" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1651732534734" />
+    <state width="1865" height="501" key="GridCell.Tab.0.bottom/0.1080.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1652078679369" />
     <state width="1865" height="87" key="GridCell.Tab.0.bottom/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652075235252" />
     <state width="1865" height="212" key="GridCell.Tab.0.bottom/62.0.1858.1080/0.-1080.1920.1080@0.-1080.1920.1080" timestamp="1645517148434" />
     <state width="1803" height="211" key="GridCell.Tab.0.bottom/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645593818236" />
     <state width="1803" height="727" key="GridCell.Tab.0.bottom/62.0.1858.1080@62.0.1858.1080" timestamp="1646054981338" />
     <state width="1865" height="194" key="GridCell.Tab.0.bottom/62.1080.1858.1080/62.0.1858.1080@62.1080.1858.1080" timestamp="1644312378823" />
-    <state width="1865" height="87" key="GridCell.Tab.0.center" timestamp="1652075235252">
-      <screen x="0" y="1080" width="1920" height="1040" />
+    <state width="1865" height="501" key="GridCell.Tab.0.center" timestamp="1652078679369">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1803" height="282" key="GridCell.Tab.0.center/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644226546386" />
     <state width="1865" height="221" key="GridCell.Tab.0.center/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1649654962168" />
     <state width="1921" height="277" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1651732534734" />
+    <state width="1865" height="501" key="GridCell.Tab.0.center/0.1080.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1652078679369" />
     <state width="1865" height="87" key="GridCell.Tab.0.center/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652075235252" />
     <state width="1865" height="212" key="GridCell.Tab.0.center/62.0.1858.1080/0.-1080.1920.1080@0.-1080.1920.1080" timestamp="1645517148434" />
     <state width="1803" height="211" key="GridCell.Tab.0.center/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645593818235" />
     <state width="1803" height="727" key="GridCell.Tab.0.center/62.0.1858.1080@62.0.1858.1080" timestamp="1646054981338" />
     <state width="1865" height="194" key="GridCell.Tab.0.center/62.1080.1858.1080/62.0.1858.1080@62.1080.1858.1080" timestamp="1644312378823" />
-    <state width="1865" height="87" key="GridCell.Tab.0.left" timestamp="1652075235252">
-      <screen x="0" y="1080" width="1920" height="1040" />
+    <state width="1865" height="501" key="GridCell.Tab.0.left" timestamp="1652078679369">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1803" height="282" key="GridCell.Tab.0.left/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644226546386" />
     <state width="1865" height="221" key="GridCell.Tab.0.left/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1649654962168" />
     <state width="1921" height="277" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1651732534733" />
+    <state width="1865" height="501" key="GridCell.Tab.0.left/0.1080.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1652078679369" />
     <state width="1865" height="87" key="GridCell.Tab.0.left/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652075235252" />
     <state width="1865" height="212" key="GridCell.Tab.0.left/62.0.1858.1080/0.-1080.1920.1080@0.-1080.1920.1080" timestamp="1645517148434" />
     <state width="1803" height="211" key="GridCell.Tab.0.left/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645593818235" />
     <state width="1803" height="727" key="GridCell.Tab.0.left/62.0.1858.1080@62.0.1858.1080" timestamp="1646054981338" />
     <state width="1865" height="194" key="GridCell.Tab.0.left/62.1080.1858.1080/62.0.1858.1080@62.1080.1858.1080" timestamp="1644312378823" />
-    <state width="1865" height="87" key="GridCell.Tab.0.right" timestamp="1652075235252">
-      <screen x="0" y="1080" width="1920" height="1040" />
+    <state width="1865" height="501" key="GridCell.Tab.0.right" timestamp="1652078679369">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1803" height="282" key="GridCell.Tab.0.right/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644226546386" />
     <state width="1865" height="221" key="GridCell.Tab.0.right/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1649654962168" />
     <state width="1921" height="277" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1651732534734" />
+    <state width="1865" height="501" key="GridCell.Tab.0.right/0.1080.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1652078679369" />
     <state width="1865" height="87" key="GridCell.Tab.0.right/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652075235252" />
     <state width="1865" height="212" key="GridCell.Tab.0.right/62.0.1858.1080/0.-1080.1920.1080@0.-1080.1920.1080" timestamp="1645517148434" />
     <state width="1803" height="211" key="GridCell.Tab.0.right/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645593818235" />
     <state width="1803" height="727" key="GridCell.Tab.0.right/62.0.1858.1080@62.0.1858.1080" timestamp="1646054981338" />
     <state width="1865" height="194" key="GridCell.Tab.0.right/62.1080.1858.1080/62.0.1858.1080@62.1080.1858.1080" timestamp="1644312378823" />
+    <state width="264" height="550" key="HiddenNamespacesPopup" timestamp="1652082645128">
+      <screen x="0" y="1080" width="1920" height="1040" />
+    </state>
+    <state width="264" height="550" key="HiddenNamespacesPopup/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652082645128" />
     <state x="328" y="96" key="SettingsEditor" timestamp="1649643159115">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="379" y="100" key="SettingsEditor/-1858.0.1858.1080/62.0.1858.1080@62.0.1858.1080" timestamp="1644213267108" />
     <state x="328" y="96" key="SettingsEditor/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1649643159115" />
     <state x="379" y="100" key="SettingsEditor/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645427609754" />
-    <state x="794" y="402" width="393" height="289" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1645425129853">
-      <screen x="62" y="0" width="1858" height="1080" />
+    <state x="756" y="1467" width="407" height="289" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1652082823712">
+      <screen x="0" y="1080" width="1920" height="1040" />
     </state>
+    <state x="756" y="1467" width="407" height="289" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652082823712" />
     <state x="794" y="402" width="393" height="289" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425129853" />
     <state x="472" y="113" key="com.intellij.database.dbimport.ImportDialog" timestamp="1645425525005">
       <screen x="62" y="0" width="1858" height="1080" />
     </state>
     <state x="472" y="113" key="com.intellij.database.dbimport.ImportDialog/62.0.1858.1080/0.-1080.1920.1080@62.0.1858.1080" timestamp="1645425525005" />
-    <state x="96" y="96" width="1728" height="848" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1649643038117">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="708" y="1402" width="504" height="415" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog" timestamp="1652082567302">
+      <screen x="0" y="1080" width="1920" height="1040" />
+    </state>
+    <state x="708" y="1402" width="504" height="415" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652082567302" />
+    <state x="96" y="1176" width="1728" height="888" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1652083071779">
+      <screen x="0" y="1080" width="1920" height="1040" />
+    </state>
+    <state x="96" y="1176" width="1728" height="888" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652083071779" />
+    <state x="96" y="1176" width="1728" height="848" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1652083138721">
+      <screen x="0" y="1080" width="1920" height="1040" />
     </state>
     <state x="96" y="96" width="1728" height="848" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1649643038117" />
+    <state x="96" y="1176" width="1728" height="848" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.1080.1920.1040/0.0.1920.1040@0.1080.1920.1040" timestamp="1652083138721" />
     <state x="258" y="238" width="1525" height="824" key="dock-window-1" timestamp="1644972391666">
       <screen x="62" y="0" width="1858" height="1080" />
     </state>

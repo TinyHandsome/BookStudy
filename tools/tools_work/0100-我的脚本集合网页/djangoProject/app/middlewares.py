@@ -12,7 +12,7 @@
 """
 from django.utils.deprecation import MiddlewareMixin
 
-from app.models import User
+from app.models import IP
 from djangoProject.settings import MY_HOST
 
 
@@ -24,14 +24,14 @@ class RememberIP(MiddlewareMixin):
         else:
             ip = request.META['REMOTE_ADDR']
 
-        if not User.objects.filter(ip=ip).exists():
+        if not IP.objects.filter(ip=ip).exists():
             print('新用户访问，IP：', ip)
-            user = User()
+            user = IP()
             user.ip = ip
             user.count = 1
             user.save()
         else:
-            user = User.objects.get(ip=ip)
+            user = IP.objects.get(ip=ip)
             user.count = user.count + 1
             user.save()
             if ip != MY_HOST:

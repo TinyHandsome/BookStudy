@@ -10,11 +10,11 @@
 @time: 2022/2/21 15:29
 @desc: title查询工具
 """
-from app.models import UrlManage
+from app.models import Url
 
 
 def search_title(request):
     path_info = request.path_info
     search_path_info = path_info.lstrip('/')
-    aim_url = UrlManage.objects.filter(func_url=search_path_info)
+    aim_url = Url.objects.filter(func_url=search_path_info)
     return aim_url[0].func_name

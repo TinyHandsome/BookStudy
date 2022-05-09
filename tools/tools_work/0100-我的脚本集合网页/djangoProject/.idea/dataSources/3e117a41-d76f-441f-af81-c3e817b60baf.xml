@@ -11,10 +11,10 @@
     <collation id="4" parent="1" name="NOCASE"/>
     <collation id="5" parent="1" name="RTRIM"/>
     <table id="6" parent="2" name="DMPTbls"/>
-    <table id="7" parent="2" name="MyFunc"/>
-    <table id="8" parent="2" name="MyRole"/>
-    <table id="9" parent="2" name="MyUrl"/>
-    <table id="10" parent="2" name="MyUser"/>
+    <table id="7" parent="2" name="Function"/>
+    <table id="8" parent="2" name="Role"/>
+    <table id="9" parent="2" name="Url"/>
+    <table id="10" parent="2" name="User"/>
     <table id="11" parent="2" name="auth_group"/>
     <table id="12" parent="2" name="auth_group_permissions"/>
     <table id="13" parent="2" name="auth_permission"/>
@@ -96,13 +96,13 @@
       <DataType>varchar(32)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="36" parent="8" name="sqlite_autoindex_MyRole_1">
+    <index id="36" parent="8" name="sqlite_autoindex_Role_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>name</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="37" parent="8" name="sqlite_autoindex_MyRole_2">
+    <index id="37" parent="8" name="sqlite_autoindex_Role_2">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>alias</ColNames>
       <ColumnCollations></ColumnCollations>
@@ -114,11 +114,11 @@
     </key>
     <key id="39" parent="8">
       <ColNames>name</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_MyRole_1</UnderlyingIndexName>
+      <UnderlyingIndexName>sqlite_autoindex_Role_1</UnderlyingIndexName>
     </key>
     <key id="40" parent="8">
       <ColNames>alias</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_MyRole_2</UnderlyingIndexName>
+      <UnderlyingIndexName>sqlite_autoindex_Role_2</UnderlyingIndexName>
     </key>
     <column id="41" parent="9" name="id">
       <Position>1</Position>
@@ -171,13 +171,13 @@
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="51" parent="9" name="sqlite_autoindex_MyUrl_1">
+    <index id="51" parent="9" name="sqlite_autoindex_Url_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>func_name</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="52" parent="9" name="sqlite_autoindex_MyUrl_2">
+    <index id="52" parent="9" name="sqlite_autoindex_Url_2">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>func_url</ColNames>
       <ColumnCollations></ColumnCollations>
@@ -197,22 +197,22 @@
     </key>
     <key id="56" parent="9">
       <ColNames>func_name</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_MyUrl_1</UnderlyingIndexName>
+      <UnderlyingIndexName>sqlite_autoindex_Url_1</UnderlyingIndexName>
     </key>
     <key id="57" parent="9">
       <ColNames>func_url</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_MyUrl_2</UnderlyingIndexName>
+      <UnderlyingIndexName>sqlite_autoindex_Url_2</UnderlyingIndexName>
     </key>
     <foreign-key id="58" parent="9">
       <ColNames>auth_role_id</ColNames>
-      <RefTableName>MyRole</RefTableName>
+      <RefTableName>Role</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
     <foreign-key id="59" parent="9">
       <ColNames>func_type_id</ColNames>
-      <RefTableName>MyFunc</RefTableName>
+      <RefTableName>Function</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
@@ -247,7 +247,7 @@
       <Position>6</Position>
       <DataType>bigint|0s</DataType>
     </column>
-    <index id="66" parent="10" name="sqlite_autoindex_MyUser_1">
+    <index id="66" parent="10" name="sqlite_autoindex_User_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>ip</ColNames>
       <ColumnCollations></ColumnCollations>
@@ -263,11 +263,11 @@
     </key>
     <key id="69" parent="10">
       <ColNames>ip</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_MyUser_1</UnderlyingIndexName>
+      <UnderlyingIndexName>sqlite_autoindex_User_1</UnderlyingIndexName>
     </key>
     <foreign-key id="70" parent="10">
       <ColNames>rule_id</ColNames>
-      <RefTableName>MyRole</RefTableName>
+      <RefTableName>Role</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>

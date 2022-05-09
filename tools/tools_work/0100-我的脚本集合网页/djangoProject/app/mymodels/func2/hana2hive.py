@@ -20,5 +20,5 @@ class DMPTbls(models.Model):
     table_des = models.CharField(max_length=255, verbose_name='表描述', blank=True, null=True)
 
     class Meta:
-        db_table = 'DMPTbls'
+        db_table = 'my_table_DMPTbls'
 
