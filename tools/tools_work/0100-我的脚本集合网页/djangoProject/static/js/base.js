@@ -1,3 +1,4 @@
+// 消息弹出设置
 const commonUtil = {
     /**
      * 弹出消息框 参考链接：https://www.cnblogs.com/liuweixi/p/13566000.html

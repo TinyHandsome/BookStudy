@@ -6,7 +6,7 @@
 @author: Liyingjun
 @contact: 694317828@qq.com
 @software: pycharm
-@file: func7_get_columns.py
+@file: func7_get_columns_view.py
 @time: 2022/4/11 9:11
 @desc: 获取列表
 """

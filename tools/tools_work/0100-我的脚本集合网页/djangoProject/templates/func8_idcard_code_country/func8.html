@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block ext_js %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/func8.css' %}">
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <form class="form-inline" action="{% url '1:func8' %}" method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">输入身份证前6位：</div>
+                <input class="form-control" type="text" id="idcard6" name="idcard6" value="{{ idcard6 }}">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">查询</button>
+                </span>
+            </div>
+
+            <br>
+            <div class="input-group">
+                <div class="input-group-addon">籍贯：</div>
+                <input class="form-control" type="text" id="country" name="country"
+                       value="{{ country }}" placeholder="爬虫默认查询时间为0-1s的延迟">
+            </div>
+        </div>
+    </form>
+
+    <span id="result" style="color: red">{{ result }}</span>
+{% endblock %}
