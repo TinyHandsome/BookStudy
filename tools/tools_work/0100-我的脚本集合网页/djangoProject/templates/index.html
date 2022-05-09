@@ -70,6 +70,8 @@
                 <th style="width: 150px">IP地址</th>
                 <th style="width: 200px">用户名</th>
                 <th>访问计数</th>
+                <th>最后一次访问时间</th>
+                <th>修改用户名</th>
             </tr>
             {% for c, user in users %}
                 <tr>
@@ -77,8 +79,45 @@
                     <td>{{ user.ip }}</td>
                     <td>{{ user.name }}</td>
                     <td>{{ user.count }}</td>
+                    <td>{{ user.update_time }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" title="Popover title"
+                                data-container="body" data-toggle="popover" data-placement="left"
+                                data-content="还没做呢，略略略~">
+                            修改
+                        </button>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
     </div>
+
+    <div class="container" style="padding: 100px 50px 10px;">
+        <button type="button" class="btn btn-default" title="Popover title"
+                data-container="body" data-toggle="popover" data-placement="left"
+                data-content="左侧的 Popover 中的一些内容">
+            左侧的 Popover
+        </button>
+        <button type="button" class="btn btn-primary" title="Popover title"
+                data-container="body" data-toggle="popover" data-placement="top"
+                data-content="顶部的 Popover 中的一些内容">
+            顶部的 Popover
+        </button>
+        <button type="button" class="btn btn-success" title="Popover title"
+                data-container="body" data-toggle="popover" data-placement="bottom"
+                data-content="底部的 Popover 中的一些内容">
+            底部的 Popover
+        </button>
+        <button type="button" class="btn btn-warning" title="Popover title"
+                data-container="body" data-toggle="popover" data-placement="right"
+                data-content="右侧的 Popover 中的一些内容">
+            右侧的 Popover
+        </button>
+    </div>
 {% endblock %}
+
+{% block ext_js %}
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+{% endblock %}
+
+

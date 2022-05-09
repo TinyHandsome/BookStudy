@@ -23,8 +23,8 @@ class IP(models.Model):
     ip = models.CharField(max_length=32, unique=True, verbose_name='ip')
     name = models.CharField(max_length=255, default='未知', verbose_name='姓名')
     count = models.IntegerField(default=0, verbose_name='访问次数')
-    is_admin = models.BooleanField(default=False, verbose_name='是否是管理员')
-    rule = models.ForeignKey(Role, on_delete=models.SET_DEFAULT, null=True, blank=True, default=2)
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='最后一次访问时间')
 
     class Meta:
         db_table = 'my_table_ip'
@@ -38,6 +38,9 @@ class User(models.Model):
     """用户"""
     username = models.CharField(max_length=255, unique=True, verbose_name='用户名')
     password = models.CharField(max_length=255, verbose_name='密码')
+
+    is_admin = models.BooleanField(default=False, verbose_name='是否是管理员')
+    rule = models.ForeignKey(Role, on_delete=models.SET_DEFAULT, default=2)
 
     class Meta:
         db_table = 'my_table_user'
