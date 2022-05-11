@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4f7a02a-f6be-4019-b93b-11033235656a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../../books/book_机器学习实战/2-kNN.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../books/book_机器学习实战/2-kNN.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../../books/book_机器学习实战/《机器学习实战》学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../books/book_机器学习实战/《机器学习实战》学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3e117a41-d76f-441f-af81-c3e817b60baf.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/573ec411-6a61-4f05-a76c-49de7e27047a.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ee17ea39-4d8d-42b8-9356-27b5b2fc4d47.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../learnings/【自学】千峰数据分析学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../learnings/【自学】千峰数据分析学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../learnings/【自学】千锋Python学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../learnings/【自学】千锋Python学习笔记.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,8 +129,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Django Server.djangoProject" />
       <item itemvalue="Python.get_columns_from_line" />
+      <item itemvalue="Django Server.djangoProject" />
     </list>
     <recent_temporary>
       <list>
@@ -176,6 +169,7 @@
       <workItem from="1652148126262" duration="805000" />
       <workItem from="1652149087701" duration="3959000" />
       <workItem from="1652153081744" duration="599000" />
+      <workItem from="1652238246206" duration="10000" />
     </task>
     <servers />
   </component>
