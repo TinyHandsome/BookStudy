@@ -94,6 +94,10 @@
 
    2. 对于 FTP 站点以及几乎所有不使用 HTTP 协议的 URL，都应该使用绝对 URL
 
+   3. 绝对 URL 和相对 URL 的比较
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/9a6de0b292b5488db757ac2676503027.png)
+
 7. ftp：File Transfer Protocol，文件传输协议
 
 
