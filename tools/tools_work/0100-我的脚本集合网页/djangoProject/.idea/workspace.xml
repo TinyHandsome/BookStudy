@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4f7a02a-f6be-4019-b93b-11033235656a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../../books/book_机器学习实战/《机器学习实战》学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../books/book_机器学习实战/《机器学习实战》学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../learnings/【自学】千峰数据分析学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../learnings/【自学】千峰数据分析学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../learnings/【自学】千锋Python学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../learnings/【自学】千锋Python学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../learnings/【自学】千锋HTML5+CSS3学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../learnings/【自学】千锋HTML5+CSS3学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +40,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
   </component>
-  <component name="JupyterTrust" id="bba384ed-fa46-4bd0-a280-96df52f05b21" />
+  <component name="JupyterTrust" id="dc61d2b0-2461-4066-a207-629d36f95a03" />
   <component name="ProjectId" id="24BM8Bc4W18Qg7xfiDnuC9mTab4" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -129,8 +128,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.get_columns_from_line" />
       <item itemvalue="Django Server.djangoProject" />
+      <item itemvalue="Python.get_columns_from_line" />
     </list>
     <recent_temporary>
       <list>
@@ -170,6 +169,7 @@
       <workItem from="1652149087701" duration="3959000" />
       <workItem from="1652153081744" duration="599000" />
       <workItem from="1652238246206" duration="10000" />
+      <workItem from="1652770453755" duration="107000" />
     </task>
     <servers />
   </component>
