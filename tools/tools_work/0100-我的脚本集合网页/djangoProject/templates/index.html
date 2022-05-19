@@ -4,6 +4,7 @@
 {% block header %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script type="text/javascript" src="{% static 'js/word_decode.js' %}"></script>
 {% endblock %}
 
 {% block title %}
@@ -77,7 +78,9 @@
                 <tr>
                     <td>{{ c }}</td>
                     <td>{{ user.ip }}</td>
-                    <td>{{ user.name }}</td>
+                    <td>
+                        {{ user.name | safe }}
+                    </td>
                     <td>{{ user.count }}</td>
                     <td>{{ user.update_time }}</td>
                     <td>
