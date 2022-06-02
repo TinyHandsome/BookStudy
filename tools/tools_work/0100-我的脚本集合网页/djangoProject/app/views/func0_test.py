@@ -8,5 +8,15 @@
 @software: pycharm
 @file: func0_test.py
 @time: 2022/6/1 16:22
-@desc: 
+@desc: 测试view
 """
+
+from django.http import JsonResponse
+
+
+def test(request):
+    return JsonResponse({
+        'des': 'test data',
+        'data': 'test',
+        "msg": '你在干神莫啊朔总'
+    })

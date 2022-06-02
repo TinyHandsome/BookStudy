@@ -9,7 +9,11 @@
   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d9c892fdaa8f4b82a822f12eb2b93e17.png)
 
 - 读后感
+
 - 传送门
+
+  1. [完美网页的视觉设计法则](https://designingfortheweb.co.uk/)
+  2. 
 
 ## 1. 网页的构造块
 
@@ -100,6 +104,11 @@
 
 7. ftp：File Transfer Protocol，文件传输协议
 
+8. HTML：有含义的标记
+
+   - HTML 描述的是网页内容的含义，即语义（semantics）
+
+## 2. 基本HTML结构
 
 
 
@@ -120,7 +129,14 @@
 
 
 
-学到  11
+
+
+
+
+
+
+
+学到  31
 
 
 ------
