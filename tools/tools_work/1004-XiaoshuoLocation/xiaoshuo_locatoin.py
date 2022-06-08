@@ -51,14 +51,20 @@ class XiaoshuoLocation:
 
     def init_books(self):
         """初始化，获取小说的总页数和内容数组"""
-        self.pages, self.view_list = self.get_location()
+        self.pages, self.view_list, self.after_half_view_list = self.get_location()
 
-    def depart_line(self, line):
+    def depart_line(self, line, start_half=False):
         """按行分割，将结果拼接成数组"""
         count = int(len(line) / self.line_length) + 1
         result_line = []
         for i in range(count):
-            start = i * self.line_length
+
+            # 是否开始偏移半个单行显示长度的身位
+            if start_half:
+                start = i * self.line_length + self.line_length // 2
+            else:
+                start = i * self.line_length
+
             end = start + self.line_length
             result_line.append(line[start: end])
         return result_line
@@ -70,16 +76,30 @@ class XiaoshuoLocation:
             temp = result.replace('\n', " ").replace(
                 '\r', " ").replace('　　', " ").replace(' ', " ")
 
-            return ceil(len(temp) / self.line_length), self.depart_line(temp)
+            return ceil(len(temp) / self.line_length), self.depart_line(temp), self.depart_line(temp, True)
 
     def search_words(self, aim_words):
         """寻找文件所在行"""
+        find_count = 0
+
+        # 在原始文件中找
         count = 1
         for line in self.view_list:
             if aim_words in line:
+                find_count += 1
                 print(count, ": ", line)
-
             count += 1
+
+        # 如果一直没有查到，将view_list换成往后偏移半个【line_length】的身位，放置查找的信息在边界
+        count = 1
+        if find_count == 0:
+            for line in self.after_half_view_list:
+                if aim_words in line:
+                    find_count += 1
+                    print(count - 1, ": ", line)
+                count += 1
+
+
 
     def show_current_info(self):
         """输出当前路径和文件信息"""
