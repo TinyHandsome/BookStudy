@@ -7,6 +7,7 @@
 - 学习链接：[千锋HTML5前端开发教程1000集](https://www.bilibili.com/video/BV17z4y1D7Yj)：`[1集: 183集]，共183集`
 - 感想 | 摘抄
   1. 查询标签在各大浏览器中的兼容问题：[caniuse](https://caniuse.com/)
+  1. 费曼学习技巧：以教促学
 - 学习时遇到的问题
 
 ## 1. 前言
@@ -65,6 +66,60 @@
    - 主要用于图文混排
    - dl > dt+dd
 
+10. 图片标签
+
+    - 同级目录
+
+      - 相对路径
+        - `code.gif`
+        - `./code.gif`
+      - 绝对路径
+
+    - 返回上一级后查找路径
+
+      - `../code.gif`
+
+    - 图片标签的属性
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/96edb97601244feba45f45c129f4fafc.png)
+
+    - 宽高设置
+
+      - 只设置一个属性：等比例缩放
+      - 设置两个属性：按设置缩放
+
+11. 超链接标签
+
+    - 能够实现不同页面的跳转
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/1476e2b2e084446eaaa439bedbe6329e.png)
+
+    - `target="_self"`：默认值，当前窗口打开
+
+    - `target="_blank"`：新窗口打开
+
+12. 表格：
+
+    - 表格创建快捷键：`table>tr*3>td*3`
+
+    - 表格属性：
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/92d5d46afb20466e94d61831d50ffa85.png)
+
+    - 行tr的属性，table row
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/a2143eb56fbc499fa23cd9ce77e883b6.png)
+
+    - 单元格td属性：table data
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/373ac438a19a4921a1b10a3cc11e37e4.png)
+
+      - 如果一个单元格的设置宽度，影响的是这一整列的宽度
+      - 如果一个单元格的设置宽度，影响的是这一整行的高度
+
+    - 表格合并
+
+      - 合并列：Colspan=所要合并的单元格的 **列数** 必须给td
 
 
 
@@ -85,7 +140,8 @@
 
 
 
-学到 P16
+
+学到 P24
 
 
 ------
