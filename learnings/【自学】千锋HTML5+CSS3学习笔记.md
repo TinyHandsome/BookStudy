@@ -119,7 +119,18 @@
 
     - 表格合并
 
-      - 合并列：Colspan=所要合并的单元格的 **列数** 必须给td
+      - 合并列：Colspan = 所要合并的单元格的 **列数** 必须给td
+      - 合并行：Rowspan = 所要合并的单元格的 **行数** 必须给td
+
+13. 表单标签
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/b6fce2cdab004fb884f2de5d678ae939.png)
+
+    - form中method的post和get的区别
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/8d47d83b9c8d474c961f3a0d27f6d07b.png)
+
+    - 
 
 
 
