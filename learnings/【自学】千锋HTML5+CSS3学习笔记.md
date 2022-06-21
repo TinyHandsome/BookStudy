@@ -19,7 +19,7 @@
    3. JS行为：W3C、ECMA制定了行为标准（W3C DOM，ECMAScript）
 
 
-## 2. HTML的基本语法
+## 2. HTML
 
 1. 标记
    1. 常规标记，双标记
@@ -130,11 +130,28 @@
 
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/8d47d83b9c8d474c961f3a0d27f6d07b.png)
 
-    - 
+## 3. CSS
 
+1. cascading style sheets，层叠样式表
 
+2. 作用：修饰网页信息的显式样式
 
+3. CSS语法：
 
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/68109782d4a84c0c905376dcad9faecc.png)
+
+   ```css
+   <style>
+           h1 {
+               color: red;
+           }
+           h2 {
+               color: blue;
+           }
+   </style>
+   ```
+
+4. 内部样式表、外部样式表、行内样式表
 
 
 

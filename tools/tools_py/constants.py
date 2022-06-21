@@ -4,6 +4,7 @@
 import json
 
 
+
 VSCODE_JSON_PATH = 'C:/Users/LITIAN/AppData/Roaming/Code/User/settings.json'
 
 
@@ -17,7 +18,11 @@ def get_vscode_json_dict():
 
     raw_json = [i for i in raw_json if '//' not in i]
     str_json = "".join(raw_json)
+    print(str_json)
     vscode_json_dict = json.loads(str_json)
 
     return vscode_json_dict
 
+
+if __name__ == '__main__':
+    get_vscode_json_dict()

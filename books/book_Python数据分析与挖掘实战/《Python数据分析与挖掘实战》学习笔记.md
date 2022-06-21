@@ -10,6 +10,10 @@
 
 - 读后感
 
+  1. 这？字典变成自编？是我有问题，还是你有问题？都出书了，为什么会有这种低级问题？
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/e59bcf39871f43e2a7c2705fd0f67477.png)
+
 - 传送门
 
 ## 1. 数据挖掘基础
@@ -38,7 +42,23 @@
 
 ## 2. Python数据分析简介
 
-
+1. 列表list可以修改，元组tuple不可以
+2. 其他创建字典dict的方法：
+   - `dict([['A', 1], ['B', 2]])`
+   - `dict.fromkeys(['A', 'B'], 0)`
+3. 集合：set，{}
+   - 元素不重复
+   - 无序
+   - 不支持索引
+4. `map`：`map(lambda x, y: x*y, a: list, b: list)`
+   - 逐一遍历
+   - map效率更高，并且是懒加载
+5. `reduce`：
+   - 递归计算
+   - `reduce(lambda x,y : x*y, range(1, n+1))`
+6. `filter`：
+   - `filter(lambda x: x > 5 and x < 8, range(10))`
+   - 总结：操作上不如**列表表达式**，但是效率上快于列表表达式
 
 
 
