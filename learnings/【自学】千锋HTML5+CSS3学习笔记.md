@@ -153,6 +153,112 @@
 
 4. 内部样式表、外部样式表、行内样式表
 
+   - 外部样式的创建
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/24e7550bb3934b37b0569d95553e316e.png)
+
+   - 外部css导入
+
+     ```html
+     <style>
+             @import url(index.css);
+     </style>
+     ```
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/12d40b08bc854bcc9bcb3358e05feb11.png)
+
+   - 行内
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/0ae9640c694e4d28b7b6bddc83c4db33.png)
+
+   - **就近原则**：`!important` >行内>内部>外部
+
+## 4. 选择器
+
+1. 为什么要用选择器：
+
+   要使用CSS对HTML页面中的元素实现一对一，一对多或者多对一的控制，这就需要用到CSS选择器
+
+2. 元素选择器/类型选择器（element选择器），如：`div{width:100px; height: 100px; background:red;}`
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2dab9f8f9e9e438d86473c03997ad3b7.png)
+
+3. class选择器/类选择器
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/4807b887194844479fb0704dbf1f9424.png)
+
+   - 优先级也是就近原则，这里就近只的是style定义的顺序，而不是class的继承顺序
+
+4. id选择器
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/c563fa5863844e55bcab8c196cb705bd.png)
+
+   - 不能给一个标签用上多个id
+
+5. \* 通配符/通配符选择器
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/e0e569a6d2d543efbc796c278819b613.png)
+
+6. 群组选择器：提出公共代码，节约代码量
+
+   ```css
+   div, p, h1, box1 {
+               background-color: yellow;
+           }
+   ```
+
+7. 后代选择器
+
+   ```css
+   div p {
+               background-color: aqua;
+           }
+   ```
+
+   - 底层查找逻辑：从右到左，先找子类，再找父类
+
+8. 伪类选择器
+
+   ![image-20220622152542175](E:\typora_pics_savepath\image-20220622152542175.png)
+
+   - 需要遵循顺序编写
+
+     ```html
+     <style>
+             a:link {
+                 color: red;
+             }
+     
+             a:visited {
+                 color: aqua;
+             }
+     
+             a:hover {
+                 color: blue;
+             }
+     
+             a:active {
+                 color: coral;
+             }
+     </style>
+     ```
+
+   - link-visited-hover-active
+
+9. 选择器的权重
+
+   - 当多个选择器，选中的是同一个元素，且都为他们定义了样式，如果属性发生了冲突，会选择权重高的来执行
+
+   - `!important` > 内联 > 包含选择器 > id > class > element
+
+   - 选择器的权重
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/17af9b2b8ab445e9b7ad6563b935fc65.png)
+
+   - 包含选择器：子类选择器（嵌套的）的权重要大于普通元素的选择器
+
+   
+
 
 
 
