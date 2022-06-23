@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .title {
+            width: 500px;
+            height: 50px;
+            background-color: #808080;
+            font-size: 25px;
+            color: #ffffff;
+            font-weight: 700;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        p {
+            width: 500px;
+            font-size: 20px;
+            text-indent: 2em;
+            
+        }
+
+        .sp1 {
+            font-weight: bold;
+        }
+        .sp2 {
+            color: red;
+        }
+
+        .p_transform {
+            text-transform: capitalize;
+        }
+
+        .p_font {
+            font: italic bold 20px/1em 微软雅黑;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="title">Qlearning和Sarsa的区别</div>
+
+    <p><span class="sp1">Sarsa的学习过程和Q-Learning基本一样</span>，不同的地方是Q-Learning在走下一步的时候是先看下一步应该走哪，但是最后不一定走，而<span class="sp2">Sarsa是决定完要走的步之后一定会去走那一步</span>。</p>
+
+    <p>换句话说，<span class="sp1">Q-Learning在更新当前位置的Q值的时候会参考表中收益最大的那个值</span>，但下一步不一定会走到那个位置，而Sarsa是先选取下一步要走的位置的Q值来更新当前位置的Q值，当然，选完它下一步一定会去走那一步。</p>
+
+    <p>Sarsa虽然说是说到做到，但是由于它选取下一步的位置是严格按照已有学习到的经验来选择，所以<span class="sp2">它探索未知位置的能力就会很差</span>，相对于说了不一定算的Q-Learning来说，反而Q-Learning更勇敢一些。</p>
+
+    <p class="p_transform">oh you are fine my friend.</p>
+
+    <p class="p_font">起飞了朋友们。</p>
+
+</body>
+
+</html>

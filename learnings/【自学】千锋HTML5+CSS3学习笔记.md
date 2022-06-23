@@ -257,7 +257,73 @@
 
    - 包含选择器：子类选择器（嵌套的）的权重要大于普通元素的选择器
 
-   
+
+## 5. CSS属性
+
+1. 文本属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/87f83d2aa8994b809811390f539bbbf5.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/7f9db198b9b64b7e9ab6d8a88c8c789a.png)
+
+   - 100：细体，lighter
+   - 400：正常，normal
+   - 700：加粗，bold
+   - 900：更粗，bolder
+
+2. 文本间距
+
+   - 词间距，word-spacing：针对英文的词之间的间距
+   - 字符间距，letter-spacing：字符与字符之间，文字与文字之间
+
+3. 首行缩进，text-indent
+
+   - 只对首行生效
+   - 2em，指当前字体大小的2个字符
+
+4. 文字装饰：
+
+   - 下划线、上划线、删除线
+
+   - 如果想要多条线
+
+     ```css
+     text-decoration: line-through underline overline;
+     ```
+
+5. 文本转换：text-transform，大写、小写，首字母大写
+
+6. font：
+
+   ```css
+   .p_font {
+               font: italic bold 20px/1em 微软雅黑;
+           }
+   ```
+
+7. 列表属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/6a59b80f47d345cf8aca55929e096ce4.png)
+
+   - 设置图片的话，需要对每一个li定义类，每个类设置不同的图片
+   - list-style：合并写法
+
+8. 背景属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/de6f46769d8b4839a3f6d899365e4e36.png)
+
+   - 背景图片小于盒子大小：默认平铺效果
+   - 背景图片大于盒子大小：裁剪显示左上角的部分
+   - background-repeat：
+     - repeat：默认平铺
+     - repeat-x：x轴平铺
+     - repeat-y：y轴平铺
+     - no-repeat：不平铺
+   - background-size：
+     - 100px 100px
+     - 100% 100%
+     - cover：把背景图像扩展至足够大，以使背景图像完全覆盖背景区域，有一部分会被裁掉
+     - contain：把图像扩展至最大尺寸，以使其宽度和高度完全适应内容区域，有一部分背景无法铺满
 
 
 
@@ -275,7 +341,9 @@
 
 
 
-学到 P24
+
+
+学到 P50
 
 
 ------
