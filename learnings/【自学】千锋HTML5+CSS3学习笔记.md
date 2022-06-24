@@ -247,11 +247,7 @@
 
 9. 选择器的权重
 
-   - 当多个选择器，选中的是同一个元素，且都为他们定义了样式，如果属性发生了冲突，会选择权重高的来执行
-
-   - `!important` > 内联 > 包含选择器 > id > class > element
-
-   - 选择器的权重
+   - 当多个选择器，选中的是同一个元素，且都为他们定义了样式，如果属性发生了冲 选择器的权重
 
      ![在这里插入图片描述](https://img-blog.csdnimg.cn/17af9b2b8ab445e9b7ad6563b935fc65.png)
 
@@ -313,18 +309,70 @@
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/de6f46769d8b4839a3f6d899365e4e36.png)
 
    - 背景图片小于盒子大小：默认平铺效果
+
    - 背景图片大于盒子大小：裁剪显示左上角的部分
+
    - background-repeat：
+
      - repeat：默认平铺
      - repeat-x：x轴平铺
      - repeat-y：y轴平铺
      - no-repeat：不平铺
+
    - background-size：
+
      - 100px 100px
      - 100% 100%
      - cover：把背景图像扩展至足够大，以使背景图像完全覆盖背景区域，有一部分会被裁掉
      - contain：把图像扩展至最大尺寸，以使其宽度和高度完全适应内容区域，有一部分背景无法铺满
 
+   - background-attachment：
+
+     - 默认是scroll
+     - 设置fixed可以制作视差效果
+
+   - 背景属性的符合写法：
+
+     1. 用空格隔开
+
+     2. 顺序可以换
+
+     3. **可以只取一个值，放在后面能覆盖前面的值**
+
+     4. background-size属性只能单独用
+
+     5. 顺序可以随便换
+
+     6. 位置的顺序要贴着写，不能随便换
+
+        ```css
+        div {
+                    width: 600px;
+                    height: 600px;
+                    /* background-color: yellow;
+                    background-image: url(pics/马卡龙.png);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-attachment: fixed; */
+        
+                    background: yellow url(pics/马卡龙.png) no-repeat center fixed;
+                }
+        ```
+
+9. 浮动属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d229161b838c46fbba82231338faad0b.png)
+
+   - 作用：
+
+     - 让竖着的东西横着来
+     - 定义网页中的其他文本如何绕着该元素显示
+
+   - 浮动是见缝插针的，能往下排就往下排，其次才会换行
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/c76f3d768cf04cfcb4c67f8299b04e3a.png)
+
+10. 
 
 
 
@@ -343,7 +391,8 @@
 
 
 
-学到 P50
+
+学到 P55 0343
 
 
 ------
