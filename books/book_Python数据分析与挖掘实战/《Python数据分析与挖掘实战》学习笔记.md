@@ -62,6 +62,7 @@
    - `reduce(lambda x,y : x*y, range(1, n+1))`
 
 6. `filter`：
+
    - `filter(lambda x: x > 5 and x < 8, range(10))`
    - 总结：操作上不如**列表表达式**，但是效率上快于列表表达式
 
@@ -77,7 +78,7 @@
 
 
 
-
+   ·
 
 
 

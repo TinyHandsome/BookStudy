@@ -372,7 +372,54 @@
 
      ![在这里插入图片描述](https://img-blog.csdnimg.cn/c76f3d768cf04cfcb4c67f8299b04e3a.png)
 
-10. 
+10. 清浮动
+
+    1. 写固定高度
+
+    2. 清浮动的clear用法
+
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/f292d5c017a24b259f8a5dc724345e69.png)
+
+    3. 当前浮动元素后面补一个盒子，不设置宽高，clear:both
+
+    4. overflow: hidden
+
+       - 通过隐藏的bfc让浮动的元素计算高度
+
+## 6. 盒子模型
+
+1. 什么是盒子模型
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/e998ad0eb27f4852a02c50d3a3ea452f.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/9c284a4ae5c344a9bc2cf16730993fa5.png)
+
+2. padding：内边距
+
+   1. 一个值，四个方向都一样
+   2. 两个值，上下，左右
+   3. 三个值，上 左右 下
+   4. 四个值，上右下做
+   5. 单独设置某一个方向的padding：`padding-left`，类似的，top、bottom、left、right
+   6. padding不支持负数
+
+3. border：边框
+
+   1. 样式：
+      - solid
+      - double
+      - dashed
+      - dotted
+   2. 背景色也能蔓延到边框，即boder压在bg-color上的
+   3. boder属性拆分：
+      - border-width
+      - border-style
+      - border-color
+
+4. margin：外边距
+
+   1. 
+
 
 
 
