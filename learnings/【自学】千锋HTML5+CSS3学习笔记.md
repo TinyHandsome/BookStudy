@@ -437,7 +437,32 @@
         - 方案4：overflow:hidden，BFC
 
 
-## 7. 溢出属性
+### 6.1 溢出属性
+
+1. 溢出属性（容器的）
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/e39a01b7dabe4117b41adc1303c1de81.png)
+
+2. 空余空间
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/3f8f68319604474b8f142d55dfadaa89.png)
+
+   - nowrap：不换行
+   - pre：显示空格、回车，不换行
+   - pre-wrap：显示空格，回车，换行
+   - pre-line：显示回车，不显示空格，换行
+
+3. 省略号显示
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/b2d4995c5d5f4c8cb81c10937529a01b.png)
+
+### 6.2 元素显示类型
+
+1. 元素显示类型
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/3c7eec43d13e42de8759520393ff406b.png)
+
+2. 
 
 
 
