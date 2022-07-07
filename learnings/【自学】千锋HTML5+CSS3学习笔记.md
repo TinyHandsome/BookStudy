@@ -462,7 +462,38 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/3c7eec43d13e42de8759520393ff406b.png)
 
-2. 
+2. 块元素：
+
+   - `display: block`
+   - `display: list-item`
+   - 独占一行显示
+   - p标签放文本可以，不能放块级元素
+
+3. 行内：
+
+   - `display: inline`
+   - 不能设置长宽
+   - padding和margin只有左右有用，上下没用
+
+4. 行内块:
+
+   - 既能设置宽高，又能跟其他标签一起分享空间
+   - `display: inline-block`
+   - `img`、`input`
+
+5. 元素类型互相转换：设置display属性
+
+   - `display: none`，隐藏属性
+   - 空格：子代选择器，`.item li`：子代中有li的都选中
+   - \> ：亲代选择器，`.item>li`：只选择自己的亲儿子
+
+6. 安利首页设计
+
+   1. 版心
+   2. 通栏
+   3. 留白
+
+7. 
 
 
 
@@ -482,7 +513,23 @@
 
 
 
-学到 P63
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+学到 P73
 
 
 ------

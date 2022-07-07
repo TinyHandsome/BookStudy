@@ -1,0 +1,82 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+.con {
+    width: 996px;
+    height: 110px;
+}
+
+.header {
+    background: yellow;
+    margin: 0 auto;
+}
+
+.logo {
+    width: 265px;
+    height: 110px;
+    background: url(imgs/anli_log.jpg);
+    float: left;
+}
+
+.header_right {
+    float: right;
+}
+
+.header_right ul {
+    height: 44px;
+    margin-top: 10px;
+    line-height: 44px;
+}
+
+.header_right li {
+    float: left;
+}
+
+.header_right li a{
+    border-right: 1px solid #b2c7ea;
+    padding: 0 13px;
+    font-style: 13px;
+    color: #ababab;
+}
+
+.header_right .last {
+    padding-right: 0;
+    border: 0;
+}
+
+.header_right li .active {
+    color: #eb6ca1
+}
+
+.search {
+    float: right;
+    width: 234px;
+    height: 28px;
+    border: 1px solid #d1d1d1;
+
+}
+
+.search input {
+    border: 0;
+    outline: none;
+}
+
+.search .left {
+    width: 196px;
+    float: left;
+    height: 28px;
+    padding-left: 14px;
+}
+
+.search .right {
+    float: right;
+    width: 24px;
+    height: 28px;
+    background: url(imgs/search_pic.jpg) no-repeat center center;
+}
