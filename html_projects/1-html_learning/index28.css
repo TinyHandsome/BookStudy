@@ -9,12 +9,12 @@ ul {
 
 .con {
     width: 996px;
-    height: 110px;
+    margin: 0 auto;
 }
 
 .header {
-    background: yellow;
-    margin: 0 auto;
+    height: 110px;
+    /* background: yellow; */
 }
 
 .logo {
@@ -38,7 +38,7 @@ ul {
     float: left;
 }
 
-.header_right li a{
+.header_right li a {
     border-right: 1px solid #b2c7ea;
     padding: 0 13px;
     font-style: 13px;
@@ -79,4 +79,88 @@ ul {
     width: 24px;
     height: 28px;
     background: url(imgs/search_pic.jpg) no-repeat center center;
+}
+
+.nav {
+    height: 53px;
+    line-height: 53px;
+    border-top: 1px solid #657588;
+    background: #0c345c;
+    color: white;
+}
+
+.nav li {
+    float: left;
+    font-size: 16px;
+    margin-right: 76px;
+}
+
+.banner {
+    height: 379px;
+    background: url('imgs/bg.jpg') no-repeat center;
+}
+
+.list {
+    height: 213px;
+    /* background: yellow; */
+    margin-top: 51px;
+    margin-bottom: 35px;
+}
+
+.item {
+    height: 211px;
+    width: 305px;
+    border: 1px solid #cccccc;
+    float: left;
+    margin-right: 36px;
+}
+
+.item p {
+    height: 47px;
+    line-height: 47px;
+    padding-left: 28px;
+    font-size: 16px;
+    color: black;
+}
+
+.item img {
+    display: block;
+}
+
+.itemlast {
+    margin-right: 0;
+}
+
+.footer {
+    height: 206px;
+    border-top: 1px solid #cccccc;
+    background: url(imgs/footer.jpg) ;
+}
+
+.footer ul {
+    height: 84px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #ecebeb;
+    line-height: 28px;
+
+}
+
+.footer ul li {
+    width: 210px;
+    padding-left: 30px;
+    font-size: 12px;
+    color: #336699;
+    float: left;
+}
+
+.footer p {
+    height: 61px;
+    line-height: 61px;
+    padding-left: 30px;
+    font-size: 12px;
+}
+
+.footer p span{
+    color: #0096da;
 }
