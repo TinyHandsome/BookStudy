@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box1 {
+            width: 0px;
+            height: 0px;
+            border-top: 20px solid red;
+            border-left: 20px solid rgba(0, 0, 0, 0);
+            border-right: 20px solid rgba(0, 0, 0, 0);
+            border-bottom: 20px solid rgba(0, 0, 0, 0);
+        }
+        .box2 {
+            width: 0px;
+            height: 0px;
+            border: 20px solid transparent;
+            /* border-top: 20px solid rgba(0, 0, 0, 0);
+            border-left: 20px solid rgba(0, 0, 0, 0);
+            border-right: 20px solid rgba(0, 0, 0, 0); */
+            border-bottom: 20px solid red;
+        }
+
+        .box{
+            width: 100px;
+            height: 50px;
+            line-height: 50px;
+            /* text-align: center; */
+            text-indent: 20px;
+            background: lightblue;
+            color: white;
+        }
+        span {
+            width: 0;
+            height: 0;
+            display: inline-block;
+            border: 5px solid transparent;
+            border-top: 5px solid #000;
+            position: relative;
+            top: 2.5px;
+        }
+
+        .box:hover span{
+            border: 5px solid transparent;
+            border-bottom: 5px solid #000;
+            top: -2.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1"></div>
+    <div class="box2"></div>
+
+    <div class="box">
+        导航
+        <span></span>
+    </div>
+</body>
+</html>
