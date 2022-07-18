@@ -15,6 +15,7 @@
         .box {
             width: 300px;
             margin: 0 auto;
+            /* overflow: hidden; */
         }
 
         ul {
@@ -29,6 +30,8 @@
             background-color: blue;
             color: white;
             line-height: 40px;
+
+            position: relative;
         }
 
         .item:hover {
@@ -39,12 +42,31 @@
             display: none;
             background: white;
             color: black;
+            position: absolute;
+            left: 0;
+            top: 40px;
+            width: 148px;
         }
         .item:hover ul{
             display: block;
         }
         .item li:hover {
             color: blue;
+        }
+
+        .content {
+            height: 100px;
+            background: yellow;
+        }
+
+        .box::after{
+            content: "asdfasdf";
+            clear: both;
+            display: block;
+            width: 0;
+            height: 0;
+            /* display: none; */
+            visibility: hidden;
         }
 
 
@@ -69,6 +91,8 @@
             </ul>
         </li>
     </ul>
+
+    <div class="content">123123123123</div>
 </body>
 
 </html>
