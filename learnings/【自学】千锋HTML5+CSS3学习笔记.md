@@ -153,7 +153,7 @@
      ![在这里插入图片描述](https://img-blog.csdnimg.cn/0ae9640c694e4d28b7b6bddc83c4db33.png)
    - **就近原则**：`!important` >行内>内部>外部
 
-## 4. 选择器
+### 3.1 选择器
 
 1. 为什么要用选择器：
 
@@ -223,7 +223,7 @@
      ![在这里插入图片描述](https://img-blog.csdnimg.cn/17af9b2b8ab445e9b7ad6563b935fc65.png)
    - 包含选择器：子类选择器（嵌套的）的权重要大于普通元素的选择器
 
-## 5. CSS属性
+### 3.2 CSS属性
 
 1. 文本属性
 
@@ -331,7 +331,7 @@
 
        - 通过隐藏的bfc让浮动的元素计算高度
 
-## 6. 盒子模型
+## 4. 盒子模型
 
 1. 什么是盒子模型
 
@@ -512,6 +512,180 @@
    - 任何长度值都可以使用 `calc()` 函数进行计算；
    - `calc()` 函数支持加减乘除的运算；
    - `calc()` 函数使用标准的数学运算优先级规则；
+   
+3. 多栏复杂布局
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/e5c7ff5b032641fbaae077f26b4e0846.png)
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   
+   <head>
+       <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Document</title>
+       <style>
+           * {
+               margin: 0;
+               padding: 0;
+           }
+   
+           html,
+           body {
+               height: 100%;
+           }
+   
+           .top,
+           .bottom {
+               width: 100%;
+               height: 50px;
+               background: #ccc;
+           }
+   
+           .middle {
+               height: calc(100% - 100px);
+               background: yellow;
+           }
+   
+           .left,
+           .right {
+               width: 100px;
+               height: 100px;
+               background: red;
+               float: left;
+           }
+   
+           .center {
+               width: calc(100% - 200px);
+               height: 100%;
+               background: blue;
+               float: left;
+           }
+       </style>
+   </head>
+   
+   <body>
+       <div class="top"></div>
+       <div class="middle">
+           <div class="left"></div>
+           <div class="center"></div>
+           <div class="right"></div>
+   
+       </div>
+       <div class="bottom"></div>
+   </body>
+   
+   </html>
+   ```
+
+## 5. 表单进阶
+
+
+
+1. 单选框
+
+   ```html
+   <input type="radio" name="sex" id="woman" checked>
+   <label for="woman">女</label>
+   ```
+
+   - name：表示单选框所在的组，该组下所有的radio都要设置同样的name
+   - input.id + label.for：使文字部分可以点击选中
+
+2. 复选框
+
+   - 基本跟单选框一样，就是 `type="checkbox"`
+
+3. 上传文件
+
+   - `<input type="file">`
+
+4. 图片按钮-代替提交按钮
+
+   ```html
+   <form action="">
+       <input type="image" src="imgs/search_pic_green.png">
+   </form>
+   ```
+
+5. 隐藏按钮
+
+   - `<input type="hidden" value="带给后端的个人信息">`
+
+6. 禁用和只读属性
+
+   - `<input type="radio" disabled>`
+   - `<input type="radio" readonly>`
+
+7. 下拉菜单
+
+   - 格式
+
+     ```html
+     <select size="3" multiple>
+         <option value="ln">辽宁</option>
+         <option selected>山东</option>
+         <option>山西</option>
+         <option>湖北</option>
+     </select>
+     ```
+
+   - select支持的属性
+
+     - size：下拉菜单显示的个数，多的话就增加滚动条
+     - multiple：支持多项选择
+
+   - option支持的属性
+
+     - value：提供给后端需要用的value值
+     - selected：默认选中
+
+8. 文本域
+
+   - `<textarea name="" id="" cols="30" rows="10">提前设置好的value</textarea>`
+   - 一般通过css来控制宽和高
+   - placeholder： 预置文本，提示文字
+   - textarea默认的value值是写在双标签内部的，注意空格问题，所以写的时候，不要进行换行啊啥的
+   - 通过在css中设置resize：重新设置大小
+     - vertical：垂直方向
+     - horizontal：水平方向
+     - both：两个方向
+     - none：两个方向都不能resize
+
+9. 字段集
+
+   - fieldset
+
+     ```html
+     <fieldset>
+         <legend>皮卡丘</legend>
+         <input type="radio" name="a">男
+         <br>
+         <input type="radio" name="a">女
+     </fieldset>	
+     ```
+
+## 6. HTML5新特性
+
+1. HTML5发展史
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d99c076cc6734ebfac5efffea4e6832f.png)
+
+2. HTML5的浏览器兼容
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/ddc8490828a14665b3ce4f1720b83a10.png)
+
+3. HTML5语法
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/4148f85e118e46d6852f8c09360768c7.png)
+
+4. HTML5新增语义化标签
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/39d56f1e5a184acfb7e6c60001c338eb.png)
+
+5. 
 
 
 
@@ -531,7 +705,7 @@
 
 
 
-学到 P89
+学到 P102
 
 ---
 
