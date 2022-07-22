@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,39 +11,86 @@
             margin: 0;
             padding: 0;
         }
-        html, body {
+
+        html,
+        body {
             height: 100%;
         }
-        header, footer {
+
+        header,
+        footer {
             height: 50px;
-            line-height: 50;
+            line-height: 50px;
             text-align: center;
             background: orange;
         }
+
         section {
             height: calc(100% - 100px);
         }
-        nav, aside {
+
+        nav,
+        aside {
             width: 100px;
             height: 100%;
             background: #ccc;
             float: left;
         }
+
         main {
             float: left;
             width: calc(100% - 200px);
             height: 100%;
             background: white;
         }
+
+        aside p {
+             font-style: 12px;
+             color: white;
+        }
+
+        main .article1 {
+            height: 60%;
+        }
+
+        main .article2 {
+            height: 40%;
+        }
     </style>
 </head>
+
 <body>
     <header>Header</header>
     <section>
-        <nav></nav>
-        <main></main>
-        <aside></aside>
+        <nav>
+            <figure>nav</figure>
+            <ul>
+                <li>111</li>
+                <li>111</li>
+                <li>111</li>
+                <li>111</li>
+            </ul>
+        </nav>
+        <main>
+            <article class="article1">
+                <header>article-header</header>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cupiditate nihil tempore quibusdam sequi ab, nemo repellat ipsa nobis sit eius est. Voluptas quam nisi repellat est fugiat explicabo rerum quod.</p>
+                <footer>article-footer</footer>
+            </article>
+            <article class="article2">
+                <header>article-header</header>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cupiditate nihil tempore quibusdam sequi ab, nemo repellat ipsa nobis sit eius est. Voluptas quam nisi repellat est fugiat explicabo rerum quod.</p>
+                <footer>article-footer</footer>
+            </article>
+        </main>
+        <aside class="aside_p">
+            <figure>aside</figure>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus repellat perspiciatis ea nobis
+                dolore cupiditate tempore quidem eius, modi eveniet fuga enim beatae quibusdam earum fugit in, iure aut.
+                Quaerat?</p>
+        </aside>
     </section>
     <footer>Footer</footer>
 </body>
+
 </html>

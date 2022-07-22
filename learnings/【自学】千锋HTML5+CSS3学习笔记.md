@@ -685,6 +685,113 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/39d56f1e5a184acfb7e6c60001c338eb.png)
 
+   - 新增的语义化标签没有实际性的作用，跟div没啥区别，就说做一个名字的参考，使用的时候还是要结合css使用
+
+   - 比如制作一个盒子模型的界面
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             * {
+                 margin: 0;
+                 padding: 0;
+             }
+     
+             html,
+             body {
+                 height: 100%;
+             }
+     
+             header,
+             footer {
+                 height: 50px;
+                 line-height: 50px;
+                 text-align: center;
+                 background: orange;
+             }
+     
+             section {
+                 height: calc(100% - 100px);
+             }
+     
+             nav,
+             aside {
+                 width: 100px;
+                 height: 100%;
+                 background: #ccc;
+                 float: left;
+             }
+     
+             main {
+                 float: left;
+                 width: calc(100% - 200px);
+                 height: 100%;
+                 background: white;
+             }
+     
+             aside p {
+                  font-style: 12px;
+                  color: white;
+             }
+     
+             main .article1 {
+                 height: 60%;
+             }
+     
+             main .article2 {
+                 height: 40%;
+             }
+         </style>
+     </head>
+     
+     <body>
+         <header>Header</header>
+         <section>
+             <nav>
+                 <figure>nav</figure>
+                 <ul>
+                     <li>111</li>
+                     <li>111</li>
+                     <li>111</li>
+                     <li>111</li>
+                 </ul>
+             </nav>
+             <main>
+                 <article class="article1">
+                     <header>article-header</header>
+                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cupiditate nihil tempore quibusdam sequi ab, nemo repellat ipsa nobis sit eius est. Voluptas quam nisi repellat est fugiat explicabo rerum quod.</p>
+                     <footer>article-footer</footer>
+                 </article>
+                 <article class="article2">
+                     <header>article-header</header>
+                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cupiditate nihil tempore quibusdam sequi ab, nemo repellat ipsa nobis sit eius est. Voluptas quam nisi repellat est fugiat explicabo rerum quod.</p>
+                     <footer>article-footer</footer>
+                 </article>
+             </main>
+             <aside class="aside_p">
+                 <figure>aside</figure>
+                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus repellat perspiciatis ea nobis
+                     dolore cupiditate tempore quidem eius, modi eveniet fuga enim beatae quibusdam earum fugit in, iure aut.
+                     Quaerat?</p>
+             </aside>
+         </section>
+         <footer>Footer</footer>
+     </body>
+     
+     </html>
+     ```
+
+   - 效果：
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/c2d4c790b1204d96ac4daaf91c8d384a.png)
+
 5. 
 
 
@@ -705,7 +812,7 @@
 
 
 
-学到 P102
+学到 P103
 
 ---
 
