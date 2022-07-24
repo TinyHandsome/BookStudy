@@ -792,7 +792,21 @@
 
      ![在这里插入图片描述](https://img-blog.csdnimg.cn/c2d4c790b1204d96ac4daaf91c8d384a.png)
 
-5. 
+5. video和audio的应用
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/32da705c32ce44cbb6213bea3c7d70b8.png)
+
+   - 之前的霸主flash，由于安全性、计算资源使用效率低，被抛弃了
+   - audio：`<audio src="./datas/AITheme0.mp3" controls loop autoplay muted></audio>`
+   - video：
+     - `<video src="./datas/movie.mp4" controls loop autoplay muted></video>`
+     - `<video src="./datas/movie.mp4" controls loop poster="./imgs/bg.jpg" width="200px" height="300px"></video>`
+
+6. 增强表单
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/c53f796a5f5a44a0af837669a90ebf22.png)
+
+   
 
 
 
@@ -812,7 +826,7 @@
 
 
 
-学到 P103
+学到 P105 0539
 
 ---
 
