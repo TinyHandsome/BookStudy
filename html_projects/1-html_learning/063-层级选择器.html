@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box>li {
+            border: 1px solid red;
+        }
+
+        /* .child+li {
+            background: yellow;
+        } */
+        .child~li {
+            background: yellow;
+        }
+        .container~p{
+            background: red;
+        }
+    </style>
+</head>
+<body>
+    <ul class="box">
+        <li>111
+            <ul>
+                <li>111-111</li>
+                <li>111-222</li>
+                <li>111-333</li>
+            </ul>
+        </li>
+        <li class="child">222</li>
+        <li>333</li>
+        <li>444</li>
+        <li>555</li>
+    </ul>
+
+    <div class="container">11111</div>
+    <p>111</p>
+    <p>222</p>
+    <div>
+        <p>333</p>
+    </div>
+</body>
+</html>

@@ -378,7 +378,7 @@
         - 方案3：加浮动，子和父都可以
         - 方案4：overflow:hidden，BFC
 
-### 6.1 溢出属性
+### 4.1 溢出属性
 
 1. 溢出属性（容器的）
 
@@ -395,7 +395,7 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/b2d4995c5d5f4c8cb81c10937529a01b.png)
 
-### 6.2 元素显示类型
+### 4.2 元素显示类型
 
 1. 元素显示类型
 
@@ -427,7 +427,7 @@
    2. 通栏
    3. 留白
 
-### 6.3 定位
+### 4.3 定位
 
 1. 定位 position
 
@@ -453,7 +453,7 @@
      - `<a href="#锚点名字"></a>`
      - `<div id="锚点名字"></div>`
 
-### 6.4 精灵图
+### 4.4 精灵图
 
 1. CSS Sprites
 
@@ -466,7 +466,7 @@
 
    ![](https://pica.zhimg.com/80/v2-d9c50e5ec5c1de6c197b7309dd7a27a7_1440w.png)
 
-### 6.5 宽高自适应
+### 4.5 宽高自适应
 
 1. 网页布局中经常要定义元素的宽和高。但很多时候我们希望元素的大小能够根据窗口或子元素自动调整，这就是自适应
 
@@ -499,7 +499,7 @@
    - `display:none`：不占位的隐藏
    - `visibility:hidden`：占位的隐藏
 
-### 6.6 窗口自适应
+### 4.6 窗口自适应
 
 1. 盒子根据窗口的大小进行改变
 
@@ -806,7 +806,156 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/c53f796a5f5a44a0af837669a90ebf22.png)
 
+   ```html
+   <form action="">
+       <div>
+           颜色选择：<input type="color" name="color">
+       </div>
+       <div>
+           邮箱输入：<input type="email" name="email">
+       </div>
+       <div>
+           url地址(完整地址)：<input type="url" name="url">
+       </div>
+       <div>
+           电话号码：<input type="tel" name="tel">
+       </div>
+       <div>
+           滑块效果：<input type="range" name="range" min="100" max="200" value="100" step="10">
+       </div>
+       <div>
+           数字类型：<input type="number" name="number" min="1" max="10" value="6" step="2">
+       </div>
+       <div>
+           搜索：<input type="search" name="search">
+       </div>
+       <div>
+           日期选择框：<input type="date", name="date">
+           月份选择框：<input type="month", name="date">
+           周数选择框：<input type="week", name="date">
+           时间选择框：<input type="datetime-local", name="date">
+       </div>
+       <input type="submit">
+   </form>
+   ```
+
+7. 数据列表
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/5acd60a0ab0741f0bc525926ac245c48.png)
+
+   - 提供选项列表
+   - 支持模糊搜索查询
+
+8. 增强表单属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/43db9a245d104cfbbb773297aa7e368f.png)
+
+## 7. CSS3基础
+
+### 7.1 CSS3选择器
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/c72ca0ac120b47948b8a3283691697fa.png)
+
+1. 优雅降级和渐进增强
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/0556fee894c64c85b606d08b6ac89d1d.png)
+
+2. 层级选择器
+
+   - \+ 的意思是：当前元素的后面第一个兄弟
+
+     ```css
+     .child+li {
+                 background: yellow;
+             }
+     ```
+
+   - \~ 的意思是：当前元素的后面所有的亲兄弟
+
+     ```CSS
+     .child~li {
+                 background: yellow;
+             }
+     ```
+
+3. 属性选择器
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/f2850bc0fad4468295e3169949df24ef.png)
+
+   实践：
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Document</title>
+       <style>
+           div[class]{
+               background: yellow;
+           }
+           p[class]{
+               background: red;
+           }
    
+           /* 完全匹配 */
+           /* div[class=box1]{
+               border: 2px dashed blue;
+           } */
+           /* 包含匹配 */
+           div[class~="box1"]{
+               border: 2px dashed blue;
+           }
+           /* 模糊匹配 */
+           div[class^="b"]{
+               color: green;
+           }
+           div[class$="2"]{
+               color: gray;
+           }
+           div[class*="1"]{
+               color: orange;
+           }
+           
+   
+   
+           input[name] {
+               background: yellow;
+           }
+           input[type=email]{
+               background: red;
+           }
+       </style>
+   </head>
+   <body>
+       <div class="box1">div111</div>
+       <div class="box2">div222</div>
+       <div>div333</div>
+       <div class="box1">div444</div>
+       <div class="box1 box3">div555</div>
+       <p class="p1">p111</p>
+       <p class="p2">p222</p>
+       <p>p333</p>
+   
+       <div>
+           用户名：<input type="text" name="username"> <br>
+           密码：<input type="password" name="password"><br>
+           年龄：<input type="number" name="age"><br>
+           邮箱：<input type="email" name="email"><br>
+       </div>
+   </body>
+   </html>
+   ```
+
+4. 伪类选择器
+
+   1. 结构伪类选择器
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/e5adf8ef92d24931892ec5cc20e8f823.png)
+
+   2. 
 
 
 
@@ -826,7 +975,8 @@
 
 
 
-学到 P105 0539
+
+学到 P112
 
 ---
 

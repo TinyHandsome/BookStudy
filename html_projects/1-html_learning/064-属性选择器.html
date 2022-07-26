@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div[class]{
+            background: yellow;
+        }
+        p[class]{
+            background: red;
+        }
+
+        /* 完全匹配 */
+        /* div[class=box1]{
+            border: 2px dashed blue;
+        } */
+        /* 包含匹配 */
+        div[class~="box1"]{
+            border: 2px dashed blue;
+        }
+        /* 模糊匹配 */
+        div[class^="b"]{
+            color: green;
+        }
+        div[class$="2"]{
+            color: gray;
+        }
+        div[class*="1"]{
+            color: orange;
+        }
+        
+
+
+        input[name] {
+            background: yellow;
+        }
+        input[type=email]{
+            background: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">div111</div>
+    <div class="box2">div222</div>
+    <div>div333</div>
+    <div class="box1">div444</div>
+    <div class="box1 box3">div555</div>
+    <p class="p1">p111</p>
+    <p class="p2">p222</p>
+    <p>p333</p>
+
+    <div>
+        用户名：<input type="text" name="username"> <br>
+        密码：<input type="password" name="password"><br>
+        年龄：<input type="number" name="age"><br>
+        邮箱：<input type="email" name="email"><br>
+    </div>
+</body>
+</html>
