@@ -15,6 +15,7 @@
   4. 浮动和绝对定位的区别：
      - float：半脱离，文字环绕
      - absolute：全脱离，不会出现文字环绕效果
+  5. [伪类和伪元素的区别（:和::的区别）](https://blog.csdn.net/muweichang/article/details/124497539)
 - 学习时遇到的问题
 
 ## 1. 前言
@@ -949,24 +950,72 @@
    </html>
    ```
 
-4. 伪类选择器
+### 7.2 伪类选择器
 
-   1. 结构伪类选择器
+1. 结构伪类选择器
 
-      ![在这里插入图片描述](https://img-blog.csdnimg.cn/e5adf8ef92d24931892ec5cc20e8f823.png)
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/e5adf8ef92d24931892ec5cc20e8f823.png)
 
-      - 通过 `nth-child(n)`实现奇数和偶数的css设置：
-        - 奇数：n改为2n-1，或者odd
-        - 偶数：n改为2n，或者even
+   - 通过 `nth-child(n)`实现奇数和偶数的css设置：
+     - 奇数：n改为2n-1，或者odd
+     - 偶数：n改为2n，或者even
 
-   2. 目标伪类选择器
+2. 目标伪类选择器
 
-      - `E:targe` 选择匹配E的所有元素，且匹配元素被相关URL指向
-      - 通常跟锚点结合使用
-      - 手风琴：每次只打开一个，折叠面板
+   - `E:targe` 选择匹配E的所有元素，且匹配元素被相关URL指向
+   - 通常跟锚点结合使用
+   - 手风琴：每次只打开一个，折叠面板
 
-   3. UI状态伪类选择器
+3. UI状态伪类选择器
 
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/fa0c1b502b3142e782fafdd4ac8f58cc.png)
+
+   - `E:focus`：焦点，会匹配此伪类选择器
+   - checkbox有自己的默认样式，如果没有清除该默认样式的化，不收伪类选择器的样式控制。清除样式：`appearance: none;`
+
+4. 否定伪类选择器
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/ec13e2df1b9d4c3a8015ee03c69251f1.png)
+
+   ```html
+   <style>
+       li:not(:first-child){
+           background: yellow;
+       }
+       li:not(:nth-child(2n+1)){
+           background: yellow;
+       }
+   </style>
+   ```
+
+5. 动态伪类选择器
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/b9d81837be5f4fd0a3a68268b4f557fd.png)
+
+### 7.3 阴影
+
+1. 文本阴影
+
+   ```html
+   <style>
+       /*
+       param1 水平方向的位移
+       param2 垂直方向的位移
+       param3 模糊程度
+       param4 阴影颜色
+       , 支持多个阴影
+       */
+       div{
+           text-shadow: -10px -10px 1px red, 10px 10px 1px yellow;
+       }
+   </style>
+   ```
+
+2. 盒子阴影
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/099cc3cd0b184eef8e502ec5692d5360.png)
+
+3. 
 
 
 
