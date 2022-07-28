@@ -1,7 +1,7 @@
 Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
-"Scancode Map"=hex:00,00,00,00,00,00,00,00,03,00,00,00,3a,00,1D,E0,1D,E0,3a,00,00,00,00,00
+"Scancode Map"=hex:00,00,00,00,00,00,00,00,03,00,00,00,1D,00,3a,00,3a,00,46,00,00,00,00,00
 
 ;参考链接：https://www.icode9.com/content-4-676188.html
 ;需要注意的是：01,00,38,E0的意思是将Esc(01,00)的功能给右alt(38,E0)
