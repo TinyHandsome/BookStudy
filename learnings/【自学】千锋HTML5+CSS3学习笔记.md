@@ -1015,7 +1015,100 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/099cc3cd0b184eef8e502ec5692d5360.png)
 
-3. 
+### 7.4 圆角边框
+
+- `border-radius`
+
+- 接收 px和% 单位
+
+- 接收一个值：四个角是一样的
+
+- 接收两个值：左上右下，左下右上一致
+
+- 三个值：左上，左下右上，右下
+
+- 四个值：从左上开始，顺时针方向
+
+- 单个角的设置：`border-bottom-left-radius: 20px;`
+
+- `border-radius: 30px/60px;`：每个角，水平方向走30，垂直方向走60
+
+- `border-radius: 10px 20px 30px 40px/50px 60px 70px 80px;`：从左上角开始，顺时针方向水平的四个走向/垂直的四个走向
+
+- 正方形变成⚪：`border-radius`的值设置为盒子长宽的一半，要考虑border和padding
+
+- 设置成50%，可以直接设置成⚪，不需要考虑border和padding
+
+- 半圆：
+
+  ```html
+  <style>
+      div {
+          width: 100px;
+          height: 50px;
+          background: green;
+          margin: 0 auto;
+          border-radius: 50px 50px 0 0;
+      }
+  </style>
+  ```
+
+- 扇形：
+
+  ```html
+  <style>
+      div {
+          width: 100px;
+          height: 100px;
+          background: green;
+          margin: 0 auto;
+          border-radius: 200px 0 0 0;
+      }
+  </style>
+  ```
+
+### 7.5 字体引入
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/e930a945cdfa4c2b8002924fa2640583.png)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @font-face {
+            font-family: lt;
+            src: url(datas/HYXiRuJ.ttf);
+        }
+        div{
+            font-family: lt;
+            font-size: 50px;
+            color: red;
+            text-shadow: 5px 0px 0px green;
+        }
+    </style>
+</head>
+<body>
+    <div>很枯燥啊马飞！</div>
+</body>
+</html>
+```
+
+### 7.6 怪异盒模型
+
+- 怪异盒模型
+
+  ![在这里插入图片描述](E:\typora_pics_savepath\8ff439bb454743e6a17a36ab8ef2a4e2.png)
+
+- `box-sizing: border-box`
+
+- 怪异盒模型以宽高为基础，padding和border只会挤压内部空间，而不是像平常出现的外扩情况。margin是一样的。
+
+- 使用场景：排列时，子组件不会因为加了padding而换行
 
 
 
@@ -1033,9 +1126,7 @@
 
 
 
-
-
-学到 P114
+学到 P123
 
 ---
 
