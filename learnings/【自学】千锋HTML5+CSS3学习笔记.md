@@ -1113,28 +1113,148 @@
 ### 7.7 弹性盒
 
 - `display:flex`
+
 - 影响
+
   1. 子元素默认横向排列
   2. 如果子元素是行内元素，则子元素会变成块级元素
   3. 只有一个元素的时候，父元素增加`margin:auto` 会使得子元素实现水平和垂直居中
+
 - 默认情况下，水平方向是主轴，垂直方向是侧轴，子元素按照 **主轴** 排列。
+
 - 设置主轴方向：`flex-direction: column`
+
 - 调整主轴对齐方向：
+
   - `justify-content: space-between;`
   - flex-start
   - flex-end
   - center
   - space-between：两端对齐
   - space-around：距离环绕
+
 - 调整侧轴对齐方向：`align-items: center;`
+
 - 折行：`flex-wrap:wrap`
+
 - 调整折行之后的行间距：
+
   - flex-start
   - flex-end
   - center
   - space-around
   - space-between
-- 加了`display:flex`属性的盒子叫做 **容器**，里面的子盒子叫做项目
+
+- 加了`display:flex`属性的盒子叫做 **容器**，里面的子盒子叫做 **项目**
+
+- 项目的对齐：`align-self: stretch`
+
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <style>
+          .box {
+              width: 300px;
+              height: 120px;
+              border: 1px solid #000;
+              margin: 10px auto;
+              display: flex;
+          }
+          .box div {
+              width: 60px;
+              /* height: 60px; */
+              border: 1px dashed red;
+              box-sizing: border-box;
+          }
+          .div1 {
+              align-self: flex-start;
+          }
+          .div2 {
+              align-self: flex-end;
+          }
+          .div3 {
+              align-self: center;
+          }
+          .div4 {
+              align-self: baseline;
+          }
+          .div5 {
+              align-self: stretch;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="box">
+          <div class="div1">111</div>
+          <div class="div2">222</div>
+          <div class="div3">333</div>
+          <div class="div4">444</div>
+          <div class="div5">555</div>
+      </div>
+  </body>
+  </html>
+  ```
+
+- 项目调整顺序：`order: 1`
+
+  - order不设置时，为0
+  - order越大，越往后面排
+  - order可以取负值，越小越往前排
+  - 如果父容器设置了 `flex-direction:row-reverse`，那么也是按照reverse之后的顺序进行排序，取负值则往前排，取正值则往后排
+
+- 项目剩余宽高：`flex: 1`
+
+  - 占满剩余空间
+
+  - 如果有多个项目都设置了flex，则各自占用的空间按照flex的比例进行平分
+
+  - 纵轴作主轴时同理
+
+  - 三栏布局样例
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            html, body {
+                height: 100%;
+            }
+            body{
+                display: flex;
+            }
+            .box1, .box3 {
+                width: 100px;
+                background: gray;
+            }
+            .box2 {
+                flex: 1;
+                background: yellow;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></divc>
+    </body>
+    </html>
+    ```
+
+  - 
 
 
 
