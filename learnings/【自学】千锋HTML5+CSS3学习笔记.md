@@ -1110,6 +1110,32 @@
 
 - 使用场景：排列时，子组件不会因为加了padding而换行
 
+### 7.7 弹性盒
+
+- `display:flex`
+- 影响
+  1. 子元素默认横向排列
+  2. 如果子元素是行内元素，则子元素会变成块级元素
+  3. 只有一个元素的时候，父元素增加`margin:auto` 会使得子元素实现水平和垂直居中
+- 默认情况下，水平方向是主轴，垂直方向是侧轴，子元素按照 **主轴** 排列。
+- 设置主轴方向：`flex-direction: column`
+- 调整主轴对齐方向：
+  - `justify-content: space-between;`
+  - flex-start
+  - flex-end
+  - center
+  - space-between：两端对齐
+  - space-around：距离环绕
+- 调整侧轴对齐方向：`align-items: center;`
+- 折行：`flex-wrap:wrap`
+- 调整折行之后的行间距：
+  - flex-start
+  - flex-end
+  - center
+  - space-around
+  - space-between
+- 加了`display:flex`属性的盒子叫做 **容器**，里面的子盒子叫做项目
+
 
 
 
