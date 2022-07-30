@@ -42,3 +42,5 @@ python_projects/6-AXFProject/axf
 
 # 工作需要
 **/info_py_ini.py
+
+!**/.ideavimrc

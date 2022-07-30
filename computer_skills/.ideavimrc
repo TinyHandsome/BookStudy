@@ -1,0 +1,33 @@
+" 让tab和shift-tab变为缩进，怎么都能缩进的那种
+nnoremap <tab> V>
+nnoremap <s-tab> V<
+vnoremap <tab> >gv
+vnoremap <s-tab> <gv
+
+" 让键盘映射jk为Esc
+inoremap jl <Esc>o
+inoremap lj <Esc>O
+inoremap kl <Esc>la
+inoremap lk <Esc>i
+inoremap kj <Esc>
+inoremap jk <Esc>
+inoremap fj <Esc>
+inoremap jf <Esc>
+" set timeout ttimeoutlen=50
+
+inoremap <C-l> <Esc>^v$
+nnoremap <C-l> ^v$
+
+" 使用无名寄存器，这样复制粘贴和P、Y使用的都是系统的剪切板，【重要】我发现设置这个之后，双击word然后按s或者x就会删除并复制，很难顶
+" set clipboard=unnamedplusset
+" 共享剪贴板  
+" set clipboard+=unnamed
+
+" 我的映射
+let mapleader=";"
+" 单词大写
+nnoremap <Leader>u bgUw
+" 单词小写
+nnoremap <Leader>l bguw
+" 删除当前到行尾
+nnoremap <Leader>d d$
