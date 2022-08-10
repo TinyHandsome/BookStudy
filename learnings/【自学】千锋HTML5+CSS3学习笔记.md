@@ -1254,9 +1254,33 @@
     </html>
     ```
 
-  - 
+## 8. 移动端布局
 
+1. 模拟器上显示的分辨率：CSS像素，设备的独立像素
 
+2. 物理分辨率：设备像素
+
+3. 设备像素比（dpr）=物理像素/CSS像素
+
+4. iphone6 1css的像素 == 2物理像素；s5 1css像素 == 3物理像素
+
+5. 设计稿：
+
+   - 物理分辨率
+   - 为了清晰的页面
+   - 只需要提供一份
+   - 需要用到的布局有
+     - 百分比布局
+     - 弹性盒布局
+     - rem布局
+
+6. 重要代码：`<meta name="viewport" content="width=device-width, initial-scale=1.0">`
+
+   - 移动端布局
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/02959f4edb4d4b5badcca107b270797d.png)
+
+   - `<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">`：用户不允许缩放
 
 
 

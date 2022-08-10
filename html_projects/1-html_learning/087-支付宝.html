@@ -48,10 +48,41 @@
         footer {
             height: 128px;
             background: gray;
+            display: flex;
+        }
+
+        footer div {
+            flex: 1;
+            /* border: 1px solid red; */
+            /* box-sizing: border-box; */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            color: #acadaf;
+            background: white;
+        }
+        footer div:hover {
+            color: #06a9ee;
+        }
+
+        footer div i.iconfont {
+            height: 66px;
+            line-height: 66px;
+            text-align: center;
+            font-size: 58px;
+        }
+
+        footer div span {
+            font-size: 28px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
         }
 
         section {
             flex: 1;
+            background: #f4f5f9;
         }
 
         .main {
@@ -70,19 +101,23 @@
             justify-content: space-between;
             color: white;
         }
+
         .main div i {
             font-size: 110px;
             text-align: center;
         }
+
         .main div span {
             font-size: 32px;
             text-align: center;
         }
+
         .list {
             display: flex;
             flex-wrap: wrap;
             background: white;
         }
+
         .list div {
             width: 25%;
             height: 208px;
@@ -93,6 +128,7 @@
             flex-direction: column;
             justify-content: center;
         }
+
         .list div i {
             height: 77px;
             line-height: 77px;
@@ -100,6 +136,7 @@
             font-size: 55px;
             color: coral;
         }
+
         .list div span {
             font-size: 30px;
             height: 61px;
@@ -107,8 +144,9 @@
             text-align: center;
         }
 
-        .pic {
+        .pic>img {
             margin-top: 25px;
+            width: 995px;
         }
     </style>
 </head>
@@ -194,11 +232,28 @@
             </div>
 
             <div class="pic">
-                <img src="imgs/item.jpg" alt="">
+                <img src="pics/zhangdan.png" alt="">
             </div>
 
         </section>
-        <footer></footer>
+        <footer>
+            <div>
+                <i class="iconfont icon-Dyanjing"></i>
+                <span>支付宝</span>
+            </div>
+            <div>
+                <i class="iconfont icon-Dyanjing"></i>
+                <span>支付宝</span>
+            </div>
+            <div>
+                <i class="iconfont icon-Dyanjing"></i>
+                <span>支付宝</span>
+            </div>
+            <div>
+                <i class="iconfont icon-Dyanjing"></i>
+                <span>支付宝</span>
+            </div>
+        </footer>
     </div>
 </body>
 
