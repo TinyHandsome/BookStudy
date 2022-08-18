@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            height: 44px;
+            background: #0cc440;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header div {
+            width: 60px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        header div:nth-child(1) {
+            border-radius: 12px 0 0 12px;
+            background: #63d985;
+            color: white;
+        }
+
+        header div:nth-child(2) {
+            border-radius: 0 12px 12px 0;
+            background: #3dd066;
+            color: #a9e4b4;
+        }
+
+        section {
+            flex: 1;
+        }
+
+        section ul {
+            display: flex;
+        }
+
+        section ul li {
+            flex: 1;
+            text-align: center;
+            height: 35px;
+            line-height: 35px;
+            border-bottom: 1px solid #d9d9d9;
+            color: #8c8c8c;
+            font-size: 14px;
+        }
+        section ul li:hover {
+            border-bottom: 2px solid #08c63e;
+            color: #14bf4d;
+        }
+        section .list {
+            display: flex;
+        }
+        section .list>div {
+            
+        }
+
+        footer {
+            height: 44px;
+            background: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>热点</div>
+        <div>关注</div>
+    </header>
+    <section>
+        <ul>
+            <li>足球现场</li>
+            <li>足球生活</li>
+            <li>足球美女</li>
+        </ul>
+
+        <div class="list">
+            <div>
+                <img src="" alt="">
+                <p>杰尼龟</p>
+            </div>
+        </div>
+    </section>
+    <footer></footer>
+</body>
+
+</html>
