@@ -5,14 +5,14 @@ vnoremap <tab> >gv
 vnoremap <s-tab> <gv
 
 " 让键盘映射jk为Esc
-inoremap jl <Esc>o
-inoremap lj <Esc>O
-inoremap kl <Esc>la
-inoremap lk <Esc>i
-inoremap kj <Esc>
-inoremap jk <Esc>
-inoremap fj <Esc>
-inoremap jf <Esc>
+inoremap <C-j>jl <Esc>o
+inoremap <C-j>lj <Esc>O
+inoremap <C-j>kl <Esc>la
+inoremap <C-j>lk <Esc>i
+inoremap <C-j>kj <Esc>
+inoremap <C-j>jk <Esc>
+" inoremap fj <Esc>
+" inoremap jf <Esc>
 " set timeout ttimeoutlen=50
 
 inoremap <C-l> <Esc>^v$

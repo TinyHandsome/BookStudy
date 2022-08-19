@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="imgs/testpic/iconfont.css">
     <style>
         * {
             margin: 0;
@@ -56,10 +57,14 @@
 
         section {
             flex: 1;
+            overflow: auto;
         }
 
         section ul {
+            position: sticky;
+            top: 0;
             display: flex;
+            background-color: white;
         }
 
         section ul li {
@@ -71,20 +76,85 @@
             color: #8c8c8c;
             font-size: 14px;
         }
+
         section ul li:hover {
             border-bottom: 2px solid #08c63e;
             color: #14bf4d;
         }
+
         section .list {
             display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
+
         section .list>div {
-            
+            width: 49%;
+            margin-top: 4px;
+            border: 1px solid gray;
+        }
+
+        section .list>div img {
+            width: 100%;
+        }
+
+        section .list>div p {
+            height: 30px;
+            line-height: 30px;
+            font-size: 12px;
+            text-indent: 10px;
         }
 
         footer {
             height: 44px;
-            background: gray;
+            background: white;
+            color: #d5d5d7;
+        }
+
+        footer ul {
+            display: flex;
+            height: 100%;
+        }
+
+        footer li {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        footer li:hover{
+            color: #08ca43;
+        }
+
+        footer li i{
+            height: 21px;
+            line-height: 21px;
+            text-align: center;
+            font-size: 16px;
+        }
+        footer li span {
+            height: 17px;
+            line-height: 17px;
+            text-align: center;
+            font-size: 12px;
+        }
+        footer li:nth-child(3){
+            position: relative;
+        }
+        footer li:nth-child(3) i{
+            width: 50px;
+            height: 50px;
+            border: 1px solid #dadada;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            margin-left: -25px;
+            top: -8;
+            font-size: 30px;
+            text-align: center;
+            line-height: 50px;
+            background: white;
         }
     </style>
 </head>
@@ -103,12 +173,58 @@
 
         <div class="list">
             <div>
-                <img src="" alt="">
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
                 <p>杰尼龟</p>
             </div>
         </div>
     </section>
-    <footer></footer>
+    <footer>
+        <ul>
+            <li>
+                <i class="iconfont icon-aixin"></i>
+                <span>首页</span>
+            </li>
+            <li>
+                <i class="iconfont icon-anquan"></i>
+                <span>发现</span>
+            </li>
+            <li>
+                <i class="iconfont icon-bangzhu"></i>
+            </li>
+            <li>
+                <i class="iconfont icon-bianji"></i>
+                <span>我的</span>
+            </li>
+            <li>
+                <i class="iconfont icon-bofangjilu"></i>
+                <span>退出</span>
+            </li>
+        </ul>
+    </footer>
 </body>
 
 </html>
