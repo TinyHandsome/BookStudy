@@ -1282,6 +1282,34 @@
 
    - `<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">`：用户不允许缩放
 
+7. 内部控件拥有自己的滚动条：overflow:auto
+
+8. 隐藏滚动条：
+
+   ```css
+   ::-webkit-scrollbar{
+               display: none;
+           }
+   ```
+
+9. 调整行间距从上面开始显示：`align-content: flex-start;`
+
+10. 文字居中显示：`text-align: center;`
+
+11. flex横向排列不运行被挤压：`flex-shrink: 0;`
+
+## 9. 多列布局
+
+1. 目的：实现蘑菇街、小红书这种的，瀑布流布局
+
+2. 多列布局
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/0c3515b892d249ba98ee2bc2ab1cf5e6.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/ae5ab732b5524194a2ab2e638adf4ff8.png)
+
+3. 
+
 
 
 

@@ -26,13 +26,169 @@
             height: 45px;
             background: gray;
         }
+        header ul {
+            display: flex;
+            overflow: auto;
+            color: white;
+        }
+        header ul li {
+            flex-shrink: 0;
+            line-height: 45px;
+            padding: 0 10px;
+        }
+        header ul li:hover {
+            background: white;
+            color: red;
+        }
         footer {
             height: 50px;
             background: gray;
         }
+        section {
+            flex: 1;
+            display: flex;
+            overflow: auto;
+        }
+        section ul {
+            width: 85px;
+            overflow: auto;
+        }
+        section ul li{
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            font-size: 14px;
+            background: #f8f8f8;
+        }
+        section ul li:hover{
+            background: white;
+            color: #e96062;
+        }
+        section>div {
+            flex: 1;
+            /* background: yellow; */
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            overflow: auto;
+        }
+        ::-webkit-scrollbar{
+            display: none;
+        }
+        /* section .content {
+
+        } */
+        section .content>div {
+            height: 101px;
+            width: 33.33%;
+            /* background: red; */
+            text-align: center;
+        }
+        section .content>div img{
+            width: 60px;
+            height: 50px;
+            margin-top: 11px;
+        }
     </style>
 </body>
-    <header></header>
-    <section></section>
+    <header>
+        <ul>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+        </ul>
+    </header>
+    <section>
+        <ul>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+            <li>热门推荐</li>
+        </ul>
+        <div class="content">
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            <div>
+                <img src="pics/computer.png" alt="">
+                <p>电脑</p>
+            </div>
+            
+        </div>
+    </section>
     <footer></footer>
 </html>
