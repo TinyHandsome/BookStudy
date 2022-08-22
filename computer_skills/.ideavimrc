@@ -5,29 +5,40 @@ vnoremap <tab> >gv
 vnoremap <s-tab> <gv
 
 " 让键盘映射jk为Esc
+" set timeout ttimeoutlen=50
 inoremap <C-j>jl <Esc>o
 inoremap <C-j>lj <Esc>O
 inoremap <C-j>kl <Esc>la
 inoremap <C-j>lk <Esc>i
 inoremap <C-j>kj <Esc>
 inoremap <C-j>jk <Esc>
-" inoremap fj <Esc>
-" inoremap jf <Esc>
-" set timeout ttimeoutlen=50
+inoremap <C-j>fj <Esc>
+inoremap <C-j>jf <Esc>
 
+
+" 单词大写
+nnoremap <C-j>u bgUw
+inoremap <C-j>u <Esc>bgUw
+" 单词小写
+nnoremap <C-j>l bguw
+inoremap <C-j>l <Esc>bguw
+" 删除当前到行尾
+nnoremap <C-j>d d$
+inoremap <C-j>d <Esc>d$
+
+" 选择当前行
 inoremap <C-l> <Esc>^v$
 nnoremap <C-l> ^v$
 
 " 使用无名寄存器，这样复制粘贴和P、Y使用的都是系统的剪切板，【重要】我发现设置这个之后，双击word然后按s或者x就会删除并复制，很难顶
 " set clipboard=unnamedplusset
 " 共享剪贴板  
-" set clipboard+=unnamed
+set clipboard+=unnamed
+" 突出显示当前行
+set cursorline
 
 " 我的映射
-let mapleader=";"
-" 单词大写
-nnoremap <Leader>u bgUw
-" 单词小写
-nnoremap <Leader>l bguw
-" 删除当前到行尾
-nnoremap <Leader>d d$
+" let mapleader=";"
+
+
+

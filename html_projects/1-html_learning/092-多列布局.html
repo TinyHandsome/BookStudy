@@ -16,11 +16,22 @@
             column-gap: 30px;
             /* 列边框 */
             column-rule: 2px solid red;
+            /* 列高度统一 */
+            /* 把balance换成auto，则每列会优先把父盒子占满 */
+            column-fill: balance;
+            /* 调整列宽 */
+            column-width: 500px;
+        }
+        div>h1 {
+            /* 横跨所有的列 */
+            column-span: all;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div>
+        <h1>赵钱孙礼</h1>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut voluptatibus, obcaecati molestiae deleniti porro tenetur earum doloribus, quibusdam ipsa corporis, officiis assumenda natus inventore amet ducimus quisquam commodi molestias dolor?Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugiat adipisci, ad voluptates modi recusandae at enim illo maiores sint quidem rerum soluta similique, nisi consectetur cumque suscipit sed porro exercitationem!
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odit vero eos facilis recusandae omnis dolore exercitationem debitis temporibus, illo magni quidem mollitia nesciunt fugiat sequi, non eveniet ex nihil accusantium!
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, minima unde expedita molestias sint eos eligendi asperiores itaque consequuntur magni, consequatur delectus cupiditate sapiente! Ipsa nam provident pariatur illo sint?

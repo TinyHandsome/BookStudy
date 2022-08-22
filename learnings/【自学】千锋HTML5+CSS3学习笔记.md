@@ -1308,7 +1308,126 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/ae5ab732b5524194a2ab2e638adf4ff8.png)
 
-3. 
+3. 多列布局案例
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Document</title>
+       <style>
+           div{
+               height: 300px;
+               background: yellow;
+   
+               /* 显示的列数 */
+               column-count: 5;
+               /* 调整列间距 */
+               column-gap: 30px;
+               /* 列边框 */
+               column-rule: 2px solid red;
+               /* 列高度统一 */
+               /* 把balance换成auto，则每列会优先把父盒子占满 */
+               column-fill: balance;
+               /* 调整列宽 */
+               column-width: 500px;
+           }
+           div>h1 {
+               /* 横跨所有的列 */
+               column-span: all;
+               text-align: center;
+           }
+       </style>
+   </head>
+   <body>
+       <div>
+           <h1>赵钱孙礼</h1>
+           Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut voluptatibus, obcaecati molestiae deleniti porro tenetur earum doloribus, quibusdam ipsa corporis, officiis assumenda natus inventore amet ducimus quisquam commodi molestias dolor?Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugiat adipisci, ad voluptates modi recusandae at enim illo maiores sint quidem rerum soluta similique, nisi consectetur cumque suscipit sed porro exercitationem!
+           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odit vero eos facilis recusandae omnis dolore exercitationem debitis temporibus, illo magni quidem mollitia nesciunt fugiat sequi, non eveniet ex nihil accusantium!
+           Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, minima unde expedita molestias sint eos eligendi asperiores itaque consequuntur magni, consequatur delectus cupiditate sapiente! Ipsa nam provident pariatur illo sint?
+       </div>
+   </body>
+   </html>
+   ```
+
+## 10. 响应式布局
+
+1. 常见的布局方案
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/aeee7cce5ef0464cabb80d6acc374c18.png)
+
+2. 模块中的内容：挤压-拉（布局不变）
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/8708e1bc0e97483cae8643dec0ba41da.png)
+
+3. 模块中的内容：换行-平铺（布局不变）
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/85bb4606734d44358d7a946f9f87b122.png)
+
+4. 模块中的内容：删减-增加（布局不变）
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/9309c3d58cbc428a89ac42a1d8bf77f4.png)
+
+5. 模块位置变换（布局改变）
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/1d470fd471aa42359df3535044e5a7a6.png)
+
+6. 模块展示方式改变：隐藏-展开（布局改变）
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d8fa63a96628489d8f3add0c72dd816e.png)
+
+7. 响应式布局特点
+
+   - 设计特点：
+     - 面对不同分辨率设备灵活性强
+     - 能够快捷解决多设备显示适应问题
+   - 缺点：
+     - 兼容各种设备工作量大，效率低下
+     - 代码累赘，会出现隐藏无用的元素，加载时间加长
+     - 其实这也是一种折中性质的设计解决方案，多方面因素影响而达不到最佳效果
+     - 一定程度上改变了网站原有的布局结构，会出现用户混淆的情况
+
+8. 媒体查询的含义：
+
+   媒体查询可以让我们根据设备显示器的特性（比如视口宽度、屏幕比例、设备方向：横向或纵向）为其设定CSS样式，媒体查询由媒体类型和一个或多个检测媒体特性的条件表达式组成。媒体查询中可用于检测的媒体特性有width、height和color等。使用媒体查询，可以在不改变页面内容的情况下，为特定的一些输出设备定制显示效果。
+
+   1. 媒体查询操作方式
+
+      实际操作为：对设备提出询问（称作表达式）开始，如果表达式结果为真，媒体查询中的CSS被应用，如果表达式结果为假，媒体查询内的CSS将被忽略
+
+   2. 媒体查询结构
+
+      ```css
+      @media all and (min-width:320px){
+      	body {background-color:blue;}
+      }
+      ```
+
+9. 设备类型（默认为all）
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/abf1ce915c284676a5f11f9afe1cdee4.png)
+
+   - screen是媒体类型中的一种，CSS2.1定义了10种媒体类型
+
+   - and被称为关键字，其他关键字还包括not（排除某种设备），only（限定某种设备）
+
+   - `(min-width:400px)`就是媒体特性，其被放置在一对括号中
+
+   - 常用设置
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/efaf983a67c24effbd979d39106ffe93.png)
+
+     ![a](https://img-blog.csdnimg.cn/c7c3545900334de98d94e0a2b8c0d2ff.png)
+
+## 11. em与rem
+
+1. px, em, rem 之争
+   - px: 500px
+   - em: 相对单位，相对于父元素的字体大小
+   - rem: 相对单位，相对于根元素的字体大小
 
 
 
@@ -1324,7 +1443,7 @@
 
 
 
-学到 P136
+学到 P144
 
 ---
 

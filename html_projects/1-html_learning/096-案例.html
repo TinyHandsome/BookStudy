@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .top {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .top>div {
+            width: 49%;
+        }
+
+        .top img {
+            width: 100%;
+            border: 2px solid red;
+        }
+
+        .top .right {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .top .right>div {
+            width: 49%;
+        }
+
+        @media screen and (max-width:768px) {
+            .top>div {
+                width: 100%;
+            }
+        }
+
+        .bottom {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .bottom>div {
+            width: 23%;
+            padding: 5px;
+            box-sizing: border-box;
+            border: 1px solid gray;
+
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px black;
+        }
+
+        .bottom img {
+            width: 100%;
+        }
+
+        @media screen and (max-width:1024px) and (min-width:768px) {
+            .bottom>div {
+                width: 31%;
+            }
+        }
+        @media screen and (max-width:768px) and (min-width:450px) {
+            .bottom>div {
+                width: 48%;
+            }
+        }
+        @media screen and (max-width:450px) {
+            .bottom>div {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+        top: flex, wrap
+            > 768px 左 50% 右 50%
+            < 768px 上 100% 下 100%
+        bottom: flex, wrap
+            > 1024 23% * 4
+            > 768 < 1024 31% * 3
+            > 450 < 768 48% * 2
+            < 450 90% * 1
+     -->
+
+    <div class="top">
+        <div class="left">
+            <img src="imgs/桌面图片/p1.jpg" alt="">
+        </div>
+        <div class="right">
+            <div><img src="pics/吃货/华夫饼.png" alt=""></div>
+            <div><img src="pics/吃货/可乐.png" alt=""></div>
+        </div>
+    </div>
+
+    <div class="bottom">
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+        <div>
+            <img src="imgs/桌面图片/P19.jpg" alt="">
+            <p>桌面图片展示</p>
+        </div>
+    </div>
+</body>
+
+</html>

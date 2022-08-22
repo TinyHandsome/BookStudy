@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        div {
+            height: 100px;
+            background: yellow;
+            border: 2px solid red;
+            box-sizing: border-box;
+            width: 33.33%;
+        }
+
+        @media screen and (orientation:portrait) {
+            div {
+                width: 33.333%;
+            }
+        }
+
+        @media screen and (orientation:landscape) {
+            div {
+                width: 20%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</body>
+
+</html>
