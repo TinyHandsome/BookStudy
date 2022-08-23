@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="imgs/testpic/iconfont.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        html {
+            /* 320px == 100vw
+                16px == ?vw
+            */
+            font-size: 5vw;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            height: 2.75rem;
+            background: #0cc440;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header div {
+            width: 3.75rem;
+            height: 1.5625rem;
+            line-height: 1.5625rem;
+            text-align: center;
+            font-size: .75rem;
+        }
+
+        header div:nth-child(1) {
+            border-radius: .75rem 0 0 .75rem;
+            background: #63d985;
+            color: white;
+        }
+
+        header div:nth-child(2) {
+            border-radius: 0 .75rem .75rem 0;
+            background: #3dd066;
+            color: #a9e4b4;
+        }
+
+        section {
+            flex: 1;
+            overflow: auto;
+        }
+
+        section ul {
+            position: sticky;
+            top: 0;
+            display: flex;
+            background-color: white;
+        }
+
+        section ul li {
+            flex: 1;
+            text-align: center;
+            height: 2.1875rem;
+            line-height: 2.1875rem;
+            border-bottom: .0625rem solid #d9d9d9;
+            color: #8c8c8c;
+            font-size: .875rem;
+        }
+
+        section ul li:hover {
+            border-bottom: .125rem solid #08c63e;
+            color: #14bf4d;
+        }
+
+        section .list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        section .list>div {
+            width: 49%;
+            margin-top: .25rem;
+            border: .0625rem solid gray;
+        }
+
+        section .list>div img {
+            width: 100%;
+        }
+
+        section .list>div p {
+            height: 1.875rem;
+            line-height: 1.875rem;
+            font-size: .75rem;
+            text-indent: .625rem;
+        }
+
+        footer {
+            height: 2.75rem;
+            background: white;
+            color: #d5d5d7;
+        }
+
+        footer ul {
+            display: flex;
+            height: 100%;
+        }
+
+        footer li {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        footer li:hover{
+            color: #08ca43;
+        }
+
+        footer li i{
+            height: 1.3125rem;
+            line-height: 1.3125rem;
+            text-align: center;
+            font-size: 1rem;
+        }
+        footer li span {
+            height: 1.0625rem;
+            line-height: 1.0625rem;
+            text-align: center;
+            font-size: .75rem;
+        }
+        footer li:nth-child(3){
+            position: relative;
+        }
+        footer li:nth-child(3) i{
+            width: 3.125rem;
+            height: 3.125rem;
+            border: .0625rem solid #dadada;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            margin-left: -1.5625rem;
+            top: -8;
+            font-size: 1.875rem;
+            text-align: center;
+            line-height: 3.125rem;
+            background: white;
+        }
+
+        .iconfont {
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>热点</div>
+        <div>关注</div>
+    </header>
+    <section>
+        <ul>
+            <li>足球现场</li>
+            <li>足球生活</li>
+            <li>足球美女</li>
+        </ul>
+
+        <div class="list">
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+            <div>
+                <img src="pics/mark1.jpg" alt="">
+                <p>杰尼龟</p>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <ul>
+            <li>
+                <i class="iconfont icon-aixin"></i>
+                <span>首页</span>
+            </li>
+            <li>
+                <i class="iconfont icon-anquan"></i>
+                <span>发现</span>
+            </li>
+            <li>
+                <i class="iconfont icon-bangzhu"></i>
+            </li>
+            <li>
+                <i class="iconfont icon-bianji"></i>
+                <span>我的</span>
+            </li>
+            <li>
+                <i class="iconfont icon-bofangjilu"></i>
+                <span>退出</span>
+            </li>
+        </ul>
+    </footer>
+</body>
+
+</html>
