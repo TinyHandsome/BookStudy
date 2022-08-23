@@ -145,6 +145,8 @@ def search_id_and_name(ep: EpidemicPrevention, name, id):
     max_stamp_two_week = 0
     max_stamp_one_month = 0
     max_stamp = 0
+    count_of_two_week = 0
+
     for s1, s2 in zip(detection_time.iloc[:-1], detection_time.iloc[1:]):
         delta = s1 - s2
         delta_hours = round(delta.days + delta.components.hours / 24, 2)
@@ -153,10 +155,11 @@ def search_id_and_name(ep: EpidemicPrevention, name, id):
 
             if s1 > day_of_two_week:
                 max_stamp_two_week = delta_hours
+                count_of_two_week += 1
             if s1 > day_of_one_month:
                 max_stamp_one_month = delta_hours
 
-    main_result = main_result + [max_stamp_two_week, max_stamp_one_month, max_stamp]
+    main_result = main_result + [max_stamp_two_week, count_of_two_week, max_stamp_one_month, max_stamp]
 
     return main_result
 
@@ -172,7 +175,7 @@ def main():
     file_path = './datas/temp.xlsx'
     df = pd.read_excel(file_path)
 
-    columns = ['今天是否做核酸', '最近核酸时间', '最远核酸时间', '最近两周核酸最长间隔', '最近一个月核酸最长间隔', '历史核酸最长间隔']
+    columns = ['今天是否做核酸', '最近核酸时间', '最远核酸时间', '最近两周核酸最长间隔', '最近两周核酸次数', '最近一个月核酸最长间隔', '历史核酸最长间隔']
     data = []
     index = 1
     for i in range(df.shape[0]):
@@ -198,6 +201,7 @@ def main():
         data.append(main_result)
 
     result = pd.DataFrame(data, columns=columns)
+    result.to_excel(datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '.xlsx')
     print(result)
 
 
