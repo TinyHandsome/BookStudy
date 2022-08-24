@@ -1457,7 +1457,188 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/2b6baafa321547948f3d233dc0230ab1.png)
 
+   - 支持多颜色渐变
+   - 支持方向：to left、to right bottom…
+   - 支持任意方向：30deg…
+
+3. 径向渐变
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/72c30ebfd38a4a7ba562ab7c2cb78076.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/3c776ba92896438a870b4190506cd2be.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/bed706288892481ba3161c9006159a72.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/4140083179124fe1b0b1674b7e90a711.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/a74ccb1d78104f7aaafc108e744408ca.png)
+
+   - 如果效果无法正常显示，需要在radial-gradient函数前加上：`-webkit-`，火狐浏览器需要加 `-moz-`
+
+4. 重复渐变：重复线性渐变
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/f162d563b1324b56ad5272dea007210a.png)
+
+5. 太极绘制：
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Document</title>
+       <style>
+           body {
+               background: lightblue;
+           }
+           div {
+               width: 200px;
+               height: 200px;
+               background: linear-gradient(white 50%, black 50%);
+               margin: 10px auto;
+               display: flex;
+               align-items: center;
+               border-radius: 50%;
+           }
+           div::before {
+               content: "";
+               display: block;
+               width: 100px;
+               height: 100px;
+               background: radial-gradient(white 20%, black 25%);
+               border-radius: 50%;
+           }
+           div::after {
+               content: "";
+               display: block;
+               width: 100px;
+               height: 100px;
+               background: radial-gradient(black 20%, white 25%);
+               border-radius: 50%;
+           }
+       </style>
+   </head>
+   <body>
+       <div></div>
+   </body>
+   </html>
+   ```
+
+## 13. 动画
+
+1. 动画过渡属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/83894ca89e9340a4957ec2cc2a870985.png)
+
+   - 注意：`display: none /block` 无法支持动画过渡
+
+   - 针对该情况的动画制作，可以使用 `height:0` 的改变来实现，并设置 `overflow:hidden`
+
+2. 动画过渡类型
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/abe72364eaf04265a81b5e094997aa6a.png)
+
+   - 样例
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             ul {
+                 list-style: none;
+             }
+     
+             li {
+                 width: 200px;
+                 height: 50px;
+                 border: 1px solid gray;
+             }
+     
+             ul:hover li:nth-child(1) {
+                 width: 600px;
+                 transition: all 2s linear;
+             }
+     
+             ul:hover li:nth-child(2) {
+                 width: 600px;
+                 transition: all 2s ease;
+             }
+     
+             ul:hover li:nth-child(3) {
+                 width: 600px;
+                 transition: all 2s ease-in;
+             }
+     
+             ul:hover li:nth-child(4) {
+                 width: 600px;
+                 transition: all 2s ease-out;
+             }
+             ul:hover li:nth-child(5) {
+                 width: 600px;
+                 transition: all 2s ease-in-out;
+             }
+             ul:hover li:nth-child(6) {
+                 width: 600px;
+                 transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1);
+             }
+         </style>
+     </head>
+     
+     <body>
+         <ul>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+         </ul>
+     </body>
+     
+     </html>
+     ```
+
+3. 动画过渡单一属性
+
+   - transition-property
+     - 现在就可以监控多个属性了
+     - 比如 `transition-property: height background`
+   - transition-duration
+   - transition-delay
+   - transition-timing-function
+
+4. 2d属性-transform
+
+   1. translate()
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/5cb4914ccc7a46c18c97676eedf9bc88.png)
+
+       - 使用transform的优点
+
+          ![在这里插入图片描述](https://img-blog.csdnimg.cn/f3cdc3ab98f349f1aec35506d33fb4cd.png)
+
+       - 设置left-合成图层
+
+          ![在这里插入图片描述](https://img-blog.csdnimg.cn/9b02d53ee1924761879fca68bd5d9b0c.png)
+
+       - 设置translate-独立图层
+
+          ![在这里插入图片描述](https://img-blog.csdnimg.cn/1d0f3f5970b64143a1865775c73d0a39.png)
    
+   2. scale()
+   
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/13550c0a5db341c4a476c3d1e4205d3d.png)
+   
+       - 
 
 
 
@@ -1484,8 +1665,7 @@
 
 
 
-
-学到 P144
+学到 P160
 
 ---
 
