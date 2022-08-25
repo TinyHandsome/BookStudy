@@ -1638,7 +1638,171 @@
    
        ![在这里插入图片描述](https://img-blog.csdnimg.cn/13550c0a5db341c4a476c3d1e4205d3d.png)
    
-       - 
+       - 如果设置的是负值，则为倒着的放大或者缩小
+       - 支持X轴、Y轴单独放大
+       - 从左上角放大：`transform-origin: left top;`
+         - 改变中心点的位置
+         - center、left top、left center…
+   
+   3. rotate()
+   
+      ![image-20220825141647066](E:\typora_pics_savepath\image-20220825141647066.png)
+   
+      - 正值：顺时针
+   
+      - 负值：逆时针
+   
+      - rotateX和rotateY会在三维空间中旋转
+   
+      - rotate = rotateZ 等价
+   
+      - 绕着左上角的点旋转：`transform-origin: left top;`
+   
+      - 折扇效果：
+   
+        ```html
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                }
+                ul {
+                    list-style: none;
+                }
+                ul {
+                    margin: 10px auto;
+                    width: 400px;
+                    height: 300px;
+                    /* border: 5px solid gray; */
+                    position: relative;
+                }
+                li {
+                    width: 60px;
+                    height: 200px;
+                    position: absolute;
+                    left: 50%;
+                    margin-left: -30px;
+                    bottom: 30px;
+                    text-align: center;
+                    transform-origin: bottom center;
+                    border-radius: 10px;
+                    transition: all 2s;
+                    font-size: 10px;
+                }
+        
+                ul li:not(:nth-child(7)) {
+                    opacity: 0;
+                }
+                ul:hover li {
+                    opacity: 1;
+                }
+        
+                ul li:nth-child(1){
+                    background: #b8f1cc;
+                }
+                ul li:nth-child(2){
+                    background: #b8f1ed;
+                }
+                ul li:nth-child(3){
+                    background: #f1f1b8;
+                }
+                ul li:nth-child(4){
+                    background: #f1ccb8;
+                }
+                ul li:nth-child(5){
+                    background: #d9b8f1;
+                }
+                ul li:nth-child(6){
+                    background: #f1b8f1;
+                }
+                ul li:nth-child(7) {
+                    background: #ff9b6a;
+                }
+                ul li:nth-child(8){
+                    background: #f9b747;
+                }
+                ul li:nth-child(9){
+                    background: #fecf45;
+                }
+                ul li:nth-child(10){
+                    background: #e3a04f;
+                }
+                ul li:nth-child(11){
+                    background: #f1ccb8;
+                }
+                ul li:nth-child(12){
+                    background: #b8d38f;
+                }
+                ul li:nth-child(13){
+                    background: #ddff95;
+                }
+        
+                ul:hover li:nth-child(1) {
+                    transform: rotate(90deg);
+                }
+                ul:hover li:nth-child(13) {
+                    transform: rotate(-90deg);
+                }
+                ul:hover li:nth-child(2) {
+                    transform: rotate(75deg);
+                }
+                ul:hover li:nth-child(12) {
+                    transform: rotate(-75deg);
+                }
+                ul:hover li:nth-child(3) {
+                    transform: rotate(60deg);
+                }
+                ul:hover li:nth-child(11) {
+                    transform: rotate(-60deg);
+                }
+                ul:hover li:nth-child(4) {
+                    transform: rotate(45deg);
+                }
+                ul:hover li:nth-child(10) {
+                    transform: rotate(-45deg);
+                }
+                ul:hover li:nth-child(5) {
+                    transform: rotate(30deg);
+                }
+                ul:hover li:nth-child(9) {
+                    transform: rotate(-30deg);
+                }
+                ul:hover li:nth-child(6) {
+                    transform: rotate(15deg);
+                }
+                ul:hover li:nth-child(8) {
+                    transform: rotate(-15deg);
+                }
+            </style>
+        </head>
+        <body>
+            <ul>
+                <li>好运</li>
+                <li>快乐</li>
+                <li>健康</li>
+                <li>顺意</li>
+                <li>平安</li>
+                <li>喜乐</li>
+                <li>暴富</li>
+                <li>升职</li>
+                <li>加薪</li>
+                <li>可爱</li>
+                <li>美丽</li>
+                <li>成功</li>
+                <li>发财</li>
+            </ul>
+        </body>
+        </html>
+        ```
+   
+   4. 
 
 
 
@@ -1665,7 +1829,7 @@
 
 
 
-学到 P160
+学到 P163
 
 ---
 
