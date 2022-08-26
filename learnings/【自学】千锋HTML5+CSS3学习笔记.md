@@ -1633,33 +1633,33 @@
        - 设置translate-独立图层
 
           ![在这里插入图片描述](https://img-blog.csdnimg.cn/1d0f3f5970b64143a1865775c73d0a39.png)
-   
+
    2. scale()
-   
+
        ![在这里插入图片描述](https://img-blog.csdnimg.cn/13550c0a5db341c4a476c3d1e4205d3d.png)
-   
+
        - 如果设置的是负值，则为倒着的放大或者缩小
        - 支持X轴、Y轴单独放大
        - 从左上角放大：`transform-origin: left top;`
          - 改变中心点的位置
          - center、left top、left center…
-   
+
    3. rotate()
-   
+
       ![image-20220825141647066](E:\typora_pics_savepath\image-20220825141647066.png)
-   
+
       - 正值：顺时针
-   
+
       - 负值：逆时针
-   
+
       - rotateX和rotateY会在三维空间中旋转
-   
+
       - rotate = rotateZ 等价
-   
+
       - 绕着左上角的点旋转：`transform-origin: left top;`
-   
+
       - 折扇效果：
-   
+
         ```html
         <!DOCTYPE html>
         <html lang="en">
@@ -1801,8 +1801,29 @@
         </body>
         </html>
         ```
-   
-   4. 
+
+5. transform的顺序问题：
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d2e2409ff3604322a5fd5b65c57c5737.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d9399dfd5f814eb9bfa5d6538630b133.png)
+
+   - 多个属性要写在一个transform中，多个transform会被覆盖
+   - 属性的顺序需要按照逻辑顺序排列，比如先位移再旋转和缩放
+
+6. 倾斜
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/ccf710d14192428d89b571834135561d.png)
+
+   - skewX：拽着右小角，往右拉动，使得偏离垂直倾斜一定的夹角
+
+7. 关键帧动画
+
+   - animation和transition的区别
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/8cafed476ed045739a42865fb0622000.png)
+
+   - 
 
 
 

@@ -11,6 +11,21 @@
             height: 600px;
             border: 2px solid gray;
         }
+        .box div {
+            width: 200px;
+            height: 200px;
+            background: red;
+            border: 1px solid black;
+        }
+        .box div:nth-child(1){
+            transform: translateX(400px);
+        }
+        .box div:nth-child(2){
+            transform: translateX(400px) scale(0.5);
+        }
+        .box div:nth-child(3){
+            transform: scale(0.5) translateX(400px);
+        }
     </style>
 </head>
 <body>

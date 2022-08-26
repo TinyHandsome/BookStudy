@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 200px;
+            height: 200px;
+            background: red;
+            animation: run1 2s linear;
+        }
+
+        /* 声明动画 */
+        @keyframes run1 {
+            from {
+                width: 200px;
+                height: 200px;
+                background: red;
+            }
+            to {
+                width: 400px;
+                height: 600px;
+                background: green;
+            }
+        }
+
+        @keyframes run2 {
+            0% {
+                width: 200px;
+                height: 200px;
+                background: red;
+            }
+            25% {
+                width: 200px;
+                height: 400px;
+                background: yellow;
+            }
+            50% {
+                width: 400px;
+                height: 600px;
+                background: blue;
+            }
+            75% {
+                width: 400px;
+                height: 500px;
+                background: gray;
+            }
+            100% {
+                width: 400px;
+                height: 600px;
+                background: green;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+</body>
+</html>

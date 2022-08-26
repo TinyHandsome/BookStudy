@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            display: block;
+        }
+
+        .box {
+            width: 350px;
+            border: 5px solid red;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        img,
+        p,
+        h2 {
+            transition: all 1s;
+        }
+
+        .box .pic {
+            width: 100%;
+        }
+
+        .box:hover .pic {
+            transform: translateY(-20px);
+            opacity: 0.5;
+        }
+
+        .box h2 {
+            position: absolute;
+            left: 60px;
+            top: 30px;
+            color: white;
+            transform: translateY(-200px);
+        }
+        .box:hover h2 {
+            transform: translateY(0);
+        }
+
+        .box p {
+            position: absolute;
+            bottom: 0;
+            left: 80px;
+            font-size: 2px;
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        .box:hover p {
+            transform: translateY(-50px);
+            opacity: 1;
+        }
+
+        .box .music {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 20px;
+            height: 20px;
+        }
+        .box:hover .music {
+            transform: rotate(360deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <img class="pic" src="imgs/桌面图片/p2.jpg" alt="">
+        <div>
+            <h2>title</h2>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+        </div>
+
+        <img class="music" src="imgs/音乐.png" alt="">
+
+    </div>
+</body>
+
+</html>
