@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .swiper-container {
+            width: 640px;
+            height: 300px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .swiper-container img {
+            width: 640px;
+            height: 300px;
+        }
+        .swiper-slide {
+            float: left;
+        }
+        .swiper-wrapper {
+            width: 9999px;
+            animation: swiperrun 10s linear infinite;
+        }
+
+        .swiper-wrapper:hover{
+            animation-play-state: paused;
+        }
+
+        @keyframes swiperrun {
+            0% {
+                transform: translateX(0px);
+            }
+            5%{
+                transform: translateX(-640px);
+            }
+            25%{
+                transform: translateX(-640px);
+            }
+            30%{
+                transform: translateX(-1280px);
+            }
+            50%{
+                transform: translateX(-1280px);
+            }
+            55%{
+                transform: translateX(-1920px);
+            }
+            75%{
+                transform: translateX(-1920px);
+            }
+            80%{
+                transform: translateX(-2560px);
+            }
+            100%{
+                transform: translateX(-2560px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="imgs/桌面图片/p1.jpg" alt="">
+            </div>
+            <div class="swiper-slide">
+                <img src="imgs/桌面图片/p2.jpg" alt="">
+            </div>
+            <div class="swiper-slide">
+                <img src="imgs/桌面图片/p3.jpg" alt="">
+            </div>
+            <div class="swiper-slide">
+                <img src="imgs/桌面图片/p4.jpg" alt=""> 
+            </div>
+
+            <!-- 为了实现无缝轮播 -->
+            <div class="swiper-slide">
+                <img src="imgs/桌面图片/p1.jpg" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

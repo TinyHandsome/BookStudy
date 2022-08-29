@@ -1823,7 +1823,184 @@
 
      ![在这里插入图片描述](https://img-blog.csdnimg.cn/8cafed476ed045739a42865fb0622000.png)
 
-   - 
+   - `infinite`：动画循环执行无限次
+
+   - animation符合属性，检索或者设置对象所应用的动画特效
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/325dbd4ebddb4e35983d8bfc0cd5bc97.png)
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/57226af8eb6c42c2a87e25adac514445.png)
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/dc730a115835460e975fb05720aa06e6.png)
+
+   - transform中的 100% 是相对于自身的100%，所以类似 `transform: translateX(-100%);` 的写法特别好用
+
+   - 动画只不过是镜花雪月，动画跑完之后就会回到初始的状态。通过设置 `animation-fill-mode: forwards` 来使动画保留到最后一帧的状态；如果是 `backwords`，就是保留初始一帧的状态
+
+   - 通过设置 `animation: run 1s linear reverse;` reverse来实现模块的弹出动画和收回动画
+
+8. 轮播案例
+
+   - 为了实现无缝轮播，通常会把第一张图复制一份放到最后
+
+   - 案例代码：
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             * {
+                 margin: 0;
+                 padding: 0;
+             }
+             .swiper-container {
+                 width: 640px;
+                 height: 300px;
+                 margin: 0 auto;
+                 overflow: hidden;
+             }
+             .swiper-container img {
+                 width: 640px;
+                 height: 300px;
+             }
+             .swiper-slide {
+                 float: left;
+             }
+             .swiper-wrapper {
+                 width: 9999px;
+                 animation: swiperrun 10s linear infinite;
+             }
+     
+             .swiper-wrapper:hover{
+                 animation-play-state: paused;
+             }
+     
+             @keyframes swiperrun {
+                 0% {
+                     transform: translateX(0px);
+                 }
+                 5%{
+                     transform: translateX(-640px);
+                 }
+                 25%{
+                     transform: translateX(-640px);
+                 }
+                 30%{
+                     transform: translateX(-1280px);
+                 }
+                 50%{
+                     transform: translateX(-1280px);
+                 }
+                 55%{
+                     transform: translateX(-1920px);
+                 }
+                 75%{
+                     transform: translateX(-1920px);
+                 }
+                 80%{
+                     transform: translateX(-2560px);
+                 }
+                 100%{
+                     transform: translateX(-2560px);
+                 }
+             }
+         </style>
+     </head>
+     <body>
+         <div class="swiper-container">
+             <div class="swiper-wrapper">
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p1.jpg" alt="">
+                 </div>
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p2.jpg" alt="">
+                 </div>
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p3.jpg" alt="">
+                 </div>
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p4.jpg" alt=""> 
+                 </div>
+     
+                 <!-- 为了实现无缝轮播 -->
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p1.jpg" alt="">
+                 </div>
+             </div>
+         </div>
+     </body>
+     </html>
+     ```
+
+9. 逐帧动画案例
+
+   - `animation: run 5s steps(1, end);`：
+
+     - steps中的1代表过程是否进行插帧，如果是1的话，不插帧，直接进行跳跃；该值越大，则过渡的帧越多，动画过渡越细腻。
+     - end：保留的当前帧，看不到最后一帧，动画结束
+     - start：保留下一帧，看不到第一帧，从第一帧很快跳到最后一帧
+
+   - 技巧，使用strep-start（保留第一帧），最后多搞一个空白帧
+
+   - 假设有4个动作，那么需要制作5个帧，每个帧涵盖范围是0-100%，帧间隔则为100/4=25%。类似的背景偏移从0出发，向着负值偏移，累计增加。
+
+   - 样例：
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             div {
+                 width: 200px;
+                 height: 300px;
+                 background-image: url(./imgs/frams/2.jpg);
+     
+                 animation: run 0.5s step-start infinite;
+             }
+     
+             @keyframes run {
+                 0% {
+                     background-position: 0px 0;
+                 }
+     
+                 25% {
+                     background-position: -180px 0;
+                 }
+     
+                 50% {
+                     background-position: -360px 0;
+                 }
+     
+                 75% {
+                     background-position: -540px 0;
+                 }
+     
+                 100% {
+                     background-position: -720px 0;
+                 }
+             }
+         </style>
+     </head>
+     
+     <body>
+         <div></div>
+     </body>
+     
+     </html>
+     ```
+
+10. Animate动画库
 
 
 
@@ -1850,7 +2027,7 @@
 
 
 
-学到 P163
+学到 P171
 
 ---
 
