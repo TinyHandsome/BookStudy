@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .box {
+            width: 600px;
+            height: 600px;
+            margin: 0 auto;
+            border: 5px solid gray;
+            transform-style: preserve-3d;
+            position: relative;
+            transform: rotateX(30deg) rotateY(30deg);
+            animation: run 5s linear infinite;
+        }
+
+        @keyframes run {
+            0%{
+                transform: rotateY(30deg) rotateX(30deg);
+            }
+            25%{
+                transform: rotateY(300deg) rotateX(300deg);
+            }
+            75%{
+                transform: rotateY(360deg) rotateX(360deg);
+            }
+            100%{
+                transform: rotateY(30deg) rotateX(30deg);
+            }
+        }
+
+        .box div {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -100px;
+            margin-top: -100px;
+            line-height: 200px;
+            text-align: center;
+            font-size: 50px;
+            opacity: 0.8;
+        }
+
+        .box div:nth-child(1){
+            background: gray;
+            transform: translateZ(100px);
+        }
+        .box div:nth-child(2){
+            background: cadetblue;
+            transform: translateX(-100px) rotateY(-90deg);
+        }
+        .box div:nth-child(3){
+            background: purple;
+            transform: translateY(-100px) rotateX(90deg);
+        }
+        .box div:nth-child(4){
+            background: green;
+            transform: translateY(100px) rotateX(-90deg);
+        }
+        .box div:nth-child(5){
+            background: red;
+            transform: translateX(100px) rotateY(90deg);
+        }
+        .box div:nth-child(6){
+            background: skyblue;
+            transform: translateZ(-100px) rotateY(-180deg);
+        }
+        h1 {
+            font-size: 100px;
+            color: red;
+            background: yellow;
+            text-shadow: 4px 4px 4px #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>欢迎涛总莅临检查</h1>
+    <div class="box">
+        <div>暴富</div>
+        <div>快乐</div>
+        <div>多福</div>
+        <div>无敌</div>
+        <div>安康</div>
+        <div>幸运</div>
+    </div>
+</body>
+</html>

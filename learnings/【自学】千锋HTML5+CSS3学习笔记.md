@@ -16,6 +16,7 @@
      - float：半脱离，文字环绕
      - absolute：全脱离，不会出现文字环绕效果
   5. [伪类和伪元素的区别（:和::的区别）](https://blog.csdn.net/muweichang/article/details/124497539)
+  5. [Animate.css动画演示](https://www.dowebok.com/demo/2014/98/)
 - 学习时遇到的问题
 
 ## 1. 前言
@@ -2002,15 +2003,238 @@
 
 10. Animate动画库
 
+    - [Animate.css动画演示](https://www.dowebok.com/demo/2014/98/)
+    - caniuse.com：查询浏览器版本是否支持的网站
 
+11. 3D场景
 
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/5aa0f13f1a6f41939c6cc200ce2c47ea.png)
 
+    - `transform-style: preserve-3d;`：flat是2d舞台；preserve-3d是3d舞台
 
+12. 景深
 
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/1add3a35f2a74102854b6fd3de25dd50.png)
 
+    - 设置景深是为了实现观察，近大远小的情况
 
+    - 3D位移
 
+      ```html
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Document</title>
+          <style>
+              .box {
+                  width: 500px;
+                  height: 500px;
+                  border: 5px solid black;
+                  transform-style: preserve-3d;
+                  position: relative;
+                  margin: 0 auto;
+                  perspective: 900px;
+      
+                  transform: rotateY(30deg);
+              }
+              .center {
+                  position: absolute;
+                  width: 200px;
+                  height: 200px;
+                  background: red;
+                  left: 50%;
+                  top: 50%;
+                  margin-left: -100px;
+                  margin-top: -100px;
+      
+                  transition: all 1s;
+      
+              }
+              .box:hover .center {
+                  /* transform: translateZ(500px); */
+                  transform: translate3d(200px, 200px, 600px);
+              }
+          </style>
+      </head>
+      <body>
+          <div class="box">
+              <div class="center"></div>
+          </div>
+      </body>
+      </html>
+      ```
 
+    - 3D旋转：`transform: rotate3d(0.11, 1, 1, 30deg);`
+
+      ![a](https://img-blog.csdnimg.cn/202304b49fa1491ab8c90332b453baa9.png)
+
+      1. x轴旋转比例
+      2. y轴旋转比例
+      3. z轴旋转比例
+      4. 上述比例要乘上的度数
+
+    - 3D缩放
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/37c3259998124ae8944bc5e5358baa01.png)
+
+      - scaleX，scaleY，scaleZ，scale3d
+      - 使用时需要加上旋转和景深使用
+        - `transform-style:preserve-3d; perspective:800px;`
+        - `transform:scaleZ(10) rotateX(45deg);`
+
+13. 立方体样例
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            .box {
+                width: 600px;
+                height: 600px;
+                margin: 0 auto;
+                border: 5px solid gray;
+                transform-style: preserve-3d;
+                position: relative;
+                transform: rotateX(30deg) rotateY(30deg);
+                animation: run 5s linear infinite;
+            }
+    
+            @keyframes run {
+                0%{
+                    transform: rotateY(30deg) rotateX(30deg);
+                }
+                25%{
+                    transform: rotateY(300deg) rotateX(300deg);
+                }
+                75%{
+                    transform: rotateY(360deg) rotateX(360deg);
+                }
+                100%{
+                    transform: rotateY(30deg) rotateX(30deg);
+                }
+            }
+    
+            .box div {
+                width: 200px;
+                height: 200px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                margin-left: -100px;
+                margin-top: -100px;
+                line-height: 200px;
+                text-align: center;
+                font-size: 50px;
+                opacity: 0.8;
+            }
+    
+            .box div:nth-child(1){
+                background: gray;
+                transform: translateZ(100px);
+            }
+            .box div:nth-child(2){
+                background: cadetblue;
+                transform: translateX(-100px) rotateY(-90deg);
+            }
+            .box div:nth-child(3){
+                background: purple;
+                transform: translateY(-100px) rotateX(90deg);
+            }
+            .box div:nth-child(4){
+                background: green;
+                transform: translateY(100px) rotateX(-90deg);
+            }
+            .box div:nth-child(5){
+                background: red;
+                transform: translateX(100px) rotateY(90deg);
+            }
+            .box div:nth-child(6){
+                background: skyblue;
+                transform: translateZ(-100px) rotateY(-180deg);
+            }
+            h1 {
+                font-size: 100px;
+                color: red;
+                background: yellow;
+                text-shadow: 4px 4px 4px #000;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>欢迎涛总莅临检查</h1>
+        <div class="box">
+            <div>暴富</div>
+            <div>快乐</div>
+            <div>多福</div>
+            <div>无敌</div>
+            <div>安康</div>
+            <div>幸运</div>
+        </div>
+    </body>
+    </html>
+    ```
+
+## 14. 网格布局
+
+1. 网格布局的概念和flex布局的区别
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/deba66d7c716429795eb11347a4ee6b2.png)
+
+2. 容器和项目
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/81ce52401b514449975c988a7051a3c5.png)
+
+3. 行和列
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/08b0071a4daa47f6968316ebfaf151e7.png)
+
+4. 单元格
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/1a8c26a06b4b42c89c9cb5fc52eed54b.png)
+
+5. 网格线
+
+   ![image-20220830143328872](E:\typora_pics_savepath\image-20220830143328872.png)
+
+6. 网格布局中的属性
+
+   含义：网格布局中的属性和flex中的布局属性类似，分为了两类，一类容器属性；一类是项目属性
+
+   1. 容器属性
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/6f249979832549709e942312c696141a.png)
+
+   2. 行列划分
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/1bef3c2882614867a4bad8681c572faa.png)
+
+   3. 功能函数：repeat()
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/b0c4f92acc084110af29b741a14dd2a0.png)
+
+   4. auto-fill关键字（自动填充）配合功能函数使用
+
+      `grid-template-columns:repeat(auto-fill, 33.33%)`
+
+   5. fr关键字（列宽片段）
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/49c1b83dd0c04ab4ab1ce5b428b8e2f7.png)
+
+   6. 
+
+   
 
 
 
