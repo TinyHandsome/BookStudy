@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul {
+            list-style: none;
+        }
+
+        li {
+            width: 200px;
+            height: 50px;
+            border: 1px solid gray;
+        }
+
+        ul:hover li:nth-child(1) {
+            width: 600px;
+            transition: all 2s linear;
+        }
+
+        ul:hover li:nth-child(2) {
+            width: 600px;
+            transition: all 2s ease;
+        }
+
+        ul:hover li:nth-child(3) {
+            width: 600px;
+            transition: all 2s ease-in;
+        }
+
+        ul:hover li:nth-child(4) {
+            width: 600px;
+            transition: all 2s ease-out;
+        }
+        ul:hover li:nth-child(5) {
+            width: 600px;
+            transition: all 2s ease-in-out;
+        }
+        ul:hover li:nth-child(6) {
+            width: 600px;
+            transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+
+</html>

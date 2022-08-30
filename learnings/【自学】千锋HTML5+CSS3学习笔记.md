@@ -16,6 +16,7 @@
      - float：半脱离，文字环绕
      - absolute：全脱离，不会出现文字环绕效果
   5. [伪类和伪元素的区别（:和::的区别）](https://blog.csdn.net/muweichang/article/details/124497539)
+  5. [Animate.css动画演示](https://www.dowebok.com/demo/2014/98/)
 - 学习时遇到的问题
 
 ## 1. 前言
@@ -1422,13 +1423,818 @@
 
      ![a](https://img-blog.csdnimg.cn/c7c3545900334de98d94e0a2b8c0d2ff.png)
 
-## 11. em与rem
+## 11. 布局单位
 
 1. px, em, rem 之争
+
    - px: 500px
    - em: 相对单位，相对于父元素的字体大小
    - rem: 相对单位，相对于根元素的字体大小
 
+2. px转rem插件推荐
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/68c925acf66c49d3b59aa43d17a5282e.png)
+
+3. js中fontsize计算：`fontsize = 当前设备的css布局宽度/物理分辨率(设计稿的宽度)*基准font-size`
+
+4. vh与vw
+
+   - vh：view-height
+   - vw：view-width
+   - 100vh == 视口的高度
+   - 100vw == 视口的宽度
+   - 100vw和100%的区别
+     - 没有滚动条的时候，可以看作两者等价
+     - 在有滚动条的时候，100vw包含滚动条，窗口大小占满；而100%是刨除滚动条剩余的空间占满
+
+## 12. 渐变
+
+1. CSS3 渐变
+
+   - CSS3 渐变（gradient）可以让你在两个或者多个指定的颜色之间显示平稳过渡。以前，你必须使用图像来实现这些效果，现在通过使用CSS3的渐变即可实现。
+   - 此外，渐变效果的元素在放大时看起来效果更好，因为渐变是由浏览器生成的。
+
+2. 线性渐变
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2b6baafa321547948f3d233dc0230ab1.png)
+
+   - 支持多颜色渐变
+   - 支持方向：to left、to right bottom…
+   - 支持任意方向：30deg…
+
+3. 径向渐变
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/72c30ebfd38a4a7ba562ab7c2cb78076.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/3c776ba92896438a870b4190506cd2be.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/bed706288892481ba3161c9006159a72.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/4140083179124fe1b0b1674b7e90a711.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/a74ccb1d78104f7aaafc108e744408ca.png)
+
+   - 如果效果无法正常显示，需要在radial-gradient函数前加上：`-webkit-`，火狐浏览器需要加 `-moz-`
+
+4. 重复渐变：重复线性渐变
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/f162d563b1324b56ad5272dea007210a.png)
+
+5. 太极绘制：
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Document</title>
+       <style>
+           body {
+               background: lightblue;
+           }
+           div {
+               width: 200px;
+               height: 200px;
+               background: linear-gradient(white 50%, black 50%);
+               margin: 10px auto;
+               display: flex;
+               align-items: center;
+               border-radius: 50%;
+           }
+           div::before {
+               content: "";
+               display: block;
+               width: 100px;
+               height: 100px;
+               background: radial-gradient(white 20%, black 25%);
+               border-radius: 50%;
+           }
+           div::after {
+               content: "";
+               display: block;
+               width: 100px;
+               height: 100px;
+               background: radial-gradient(black 20%, white 25%);
+               border-radius: 50%;
+           }
+       </style>
+   </head>
+   <body>
+       <div></div>
+   </body>
+   </html>
+   ```
+
+## 13. 动画
+
+1. 动画过渡属性
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/83894ca89e9340a4957ec2cc2a870985.png)
+
+   - 注意：`display: none /block` 无法支持动画过渡
+
+   - 针对该情况的动画制作，可以使用 `height:0` 的改变来实现，并设置 `overflow:hidden`
+
+2. 动画过渡类型
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/abe72364eaf04265a81b5e094997aa6a.png)
+
+   - 样例
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             ul {
+                 list-style: none;
+             }
+     
+             li {
+                 width: 200px;
+                 height: 50px;
+                 border: 1px solid gray;
+             }
+     
+             ul:hover li:nth-child(1) {
+                 width: 600px;
+                 transition: all 2s linear;
+             }
+     
+             ul:hover li:nth-child(2) {
+                 width: 600px;
+                 transition: all 2s ease;
+             }
+     
+             ul:hover li:nth-child(3) {
+                 width: 600px;
+                 transition: all 2s ease-in;
+             }
+     
+             ul:hover li:nth-child(4) {
+                 width: 600px;
+                 transition: all 2s ease-out;
+             }
+             ul:hover li:nth-child(5) {
+                 width: 600px;
+                 transition: all 2s ease-in-out;
+             }
+             ul:hover li:nth-child(6) {
+                 width: 600px;
+                 transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1);
+             }
+         </style>
+     </head>
+     
+     <body>
+         <ul>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+         </ul>
+     </body>
+     
+     </html>
+     ```
+
+3. 动画过渡单一属性
+
+   - transition-property
+     - 现在就可以监控多个属性了
+     - 比如 `transition-property: height background`
+   - transition-duration
+   - transition-delay
+   - transition-timing-function
+
+4. 2d属性-transform
+
+   1. translate()
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/5cb4914ccc7a46c18c97676eedf9bc88.png)
+
+       - 使用transform的优点
+
+          ![在这里插入图片描述](https://img-blog.csdnimg.cn/f3cdc3ab98f349f1aec35506d33fb4cd.png)
+
+       - 设置left-合成图层
+
+          ![在这里插入图片描述](https://img-blog.csdnimg.cn/9b02d53ee1924761879fca68bd5d9b0c.png)
+
+       - 设置translate-独立图层
+
+          ![在这里插入图片描述](https://img-blog.csdnimg.cn/1d0f3f5970b64143a1865775c73d0a39.png)
+
+   2. scale()
+
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/13550c0a5db341c4a476c3d1e4205d3d.png)
+
+       - 如果设置的是负值，则为倒着的放大或者缩小
+       - 支持X轴、Y轴单独放大
+       - 从左上角放大：`transform-origin: left top;`
+         - 改变中心点的位置
+         - center、left top、left center…
+
+   3. rotate()
+
+      ![image-20220825141647066](E:\typora_pics_savepath\image-20220825141647066.png)
+
+      - 正值：顺时针
+
+      - 负值：逆时针
+
+      - rotateX和rotateY会在三维空间中旋转
+
+      - rotate = rotateZ 等价
+
+      - 绕着左上角的点旋转：`transform-origin: left top;`
+
+      - 折扇效果：
+
+        ```html
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                }
+                ul {
+                    list-style: none;
+                }
+                ul {
+                    margin: 10px auto;
+                    width: 400px;
+                    height: 300px;
+                    /* border: 5px solid gray; */
+                    position: relative;
+                }
+                li {
+                    width: 60px;
+                    height: 200px;
+                    position: absolute;
+                    left: 50%;
+                    margin-left: -30px;
+                    bottom: 30px;
+                    text-align: center;
+                    transform-origin: bottom center;
+                    border-radius: 10px;
+                    transition: all 2s;
+                    font-size: 10px;
+                }
+        
+                ul li:not(:nth-child(7)) {
+                    opacity: 0;
+                }
+                ul:hover li {
+                    opacity: 1;
+                }
+        
+                ul li:nth-child(1){
+                    background: #b8f1cc;
+                }
+                ul li:nth-child(2){
+                    background: #b8f1ed;
+                }
+                ul li:nth-child(3){
+                    background: #f1f1b8;
+                }
+                ul li:nth-child(4){
+                    background: #f1ccb8;
+                }
+                ul li:nth-child(5){
+                    background: #d9b8f1;
+                }
+                ul li:nth-child(6){
+                    background: #f1b8f1;
+                }
+                ul li:nth-child(7) {
+                    background: #ff9b6a;
+                }
+                ul li:nth-child(8){
+                    background: #f9b747;
+                }
+                ul li:nth-child(9){
+                    background: #fecf45;
+                }
+                ul li:nth-child(10){
+                    background: #e3a04f;
+                }
+                ul li:nth-child(11){
+                    background: #f1ccb8;
+                }
+                ul li:nth-child(12){
+                    background: #b8d38f;
+                }
+                ul li:nth-child(13){
+                    background: #ddff95;
+                }
+        
+                ul:hover li:nth-child(1) {
+                    transform: rotate(90deg);
+                }
+                ul:hover li:nth-child(13) {
+                    transform: rotate(-90deg);
+                }
+                ul:hover li:nth-child(2) {
+                    transform: rotate(75deg);
+                }
+                ul:hover li:nth-child(12) {
+                    transform: rotate(-75deg);
+                }
+                ul:hover li:nth-child(3) {
+                    transform: rotate(60deg);
+                }
+                ul:hover li:nth-child(11) {
+                    transform: rotate(-60deg);
+                }
+                ul:hover li:nth-child(4) {
+                    transform: rotate(45deg);
+                }
+                ul:hover li:nth-child(10) {
+                    transform: rotate(-45deg);
+                }
+                ul:hover li:nth-child(5) {
+                    transform: rotate(30deg);
+                }
+                ul:hover li:nth-child(9) {
+                    transform: rotate(-30deg);
+                }
+                ul:hover li:nth-child(6) {
+                    transform: rotate(15deg);
+                }
+                ul:hover li:nth-child(8) {
+                    transform: rotate(-15deg);
+                }
+            </style>
+        </head>
+        <body>
+            <ul>
+                <li>好运</li>
+                <li>快乐</li>
+                <li>健康</li>
+                <li>顺意</li>
+                <li>平安</li>
+                <li>喜乐</li>
+                <li>暴富</li>
+                <li>升职</li>
+                <li>加薪</li>
+                <li>可爱</li>
+                <li>美丽</li>
+                <li>成功</li>
+                <li>发财</li>
+            </ul>
+        </body>
+        </html>
+        ```
+
+5. transform的顺序问题：
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d2e2409ff3604322a5fd5b65c57c5737.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d9399dfd5f814eb9bfa5d6538630b133.png)
+
+   - 多个属性要写在一个transform中，多个transform会被覆盖
+   - 属性的顺序需要按照逻辑顺序排列，比如先位移再旋转和缩放
+
+6. 倾斜
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/ccf710d14192428d89b571834135561d.png)
+
+   - skewX：拽着右小角，往右拉动，使得偏离垂直倾斜一定的夹角
+
+7. 关键帧动画
+
+   - animation和transition的区别
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/8cafed476ed045739a42865fb0622000.png)
+
+   - `infinite`：动画循环执行无限次
+
+   - animation符合属性，检索或者设置对象所应用的动画特效
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/325dbd4ebddb4e35983d8bfc0cd5bc97.png)
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/57226af8eb6c42c2a87e25adac514445.png)
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/dc730a115835460e975fb05720aa06e6.png)
+
+   - transform中的 100% 是相对于自身的100%，所以类似 `transform: translateX(-100%);` 的写法特别好用
+
+   - 动画只不过是镜花雪月，动画跑完之后就会回到初始的状态。通过设置 `animation-fill-mode: forwards` 来使动画保留到最后一帧的状态；如果是 `backwords`，就是保留初始一帧的状态
+
+   - 通过设置 `animation: run 1s linear reverse;` reverse来实现模块的弹出动画和收回动画
+
+8. 轮播案例
+
+   - 为了实现无缝轮播，通常会把第一张图复制一份放到最后
+
+   - 案例代码：
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             * {
+                 margin: 0;
+                 padding: 0;
+             }
+             .swiper-container {
+                 width: 640px;
+                 height: 300px;
+                 margin: 0 auto;
+                 overflow: hidden;
+             }
+             .swiper-container img {
+                 width: 640px;
+                 height: 300px;
+             }
+             .swiper-slide {
+                 float: left;
+             }
+             .swiper-wrapper {
+                 width: 9999px;
+                 animation: swiperrun 10s linear infinite;
+             }
+     
+             .swiper-wrapper:hover{
+                 animation-play-state: paused;
+             }
+     
+             @keyframes swiperrun {
+                 0% {
+                     transform: translateX(0px);
+                 }
+                 5%{
+                     transform: translateX(-640px);
+                 }
+                 25%{
+                     transform: translateX(-640px);
+                 }
+                 30%{
+                     transform: translateX(-1280px);
+                 }
+                 50%{
+                     transform: translateX(-1280px);
+                 }
+                 55%{
+                     transform: translateX(-1920px);
+                 }
+                 75%{
+                     transform: translateX(-1920px);
+                 }
+                 80%{
+                     transform: translateX(-2560px);
+                 }
+                 100%{
+                     transform: translateX(-2560px);
+                 }
+             }
+         </style>
+     </head>
+     <body>
+         <div class="swiper-container">
+             <div class="swiper-wrapper">
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p1.jpg" alt="">
+                 </div>
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p2.jpg" alt="">
+                 </div>
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p3.jpg" alt="">
+                 </div>
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p4.jpg" alt=""> 
+                 </div>
+     
+                 <!-- 为了实现无缝轮播 -->
+                 <div class="swiper-slide">
+                     <img src="imgs/桌面图片/p1.jpg" alt="">
+                 </div>
+             </div>
+         </div>
+     </body>
+     </html>
+     ```
+
+9. 逐帧动画案例
+
+   - `animation: run 5s steps(1, end);`：
+
+     - steps中的1代表过程是否进行插帧，如果是1的话，不插帧，直接进行跳跃；该值越大，则过渡的帧越多，动画过渡越细腻。
+     - end：保留的当前帧，看不到最后一帧，动画结束
+     - start：保留下一帧，看不到第一帧，从第一帧很快跳到最后一帧
+
+   - 技巧，使用strep-start（保留第一帧），最后多搞一个空白帧
+
+   - 假设有4个动作，那么需要制作5个帧，每个帧涵盖范围是0-100%，帧间隔则为100/4=25%。类似的背景偏移从0出发，向着负值偏移，累计增加。
+
+   - 样例：
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             div {
+                 width: 200px;
+                 height: 300px;
+                 background-image: url(./imgs/frams/2.jpg);
+     
+                 animation: run 0.5s step-start infinite;
+             }
+     
+             @keyframes run {
+                 0% {
+                     background-position: 0px 0;
+                 }
+     
+                 25% {
+                     background-position: -180px 0;
+                 }
+     
+                 50% {
+                     background-position: -360px 0;
+                 }
+     
+                 75% {
+                     background-position: -540px 0;
+                 }
+     
+                 100% {
+                     background-position: -720px 0;
+                 }
+             }
+         </style>
+     </head>
+     
+     <body>
+         <div></div>
+     </body>
+     
+     </html>
+     ```
+
+10. Animate动画库
+
+    - [Animate.css动画演示](https://www.dowebok.com/demo/2014/98/)
+    - caniuse.com：查询浏览器版本是否支持的网站
+
+11. 3D场景
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/5aa0f13f1a6f41939c6cc200ce2c47ea.png)
+
+    - `transform-style: preserve-3d;`：flat是2d舞台；preserve-3d是3d舞台
+
+12. 景深
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/1add3a35f2a74102854b6fd3de25dd50.png)
+
+    - 设置景深是为了实现观察，近大远小的情况
+
+    - 3D位移
+
+      ```html
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Document</title>
+          <style>
+              .box {
+                  width: 500px;
+                  height: 500px;
+                  border: 5px solid black;
+                  transform-style: preserve-3d;
+                  position: relative;
+                  margin: 0 auto;
+                  perspective: 900px;
+      
+                  transform: rotateY(30deg);
+              }
+              .center {
+                  position: absolute;
+                  width: 200px;
+                  height: 200px;
+                  background: red;
+                  left: 50%;
+                  top: 50%;
+                  margin-left: -100px;
+                  margin-top: -100px;
+      
+                  transition: all 1s;
+      
+              }
+              .box:hover .center {
+                  /* transform: translateZ(500px); */
+                  transform: translate3d(200px, 200px, 600px);
+              }
+          </style>
+      </head>
+      <body>
+          <div class="box">
+              <div class="center"></div>
+          </div>
+      </body>
+      </html>
+      ```
+
+    - 3D旋转：`transform: rotate3d(0.11, 1, 1, 30deg);`
+
+      ![a](https://img-blog.csdnimg.cn/202304b49fa1491ab8c90332b453baa9.png)
+
+      1. x轴旋转比例
+      2. y轴旋转比例
+      3. z轴旋转比例
+      4. 上述比例要乘上的度数
+
+    - 3D缩放
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/37c3259998124ae8944bc5e5358baa01.png)
+
+      - scaleX，scaleY，scaleZ，scale3d
+      - 使用时需要加上旋转和景深使用
+        - `transform-style:preserve-3d; perspective:800px;`
+        - `transform:scaleZ(10) rotateX(45deg);`
+
+13. 立方体样例
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            .box {
+                width: 600px;
+                height: 600px;
+                margin: 0 auto;
+                border: 5px solid gray;
+                transform-style: preserve-3d;
+                position: relative;
+                transform: rotateX(30deg) rotateY(30deg);
+                animation: run 5s linear infinite;
+            }
+    
+            @keyframes run {
+                0%{
+                    transform: rotateY(30deg) rotateX(30deg);
+                }
+                25%{
+                    transform: rotateY(300deg) rotateX(300deg);
+                }
+                75%{
+                    transform: rotateY(360deg) rotateX(360deg);
+                }
+                100%{
+                    transform: rotateY(30deg) rotateX(30deg);
+                }
+            }
+    
+            .box div {
+                width: 200px;
+                height: 200px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                margin-left: -100px;
+                margin-top: -100px;
+                line-height: 200px;
+                text-align: center;
+                font-size: 50px;
+                opacity: 0.8;
+            }
+    
+            .box div:nth-child(1){
+                background: gray;
+                transform: translateZ(100px);
+            }
+            .box div:nth-child(2){
+                background: cadetblue;
+                transform: translateX(-100px) rotateY(-90deg);
+            }
+            .box div:nth-child(3){
+                background: purple;
+                transform: translateY(-100px) rotateX(90deg);
+            }
+            .box div:nth-child(4){
+                background: green;
+                transform: translateY(100px) rotateX(-90deg);
+            }
+            .box div:nth-child(5){
+                background: red;
+                transform: translateX(100px) rotateY(90deg);
+            }
+            .box div:nth-child(6){
+                background: skyblue;
+                transform: translateZ(-100px) rotateY(-180deg);
+            }
+            h1 {
+                font-size: 100px;
+                color: red;
+                background: yellow;
+                text-shadow: 4px 4px 4px #000;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>欢迎涛总莅临检查</h1>
+        <div class="box">
+            <div>暴富</div>
+            <div>快乐</div>
+            <div>多福</div>
+            <div>无敌</div>
+            <div>安康</div>
+            <div>幸运</div>
+        </div>
+    </body>
+    </html>
+    ```
+
+## 14. 网格布局
+
+1. 网格布局的概念和flex布局的区别
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/deba66d7c716429795eb11347a4ee6b2.png)
+
+2. 容器和项目
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/81ce52401b514449975c988a7051a3c5.png)
+
+3. 行和列
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/08b0071a4daa47f6968316ebfaf151e7.png)
+
+4. 单元格
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/1a8c26a06b4b42c89c9cb5fc52eed54b.png)
+
+5. 网格线
+
+   ![image-20220830143328872](E:\typora_pics_savepath\image-20220830143328872.png)
+
+6. 网格布局中的属性
+
+   含义：网格布局中的属性和flex中的布局属性类似，分为了两类，一类容器属性；一类是项目属性
+
+   1. 容器属性
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/6f249979832549709e942312c696141a.png)
+
+   2. 行列划分
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/1bef3c2882614867a4bad8681c572faa.png)
+
+   3. 功能函数：repeat()
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/b0c4f92acc084110af29b741a14dd2a0.png)
+
+   4. auto-fill关键字（自动填充）配合功能函数使用
+
+      `grid-template-columns:repeat(auto-fill, 33.33%)`
+
+   5. fr关键字（列宽片段）
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/49c1b83dd0c04ab4ab1ce5b428b8e2f7.png)
+
+   6. 
+
+   
 
 
 
@@ -1443,7 +2249,9 @@
 
 
 
-学到 P144
+
+
+学到 P171
 
 ---
 
