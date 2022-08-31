@@ -7,7 +7,6 @@ from selenium.common.exceptions import StaleElementReferenceException
 from search_info import EpidemicPrevention, increase_speed
 import pandas as pd
 
-
 import password as pw
 
 pd.set_option('display.max_columns', None)
@@ -135,8 +134,13 @@ def search_id_and_name(ep: EpidemicPrevention, name, id):
 
     # 开始处理业务逻辑和数据处理
     latest_detection_date = detection_time.iloc[0]
+    # 采样机构获取，如果采样机构有，就直接拿，否则拿来源
+    caiyang_jigou = df['采样机构'].iloc[0]
+    if len(caiyang_jigou.strip()) == 0:
+        caiyang_jigou = df['来源'].iloc[0]
+
     if_now_detection = datetime.datetime.now().strftime('%Y-%m-%d') == latest_detection_date.strftime('%Y-%m-%d')
-    main_result = [if_now_detection, latest_detection_date.strftime('%Y-%m-%d %H:%M:%S'),
+    main_result = [if_now_detection, latest_detection_date.strftime('%Y-%m-%d %H:%M:%S'), caiyang_jigou,
                    detection_time.iloc[-1].strftime('%Y-%m-%d %H:%M:%S')]
 
     # 检查最近14天数据，最长核酸间隔，单位为天，以最近核酸时间作为标准往前推14天
@@ -175,7 +179,7 @@ def main():
     file_path = './datas/temp.xlsx'
     df = pd.read_excel(file_path)
 
-    columns = ['今天是否做核酸', '最近核酸时间', '最远核酸时间', '最近两周核酸最长间隔', '最近两周核酸次数', '最近一个月核酸最长间隔', '历史核酸最长间隔']
+    columns = ['今天是否做核酸', '最近核酸时间', '最近核酸采样机构', '最远核酸时间', '最近两周核酸最长间隔', '最近两周核酸次数', '最近一个月核酸最长间隔', '历史核酸最长间隔']
     data = []
     index = 1
     for i in range(df.shape[0]):
