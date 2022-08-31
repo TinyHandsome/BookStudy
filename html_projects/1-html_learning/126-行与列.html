@@ -1,25 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        div{
+        .box {
             width: 600px;
             height: 600px;
             border: 5px solid gray;
             display: grid;
 
-            grid-template-rows: 200px, 200px, 200px;
-            grid-template-columns: 200px, 200px, 200px;
+            /* 1. 固定值 */
+            /* grid-template-rows: 200px 200px 200px; */
+            /* grid-template-columns: 200px 200px 200px; */
+
+            /* 2. 百分比方式 */
+            /* grid-template-rows: 25% 25% 25% 25%;
+            grid-template-columns: 25% 25% 25% 25%; */
+
+            /* 3. repeat */
+            /* grid-template-rows: repeat(3, 33.3%); */
+            /* grid-template-columns: repeat(3, 33.3%); */
+
+            /* 4. repeat autofill */
+            /* grid-template-rows: repeat(auto-fill, 300px);
+            grid-template-columns: repeat(auto-fill, 33.3%); */
+
+            /* 5. fr 片段 */
+            /* grid-template-rows: 100px 1fr 300px;
+            grid-template-columns: 100px 1fr 300px; */
+
+            /* 6. minmax */
+            /* grid-template-rows: minmax(100px, 200px) 200px 400px;
+            grid-template-columns: 200px 200px 200px; */
+
+            /* 7. auto */
+            grid-template-rows: 100px auto 200px;
+            grid-template-columns: 100px 200px auto;
         }
     </style>
 </head>
+
 <body>
-    <div></div>
-    <!-- <div class="box">
+    <div class="box">
         <div>1</div>
         <div>2</div>
         <div>3</div>
@@ -29,6 +55,7 @@
         <div>7</div>
         <div>8</div>
         <div>9</div>
-    </div> -->
+    </div>
 </body>
+
 </html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 650px;
+            height: 320px;
+            border: 5px solid red;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: repeat(3, 100px);
+            grid-template-columns: repeat(6, 100px);
+
+            grid-template-areas: 'a a a a b b'
+                'a a a a c c'
+                'd d e f c c';
+            overflow: hidden;
+            grid-gap: 10px 10px;
+        }
+
+        .box img {
+            width: 100%;
+        }
+
+        .box img:nth-child(1) {
+            grid-area: a;
+        }
+
+        .box img:nth-child(2) {
+            grid-area: d;
+        }
+
+        .box img:nth-child(3) {
+            grid-area: e;
+        }
+
+        .box img:nth-child(4) {
+            grid-area: f;
+        }
+
+        .box img:nth-child(5) {
+            grid-area: b;
+        }
+
+        .box img:nth-child(6) {
+            grid-area: c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <img src="imgs/桌面图片/p1.jpg" alt="">
+        <img src="imgs/桌面图片/p2.jpg" alt="">
+        <img src="imgs/桌面图片/p3.jpg" alt="">
+        <img src="imgs/桌面图片/p4.jpg" alt="">
+        <img src="imgs/桌面图片/p5.jpg" alt="">
+        <img src="imgs/桌面图片/p6.jpg" alt="">
+    </div>
+</body>
+
+</html>
