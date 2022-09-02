@@ -203,6 +203,30 @@
 
 13. 循环结构语句
 
+    - while
+
+        ![在这里插入图片描述](https://img-blog.csdnimg.cn/30b95cbcd9604550ac315fc0b9d8ef8f.png)
+
+        - 小结：
+
+          ![在这里插入图片描述](https://img-blog.csdnimg.cn/76c091527787488490f1ae3edb47ab5f.png)
+
+    - dowhile;
+
+        ![在这里插入图片描述](https://img-blog.csdnimg.cn/f7c136d8e2d3481099d727e9b944dabb.png)
+
+    - for
+
+        ![在这里插入图片描述](https://img-blog.csdnimg.cn/549f713dd8b14171ab5f86f959aed855.png)
+
+        ```js
+        for (var i = 0; i < 3; i ++) {
+            console.log('啊吧啊吧' + i)
+        }
+        console.log('完事儿了')
+        ```
+
+        
 
 
 
@@ -230,8 +254,7 @@
 
 
 
-
-学到P195
+学到P198
 
 
 ------

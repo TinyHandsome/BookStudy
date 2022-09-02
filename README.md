@@ -39,6 +39,7 @@
 8. [Python多线程编程学习笔记](https://blog.csdn.net/qq_21579045/article/details/113741647)
 9. [Django学习笔记](https://blog.csdn.net/qq_21579045/article/details/122486699)
 9. [Flask学习笔记](https://blog.csdn.net/qq_21579045/article/details/124550035)
+9. [HTML5+CSS3学习笔记](https://blog.csdn.net/qq_21579045/article/details/126626027)
 
 ## 设计笔记 | Designs
 
