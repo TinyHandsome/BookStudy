@@ -226,6 +226,24 @@
         console.log('完事儿了')
         ```
 
+    - 循环的练习
+
+        ```js
+        for (var i=0; i <9; i++) {
+            for (var j=0; j<9; j++){
+                document.write('*')
+            }
+            document.write('<br>')
+        }
+        
+        for (var i=1; i <= 9; i++){
+            for (var j=1; j<=i; j++){
+                document.write(i + '*' + j + '=' + i * j + '    ')
+            }
+            document.write('<br>')
+        }
+        ```
+
     - 
 
 
@@ -254,7 +272,7 @@
 
 
 
-学到P198
+学到P199
 
 
 ------

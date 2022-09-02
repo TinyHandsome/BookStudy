@@ -47,10 +47,24 @@
         // var result = prompt('你好呀？')
         // console.log(result)
 
-        for (var i = 0; i < 3; i ++) {
-            console.log('啊吧啊吧' + i)
+        // for (var i = 0; i < 3; i ++) {
+        //     console.log('啊吧啊吧' + i)
+        // }
+        // console.log('完事儿了')
+
+        for (var i=0; i <9; i++) {
+            for (var j=0; j<9; j++){
+                document.write('*')
+            }
+            document.write('<br>')
         }
-        console.log('完事儿了')
+
+        for (var i=1; i <= 9; i++){
+            for (var j=1; j<=i; j++){
+                document.write(i + '*' + j + '=' + i * j + '    ')
+            }
+            document.write('<br>')
+        }
 
     </script>
 </body>
