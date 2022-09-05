@@ -18,9 +18,8 @@ def get_vscode_json_dict():
 
     raw_json = [i for i in raw_json if '//' not in i]
     str_json = "".join(raw_json)
-    print(str_json)
+    # print('\n'.join(str_json.split('\n')[130:150]))
     vscode_json_dict = json.loads(str_json)
-
     return vscode_json_dict
 
 
