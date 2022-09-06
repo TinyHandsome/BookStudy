@@ -452,6 +452,258 @@
 
 ### 1.11 字符串常用方法
 
+1. charAt
+
+   - `str.charAt(索引)`
+   - 获取对应索引位置的字符，返回字符
+
+2. toLowerCase
+
+   - `str.toLowerCase()`
+   - 将字符串内的字母全部转换成小写，返回转换后的字符串
+
+3. toUpperCase
+
+   - `str.toUpperCase()`
+   - 将字符串内的字母全部转换成大写，返回转换后的字符串
+
+4. replace
+
+   - `str.replace(换下内容, 换上内容)`
+   - 将字符串内 第一个 满足换下内容的片段替换成 换上内容，返回换好的字符串
+
+5. trim
+
+   - `str.trim()`
+   - 去除字符串首尾的空格，返回修改后的字符串
+
+6. split
+
+   - `str.split(分隔符)`
+   - 按照分隔符把字符串切割成一个数组，返回该数组
+
+7. substr, substring, slice
+
+   - `str.substr(开始索引, 长度)`
+
+   - `str.substring(开始索引，结束索引)`，前闭后开
+
+   - `str.slice(开始索引, 结束索引)`，跟substring一样，也是前闭后开
+
+   - 截取字符串，返回该字符串
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/6d0067ddbda14e8bbd6af8c3cb7b6e89.png)
+
+8. 小结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/39b83b9100574b5eb9db447bc3978375.png)
+
+### 1.12 数字常用方法
+
+1. random
+
+   - `Math.random()`
+   - 获取`[0, 1)`之间的随机小数，前闭后开，返回该数
+
+2. round
+
+   - `Math.round(数字)`
+   - 对数字进行四舍五入的取整，返回该数
+
+3. ceil | floor
+
+   - `Math.ceil(数字)` | `Math.floor(数字)`
+   - 对数字进行向上|下取整，返回该数
+
+4. pow
+
+   - `Math.pow(底数，指数)`
+   - 对数字进行 取幂 运算，返回结果
+
+5. sqrt
+
+   - `Math.sqrt(数字)`
+   - 对数字进行 二次方根 运算，返回结果
+
+6. abs
+
+   - `Math.abs(数字)`
+   - 对数字进行 绝对值 运算，返回结果
+
+7. max | min
+
+   - `Math.max(多个数字)` | `Math.min(多个数字)`
+   - 获得多个数字的最大|小值，返回结果
+
+8. PI
+
+   - `Math.PI`
+   - 得到一个近似Π的值
+
+9. 案例1：获得0-10之间的随机证数
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/7be90680923f4157acf6a2ac492e3d3f.png)
+
+10. 小结
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/8468e99ca52946b09edb6f85abdc2e2a.png)
+
+### 1.13 时间常用方法
+
+1. 查看时间
+
+   ```js
+   var time = new Date()
+   console.log(time)
+   ```
+
+2. 创建时间
+
+   ```js
+   var time = new Date(2002, 1, 23, 11, 22, 18)
+   console.log(time)
+   ```
+
+3. 获取时间的方法
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/2e801fd2070a4d0db585c2a1c2344732.png)
+
+   - 时间戳
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/b95bf3f006f44c8992791bbb4a21152a.png)
+
+4. 设置时间的方法
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/6643d31a6a7445ccaf4268b5f43b2058.png)
+
+5. 小结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/b3f41a81898242078184e3999034a912.png)
+
+6. 案例1：计算时间差
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/9a858e33890e4b67bfbffda33e4a6056.png)
+
+### 1.14 JS的BOM操作
+
+BOM：Browser Object Model
+
+1. 获取浏览器窗口尺寸
+
+   - 获取可视窗口宽度：window.innerWidth
+   - 获取可视窗口高度：window.innerHeight
+
+2. 浏览器的弹出层
+
+   - 提示框：window.alert(info)
+
+   - 询问框：window.confirm(info)
+
+     有返回值，true | false
+
+   - 输入框：window.prompt(info)
+
+     有返回值，输入的内容 | null
+
+3. 开启和关闭标签页
+
+   - 开启：window.open(地址)
+
+   - 关闭：window.close()
+
+   - 样例
+
+     ```html
+     <body>
+     
+         <button id="on">开启</button>
+         <button id="off">关闭</button>
+     
+         <script>
+             on.onclick = function () {
+                 window.open('http://www.baidu.com/')
+             }
+             off.onclick = function () {
+                 window.close()
+             }
+     
+         </script>
+     </body>
+     ```
+
+   - 在js中可以直接引用  **id**  设置属性和事件
+
+4. 浏览器的常用事件
+
+   - 资源加载完毕：window.onload = function(){}
+   - 可视尺寸改变：window.onresize= function(){}
+   - 滚动条位置改变：window.onscroll= function(){}
+
+5. 浏览器的历史记录操作
+
+   - 回退页面：window.history.back()
+
+     相当于浏览器的左箭头
+
+   - 前进页面：window.history.forward()
+
+     相当于浏览器的右箭头
+
+6. 浏览器卷去的尺寸
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/e377befe664546939236550e17b9be2f.png)
+
+   - 卷去的高度：即拖动滚动条越大，值越大，初始位置的值为0
+
+     - document.documentElement.scrollTop
+
+     - document.body.scrollTop
+
+     - 上面两个语法的区别在于，前者需要html头有 `<!DOCTYPE html>`，否则就用后者，所以在实际使用中可以写成如下兼容的写法
+
+       ```js
+       var height = document.documentElement.scrollTop || document.body.scrollTop
+       ```
+
+   - 卷去的宽度：
+
+     - document.documentElement.scrollLeft
+     - document.body.scrollLeft
+     - 规则与上述高度一样
+
+7. 浏览器滚动到
+
+   - window.scrollTo()
+
+     - 参数方式1：window.scrollTo(left, top)
+
+       - left：浏览器卷去的宽度
+       - top：浏览器卷去的高度
+       - **这种方法只能瞬间定位，不能滚动**
+
+     - 参数方式2：
+
+       ```js
+       window.scrollTo({
+       	left: xx,
+       	top: yy,
+       	behavior: 'smooth'
+       })
+       ```
+
+       - 滚动条滚动到指定位置
+
+8. 小结
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/7541f06f33244d24806f1b3a70871861.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d2c53d417daa41f790d9d4f03597ae3c.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/88e3750c84ed4402aa670acf4b22b47b.png)
+
+### 1.15 JS的定时器
+
+1. 
 
 
 
@@ -469,12 +721,7 @@
 
 
 
-
-
-
-
-
-学到P208
+学到P212
 
 
 ------

@@ -9,6 +9,10 @@
 </head>
 
 <body>
+
+    <button id="on">开启</button>
+    <button id="off">关闭</button>
+
     <script>
         // var num = 100
         // alert(num)
@@ -106,7 +110,7 @@
 
         // var arr = [100, true, 'hello world']
 
-        var arr = [9, 3, 6, 2, 4, 1, 8, 5, 7]
+        // var arr = [9, 3, 6, 2, 4, 1, 8, 5, 7]
 
         // for (var j = 0; j < arr.length - 1; j++) {
         //     for (var i=0; i < arr.length -1-j; i ++) {
@@ -131,16 +135,33 @@
         // }
         // console.log(arr)
 
-        var arr = [1, 2, 3, 4]
+        // var arr = [1, 2, 3, 4]
         // console.log(arr)
 
         // var ll = arr.push(5)
         // console.log(ll)
         // console.log(arr)
 
-        console.log(arr.join('-'))
-        console.log(arr.concat([9, 10, 11]))
-        console.log(arr.slice(0, 2))
+        // console.log(arr.join('-'))
+        // console.log(arr.concat([9, 10, 11]))
+        // console.log(arr.slice(0, 2))
+
+        // var r1 = Math.random()
+        // var r2 = r1 * 10
+        // var res = Math.round(r2)
+        // console.log(res)
+
+        // var time = new Date()
+        // console.log(time)
+
+        // console.log(window.innerWidth, window.innerHeight)
+
+        on.onclick = function() {
+            window.open('http://www.baidu.com/')
+        }
+        off.onclick = function() {
+            window.close()
+        }
 
     </script>
 </body>
