@@ -8,7 +8,7 @@
 
   ![封面](https://img2022.cnblogs.com/blog/1589204/202209/1589204-20220905095739193-1849832512.jpg)
 
-- 学习链接
+- 学习链接：[千锋HTML5前端开发教程1000集](https://www.bilibili.com/video/BV17z4y1D7Yj)：`[184集: 286集]，共103集`
 
 - 感想 | 摘抄
 
@@ -755,6 +755,7 @@ DOM：Document Object Model
    - 修改属性
    - 改变位置
    - 添加事件
+
 2. 获取元素的方式
    - 根据 id 名称获取
      - `document.getElementById('id名称')`
@@ -782,6 +783,7 @@ DOM：Document Object Model
      - `document.querySelectorAll('选择器')`
      - 获取文档流中 **所有** 满足选择器规则的元素，返回伪数组
      - **同类名获取**
+
 3. 操作元素内容
    - 操作元素文本内容，就是元素中的内容
      - 获取：`元素.innerText`
@@ -789,6 +791,7 @@ DOM：Document Object Model
    - 操作元素超文本内容，就是整个元素
      - 获取：`元素.innerHTML`
      - 设置：`元素.innerHTML = '新内容'`
+
 4. 操作元素属性
    - 原生属性
      - 获取：`元素.属性名`
@@ -798,17 +801,252 @@ DOM：Document Object Model
      - 设置：`元素.setAttribute('属性名', '属性值')`
      - 删除：`元素.removeAttribute('属性名')`
    - 注意：以上方法一般埠用作操作元素的 **类名** 和 **样式**
+
 5. 操作元素类名
    - 获取：`元素.className`
    - 设置：`元素.className = '新类名'`
+
 6. 操作元素行内样式
    - 获取：`元素.style.样式名`
    - 设置：`元素.style.样式名 = '样式值'`
    - 获取样式中的值时使用类似 `box.style.width` 的语法，需要注意的是，中划线的样式名需要改为驼峰式语法：`box.style.backgroundColor`
    - 注意：只能获取和设置元素的 **行内样式**
+
 7. 获取元素非行内样式
    - 获取：`window.getComputedStyle(元素).样式名`
    - 注意：可以获取行内样式，也可以获取非行内样式
+   - 但是不能设置非行内样式，前端只能设置行内样式
+
+8. 小结：
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/60a677e41a3345ff8c1a8a9399194e4b.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/aae3ef814a9e4a7a8320fdc6a32bdf4f.png)
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/00919cab63e44fae8a2a3be904ee1aec.png)
+
+9. 案例1：回到顶部
+
+   - 确认需求
+
+     1. 滚动条滚动超过临界点：顶部通栏显示，否则隐藏
+     2. 滚动条滚动超过临界点：回到顶部按钮显示，否则隐藏
+     3. 点击回到顶部按钮：滚动条滚动回到顶部
+
+   - 布局结构
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/6ffce889a32243de9c9be880ca7e7594.png)
+
+   - 代码逻辑
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/1b2ea6a4206347c19423d9d3015dea4d.png)
+
+   - 代码：
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             * {
+                 margin: 0;
+                 padding: 0;
+             }
+             body {
+                 height: 3000px;
+             }
+             .header {
+                 width: 100%;
+                 height: 80px;
+                 display: flex;
+                 justify-content: center;
+                 align-items: center;
+                 font-size: 30px;
+                 color: #fff;
+                 background-color: skyblue;
+     
+                 transition: top 0.2s linear;
+     
+                 position: fixed;
+                 top: -80px;
+                 left: 0;
+             }
+     
+             .goTop {
+                 width: 50px;
+                 height: 50px;
+                 background-color: pink;
+                 font-size: 20px;
+                 text-align: center;
+                 line-height: 25px;
+                 color: #fff;
+     
+                 position: fixed;
+                 bottom: 50px;
+                 right: 50px;
+     
+                 display: none;
+             }
+         </style>
+     </head>
+     <body>
+         <div class="header">顶部通栏</div>
+         <div class="goTop">回到顶部</div>
+     
+         <script>
+             // 1. 获取元素
+             var header = document.querySelector('.header')
+             var goTop = document.querySelector('.goTop')
+     
+             // 2. 绑定滚动事件
+             window.onscroll = function(){
+                 // 2.1 获取浏览器卷去的高度
+                 var height = document.documentElement.scrollTop || document.body.scrollTop
+                 // 2.2 判断卷去的高度
+                 if (height >= 300) {
+                     // 显示
+                     header.style.top = '0px'
+                     goTop.style.display = 'block'
+                 }else{
+                     // 隐藏
+                     header.style.top = '-80px'
+                     goTop.style.display = 'none'
+                 }
+             }
+     
+             // 3. 绑定点击事件
+             goTop.onclick = function(){
+                 window.scrollTo({
+                     top: 0,
+                     behavior: 'smooth'
+                 })
+             }
+         </script>
+     </body>
+     </html>
+     ```
+
+10. 案例2：全选
+
+    - 确认需求：
+
+      1. 全选按钮点击的时候，根据自身状态决定所有选项按钮状态
+      2. 点击每一个选项按钮的时候，根据所有选项按钮状态决定全选按钮状态
+
+    - 布局结构
+
+      1. 需要一个 全选按钮 和若干的 选项按钮 标签
+
+    - 代码逻辑
+
+      1. 给 全选按钮 绑定点击事件
+         - 拿到自己的选中状态
+         - 给所有选项按钮设置选中状态
+      2. 给 每一个选项按钮 绑定点击事件
+         - 判断是不是所有选项按钮都是选中的
+         - 根据判断结果给全选按钮设置选中状态
+
+    - 代码
+
+      ```html
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Document</title>
+          <style>
+              * {
+                  margin: 0;
+                  padding: 0;
+              }
+              .box {
+                  width: 100px;
+                  padding: 20px;
+                  border: 1px solid pink;
+                  margin: 30px auto;
+                  border-radius: 5px;
+              }
+              hr {
+                  margin: 10px 0;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="box">
+              全选：<input type="checkbox"> <br>
+              <hr>
+              <input type="checkbox"> 选项一 <br>
+              <input type="checkbox"> 选项二 <br>
+              <input type="checkbox"> 选项三 <br>
+              <input type="checkbox"> 选项四 <br>
+          </div>
+      
+          <script>
+              // 1. 获取元素
+              var allBtn = document.querySelector('input')
+              // n+2指的是从第二个子元素开始
+              var items = document.querySelectorAll('input:nth-child(n+2)')
+              // console.log(allBtn);
+              // console.log(items);
+      
+              // 2. 给全选按钮绑定事件
+              allBtn.onclick = function () {
+                  // 2.1 拿到自己的选中状态
+                  var myType = allBtn.checked
+                  // 2.2 把自己的选中状态设置给每一个选项按钮
+                  for(var i = 0; i < items.length; i++) {
+                      items[i].checked = myType
+                  }
+              }
+      
+              // 3. 循环给每一个选项按钮绑定点击事件
+              for(var i = 0; i < items.length; i++) {
+                  // 3.1 给每一个选项按钮绑定点击事件
+                  items[i].onclick = function() {
+                      // 3.2 首先定义假设变量，假设所有按钮都是选中的
+                      var flag = true
+      
+                      // 3.3 啊通过循环来验证我们的假设
+                      for (var j = 0; j < items.length; j++) {
+                          if(items[j].checked === false) {
+                              flag = false
+                              break
+                          }
+                      }
+      
+                      // 3.4 把我们得到的结果设置给全选按钮
+                      allBtn.checked = flag
+                  }
+              }
+          </script>
+      </body>
+      </html>
+      ```
+
+11. 案例3：选项卡
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/29abc47b19684ddda993429bb0470924.png)
+
+    - 确认需求：
+      1. 点击哪一个按钮，其他按钮全部回归原始，当前高亮
+      2. 点击哪一个按钮，其他盒子全部隐藏，当前索引对应盒子显示
+    - 布局结构：
+      1. 三个表示按钮的盒子，横向排列，初始一个高亮
+      2. 三个显示内容的盒子，在 同一位置不同层级 排列，初始一个显示
+    - 代码逻辑：
+      1. 每一个 按钮盒子 绑定一个点击事件
+      2. 点击任何一个按钮盒子时
+         - 所有按钮盒子取消高亮状态
+         - 所有内容盒子隐藏
+      3. 点击任何一个按钮盒子时
+         - 当前按钮盒子高亮
+         - 当前索引对应内容盒子显示
 
 
 
@@ -826,7 +1064,7 @@ DOM：Document Object Model
 
 
 
-学到P213
+学到P217
 
 
 ------

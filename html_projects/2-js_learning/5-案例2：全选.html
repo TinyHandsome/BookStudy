@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .box {
+            width: 100px;
+            padding: 20px;
+            border: 1px solid pink;
+            margin: 30px auto;
+            border-radius: 5px;
+        }
+        hr {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        全选：<input type="checkbox"> <br>
+        <hr>
+        <input type="checkbox"> 选项一 <br>
+        <input type="checkbox"> 选项二 <br>
+        <input type="checkbox"> 选项三 <br>
+        <input type="checkbox"> 选项四 <br>
+    </div>
+
+    <script>
+        // 1. 获取元素
+        var allBtn = document.querySelector('input')
+        // n+2指的是从第二个子元素开始
+        var items = document.querySelectorAll('input:nth-child(n+2)')
+        // console.log(allBtn);
+        // console.log(items);
+
+        // 2. 给全选按钮绑定事件
+        allBtn.onclick = function () {
+            // 2.1 拿到自己的选中状态
+            var myType = allBtn.checked
+            // 2.2 把自己的选中状态设置给每一个选项按钮
+            for(var i = 0; i < items.length; i++) {
+                items[i].checked = myType
+            }
+        }
+
+        // 3. 循环给每一个选项按钮绑定点击事件
+        for(var i = 0; i < items.length; i++) {
+            // 3.1 给每一个选项按钮绑定点击事件
+            items[i].onclick = function() {
+                // 3.2 首先定义假设变量，假设所有按钮都是选中的
+                var flag = true
+
+                // 3.3 啊通过循环来验证我们的假设
+                for (var j = 0; j < items.length; j++) {
+                    if(items[j].checked === false) {
+                        flag = false
+                        break
+                    }
+                }
+
+                // 3.4 把我们得到的结果设置给全选按钮
+                allBtn.checked = flag
+            }
+        }
+    </script>
+</body>
+</html>
