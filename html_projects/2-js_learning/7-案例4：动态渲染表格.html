@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            width: 300px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>性别</th>
+                <th>姓名</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script>
+        var users = [
+            {id:1, name: '张三', age: 18},
+            {id: 2, name: '李四', age: 22},
+            {id: 3, name: '王五', age: 20}
+        ]
+
+        // 0. 获取tbody标签
+        var tbody = document.querySelector('tbody')
+        // 1. 循环遍历users数据
+        users.forEach(function(item){
+            // 这里的item就是数组中的每一个对象
+            console.log(item);
+            // 2. 每一个对象生成一个tr标签
+            var tr = document.createElement('tr')
+
+            // 3. 遍历item
+            for (var key in item) {
+                var td = document.createElement('td')
+                td.innerHTML = item[key]
+                // 5. 把td插入到tr标签内部
+                tr.appendChild(td)
+            }
+            // 6. 把本次的tr插入到tbody的内部
+            tbody.appendChild(tr)
+        })
+    </script>
+</body>
+</html>

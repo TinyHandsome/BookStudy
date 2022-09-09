@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 200px;
+            height: 200px;
+            background-color: pink;
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+
+    <script>
+        // 1. 获取div元素
+        var div = document.querySelector('div')
+        // 2. 绑定点击事件
+        div.onclick = function() {
+            // 3. 书写点击的时候执行的代码
+            console.log('啊吧啊吧');
+        }
+    </script>
+</body>
+</html>

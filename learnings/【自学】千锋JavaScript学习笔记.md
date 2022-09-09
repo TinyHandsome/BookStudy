@@ -1048,6 +1048,287 @@ DOM：Document Object Model
          - 当前按钮盒子高亮
          - 当前索引对应内容盒子显示
 
+12. 节点操作
+
+    - 创建节点
+
+      - `document.createElement('标签名称')`
+      - 创建一个指定标签元素，返回创建好的元素节点
+
+    - 插入节点
+
+      - 语法1：`父节点.appendChild(子节点)`
+      - 把 子节点 放在父节点 的内部，并且放在最后的位置
+      - 语法2：`父节点.insertBefore(要插入的子节点，哪一个子节点的前面)`
+      - 把子节点放在父节点的内部，并且放在指定某一个子节点的前面
+
+    - 删除节点
+
+      - 语法1：`父节点.removeChild(子节点)`
+      - 从父节点内删除一个子节点
+      - 语法2：`节点.remove()`
+      - 把自己删除
+
+    - 替换节点
+
+      - `父节点.replaceChild(换上节点, 换下节点)`
+      -  在父节点内，使用 换上节点 替换掉 换下节点
+
+    - 克隆节点
+
+      - `节点.cloneNode(是否克隆后代节点)`
+      - 把该节点 复制 一份一模一样的内容
+      - 返回克隆好的节点
+
+    - 小结
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/54d025b5a065448081ae6f32f063c612.png)
+
+13. 获取元素尺寸
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/a9a85ddaa3374012a7d193e4b09b98ab.png)
+
+14. 案例4：动态渲染页面
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/2bef23c95f194bfebf327b59c24aa3ec.png)
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            ul, ol, li {
+                list-style: none;
+            }
+            .box {
+                width: 600px;
+                height: 400px;
+                border: 3px solid pink;
+                margin: 50px auto;
+                display: flex;
+                flex-direction: column;
+            }
+            .box > ul {
+                height: 60px;
+                display: flex;
+            }
+            .box > ul > li {
+                flex: 1;
+                color: #fff;
+                background-color: skyblue;
+                font-size: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+            }
+            .box > ul > li.active {
+                background-color: orange;
+            }
+    
+            .box > ol {
+                flex: 1;
+                position: relative;
+            }
+    
+            .box > ol > li {
+                width: 100%;
+                height: 100%;
+                background-color: purple;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #fff;
+                font-size: 100px;
+    
+                position: absolute;
+                left: 0;
+                top: 0;
+    
+                display: none;
+            }
+    
+            .box > ol > li.active {
+                display: flex;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <ul>
+                <li class="active">1</li>
+                <li>2</li>
+                <li>3</li>
+            </ul>
+            <ol>
+                <li class="active">1</li>
+                <li>2</li>
+                <li>3</li>
+            </ol>
+        </div>
+    
+        <script>
+            // 1. 获取元素
+            var btns = document.querySelectorAll('ul > li')
+            var tabs = document.querySelectorAll('ol > li')
+    
+            // 2. 给btns里面所有按钮添加点击事件
+            btns.forEach(function(item, index){
+                item.onclick = function(){
+                    // 2.1 给btns和tabs里面所有的内容取消 active 类名
+                    btns.forEach(function(t, i){
+                        t.className = ''
+                        tabs[i].className = ''
+                    })
+    
+                    // 2.2 当前点击的按钮和索引对应的盒子添加active类名
+                    item.className = 'active'
+                    tabs[index].className = 'active'
+                }
+            })
+        </script>
+    </body>
+    </html>
+    ```
+
+### 1.17 事件
+
+- 前端通过代码的方式和页面中的某些内容做好一个约定
+
+- 用户触发指定行为的时候，就会执行代码
+
+- 事件绑定
+
+  - 事件绑定的三要素
+    1. 事件源：和谁做好约定
+    2. 事件类型：约定一个什么行为
+    3. 事件处理函数：当用户触发该行为的时候，执行什么代码
+  - 语法：`事件源.on事件类型 = 事件处理函数`
+
+- 事件类型
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/954a6083e71041a59012a2c83611c60d.png)
+
+- 事件对象
+
+  - 当事件触发的时候，一个描述该事件信息的对象数据类型
+
+  - 直接在事件处理函数接收形参就是事件对象了
+
+    ```js
+    div.onclick = function(e){
+    	console.log(e)
+    }
+    ```
+
+- 事件对象内的信息
+
+  - 鼠标事件
+
+    - 坐标信息
+      1. offsetX和offsetY：相对于触发事件的元素的位置
+      2. clientX和clientY：相对于浏览器可视窗口的位置
+      3. pageX和pageY：相对于页面文档流的位置
+
+  - 键盘事件
+
+    - 键盘编码：`事件对象.keyCode`
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/3c31c2bf9f8e4752b0be3c6c0a04a3c5.png)
+
+- 案例：鼠标跟随
+
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <style>
+          img {
+              width: 50px;
+              height: 50px;
+              position: fixed;
+              left: 0;
+              top: 0;
+          }
+      </style>
+  </head>
+  <body>
+      <img src="./pic/棒棒糖.png" alt="">
+      <script>
+          var imgBox = document.querySelector('img')
+          //  给 document 绑定一个鼠标移动事件
+          document.onmousemove = function(e) {
+              // 拿到光标相对于窗口的坐标点位
+              var x = e.clientX
+              var y = e.clientY
+              // 把 x 和 y 的值复制给img标签的left和top样式
+              imgBox.style.left = x + 5 + 'px'
+              imgBox.style.top = y + 5 + 'px'
+          }
+      </script>
+  </body>
+  </html>
+  ```
+
+- 事件传播 ![在这里插入图片描述](https://img-blog.csdnimg.cn/36046364733a4f7d978cc408868577df.png)
+
+  - 浏览器的响应事件的机制
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/20796fc4cab34d2cac4ed3602cbf34ab.png)
+
+    - 浏览器窗口最先知道事件的发生
+    - 捕获阶段：从window按照结构子级的顺序传递到目标
+    - 目标阶段：准确触发事件的元素接收到行为
+    - 冒泡阶段：从目标按照结构父级的顺序传递到window
+    - 本次事件传播结束
+    - **浏览器的传播机制默认都是在冒泡阶段触发事件的**
+
+  - 阻止事件传播
+
+    - `事件对象.stopPropagation()`
+
+    - 代码
+
+      ```js
+      inner.onclick = function(e){
+      	e.stopProgation()
+      	console.log('aaa')
+      }
+      ```
+
+  - 事件委托
+
+    - 利用事件冒泡的机制，把自己的事件委托给结构父级中的某一层
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/7e228fbd56824d93b62d0af1c3e54464.png)
+
+    - 通过事件对象的 `e.taget` 拿到点击的对象
+
+      ```js
+      ul.onclick = function(e){
+      	if(e.target.tagName === 'LI'){
+      		console.log('你点击的是li')
+      	}
+      }
+      ```
+
+    - 上述代码通过识别点击对象的tagName，设置仅对li对象的点击响应，而不对其父对象ul响应
+
+- 案例：轮播图
+
+  
 
 
 
@@ -1063,8 +1344,7 @@ DOM：Document Object Model
 
 
 
-
-学到P217
+学到P222
 
 
 ------

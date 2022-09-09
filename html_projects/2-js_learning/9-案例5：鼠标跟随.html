@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img {
+            width: 50px;
+            height: 50px;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <img src="./pic/棒棒糖.png" alt="">
+    <script>
+        var imgBox = document.querySelector('img')
+        //  给 document 绑定一个鼠标移动事件
+        document.onmousemove = function(e) {
+            // 拿到光标相对于窗口的坐标点位
+            var x = e.clientX
+            var y = e.clientY
+            // 把 x 和 y 的值复制给img标签的left和top样式
+            imgBox.style.left = x + 5 + 'px'
+            imgBox.style.top = y + 5 + 'px'
+        }
+    </script>
+</body>
+</html>
