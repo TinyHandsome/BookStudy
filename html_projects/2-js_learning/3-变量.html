@@ -181,9 +181,32 @@
 
         console.log(ele.innerText)
 
-        btn.onclick = function(){
+        btn.onclick = function () {
             ele.innerText = '皮卡丘'
         }
+
+        function createObj(name, age, sayHi) {
+            var obj = {}
+
+            obj.name = name
+            obj.age = age
+            obj.sayHi = sayHi
+
+            return obj
+        }
+
+        var s1 = createObj('a', 1, function () { return 1 })
+        var s2 = createObj('b', 2, function () { return 2 })
+
+        function createObj2() {
+            this.name = 'Jack'
+            this.age = 18
+            this.sayHi = function () { console.log("11") }
+        }
+
+        var obj1 = new createObj2()
+        var obj2 = new createObj2()
+        
 
 
     </script>

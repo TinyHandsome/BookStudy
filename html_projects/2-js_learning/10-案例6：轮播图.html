@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        ol,
+        li {
+            list-style: none;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .banner {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            margin: 50px 0;
+        }
+
+        .banner>ul {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .banner>ul>li {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            opacity: 0;
+            transition: opacity .5s linear
+        }
+
+        .banner>ul>li.active {
+            opacity: 1;
+        }
+
+        .banner>ol {
+            width: 200px;
+            height: 30px;
+            position: absolute;
+            left: 30px;
+            bottom: 30px;
+            background-color: rgba(0, 0, 0, 0.5);
+
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 15px;
+        }
+
+        .banner>ol>li {
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .banner>ol>li.active {
+            background-color: orange;
+        }
+
+        .banner>div {
+            width: 40px;
+            height: 60px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .banner>div.left {
+            left: 0;
+        }
+
+        .banner>div.right {
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="banner">
+        <!-- 图片区域 -->
+        <ul>
+            <li class="active"><img src="./pic/lb-1.jpg" alt=""></li>
+            <li><img src="./pic/lb-2.jpg" alt=""></li>
+            <li><img src="./pic/lb-3.jpg" alt=""></li>
+            <li><img src="./pic/lb-4.jpg" alt=""></li>
+        </ul>
+
+        <!-- 焦点区域 -->
+        <ol>
+            <li data-i="0" data-name="point" class="active"></li>
+            <li data-i="1" data-name="point"></li>
+            <li data-i="2" data-name="point"></li>
+            <li data-i="3" data-name="point"></li>
+        </ol>
+
+        <!-- 左右切换按钮 -->
+        <div class="left">&lt;</div>
+        <div class="right">&gt;</div>
+    </div>
+
+    <script>
+        // 获取到所有承载图片的li喝所有承载焦点的li
+        var imgs = document.querySelectorAll('ul>li')
+        var points = document.querySelectorAll('ol>li')
+        var banner = document.querySelector('.banner')
+        // 准备一个变量，表示当前是第几张，默认是0，因为默认显示的是索引第0张
+        var index = 0
+        // 书写一个切换一张的函数
+        function changeOne(type) {
+            /*
+                约定：
+                    1. 参数为true，我们切换下一张
+                    2. 参数为false，我们切换上一张
+                    3. 参数为数字，我们切换到指定索引的那一张
+            */
+            //    1. 让当前这一张消失
+            imgs[index].className = ''
+            points[index].className = ''
+
+            // 2. 根据type传递啦id参数，来切换index的值
+            if (type === true) {
+                index++
+            } else if (type === false) {
+                index--
+            } else {
+                index = type
+            }
+            // 判定一下 index 的边界值
+            if (index >= imgs.length) {
+                index = 0
+            }
+            if (index < 0) {
+                index = imgs.length - 1
+            }
+            // 3. 让改变后的这一张显示出来
+            imgs[index].className = 'active'
+            points[index].className = 'active'
+        }
+        // 给轮播图区域盒子绑定点击事件
+        banner.onclick = function (e) {
+            // console.log('点击事件');
+
+            // 判断点击的是左按钮
+            if (e.target.className === 'left') {
+                console.log('点击的是左按钮');
+                // 切换上一张，调用changeOne 方法传递参数为false
+                changeOne(false)
+            }
+
+            // 判断点击的是右按钮
+            if (e.target.className === 'right') {
+                console.log('点击的是右按钮');
+                // 切换下一张，调用changeOne方法传递参数为true
+                changeOne(true)
+            }
+
+            // 判断点击的是焦点盒子
+            if (e.target.dataset.name === 'point'){
+                console.log('点击的是焦点盒子');
+                // 拿到自己身上记录的索引
+                var i = e.target.dataset.i - 0
+                // 切换某一张，调用changeOne方法传递参数为要切换的索引
+                changeOne(i)
+            }
+        }
+
+        // 自动切换功能
+        setInterval(function(){
+            changeOne(true)
+        }, 3000)
+    </script>
+</body>
+
+</html>

@@ -1328,7 +1328,333 @@ DOM：Document Object Model
 
 - 案例：轮播图
 
-  
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/82310e630c4e48bbb16ebb1464dba2fa.png)
+
+  - 需求：
+
+    - 点击左按钮，当前这一张消失，上一张出现
+    - 点击右按钮，当前这一张消失，下一张出现
+    - 点击焦点按钮，当前这一张消失，某一张出现
+
+  - 代码
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+    
+            ul,
+            ol,
+            li {
+                list-style: none;
+            }
+    
+            img {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+    
+            .banner {
+                width: 100%;
+                height: 500px;
+                position: relative;
+                margin: 50px 0;
+            }
+    
+            .banner>ul {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+    
+            .banner>ul>li {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+    
+                opacity: 0;
+                transition: opacity .5s linear
+            }
+    
+            .banner>ul>li.active {
+                opacity: 1;
+            }
+    
+            .banner>ol {
+                width: 200px;
+                height: 30px;
+                position: absolute;
+                left: 30px;
+                bottom: 30px;
+                background-color: rgba(0, 0, 0, 0.5);
+    
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                border-radius: 15px;
+            }
+    
+            .banner>ol>li {
+                width: 20px;
+                height: 20px;
+                background-color: #fff;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+    
+            .banner>ol>li.active {
+                background-color: orange;
+            }
+    
+            .banner>div {
+                width: 40px;
+                height: 60px;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 30px;
+                color: #fff;
+                cursor: pointer;
+            }
+    
+            .banner>div.left {
+                left: 0;
+            }
+    
+            .banner>div.right {
+                right: 0;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="banner">
+            <!-- 图片区域 -->
+            <ul>
+                <li class="active"><img src="./pic/lb-1.jpg" alt=""></li>
+                <li><img src="./pic/lb-2.jpg" alt=""></li>
+                <li><img src="./pic/lb-3.jpg" alt=""></li>
+                <li><img src="./pic/lb-4.jpg" alt=""></li>
+            </ul>
+    
+            <!-- 焦点区域 -->
+            <ol>
+                <li data-i="0" data-name="point" class="active"></li>
+                <li data-i="1" data-name="point"></li>
+                <li data-i="2" data-name="point"></li>
+                <li data-i="3" data-name="point"></li>
+            </ol>
+    
+            <!-- 左右切换按钮 -->
+            <div class="left">&lt;</div>
+            <div class="right">&gt;</div>
+        </div>
+    
+        <script>
+            // 获取到所有承载图片的li喝所有承载焦点的li
+            var imgs = document.querySelectorAll('ul>li')
+            var points = document.querySelectorAll('ol>li')
+            var banner = document.querySelector('.banner')
+            // 准备一个变量，表示当前是第几张，默认是0，因为默认显示的是索引第0张
+            var index = 0
+            // 书写一个切换一张的函数
+            function changeOne(type) {
+                /*
+                    约定：
+                        1. 参数为true，我们切换下一张
+                        2. 参数为false，我们切换上一张
+                        3. 参数为数字，我们切换到指定索引的那一张
+                */
+                //    1. 让当前这一张消失
+                imgs[index].className = ''
+                points[index].className = ''
+    
+                // 2. 根据type传递啦id参数，来切换index的值
+                if (type === true) {
+                    index++
+                } else if (type === false) {
+                    index--
+                } else {
+                    index = type
+                }
+                // 判定一下 index 的边界值
+                if (index >= imgs.length) {
+                    index = 0
+                }
+                if (index < 0) {
+                    index = imgs.length - 1
+                }
+                // 3. 让改变后的这一张显示出来
+                imgs[index].className = 'active'
+                points[index].className = 'active'
+            }
+            // 给轮播图区域盒子绑定点击事件
+            banner.onclick = function (e) {
+                // console.log('点击事件');
+    
+                // 判断点击的是左按钮
+                if (e.target.className === 'left') {
+                    console.log('点击的是左按钮');
+                    // 切换上一张，调用changeOne 方法传递参数为false
+                    changeOne(false)
+                }
+    
+                // 判断点击的是右按钮
+                if (e.target.className === 'right') {
+                    console.log('点击的是右按钮');
+                    // 切换下一张，调用changeOne方法传递参数为true
+                    changeOne(true)
+                }
+    
+                // 判断点击的是焦点盒子
+                if (e.target.dataset.name === 'point'){
+                    console.log('点击的是焦点盒子');
+                    // 拿到自己身上记录的索引
+                    var i = e.target.dataset.i - 0
+                    // 切换某一张，调用changeOne方法传递参数为要切换的索引
+                    changeOne(i)
+                }
+            }
+    
+            // 自动切换功能
+            setInterval(function(){
+                changeOne(true)
+            }, 3000)
+        </script>
+    </body>
+    
+    </html>
+    ```
+
+## 2. 面向对象
+
+1. 了解面向对象
+   - 面向对象是我们的一种开发方式
+   - 面向过程：一种关注过程的开发方式
+     - 在开发过程中，我们要关注每一个细节，步骤，顺序
+   - 面向对象：一种面向对象的开发方式
+     - 在开发过程中，我们看看有没有一个对象能帮我们完成任务
+   - 面向对象的核心：高内聚，低耦合
+
+2. 创建对象的方式
+
+   1. 字面量方式创建对象
+
+      - `var obj = {...}`
+
+      - 可以后期动态添加
+
+        ```js
+        var obj = {
+        	name: 'Jack',
+        	age: 18,
+        	sayHi: function () {console.log('hello world')}
+        }
+        ```
+
+   2. 内置构造函数创建对象
+
+      - `var obj = new Object()`
+
+      - 可以后期动态添加
+
+        ```js
+        var obj = new Object()
+        obj.name = 'Jack'
+        obj.age = 18
+        obj.sayHi = function () {console.log('hello world')}
+        ```
+
+   3. 工厂函数创建对象
+
+      1. 制造一个工厂函数
+
+      2. 使用工厂函数创建对象
+
+         ```js
+         function createObj(name, age, sayHi) {
+             var obj = {}
+         
+             obj.name = name
+             obj.age = age
+             obj.sayHi = sayHi
+         
+             return obj
+         }
+         
+         var s1 = createObj('a', 1, function(){return 1})
+         var s2 = createObj('b', 2, function(){return 2})
+         ```
+
+   4. 自定义构造函数创建对象
+
+      1. 制造一个自定义的构造函数
+      2. 使用自定义的构造函数去创建对象
+
+      - 构造函数会自动创建对象，自动返回这个对象，我们只需要手动向里面添加内容就可以了
+
+      - 构造函数在使用的时候，需要和new关键字连用，如果不连用，那么没有意义
+
+        ```js
+        function createObj() {
+        	this.name = 'Jack'
+        	this.age = 18
+        	this.sayHi = function () {console.log("11")}
+        }
+        ```
+
+      - 每一个对象可能类似，但是内容不太一样
+
+        - 构造函数
+
+        - 可以批量生产对象
+
+        - 可以像函数一样传递参数，可以给每一个对象添加一些不同的内容
+
+          ```js
+          function createObj2() {
+              this.name = 'Jack'
+              this.age = 18
+              this.sayHi = function () { console.log("11") }
+          }
+          
+          var obj1 = new createObj2()
+          var obj2 = new createObj2()
+          ```
+
+3. 构造函数的使用
+
+   1. 构造函数和普通函数没有区别
+      - 只不过在调用的时候和 new 关键字连用
+   2. 书写构造函数，函数名首字母大写
+   3. 调用的时候，需要和new关键字联用
+   4. 调用构造函数的时候，如果不需要传递参数，可以不写最后的小括号
+   5. 构造函数内部，不要随便写return
+      - 如果在函数体中写了 `return 基本数据类型` ，则该return不起作用
+      - 如果return 的是 复杂数据类型，则构造函数白写（数组，函数，时间对象）
+
+4. 构造函数的不合理
+
+   
+
+
 
 
 
@@ -1350,12 +1676,13 @@ DOM：Document Object Model
 ------
 
 
-- :cloud: 我的CSDN：`https://blog.csdn.net/qq_21579045`
+- :cloud: 我的CSDN：`https://blog.csdn.net/qq_21579045/`
 - :snowflake: 我的博客园：`https://www.cnblogs.com/lyjun/`
-- :sunny: 我的Github：`https://github.com/TinyHandsome`
-- :rainbow: 我的bilibili：`https://space.bilibili.com/8182822`
-- :avocado: 我的思否：`https://segmentfault.com/u/liyj`
-- :tomato: 我的知乎：`https://www.zhihu.com/people/lyjun_`
+- :sunny: 我的Github：`https://github.com/TinyHandsome/`
+- :rainbow: 我的bilibili：`https://space.bilibili.com/8182822/`
+- :avocado: 我的思否：`https://segmentfault.com/u/liyj/`
+- :tomato: 我的知乎：`https://www.zhihu.com/people/lyjun_/`
+- :potato: 我的豆瓣：`https://www.douban.com/people/lyjun_/`
 - :penguin: 粉丝交流群：1060163543，神秘暗号：为干饭而来
 
 碌碌谋生，谋其所爱。:ocean:              @李英俊小朋友

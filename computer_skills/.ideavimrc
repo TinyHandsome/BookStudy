@@ -6,22 +6,22 @@ vnoremap <s-tab> <gv
 
 " 让键盘映射jk为Esc
 " set timeout ttimeoutlen=50
-inoremap <C-j>jl <Esc>o
-inoremap <C-j>lj <Esc>O
-inoremap <C-j>kl <Esc>la
-inoremap <C-j>lk <Esc>i
-inoremap <C-j>kj <Esc>
-inoremap <C-j>jk <Esc>
-inoremap <C-j>fj <Esc>
-inoremap <C-j>jf <Esc>
+inoremap <C-j>o <Esc>o
+inoremap <C-j>i <Esc>O
+inoremap <C-j>l <Esc>la
+inoremap <C-j>k <Esc>i
+inoremap <C-j>j <Esc>
+inoremap <C-j>k <Esc>
+" inoremap <C-j>fj <Esc>
+" inoremap <C-j>jf <Esc>
 
 
 " 单词大写
-nnoremap <C-j>u bgUw
-inoremap <C-j>u <Esc>bgUw
+nnoremap <C-j>U bgUw
+inoremap <C-j>U <Esc>bgUw
 " 单词小写
-nnoremap <C-j>l bguw
-inoremap <C-j>l <Esc>bguw
+nnoremap <C-j>u bguw
+inoremap <C-j>u <Esc>bguw
 " 删除当前到行尾
 nnoremap <C-j>d d$
 inoremap <C-j>d <Esc>d$
