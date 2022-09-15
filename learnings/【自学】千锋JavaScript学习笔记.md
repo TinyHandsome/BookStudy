@@ -14,6 +14,8 @@
 
 - 学习时遇到的问题
 
+  1. [CSS中的position:relative理解](https://blog.csdn.net/gamenoover/article/details/90614014)
+
 - 直通车
 
 - <span style="color: skyblue; font-weight: bold">PS：相关工程代码都在 Github 上</span>
@@ -1652,7 +1654,420 @@ DOM：Document Object Model
 
 4. 构造函数的不合理
 
-   
+   - 当你在构造函数体内书写方法的时候
+     - 你需要向对象上添加方法的时候
+     - 只要创建一次对象（new一次），就会有一个函数在占用空间
+     - 函数无法被重复利用
+
+5. 原型 prototype
+
+   - 定义：每一个函数天生自带一个属性，叫做prototype，是一个 **对象**
+   - 构造函数也是函数，也会有这个自带的空间 prototype
+   - 既然 prototype是一个对象，我们就可以使用对象操作的语法，向里面添加一些内容
+
+6. 对象
+
+   - 定义：每一个对象，在你访问他的成员的时候，如果自己没有这个属性，会自动的去所属构造函数的prototype上查找
+   - 自定义构造函数创建的对象也是对象，当你访问某一个成员的时候
+     - 如果没有，也会自动取所属构造函数的原型上查找
+     - 哪一个构造函数创建的对象，这个对象就属于哪一个构造函数
+     - 因为构造函数在创建对象的过程，叫做 实例化 过程，创建出来的对象家做这个构造函数的一个 实例化对象
+   - **理解：函数的原型可以用来定义类方法，该方法每一个实例都可以使用，渐少资源的浪费**
+
+7. 面向对象开发
+
+   - 选项卡：
+
+     1. 书写一个构造函数
+     2. 创建一个能够完成选项卡的对象
+        - 属性1：选项卡中能够点击的按钮
+        - 属性2：选项卡中用于切换的盒子
+        - 方法：控制点击的按钮添加点击事件，给盒子进行切换操作
+     3. 使用构造函数创建一个选项卡对象
+
+   - 代码
+
+     ```html
+     <!DOCTYPE html>
+     <html lang="en">
+     
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Document</title>
+         <style>
+             * {
+                 margin: 0;
+                 padding: 0;
+             }
+     
+             ul,
+             ol,
+             li {
+                 list-style: none;
+             }
+     
+             .tab {
+                 width: 600px;
+                 height: 400px;
+                 border: 10px solid #333;
+     
+                 display: flex;
+                 flex-direction: column;
+             }
+     
+             ul {
+                 height: 60px;
+                 display: flex;
+             }
+     
+             ul>li {
+                 flex: 1;
+                 display: flex;
+                 justify-content: center;
+                 align-items: center;
+                 font-size: 40px;
+                 color: #fff;
+                 background-color: skyblue;
+                 cursor: pointer;
+             }
+     
+             ul>li.active {
+                 background-color: orange;
+             }
+     
+             ol {
+                 flex: 1;
+                 position: relative;
+             }
+     
+             ol>li {
+                 position: absolute;
+                 left: 0;
+                 top: 0;
+                 width: 100%;
+                 height: 100%;
+                 font-size: 100px;
+                 color: #fff;
+                 background-color: purple;
+                 display: none;
+                 justify-content: center;
+                 align-items: center;
+             }
+     
+             ol>li.active {
+                 display: flex;
+             }
+         </style>
+     </head>
+     
+     <body>
+         <div class="tab" id="box">
+             <ul>
+                 <li class="active">1</li>
+                 <li>2</li>
+                 <li>3</li>
+             </ul>
+             <ol>
+                 <li class="active">1</li>
+                 <li>2</li>
+                 <li>3</li>
+             </ol>
+         </div>
+     
+         <div class="tab" id="box2">
+             <ul>
+                 <li class="active">1</li>
+                 <li>2</li>
+                 <li>3</li>
+                 <li>4</li>
+             </ul>
+             <ol>
+                 <li class="active">1</li>
+                 <li>2</li>
+                 <li>3</li>
+                 <li>4</li>
+             </ol>
+         </div>
+     
+         <script>
+             function Tabs(ele) {
+                 // 范围
+                 this.ele = document.querySelector(ele)
+                 // 在范围内找到所有可以点击的盒子
+                 this.btns = this.ele.querySelectorAll('ul > li')
+                 // 在范围内找到所有需要切换显示的盒子
+                 this.tabs = this.ele.querySelectorAll('ol > li')
+             }
+             // 原型上书写方法
+             Tabs.prototype.change = function () {
+                 // 保存一下当前的实例，在下面的函数中需要使用该实例的变量
+                 var current_tab = this
+     
+                 for (var i = 0; i < current_tab.btns.length; i++) {
+                     // 给每一个按钮设置index的索引
+                     this.btns[i].setAttribute('index', i)
+                     // 去掉所有btn和tab的active标记
+                     this.btns[i].addEventListener('click', function () {
+                         for (var j = 0; j < current_tab.btns.length; j++) {
+                             current_tab.btns[j].className = ''
+                             current_tab.tabs[j].className = ''
+                         }
+                         // 当前点击的这个li有active类名
+                         this.className = 'active'
+                         // 同时，对应的tab索引的li也同样有active类名
+                         var index = this.getAttribute('index') - 0
+                         current_tab.tabs[index].className = 'active'
+                     })
+                 }
+             }
+             var t = new Tabs('#box')
+             t.change()
+             var t2 = new Tabs('#box2')
+             t2.change()
+         </script>
+     </body>
+     
+     </html>
+     ```
+
+## 3. 原型和原型链
+
+1. 原型
+
+   - 问题：在构造函数体内直接向实例对象添加方法，这个行为并不好
+
+   - 原因：每次创建实例的时候，都会创建一个函数数据类型，浪费存储空间
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/ef5aaa2669a04fe6a5d7d21494889308.png)
+
+2. 概念：
+
+   - 每一个构造函数天生自带一个 prototype属性，是一个对象数据类型
+
+   - 当函数被书写完毕以后，就会有 prototype 出现
+
+   - **我的理解：** prototype相当于定义类变量和类方法的位置
+
+   - 每一个对象天生自带一个属性 \__proto__，指向所属构造函数（类）的prototype
+
+   - 当你访问对象的成员的时候，首先在自己身上查找，如果没有，自动去到 \__proto__ 上查找 
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/778ef19521064cf693f354e2bcfd2680.png)
+
+3. 原型链
+
+   - 问题1：实例对象上的 `__proto__` 指向谁？
+
+     - 指向所属构造函数的 prototype
+
+   - 问题2：`Person.prototype` 的 `__proto__` 指向谁？
+
+     - 指向内置构造函数Object.prototype
+
+   - 问题3：`Person` 的 `__proto__` 指向谁？
+
+     - 指向内置构造函数Function.prototype
+
+   - 问题4：`Object.prototype` 的 `__proto__` 指向谁？
+
+     - ~~指向内置构造函数Object.prototype~~
+     - **注意：Object.prototype 在JS内叫做顶级原型，不再有 `__proto__` **
+     - 指向null
+
+   - 问题5：`Object` 的 `__proto__` 指向谁？
+
+     - Object是一个内置构造函数（类）、函数、对象
+     - 在JS内，所有的函数都是属于内置构造函数（类） Function 的实例
+     - 所以，Object也是Function的实例
+     - 所以，指向 Function.prototype
+
+   - 问题6：`Function.protptype`的  `__proto__`  指向谁？
+
+     - Function.prototype 也是一个对象数据实例
+     - 只要是对象数据类型都是 Object 的实例
+     - 指向 Object.prototype
+
+   - 问题7：`Function` 的 `__proto__` 指向谁？
+
+     - Function 是一个内置函数（类）、函数
+     - 在JS内，所有的函数都是属于内置构造函数Function的实例
+     - Function 自己是自己的构造函数、也是自己的实例对象
+     - 所以，指向 Function.prototype
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/c6f74802e8504b0c8a2477cd84dc5cb9.png)
+
+   - 原型链：
+
+     - 用 `__proto__` 串联起来的对象链状结构
+     - **注意：使用 `__proto__` 串联**
+     - 每一个对象数据类型都有一个属于自己的原型链
+     - 作用：为了访问对象成员
+
+   - 对象访问机制
+
+     - 当你需要访问对象的成员的时候
+     - 首先在自己身上查找，如果有则直接使用
+     - 否则，在 `__proto__` 上查找
+     - 再否则，顺着原型链的 `__proto__` 查找
+     - 直到Object.prototype 都没有，则返回undefined
+
+## 4. ES6
+
+1. 定义变量
+
+   - 以前：var
+   - 新增：
+     - let：定义变量
+     - const：定义常量（特殊的变量）
+   - var与let/const的区别：
+     - var会进行预解析，let/const不会
+       - 预解析可以使得变量在定义之前使用，如果是let的话，会报错
+     - var可以声明两个重名的变量，let/const不能
+     - var没有块级作用域，let/const有
+       - 任何一个可以执行代码段的 `{}` 都会限制该变量的使用范围
+   - let与const的区别
+     - let可以定义变量的时候不进行赋值，const则必须赋值
+     - let定义的变量可以被修改，const则不可以
+
+2. 箭头函数
+
+   - 是在ES6语法中对函数表达式的简写
+
+   - 对于声明式函数不能使用
+
+   - 在某些规则上又和以前的函数有一些不一样
+
+   - 什么是函数表达式
+
+     - 又叫匿名函数
+
+     - 也就是我们不需要单独定义函数，直接使用的位置
+
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/c09f0c759e744d42ac1ba5862dbed31f.png)
+
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/fcfb316ae74541dda87568c16dd7e4cb.png)
+
+   - 箭头函数的特殊之处
+
+     1. 当你的形参只有一个的时候可以不写 ()
+
+        `var f1 = a => {console.log('a', a)}`
+
+     2. 当你的代码只有一句话的时候，可以不写 {}，直接返回该句话的结果
+
+        `var f1  = (a, b) => a + b`
+
+     3. 箭头函数内没有arguments
+
+     4. 箭头函数内没有this，箭头函数中的this就是外部作用域的this
+
+3. 函数参数默认值
+
+   - 函数在定义的时候，可以直接给形参设置一个默认值
+   - 当没有传递实参的时候，就使用默认值
+   - 当传递了实参，就使用传递的实参
+   - **普通函数可以使用，箭头函数也可以使用**
+   - `function fn(a=100, b=200){...}`
+   - `var s = (a=100, b=200) => {...}`
+
+4. 结构赋值
+
+   - 快速从对象或者数组中获取成员
+
+   - 结构赋值分成两种
+
+     - 数组的结构赋值
+
+       ![在这里插入图片描述](E:\typora_pics_savepath\eac2ba045ea34b21919ab54359678a49.png)
+
+     - 对象的结构赋值
+
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/8423f558e90b4db39a8e2f85ae83d9ce.png)
+
+       - 解构的时候，可以同时解构多个：比如 `let {name, age} = obj`
+       - 如果没有该变量名，则为undefined
+       - 起别名：`var {name: n} = obj`，把obj.name赋值给n
+
+5. 模板字符串
+
+   - 其实就是ES6内新增的定义字符串的方式
+
+   - 以前：
+
+     - `var str = '...'`
+     - `var str = "..."`
+
+   - 现在：
+
+     ```js
+     var str = `...`
+     ```
+
+   - 区别：
+
+     1. 可以换行书写，保留换行
+     2. 可以直接在字符串内解析变量，形式：`${变量}`
+
+6. 展开运算符
+
+   - 就是点点点：`...`
+
+   - 作用：展开数组的[]，或者展开对象的{}
+
+   - `console.log(...arr)`
+
+   - 作用
+
+     1. 合并数组：`arr = [...arr1, ...arr2, ...arrn]`
+
+     2. 给函数传递参数（类似python的*）
+
+        展开数组、展开对象
+
+        ```js
+        var obj = {name: 'aa', age: 17}
+        var obj2 = {
+        	'gender': 'male',
+        	...obj
+        }
+        ```
+
+     3. 注意：展开对象时的顺序问题，需要考虑同名成员的取值的覆盖
+
+7. 类语法
+
+   - 过去新增类的方法：
+
+     ```js
+     function Person(name, age){
+         this.name = name
+         this.age = age
+     }
+     Person.prototype.sayHi = function () {console.log('hello world')}
+     ```
+
+   - 问题：
+
+     1. 构造函数本质还是一个函数，可以不和new关键字联动（*虽然返回值为undefined*）
+     2. 原型上的方法跟定义分开来写了（目的都是为了给实例使用）
+
+   - 现在类的书写：
+
+     ```js
+     class Person {
+         constructor(name, age){
+             this.name = name
+             this.age = age
+         }
+         sayHi(){
+              console.log('hello world')
+         }
+     }
+     ```
+
+     
 
 
 
@@ -1670,7 +2085,7 @@ DOM：Document Object Model
 
 
 
-学到P222
+学到P226
 
 
 ------

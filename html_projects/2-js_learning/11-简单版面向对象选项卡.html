@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        ol,
+        li {
+            list-style: none;
+        }
+
+        .tab {
+            width: 600px;
+            height: 400px;
+            border: 10px solid #333;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        ul {
+            height: 60px;
+            display: flex;
+        }
+
+        ul>li {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: #fff;
+            background-color: skyblue;
+            cursor: pointer;
+        }
+
+        ul>li.active {
+            background-color: orange;
+        }
+
+        ol {
+            flex: 1;
+            position: relative;
+        }
+
+        ol>li {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 100px;
+            color: #fff;
+            background-color: purple;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        ol>li.active {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tab" id="box">
+        <ul>
+            <li class="active">1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+        <ol>
+            <li class="active">1</li>
+            <li>2</li>
+            <li>3</li>
+        </ol>
+    </div>
+
+    <div class="tab" id="box2">
+        <ul>
+            <li class="active">1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+        <ol>
+            <li class="active">1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ol>
+    </div>
+
+    <script>
+        function Tabs(ele) {
+            // 范围
+            this.ele = document.querySelector(ele)
+            // 在范围内找到所有可以点击的盒子
+            this.btns = this.ele.querySelectorAll('ul > li')
+            // 在范围内找到所有需要切换显示的盒子
+            this.tabs = this.ele.querySelectorAll('ol > li')
+        }
+        // 原型上书写方法
+        Tabs.prototype.change = function () {
+            // 保存一下当前的实例，在下面的函数中需要使用该实例的变量
+            var current_tab = this
+
+            for (var i = 0; i < current_tab.btns.length; i++) {
+                // 给每一个按钮设置index的索引
+                this.btns[i].setAttribute('index', i)
+                // 去掉所有btn和tab的active标记
+                this.btns[i].addEventListener('click', function () {
+                    for (var j = 0; j < current_tab.btns.length; j++) {
+                        current_tab.btns[j].className = ''
+                        current_tab.tabs[j].className = ''
+                    }
+                    // 当前点击的这个li有active类名
+                    this.className = 'active'
+                    // 同时，对应的tab索引的li也同样有active类名
+                    var index = this.getAttribute('index') - 0
+                    current_tab.tabs[index].className = 'active'
+                })
+            }
+        }
+        var t = new Tabs('#box')
+        t.change()
+        var t2 = new Tabs('#box2')
+        t2.change()
+    </script>
+</body>
+
+</html>
