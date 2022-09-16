@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        form {
+            width: 500px;
+            padding: 20px;
+            margin: 50px auto;
+            border: 3px solid pink;
+            display: flex;
+            flex-direction: column;
+            font-size: 30px;
+            padding-top: 50px;
+            position: relative;
+        }
+        form > label {
+            height: 50px;
+        }
+        form > label > input {
+            font-size: 24px;
+            height: 40px;
+            padding-left: 20px;
+        }
+        form > span {
+            position: absolute;
+            left: 50%;
+            top: 5px;
+            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form action="">
+        <span class="error">用户名或者密码错误！！</span>
+        <label for="">
+            用户名：<input class="username" type="text">
+        </label>
+        <label for="">
+            密码：<input class="password" type="text">
+        </label>
+        <button>登录</button>
+    </form>
+    <script>
+        // 0 获取元素
+        // 0-1 form标签
+        var loginForm = document.querySelector('form')
+        // 0-2 用户名文本框
+        var nameInp = document.querySelector('.username')
+        // 0-3 密码文本框
+        var pwdInp = document.querySelector('.password')
+        // 0-4 错误提示文本框
+        var errBox = document.querySelector('.error')
+        // 1 个iform标签绑定一个标签提示事件
+        loginForm.onsubmit = function(e){
+            // 注意：阻止表单的默认提交行为
+            e.preventDefault();
+            // 2 拿到用户名和密码
+            var name = nameInp.value
+            var pwd = pwdInp.value
+            // 2-2 验证用户名和密码
+            if(!name || !pwd) return alert('请完整填写表单')
+            console.log(name, pwd);
+            // 3 发送ajax请求
+            var xhr = new XMLHttpRequest()
+            xhr.open('POST', 'xxx/users/login', true)
+            xhr.onload = function(){
+                // 因为后端返回的是json格式的数据
+                var res = JSON.parse(xhr.responseText)
+                // 进行条件判断
+                if(res.code === 0) {
+                    // 登录失败
+                    errBox.style.display = 'block'
+                }else{
+                    // 登录成功
+                    window.location.href = './home.html'
+                }
+            }
+            // 注意：POST请求携带参数需要提前说明
+            xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
+            // 因为POST请求携带参数是在请求体内
+            xhr.send('username='+name + '&password=' + pwd)
+        }
+    </script>
+</body>
+</html>

@@ -2064,10 +2064,88 @@ DOM：Document Object Model
          sayHi(){
               console.log('hello world')
          }
+         // 书写静态属性和方法
+         static a = 100
+         static go (){console.log('running')}
      }
      ```
-
      
+   - 注意：必须和new关键字联用，否则会报错
+
+   - 以前：书写静态属性和方法
+
+     ```js
+     Person.a = 100
+     Person.go = function(){console.log('run')}
+     ```
+
+   - 使用静态属性和方法
+
+     ```js
+     Person.go()
+     console.log(Person.a)
+     ```
+
+## 5. ajax
+
+1. 前后端交互
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/d413225cf17b434cb5fb05d18f70d124.png)
+
+2. 接口文档
+
+   - 请求地址
+   - 请求方式
+   - 携带参数
+   - 响应数据
+
+3. 交互方式：ajax
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/6bde480ff8e146dd8eedeac9865d5034.png)
+
+   - 如何拿到后端返回的信息：
+     - xhr.responseText
+   - 解析json格式的字符串
+     - var res = JSON.parse(xhr.responseText)
+     - 这里处理后得到 **对象数据类型** （字典）
+
+4. 请求方式
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/efe2f80b42f546008af98f9269f9e9f2.png)
+
+   - get：直接在地址后面拼接参数
+
+     `xxx?name=aa&age=18`
+
+   - post：请求体写在send的括号中
+
+     `xhr.send(name=aa&age=18)`
+
+     - 需要携带参数时还要有特殊说明
+     - 语法：`xhr.setRequestHeader('content-type', 你传递参数的格式)`
+     - `xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')`
+
+5. 登录案例
+
+   - 需求分析
+
+     1. 什么时候进行请求发送？
+
+        点击登录按钮的时候，需要给form标签绑定一个表单提交事件
+
+     2. 需要拿到哪些信息？
+
+        用户名和密码
+
+     3. 需要如何发送给后端？
+
+        按照接口文档的规范进行发送
+
+     4. 请求完成以后，我们需要做什么？
+
+        根据后端返回的信息，进行一些后续的操作；如果后端返回的信息是登录成功，那么我们进行页面跳转；如果后端返回的是登录失败，那么我们提示用户错误
+
+   
 
 
 
@@ -2081,11 +2159,7 @@ DOM：Document Object Model
 
 
 
-
-
-
-
-学到P226
+学到P251
 
 
 ------
