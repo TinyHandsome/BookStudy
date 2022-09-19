@@ -2145,7 +2145,297 @@ DOM：Document Object Model
 
         根据后端返回的信息，进行一些后续的操作；如果后端返回的信息是登录成功，那么我们进行页面跳转；如果后端返回的是登录失败，那么我们提示用户错误
 
-   
+## 6. jQuery
+
+1. 一个大型的简单的第三方类库
+
+2. DOM操作进行封装
+
+   - 获取DOM节点
+   - 操作节点文本、样式、类名、属性、尺寸、偏移量、事件
+   - 节点动画操作、ajax封装
+
+3. 体验jQuery
+
+   - 当你引入jQuery文件以后，会在全局暴露两个变量名
+     - `$`
+     - `jQuery`
+     - 上述两个变量是一个意思
+
+4. jQuery的选择器：`$('选择器')`
+
+   - 注意：不管使用任何选择器，获取到的元素都是一个元素的集合
+
+   - 代码
+
+     ```html
+     <body>
+         <ul>
+             <li class="a">1</li>
+             <li>2</li>
+             <li class="b">3</li>
+             <li>4</li>
+             <li>5</li>
+             <li class="a">6</li>
+             <li>7</li>
+             <li id="box">8</li>
+         </ul>
+         <script src="../9-package/jquery-3.6.1.js"></script>
+         <script>
+             // console.log($);
+             // console.log(jQuery);
+     
+             // id选择器
+             console.log($('#box'));
+     
+             // 类名选择器
+             console.log($('.a'))
+     
+             // 标签名选择器
+             console.log($('li'));
+     
+             // 结构选择器
+             console.log($('li:nth-child(odd)'));
+             console.log($('li:nth-child(even'));
+         </script>
+     
+     </body>
+     </html>
+     ```
+
+5. jQuery的筛选器：`$('选择器').筛选器名称()`
+
+   - first()：选到结果列表的第一个
+   - last()：选到结果列表的最后一个
+   - eq(索引)：拿到的是第索引的元素（索引从0开始，依次+1）
+   - next()：拿到当前元素的下一个元素
+   - nextAll()：拿到当前元素下面所有的元素
+   - prev()：拿到当前元素的前一个元素
+   - prevAll()：拿到当前元素的前面所有元素
+   - parent()：拿到当前元素的父元素
+   - parents()：获取到的是该元素的所有父级元素，逐层获取，直到获取html标签为止
+   - siblings()：拿到该元素的所有兄弟元素
+   - find()：找到该元素的所有后代元素中，满足选择器要求的元素（可以下钻到所有层）
+
+6. jQuery操作文本内容：
+
+   - html()：等价于原生JS的innerHTML，可以获取和设置内容
+
+     - 注意：可以识别并解析html结构字符串
+
+     - 获取和设置
+
+       ```html
+       console.log($('div').html())
+       $('div').html('<h2>aaa</h2>')
+       ```
+
+   - text()：等价于原生JS的innerText
+
+     - 注意：不可以识别并解析html结构字符串
+     - 获取和设置大体如上
+
+   - val()
+
+     - 等价于原生JS的value
+     - 作用：获取和设置该表单元素的 value 值
+
+7. jQuery操作类名
+
+   1. addClass()
+      - 语法：元素集合.addClass(类名)
+      - 添加类名
+   2. removeClass()
+      - 语法：元素集合.removeClass(类名)
+      - 删除类名
+   3. toggleClass()
+      - 语法：元素集合.toggleClass(类名)
+      - 切换类名：如果本身有这个类名，就是删除；如果本身没有这个类名，就是添加
+
+8. jQuery操作元素样式
+
+   - 只有一个方法：css()
+     1. css获取样式
+        - 注意：可以获取到元素的行内样式，也可以获取到元素的非行内样式
+        - 语法：元素集合.css(你要获取的样式名称)
+        - 返回：该样式的样式值
+        - 例如：`console.log($('div').css('width'))`
+
+     2. css设置样式
+        - 注意：当你需要给一个元素设置样式值为px单位的时候，可以省略不写
+        - 语法：元素集合.css(样式名，样式值)
+        - 例如：`$('div').css('width', '300px')`
+
+     3. css 批量设置样式
+
+        - 语法：元素集合.css({ 你所有需要设置的样式 })
+
+        - 我觉得：里面的值可以是字符串也可以不是
+
+          ```js
+          $('div').css({
+          	width: 260,
+          	height: 320,
+          	opacity: 0.68,
+          	'background-color': 'purple'
+          })
+          ```
+
+9. jQuery操作属性
+
+   1. attr()
+      - 可以进行设置和获取元素的属性
+      - 注意：**一般**用于操作元素的**自定义属性**
+      - 注意：attr操作的所有属性都会直接出现在元素的标签上
+      - 获取：
+        - 语法：元素.attr(你要获取的属性名)
+        - 返回值：该属性名对应的属性值
+      - 设置：
+        - 语法：元素.attr(属性名，属性值)
+   2. removeAttr()
+      - 对元素的属性进行删除操作
+      - 语法：元素集合.removeAttr(属性名)
+      - attr和removeAttr都可以操作自定义属性和原生属性，但是不建议操作原生属性
+   3. prop()
+      - 可以获取和设置元素的属性
+      - 注意：
+        - 当prop设置元素的原生属性时，会直接响应在元素标签身上
+        - 当prop设置元素自定义属性时，不会直接响应在元素标签身上，而是会响应在元素对象身上
+      - 注意：prop方法不能获取元素标签身上的自定义属性，只能获取到prop方法自己设置的自定义属性
+      - prop设置
+        - 语法：元素集合.prop(属性名，属性值)
+      - prop获取
+        - 语法：元素集合.prop(属性名)
+        - 返回：该属性对应的值
+   4. removeProp()
+      - 用来哦删除元素属性的方法
+      - 注意：
+        - 不能删除原生属性
+        - 只能删除由prop方法设置的自定义属性
+      - 语法：元素集合.removeProp(属性名)
+
+10. 获取元素尺寸
+
+    1. width() 和 height()
+       - 获取到的就是元素内容区域的尺寸
+    2. innerWidth() 和 innerHeight()
+       - 上述+padding后的尺寸
+    3. outerWidth() 和 outerHeight()
+       - 上述+border后的尺寸
+    4. outerWidth(true) 和 outerHeight(true)
+       - 上述+margin后的尺寸
+    5. 注意：
+       1. 不管该元素是否隐藏，都能获取到该元素的值
+       2. 不管盒子模型是什么状态，拿到的尺寸区域不变，尺寸可能变，比如使用怪异盒模型
+
+11. 元素的偏移量
+
+    1. offset()
+       - 获取元素相对于页面左上角的坐标位置（**绝对偏移**）
+       - 注意：返回值是一个对象数据类型，`{top:yyy, left:xxx}`
+    2. position()
+       - 获取的就是元素的定位位置（相对位置）
+       - 注意：如果你设置的是right和bottom，会自动帮你换算成left和top的值
+
+12. jQuery绑定事件
+
+    1. on()
+
+       1. 基础绑定事件
+
+          - 语法：元素集合.on(‘事件类型’, 事件处理函数)
+          - `$('div').on('click', function(){console.log('我是div的点击事件')})`
+
+       2. 事件委托绑定事件
+
+          - 语法：元素集合.on(‘事件类型’, 选择器, 事件处理函数)
+
+          - 把事件绑定给div元素，当你在div内的p元素触发事件的时候，执行处理函数
+
+            ```js
+            // 事件委托，把p元素的事件委托给了div元素来绑定，点击div不触发，点击p才会触发
+            $('div').on('click', 'p', function(){console.log('我是事件委托形式的事件')})
+            ```
+
+       3. 批量绑定事件
+
+          - 语法：元素集合.on({ 事件类型1: 处理函数, 事件类型2: 处理函数 })
+
+          - 注意：不能进行事件委托了
+
+            ```js
+            $('div').on({
+            	click: function(){console.log('mouse click event')},
+            	mouseover: function(){console.log('mouse over event')},
+            	mouseout: function(){console.log('mouse out event')}
+            })
+            ```
+
+    2. one()
+
+       - 用来绑定事件，和on方法绑定事件的方式是一样的
+       - 区别：one方法绑定的事件，**只能执行一次**
+
+    3. hover()
+
+       - 注意：jQuery里面一个特殊的事件
+
+       - 语法：元素集合.hover(移入时触发的函数，移出时触发的函数)，当你只传递一个函数的时候，会在移入、移出都触发
+
+         ```js
+         $('div').hover(
+         	function(){console.log('f1')},
+         	function(){console.log('f2')}
+         )
+         ```
+
+    4. 常用事件函数
+
+       - jQuery把我们常用的一些事件，单独做成了事件函数，我们通过调用这些事件函数，来达到绑定事件的效果
+
+       - click()、mouseover()、mouseout()、change()、…
+
+         ```js
+         $('div').click(function(){console.log('点击事件')})
+         ```
+
+13. 事件的解绑和触发
+
+    1. off() 事件解绑
+
+       1. 解绑全部事件函数
+
+          - 语法：元素集合.off(事件类型)
+
+            ```js
+            // 会把div的click事件对应的所有事件处理函数全部移除
+            $('div').off('click')
+            ```
+
+       2. 解绑指定的事件处理函数
+
+          - 语法：元素集合.off(事件类型，要解绑的事件处理函数)
+
+            ```js
+            $('div').off('click', handlerB)
+            ```
+
+    2. trigger() 事件触发
+
+       - 使用代码的方式，来触发事件
+
+       - 语法：元素集合.trigger(事件类型)
+
+       - 就会触发该元素的该事件
+
+         ```js
+         // 每1000ms触发一次div的click事件
+         setInterval(function(){
+         	$('div').trigger('click')
+         }, 1000)
+         ```
+
+14. jQuery基本动画函数
 
 
 
@@ -2157,9 +2447,7 @@ DOM：Document Object Model
 
 
 
-
-
-学到P251
+学到P262
 
 
 ------
