@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            width: 500px;
+            height: 500px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <button>show</button>
+    <button>hide</button>
+    <button>toggle</button>
+    <button>stop</button>
+    <div></div>
+    <script src="../9-package/jquery-3.6.1.js"></script>
+    <script>
+        $('button:nth-child(1)').click(function () {
+            // 执行 show 动画函数
+            $('div').show(1000, 'linear', function () { console.log('show finished') })
+        })
+        $('button:nth-child(2)').click(function () {
+            // 执行 hide 动画函数
+            $('div').hide(1000, 'linear', function () { console.log('hide finished') })
+        })
+        $('button:nth-child(3)').click(function () {
+            // 执行 toggle 动画函数
+            $('div').toggle(1000, 'linear', function () { console.log('toggle finished') })
+        })
+        $('button:nth-child(4)').click(function () {
+            // 执行 stop 停止动画函数
+            $('div').stop()
+        })
+    </script>
+</body>
+
+</html>

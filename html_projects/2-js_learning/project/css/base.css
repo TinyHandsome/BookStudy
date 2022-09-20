@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+ul,
+ol,
+li {
+    list-style: none;
+}
+
+a,
+a:active,
+a:hover,
+a:link {
+    text-decoration: none;
+    color: #333;
+}
+
+input,
+button,
+select,
+textarea {
+    outline: none;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* 头部内容样式 */
+.header {
+    width: 1200px;
+    height: 60px;
+    background-color: skyblue;
+    margin: 0 auto;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.header>p {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 30px;
+    font-size: 20px;
+    display: none;
+}
+
+.header>p.active {
+    display: block;
+}

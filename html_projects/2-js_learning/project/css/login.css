@@ -1,0 +1,40 @@
+form {
+    width: 600px;
+    padding: 20px;
+    border: 3px solid pink;
+    margin: 30px auto;
+
+    display: flex;
+    flex-direction: column;
+
+    padding-top: 50px;
+    position: relative;
+}
+
+form>span {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 5%;
+    font-size: 20px;
+    color: red;
+    display: none;
+}
+
+form>label {
+    height: 50px;
+    font-size: 30px;
+}
+
+form>label>input {
+    width: 300px;
+    padding-left: 20px;
+    font-size: 30px;
+    height: 40px;
+}
+
+form>button {
+    padding: 5px;
+    font-size: 30px;
+    cursor: pointer;
+}

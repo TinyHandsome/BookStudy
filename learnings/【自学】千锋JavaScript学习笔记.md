@@ -12,6 +12,8 @@
 
 - 感想 | 摘抄
 
+  1. 父元素设置 `position: relative`；子元素设置 `position: absolute; left: 50%; transform: translateX(-50%)`，可以实现内容的居中显示
+
 - 学习时遇到的问题
 
   1. [CSS中的position:relative理解](https://blog.csdn.net/gamenoover/article/details/90614014)
@@ -2437,6 +2439,140 @@ DOM：Document Object Model
 
 14. jQuery基本动画函数
 
+    1. show()：显示
+    2. hide()：隐藏
+    3. toggle()：切换，隐藏和显示的切换
+
+    - 对于上面三个运动函数，有共同的参数
+
+      1. 表示运动时间
+      2. 表示运动曲线
+      3. 表示运动结束的回调函数
+
+    - 样例
+
+      ```html
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Document</title>
+          <style>
+              * {
+                  margin: 0;
+                  padding: 0;
+              }
+              div {
+                  width: 500px;
+                  height: 500px;
+                  background-color: skyblue;
+              }
+          </style>
+      </head>
+      <body>
+          <button>show</button>
+          <button>hide</button>
+          <button>toggle</button>
+          <div></div>
+          <script src="../9-package/jquery-3.6.1.js"></script>
+          <script>
+              $('button:nth-child(1)').click(function() {
+                  // 执行 show 动画函数
+                  $('div').show(1000, 'linear', function(){console.log('show finished')})
+              })
+              $('button:nth-child(2)').click(function() {
+                  // 执行 hide 动画函数
+                  $('div').hide(1000, 'linear', function(){console.log('hide finished')})
+              })
+              $('button:nth-child(3)').click(function() {
+                  // 执行 toggle 动画函数
+                  $('div').toggle(1000, 'linear', function(){console.log('toggle finished')})
+              })
+          </script>
+      </body>
+      </html>
+      ```
+
+15. jQuery折叠动画函数
+
+    1. slideDown()：显示
+    2. slideUp()：隐藏
+    3. slideToggle()：切换
+
+    - 就是展现形式不同，这个是窗帘上拉下放的形式，所以down是显示，而up是隐藏，其他的函数表现形式基本与上述基本动画一致
+
+16. jQuery渐隐渐显动画函数
+
+    1. fadeIn()：显示
+    2. fadeOut()：隐藏
+    3. fadeToggle()：切换
+    4. fadeTo(运动时间，指定的透明度，运动曲线，回调函数)
+
+    - 展现形式为：渐隐渐显（仅改变opacity），其他一样
+
+17. jQuery综合动画函数
+
+    - animate()
+
+      1. 要运动的样式，以一个对象数据类型传递
+      2. 运动时间
+      3. 运动曲线
+      4. 运动结束的回调函数
+
+    - 注意：
+
+      - 关于颜色相关的样式是不能运动的
+      - 关于 transform 相关的样式是不能运动的
+
+    - 样例
+
+      ```js
+      $('button').click(function(){
+          $('div').animate({
+              width: 500,
+              height: 600，
+              left: 300, 
+              top: 200,
+              'border-radius': '50%'
+          }, 1000, 'linear', function(){console.log('运动结束')})
+      })
+      ```
+
+18. jQuery结束动画函数
+
+    动画需要结束的原因：如果快速触发动画多次会导致动画不断播放，而触发的动作已经结束了。
+
+    1. stop()
+
+       - 当任何一个元素执行了stop方法以后，就会立刻结束当前的所有运动，目前运动到什么位置，就停留在什么位置
+
+       - 使用场景：利用结束动画书写动画函数；每一次触发的时候，都会把之前的动画停止下来，只执行本次最新的动画
+
+         ```js
+         $('div').stop().toggle(2000)
+         ```
+
+    2. finish()
+
+       - 当任何一个元素，执行了finish方法后，会直接结束当前的所有运动，**直接去到动画的结束位置**
+       - 使用场景：利用完成动画书写动画函数；每一次触发的时候，都会把之前的动画瞬间完成，只执行本次最新的动画
+
+19. jQuery的ajax请求
+
+    - 注意：
+      - 因为发送ajax请求，不是操作DOM，不需要依赖选择器去获取到元素
+      - 它的使用是直接依赖jQuery或者$变量来使用：`$.ajax({本次发送ajax的配置项})`
+    - 配置项：
+      - url：必填，请求地址
+      - method：选填，默认是 GET，请求方式
+      - data：选填，默认是 `''` ，表示携带给后端的参数
+      - async：选填，默认是true，表示是否异步
+      - success：选填，表示请求成功的回调函数
+      - error：选填，表示请求失败的回调函数
+
+## 7. 项目
 
 
 
@@ -2447,7 +2583,10 @@ DOM：Document Object Model
 
 
 
-学到P262
+
+
+
+学到P272
 
 
 ------
