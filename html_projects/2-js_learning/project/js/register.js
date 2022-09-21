@@ -6,12 +6,13 @@ $('form').on('submit', function(e){
     const data = $('form').serialize()
     console.log(data);
     // 3. 发送请求
-    $.post('http://localhost:8888/users/register', data, res=>{
+    $.post('http://10.193.68.138:8000/manage/register/', data, res=>{
         console.log(res);
         // 4. 判断结果，来决定是否提示错误
-        if(res.code === 0) {
+        if(res.status === 0) {
             // 提示错误
             $('form>span').css('display', 'block')
+            $('form>span').text(res.msg)
             return 
         }
         // 5. 跳转页面；代码执行到这里，表示注册成功了

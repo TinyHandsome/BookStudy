@@ -14,7 +14,9 @@ a:active,
 a:hover,
 a:link {
     text-decoration: none;
-    color: #333;
+    color: orange;
+    font-weight: bold;
+    font-size: 23px
 }
 
 input,
