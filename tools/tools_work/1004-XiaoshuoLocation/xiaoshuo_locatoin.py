@@ -99,7 +99,8 @@ class XiaoshuoLocation:
                     print(count - 1, ": ", line)
                 count += 1
 
-
+    def get_aim_line_info(self, page):
+        return self.view_list[page-1]
 
     def show_current_info(self):
         """输出当前路径和文件信息"""

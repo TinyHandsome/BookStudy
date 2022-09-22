@@ -1,0 +1,1 @@
+chrome.exe --remote-debugging-port=9222 --user-data-dir="E:\1-Work\3-Code\tools\tools_work\1004-XiaoshuoLocation\chrome data" --app=https://blog.csdn.net/pygodnet/article/details/111190886 --start-maximized --disable-javascript

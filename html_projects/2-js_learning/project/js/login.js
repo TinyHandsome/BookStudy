@@ -19,18 +19,9 @@ $('form').on('submit', function(e){
         // window.location.href = './index.html'
         
         // 5.1 把登录过的“凭证”存储起来，为了其他页面使用
-        window.localStorage.setItem('token', res.token)
+        window.localStorage.setItem('jwt_token', res.jwt_token)
         // 5.2 把用户的id信息也存储起来
         // window.localStorage.setItem('id', res.user.id)
-
-        // 这里，可以直接把user_id和first_name传过来（我的备注）
-        window.localStorage.setItem('user_id', res.user_id)
-        let user_name = res.user_name
-
-        if (!user_name){
-            user_name = res.username
-        }
-        window.localStorage.setItem('user_name', user_name)
 
         // 5.3 跳转页面
         window.location.href = './index.html'

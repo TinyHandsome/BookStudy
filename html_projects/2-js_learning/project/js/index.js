@@ -45,33 +45,41 @@ function getInfo() {
 */
 
 // 下面为华子平台登录逻辑处理
-const token = window.localStorage.getItem('token')
+const jwt_token = window.localStorage.getItem('jwt_token')
 
 $.ajax({
     url: 'http://10.193.68.138:8000/manage/getcurrentuserinfo/',
     method: 'GET',
     headers: {
-        authorization: token
+        authorization: jwt_token
     },
     success(res) {
-        console.log(res)
         if (res.status !== 1) {
             $('.off').addClass('active')
             $('on').removeClass('active')
             return
         } else {
-
-            let user_name = res.user.first_name
-
-            if (!user_name) {
-                user_name = res.user.username
-            }
-
-            $('.on').addClass('active').find('span').text(user_name)
+            let user_name = res.data.user_name
             $('.off').removeClass('active')
+            $('.on').addClass('active').find('span').text(user_name)
         }
     },
     error(res) {
-        alert('获取失败')
+        alert('获取失败，请检查服务器')
     }
 })
+
+$('button.self').on('click', function(){
+    window.location.href = './self.html'
+})
+
+// 退出登录
+$('button.logout').on('click', function () { 
+    // 删掉window.localStorage的信息
+    window.localStorage.clear()
+    // 直接发送请求，请求退出
+    $.get('http://10.193.68.138:8000/manage/logout/', res => {
+        // 退出登录以后，直接刷新页面
+        window.location.reload()
+    })
+ })
