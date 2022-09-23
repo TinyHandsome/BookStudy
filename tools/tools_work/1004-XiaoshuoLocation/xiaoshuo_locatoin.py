@@ -16,10 +16,11 @@
 
 # -----------------【可以删除】---------------------
 # 这里是获取vscode配置文件json，读取成dict的过程
-import sys
-sys.path.append("E:/1-Work/3-Code/tools/tools_py")
-from constants import get_vscode_json_dict
-vscode_json_dict = get_vscode_json_dict()
+# import sys
+# sys.path.append("E:/1-Work/3-Code/tools/tools_py")
+from vscode_settings_tool import VSCODE
+vs = VSCODE()
+vscode_json_dict = vs.get_vscode_json_dict()
 # --------------------------------------------------
 
 
@@ -30,7 +31,8 @@ import os
 
 # 可以直接把文件路径粘到这里就行，不需要像我这样从vscode的配置文件中
 book_path = vscode_json_dict.get("thiefBook.filePath")
-current_single_page = vscode_json_dict.get("thiefBook.pageSize")
+page_size = vscode_json_dict.get("thiefBook.pageSize")
+current_page = vscode_json_dict.get("thiefBook.currPageNumber")
 book_name = os.path.split(book_path)[-1]
 
 @dataclass
@@ -79,7 +81,7 @@ class XiaoshuoLocation:
             return ceil(len(temp) / self.line_length), self.depart_line(temp), self.depart_line(temp, True)
 
     def search_words(self, aim_words):
-        """寻找文件所在行"""
+        """寻找文字所在行"""
         find_count = 0
 
         # 在原始文件中找
@@ -120,7 +122,7 @@ def get_path_name_extension(file_path):
 
 if __name__ == '__main__':
 
-    xsloc = XiaoshuoLocation(current_single_page, book_path)
+    xsloc = XiaoshuoLocation(page_size, book_path)
     xsloc.show_current_info()
 
     info = ''
