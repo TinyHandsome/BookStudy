@@ -52,7 +52,7 @@ class SeleniumChrome:
         self.driver.execute_script(
             "arguments[0].innerText='';let a = document.createElement('label');a.innerText=arguments[1];" +
             # 设置字体没有作用啊马飞
-            # "a.style.fontSize='50px';a.style.fontWeight='bold';" +
+            "a.style.fontSize='50px!important';" + 
             "arguments[0].appendChild(a);", self.class_operator, '+' + new_line + '+')
 
     def alert_str(self, ss):

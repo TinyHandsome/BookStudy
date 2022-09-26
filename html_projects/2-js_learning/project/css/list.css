@@ -1,0 +1,21 @@
+.filterBox {
+    width: 1200px;
+    margin: 20px auto;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.filterBox>.content {
+    display: flex;
+}
+
+.filterBox>.content>p {
+    width: 120px;
+}
+
+.filterBox>.content>ul{
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+}

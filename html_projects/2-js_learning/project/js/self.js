@@ -55,6 +55,7 @@ $('form').on('submit', function(e){
         success(res){
             // console.log(res);
             window.alert('修改用户信息成功')
+            window.localStorage.setItem('jwt_token', res.jwt_token)
         }
     })
 })
