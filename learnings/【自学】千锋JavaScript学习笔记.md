@@ -17,6 +17,7 @@
 - 学习时遇到的问题
 
   1. [CSS中的position:relative理解](https://blog.csdn.net/gamenoover/article/details/90614014)
+  1. [『前端大白话』之 “flex:1”](https://juejin.cn/post/6969797532687794183)
 
 - 直通车
 

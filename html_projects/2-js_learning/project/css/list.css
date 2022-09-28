@@ -8,14 +8,138 @@
 
 .filterBox>.content {
     display: flex;
+    margin-bottom: 15px;
 }
 
 .filterBox>.content>p {
     width: 120px;
+    font-size: 20px;
+    text-align: center;
 }
 
-.filterBox>.content>ul{
+.filterBox>.content>ul {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
+}
+
+.filterBox>.content>ul>li {
+    padding: 5px 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.filterBox>.content>ul>li:hover,
+.filterBox>.content>ul>li.active {
+    background-color: pink;
+    color: #fff;
+}
+
+.filterBox>.content>input {
+    font-size: 20px;
+    height: 30px;
+    padding-left: 20px;
+}
+
+.filterBox>.content>span {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.filterBox>.content>span.left,
+.filterBox>.content>span.right {
+    background-color: skyblue;
+    color: #fff;
+}
+
+.filterBox>.content>span.disable {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.filterBox>.content>select {
+    margin-left: 20px;
+    font-size: 20px;
+    padding-left: 20px;
+}
+
+.filterBox>.content>input.page {
+    width: 50px;
+    text-align: center;
+    padding-left: 0;
+    margin: 0 20px;
+}
+
+.filterBox>.content>button {
+    font-size: 20px;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+.list {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    font-weight: wrap;
+    box-sizing: border-box;
+    justify-content: space-between;
+}
+
+.list>li {
+    width: 280px;
+    border: 1px solid #333;
+    margin-bottom: 10px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.list>li>.show {
+    width: 280px;
+    height: 280px;
+    position: relative;
+}
+
+.list>li>.show>div {
+    padding: 5px 10px;
+    background-color: red;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #fff
+}
+
+.list>li>.show>div.sale {
+    background-color: orange;
+    right: 60px;
+}
+
+
+.list>li>.info {
+    box-sizing: border-box;
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.list>li>.info>p.price {
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.list>li>.info>p.price>.current {
+    color: red;
+}
+
+.list>li>.info>p.price>.old {
+    color: #ccc;
+    font-size: 14px;
+}
+
+.list>li>.info>button {
+    padding: 5px;
+    cursor: pointer;
 }
