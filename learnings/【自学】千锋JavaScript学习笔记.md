@@ -13,6 +13,7 @@
 - 感想 | 摘抄
 
   1. 父元素设置 `position: relative`；子元素设置 `position: absolute; left: 50%; transform: translateX(-50%)`，可以实现内容的居中显示
+  1. 激活当前元素，取消其他兄弟元素的激活：`$(this).addClass('active').siblings().removeClass('active')`
 
 - 学习时遇到的问题
 

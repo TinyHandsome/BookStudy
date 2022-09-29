@@ -124,6 +124,11 @@
     justify-content: space-between;
 }
 
+.list>li>.info>.tilte {
+    overflow: hidden;
+    height: 20px;
+}
+
 .list>li>.info>p.price {
     font-size: 18px;
     display: flex;
