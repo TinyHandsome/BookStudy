@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/cart.css">
+</head>
+<body>
+    <div class="header">
+        购物车页面
+        <p class="active">
+            <a href="./index.html">回到首页</a>
+            <a href="./list.html">继续去购物</a>
+        </p>
+    </div>
+
+    <div class="content">
+        <div class="empty">
+            <img src="./pic/可乐.png" alt="">
+        </div>
+        <div class="list active">
+            <div class="top">
+                全选 <input type="checkbox">
+            </div>
+            <div class="center">    
+                <li>
+                    <div class="select">
+                        <input type="checkbox">
+                    </div>
+                    <div class="show">
+                        <img src="" alt="">
+                    </div>
+                    <div class="title">
+                        商品介绍
+                    </div>
+                    <div class="price">￥ 100.00</div>
+                    <div class="number">
+                        <button>-</button>
+                        <input type="text" value="1">
+                        <button>+</button>
+                    </div>
+                    <div class="subPrice">￥ 100.00</div>
+                    <div class="destory">
+                        <button>删除</button>
+                    </div>
+                </li>
+                <li>2</li>
+            </div>
+            <div class="bottom">
+                <p>
+                    共计 <span>0</span> 件商品
+                </p>
+                <div class="btns">
+                    <button>清空购物车</button>
+                    <button disabled>删除所有已选中</button>
+                    <button disabled>去支付</button>
+                </div>
+                <p>
+                    共计 ￥<span>0</span> 
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../9-package/jquery-3.6.1.js"></script>
+    <script src="./js/cart.js"></script>
+</body>
+</html>

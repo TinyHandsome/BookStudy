@@ -2574,7 +2574,35 @@ DOM：Document Object Model
       - success：选填，表示请求成功的回调函数
       - error：选填，表示请求失败的回调函数
 
-## 7. 项目
+## 7. Node.js
+
+### 7.1 认识Node.js
+
+1. Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine.
+
+2. 特性
+
+   Node.js可以解析JS代码，**没有浏览器安全级别的限制**，提供很多系统级别的API
+
+   - 文件的读写 File System
+
+     ```
+     
+     ```
+
+   - 进程的管理 Process
+
+   - 网络通信 HTTP/HTTPS
+
+   - 。。。
+
+3. 
+
+
+
+
+
+
 
 
 

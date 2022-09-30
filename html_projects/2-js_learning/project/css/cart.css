@@ -1,0 +1,104 @@
+.content {
+    width: 1200px;
+    margin: 20px auto;
+}
+
+.content>div {
+    display: none!important;
+}
+
+.content>div.active {
+    display: block!important;
+}
+
+.content>.list {
+    display: flex;
+    flex-direction: column;
+}
+
+.content>.list>.top {
+    height: 40px;
+    box-sizing: border-box;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    background-color: pink;
+}
+
+.content>.list>.top>input {
+    width: 15px;
+    height: 15px;
+    margin-left: 20px;
+}
+
+.content>.list>.bottom {
+    height: 50px;
+    background-color: pink;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+.content>.list>.center {
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.content>.list>.center>li {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #333;
+    margin-bottom: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.content>.list>.center>li>div {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.content>.list>.center>li>.select,
+.content>.list>.center>li>.destroy,
+.content>.list>.center>li>.show {
+    width: 100px;
+}
+
+.content>.list>.center>li>.price,
+.content>.list>.center>li>.number,
+.content>.list>.center>li>.subPrice {
+    width: 200px;
+}
+
+.content>.list>.center>li>.title {
+    flex: 1;
+    justify-content: start;
+    align-items: flex-start;
+    box-sizing: border-box;
+
+    padding: 5px;
+}
+
+.content>.list>.center>li>.price,
+.content>.list>.center>li>.subPrice {
+    color: red;
+    font-size: 20px;
+}
+
+.content>.list>.center>li>.number>input{
+    width: 50px;
+    height: 30px;
+    border: none;
+    text-align: center;
+}
+
+.content>.list>.center>li>.number>button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
