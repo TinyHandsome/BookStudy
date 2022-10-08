@@ -19,6 +19,9 @@
 
   1. [CSS中的position:relative理解](https://blog.csdn.net/gamenoover/article/details/90614014)
   1. [『前端大白话』之 “flex:1”](https://juejin.cn/post/6969797532687794183)
+  1. [nvm-windows安装教程](https://www.jianshu.com/p/13c0b3ca7c71)
+  1. [查找第三方模块](npmjs.com)
+  1. [npm 全局安装与本地安装、开发依赖和生产依赖](https://blog.csdn.net/qq_43456781/article/details/120077136)
 
 - 直通车
 
@@ -2586,17 +2589,97 @@ DOM：Document Object Model
 
    - 文件的读写 File System
 
-     ```
+     ```js
+     const fs = require('fs')
      
+     fs.writeFile('./log.text', 'hello', (err, data) => {
+         if (err) {
+     
+         }else{
+             console.log('文件创建成功');
+         }
+     })
      ```
+
+     运行上述代码：`node index.js`
 
    - 进程的管理 Process
 
+     ```js
+     function main(argv){
+         console.log(argv);
+     }
+     
+     main(process.argv)
+     ```
+
+     运行：`node process.js 1 2`
+
    - 网络通信 HTTP/HTTPS
+
+     ```js
+     const http = require('http')
+     
+     const server = http.createServer((request, response) => {
+         let url = request.url
+         response.write(url)
+         response.end()
+     })
+     
+     server.listen(8090, 'localhost', ()=>{
+         console.log('localhost:8090');
+     })
+     ```
 
    - 。。。
 
-3. 
+3. Node相关工具
+
+   1. nvm：Node Version Manager
+
+      - node.js的版本管理工具，windows不支持，需要安装其他的
+
+        ```
+        nvm-windows
+        nodist
+        ```
+
+      - 查看软件版本：`npm view node versions`
+      - 查看node版本：`node -v`
+      - 查看已安装的node版本：`nvm list`
+      - 切换node版本：`nvm user 14.15.0`
+      - 设置默认版本：`nvm alias default 14.15.0`
+
+   2. npm：Node Package Manager
+
+
+### 7.2 NPM
+
+- 安装全局包：`npm install jquery -g(--global)`
+- 全局安装包的目录：`C:\Users\用户\AppData\Roaming\npm\node_modules`
+- 使用package.json可以实现本地包的安装：`npm install xxx --save-dev`
+  - `--save`：可以替换为 `-S`
+  - `--save-dev`：可以替换为 `-D`
+  - 这里如果不加 `-dev` （开发环境），表示的是：将包安装在生产环境中，这样该包的信息会更新到 `package.json` 的 `dependencies` 里
+  - 同理，开发环境的话，会把包的信息放到 `devDependencies` 键中
+  - 最后使用 `node i` 来安装所有的依赖包
+  - 查看特定名称的包：`npm list | grep gulp`
+  - 安装 **生产** 环境下的包：`npm i --production`
+  - 查看包有哪些版本：`npm view jquery versions`
+  - 安装具体版本的包：`npm i jquery@2.2.4`
+  - 安装某版本最高版本的包：`npm i jquery@2`
+    - MAJOR：表示当前APR的主版本号，它的变化通常意味着APR的巨大的变化，比如体系结构的重新设计，API的重新设计等等，而且这种变化通常会导致APR版本的向前不兼容。 
+    - MINOR：称之为APR的次版本号，它通常只反映了一些较大的更改，比如APR的API的增加等等，但是这些更改并不影响与旧版本源代码和二进制代码之间的兼容性。
+    - PATCH通常称之为补丁版本，通常情况下如果只是对APR函数的修改而不影响API接口的话都会导致PATCH的变化。 目前为止APR的最高版本是1.2.2，最早遵循这种规则的版本号是0.9.0，不过在0.9.0之前，APR还推出了两个版本a8和a9。
+      - 如果为奇数：则是不稳定的patch
+      - 所以一般某个major的最高版本为偶数patch
+    - `^`：该配置只锁定major版本号
+    - `~`：锁定major和minor版本号
+    - ` `：什么都不加是最严格的，指定版本号
+    - `*`：最新版本
+  - 清空npm缓存：`npm cache clean --force`
+- loadsh介绍（与underscore是竞品）
+  - chunck：数组的分割
 
 
 
@@ -2616,7 +2699,7 @@ DOM：Document Object Model
 
 
 
-学到P272
+学到P294
 
 
 ------

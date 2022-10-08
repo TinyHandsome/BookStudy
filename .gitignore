@@ -17,6 +17,11 @@
 **/model_dir
 **/chrome data
 
+# nodejs包
+**/node_modules
+**/package.json
+**/package-lock.json
+
 practice_data
 output
 mytoken
