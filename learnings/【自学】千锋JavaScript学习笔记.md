@@ -10,7 +10,11 @@
 
 - 学习链接：[千锋HTML5前端开发教程1000集](https://www.bilibili.com/video/BV17z4y1D7Yj)：`[184集: 286集]，共103集`
 
-- 感想 | 摘抄
+- 感想
+
+  1. node.js 这部分讲的真的很难顶，真想直接跳到vue。这个老师思想跳跃很大，讲课基于自己而不是基于受众。且不提我，很多老师体到的东西屏幕里的学生都很懵。前面说着说着就说到一些超纲知识点，说了又不详解，只会说后面会讲，会面会讲就不要体到前面，很多知识点之间跳跃性很大，缺乏逻辑性串讲。
+  
+- 摘抄
 
   1. 父元素设置 `position: relative`；子元素设置 `position: absolute; left: 50%; transform: translateX(-50%)`，可以实现内容的居中显示
   1. 激活当前元素，取消其他兄弟元素的激活：`$(this).addClass('active').siblings().removeClass('active')`
@@ -2636,27 +2640,32 @@ DOM：Document Object Model
 3. Node相关工具
 
    1. nvm：Node Version Manager
-
-      - node.js的版本管理工具，windows不支持，需要安装其他的
-
-        ```
-        nvm-windows
-        nodist
-        ```
-
-      - 查看软件版本：`npm view node versions`
-      - 查看node版本：`node -v`
-      - 查看已安装的node版本：`nvm list`
-      - 切换node版本：`nvm user 14.15.0`
-      - 设置默认版本：`nvm alias default 14.15.0`
-
    2. npm：Node Package Manager
+   2. nrm：npm registry manager
+   2. npx：npm package extention
+
+### 7.2 NVM
+
+- node.js的版本管理工具，windows不支持，需要安装其他的
+
+    ```
+    nvm-windows
+    nodist
+    ```
+
+- 查看软件版本：`npm view node versions`
+- 查看node版本：`node -v`
+- 查看已安装的node版本：`nvm list`
+- 切换node版本：`nvm user 14.15.0`
+- 设置默认版本：`nvm alias default 14.15.0`
 
 
 ### 7.2 NPM
 
 - 安装全局包：`npm install jquery -g(--global)`
+
 - 全局安装包的目录：`C:\Users\用户\AppData\Roaming\npm\node_modules`
+
 - 使用package.json可以实现本地包的安装：`npm install xxx --save-dev`
   - `--save`：可以替换为 `-S`
   - `--save-dev`：可以替换为 `-D`
@@ -2678,8 +2687,152 @@ DOM：Document Object Model
     - ` `：什么都不加是最严格的，指定版本号
     - `*`：最新版本
   - 清空npm缓存：`npm cache clean --force`
+
 - loadsh介绍（与underscore是竞品）
   - chunck：数组的分割
+
+- 自己发布包
+
+  - 写一个函数 `myChunk()`
+
+  - 暴露函数的接口：`module.exports = myChunk`
+
+  - 调用：
+
+    ```js
+    const myChunk = require('./index.js')
+    console.log(myChunk([4, 5, 6, 7]));
+    ```
+
+  - 发布
+
+    ```bash
+    // npm登录
+    npm adduser
+    // 查看源
+    npm config get registry
+    // 切换淘宝源（样例，实际要切回官方的源）
+    npm config set registry https://registry.npm.taobao.org
+    // 切回官方源
+    npm config set registry https://registry.npmjs.org
+    // 发布
+    npm publish
+    // 查看当前项目引用了哪些包
+    npm ls
+    // 卸载包
+    npm unpublish --force
+    // 引用包
+    var hello = require('pg19-npm')
+    hello.sayHello()
+    ```
+
+- `package.json` 描述文件
+
+  - name：包名称
+  - version：版本号
+  - description：描述
+  - main：暴露接口的主程序
+  - scripts：执行时需要执行的脚本
+  - respository：项目库（除了可以从npm官网安装，也可以通过github等安装）
+  - keywords：关键词
+  - author：作者
+  - license：证数，一般为MIT
+  - bugs：bug链接
+  - homepage：主页地址
+
+- npm脚本
+
+  - npm允许在package.json文件里面，使用scripts字段定义脚本命令
+
+  - npm运行package.json中的脚本
+
+    ```sh
+    npm run runjs
+    ```
+
+  - 如果脚本中有多个，使用 `&` 或 `&&` 连接
+
+    - `&`：并行运行脚本
+    - `&&`：串行运行脚本
+
+  - 如果脚本名为 start 、 test 等特殊的名称时，可以省略 `run`：`npm test`
+
+  - 获取package.json中的信息：
+
+    `console.log(process.env.npm_package_config_env)`
+
+    - 其中：congfig为第一级的key，env为二级key，取到的是config.env的值
+
+    - 注意：如果直接获取的是config，是会报错的
+
+    - 该方法只能通过配置package.json后运行里面的脚本才生效，如果直接运行对应的js会直接显示undefined
+
+    - 在脚本内部也可以直接获取package.json的信息
+
+      ```json
+      "scripts": {
+      	"build": "echo $npm_package_config_env"
+      }
+      ```
+
+  - npm安装git上发布的包
+
+    - `npm install git+https://git@xxx`
+    - `npm install git+ssh://git@xxx`
+
+- cross-env
+
+  - windows不支持 `NODE_ENV=production` 的设置方式
+
+  - 解决：cross-env使得可以使用单个命令，而不必担心为平台正确设置或使用环境变量。这个迷你的包（cross-env）能够提供一个设置环境变量的scripts，让你能够以Unix方式设置环境变量，然后再Windows上也能兼容运行
+
+  - 安装：`npm install --save-dev cross-env`
+
+  - 可以直接在脚本中设置环境变量的值，比如说
+
+    ```json
+    "scripts": {
+    	"dev": "NODE_ENV=development gulp -f gulp.config.js",
+    	"prod": "NODE_ENV=production gulp -f gulp.config.js"
+    }
+    ```
+
+  - 如果需要使用cross-env
+
+    ```json
+    "scripts": {
+    	"dev": "cross-env NODE_ENV=development gulp -f gulp.config.js",
+    	"prod": "cross-env NODE_ENV=production gulp -f gulp.config.js"
+    }
+    ```
+
+
+### 7.3 NRM
+
+- npm的镜像源管理工具，有时候国外资源太慢，使用这个就可以快速地在npm源之间切换
+- 安装：`npm install -g nrm`
+- 查看可选的源：`nrm ls`
+- 切换nrm：`nrm use taobao`
+- 测试速度：`nrm test`
+
+### 7.4 NPX
+
+- npm从5.2开始增加了npx命令，如果没有自带，可以手动安装：`npm install -g npx`
+- npx想要解决的主要问题，就是调用项目内部安装的模块
+  - 需要使用某个库的时候，要么配置package.json后调用里面的脚本，或者进入到node_modules文件夹中找到对应的库，再运行
+  - 比如：`gulp -v` 不行；但是 `npx gulp -v` 就可以了
+  - 如果本地没有这个库，npx会自己下载，但不会在本地/全局安装。其实是安装在临时文件夹中，使用完后自动删除
+- `npx --no-install http-server`：让npx强制使用本地模块，不下载远程模块，本地不存在就会报错
+- `npx --ignore-existing http-server`：忽略本地的同名模块，强制安装使用远程模块
+
+### 7.5 模块/包与CommonJS
+
+1. 分类
+   - 内置的模块
+   - 第三方的模块
+   - 自定义的模块
+2. 
+
 
 
 
