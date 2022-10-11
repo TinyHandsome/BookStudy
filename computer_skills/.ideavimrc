@@ -6,15 +6,20 @@ vnoremap <s-tab> <gv
 
 " 让键盘映射jk为Esc
 " set timeout ttimeoutlen=50
+" asdfghjkl uiop
+" U
 inoremap <C-j>o <Esc>o
 inoremap <C-j>i <Esc>O
 inoremap <C-j>l <Esc>la
 inoremap <C-j>k <Esc>i
 inoremap <C-j>j <Esc>
-inoremap <C-j>k <Esc>
-" inoremap <C-j>fj <Esc>
-" inoremap <C-j>jf <Esc>
-
+inoremap <C-j>a +
+inoremap <C-j>s -
+inoremap <C-j>d *
+inoremap <C-j>f /
+inoremap <C-j>g (
+inoremap <C-j>h )
+inoremap <C-j>p %
 
 " 单词大写
 nnoremap <C-j>U bgUw
@@ -22,9 +27,6 @@ inoremap <C-j>U <Esc>bgUw
 " 单词小写
 nnoremap <C-j>u bguw
 inoremap <C-j>u <Esc>bguw
-" 删除当前到行尾
-nnoremap <C-j>d d$
-inoremap <C-j>d <Esc>d$
 
 " 选择当前行
 inoremap <C-l> <Esc>^v$

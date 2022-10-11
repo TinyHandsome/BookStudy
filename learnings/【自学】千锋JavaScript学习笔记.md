@@ -1,4 +1,4 @@
-# 学习笔记
+# 千锋JavaScript学习笔记
 
 [TOC]
 
@@ -8,12 +8,17 @@
 
   ![封面](https://img2022.cnblogs.com/blog/1589204/202209/1589204-20220905095739193-1849832512.jpg)
 
+  ```
+  js+jQuery+Node.js学习笔记
+  ```
+
 - 学习链接：[千锋HTML5前端开发教程1000集](https://www.bilibili.com/video/BV17z4y1D7Yj)：`[184集: 286集]，共103集`
 
 - 感想
 
-  1. node.js 这部分讲的真的很难顶，真想直接跳到vue。这个老师思想跳跃很大，讲课基于自己而不是基于受众。且不提我，很多老师体到的东西屏幕里的学生都很懵。前面说着说着就说到一些超纲知识点，说了又不详解，只会说后面会讲，会面会讲就不要体到前面，很多知识点之间跳跃性很大，缺乏逻辑性串讲。
-  
+  1. [20221008] node.js 这部分讲的真的很难顶，真想直接跳到vue。这个老师思想跳跃很大，讲课基于自己而不是基于受众。且不提我，很多老师体到的东西屏幕里的学生都很懵。前面说着说着就说到一些超纲知识点，说了又不详解，只会说后面会讲，会面会讲就不要体到前面，很多知识点之间跳跃性很大，缺乏逻辑性串讲。
+  2. [20221010] 感觉node.js的主讲老师，很多常见的函数api都记不住，动不动就要查，跟着敲代码都要改来改去，脑阔痛。
+
 - 摘抄
 
   1. 父元素设置 `position: relative`；子元素设置 `position: absolute; left: 50%; transform: translateX(-50%)`，可以实现内容的居中显示
@@ -2583,6 +2588,8 @@ DOM：Document Object Model
 
 ## 7. Node.js
 
+- 视频中笔记链接：https://lurongtao.gitee.io/felixbooks-gp19-node.js/
+
 ### 7.1 认识Node.js
 
 1. Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine.
@@ -2828,12 +2835,159 @@ DOM：Document Object Model
 ### 7.5 模块/包与CommonJS
 
 1. 分类
+
    - 内置的模块
    - 第三方的模块
    - 自定义的模块
-2. 
 
+2. 浏览器是没有require对象的
 
+3. 编写暴露的接口
+
+   ```js
+   module.exports = {
+   	name,
+   	age
+   }
+   ```
+
+   - 可以通过这种方式，暴露多个接口
+
+   - 也可以使用如下方式，其中exports是 `module.exports` 的引用
+
+     ```js
+     exports.name = name
+     exports.age = age
+     ```
+
+### 7.6 常用内置模块
+
+#### ① url
+
+- `url.parse(urlString[, parseQueryString[, slashesDenoteHost]])`：将链接解析为一连串的信息
+
+  ```js
+  const url = require('url')
+  const urlString = 'https://www.baidu.com:443/path/index.html?id=2#tag=3'
+  
+  logger.debug(url.parse(urlString));
+  
+  // 输出
+  Url {
+    protocol: 'https:',
+    slashes: true,
+    auth: null,
+    host: 'www.baidu.com:443',
+    port: '443',
+    hostname: 'www.baidu.com',
+    hash: '#tag=3',
+    search: '?id=2',
+    query: 'id=2',
+    pathname: '/path/index.html',
+    path: '/path/index.html?id=2',
+    href: 'https://www.baidu.com:443/path/index.html?id=2#tag=3'
+  }
+  ```
+
+- `url.format(urlObject)`：将结构体的信息转为链接
+
+  ```js
+  logger.debug(url.format(
+      {
+          protocol: 'https:',
+          slashes: true,
+          auth: null,
+          host: 'www.baidu.com:443',
+          port: '443',
+          hostname: 'www.baidu.com',
+          hash: '#tag=3',
+          search: '?id=2',
+          query: 'id=2',
+          pathname: '/path/index.html',
+          path: '/path/index.html?id=2',
+          href: 'https://www.baidu.com:443/path/index.html?id=2#tag=3'
+      }
+  ))
+  
+  // 输出
+  https://www.baidu.com:443/path/index.html?id=2#tag=3
+  ```
+
+- `url.resolve(from, to)`：实现路径的拼接，前向后向都可以
+
+  ```js
+  logger.debug(url.resolve('http://www.abc.com/a', '/b'))
+  logger.debug(url.resolve('http://www.abc.com/a', '../'))
+  
+  // 输出
+  http://www.abc.com/b
+  http://www.abc.com/
+  ```
+
+- `URLSearchParams`：解析url之后得到数据体，然后获取对应的search（*search: '?id=2',*）
+
+  ```js
+  const urlParams = new URLSearchParams(url.parse(urlString).search)
+  logger.debug(urlParams);
+  
+  // 输出
+  URLSearchParams { 'id' => '2' }
+  ```
+
+#### ② querystring
+
+- `querystring.parse(str[, sep[, eq[, options]]])`：参数的解析，将url中的参数部分解析为数据体（对象）
+
+  ```js
+  const querystring = require('querystring')
+  var qs = 'x=3&y=4'
+  var parsed = querystring.parse(qs)
+  console.log(parsed)
+  
+  // 输出
+  [Object: null prototype] { x: '3', y: '4' }
+  ```
+
+- `querystring.stringify(obj[, sep[, eq[, options]]])`：将数据体中的参数和值解析为url的参数
+
+  ```js
+  const querystring = require('querystring')
+  var qo = {
+    x: 3,
+    y: 4
+  }
+  var parsed = querystring.stringify(qo)
+  console.log(parsed)
+  
+  // 输出
+  x=3&y=4
+  ```
+
+- `querystring.escape(str)`：对url的参数进行编码
+
+  ```js
+  const querystring = require('querystring')
+  var str = 'id=3&city=北京&url=https://www.baidu.com'
+  var escaped = querystring.escape(str)
+  console.log(escaped)
+  
+  // 输出
+  id%3D3%26city%3D%E5%8C%97%E4%BA%AC%26url%3Dhttps%3A%2F%2Fwww.baidu.com
+  ```
+
+- `querystring.unescape(str)`：解码
+
+  ```js
+  const querystring = require('querystring')
+  var str = 'id%3D3%26city%3D%E5%8C%97%E4%BA%AC%26url%3Dhttps%3A%2F%2Fwww.baidu.com'
+  var unescaped = querystring.unescape(str)
+  console.log(unescaped)
+  
+  // 输出
+  id=3&city=北京&url=https://www.baidu.com
+  ```
+
+#### ③ http
 
 
 
