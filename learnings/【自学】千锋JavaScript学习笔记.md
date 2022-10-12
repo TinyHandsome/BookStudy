@@ -2989,6 +2989,14 @@ DOM：Document Object Model
 
 #### ③ http
 
+- node的浏览端调试：`node --inspect --inspect-brk server.js`
+- node进程管理工具：一直监听，如果代码有修改会自动重启
+  - supervisor
+  - forever
+  - nodemon
+  - pm2
+- `response.end()`中也可以写返回的信息
+
 
 
 
