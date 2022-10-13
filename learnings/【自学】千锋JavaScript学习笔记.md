@@ -2990,12 +2990,103 @@ DOM：Document Object Model
 #### ③ http
 
 - node的浏览端调试：`node --inspect --inspect-brk server.js`
+
 - node进程管理工具：一直监听，如果代码有修改会自动重启
   - supervisor
   - forever
   - nodemon
   - pm2
+  
 - `response.end()`中也可以写返回的信息
+
+- `get`：
+
+  ```js
+  const http = require('http')
+  const querystring = require('querystring')
+  const https = require('https');
+  
+  const server = http.createServer((request, response) => {
+      // console.log(response);
+  
+      // const url = request.url
+      // console.log(url);
+  
+      https.get('https://www.xiaomiyoupin.com/mtop/mf/cat/list', (result) => {
+          let data = ''
+          result.on('data', (chunk) => {
+              data += chunk
+          })
+          result.on('end', () => {
+              response.writeHead(200, {
+                  // 'content-type': 'text/html'
+                  'content-type': 'application/json;charset=utf-8'
+              })
+              // response.write('<div>hello</div>')
+              // response.write('{"x": 1}')
+              // response.end('{"x": 1}')
+              // console.log(data);
+              // response.write(`{"url": "${url}"}`)
+              response.write(JSON.stringify(querystring.parse(data)))
+              response.end()
+          })
+      })
+  })
+  
+  server.listen(8080, () => {
+      console.log('localhost:8080');
+  })
+  ```
+
+- `post`
+
+  ```js
+  const http = require('http');
+  const querystring = require('querystring');
+  
+  const postData = querystring.stringify({
+      province: '上海',
+      city: '上海',
+      district: '宝山区',
+      address: '同济啊吧啊吧',
+      latitude: 43.0,
+      longitude: 160.0,
+      message: '求购一条小鱼',
+      contact: '13666666666',
+      type: 'sell',
+      time: 1571217561
+  })
+  
+  const options = {
+      protocol: 'http:',
+      hostname: 'localhost',
+      method: 'post',
+      port: 3000,
+      path: '/data',
+      headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(postData),
+      }
+  }
+  
+  const server = http.createServer((req, res) => {
+      const request = http.request(options, (result) => {
+  
+      })
+      request.write(postData)
+      request.end()
+  
+      res.end()
+  })
+  
+  server.listen(8080, () => {
+      console.log('localhost:8080');
+  })
+  ```
+
+#### ④ 跨域
+
+- jsonp
 
 
 
