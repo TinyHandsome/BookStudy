@@ -18,11 +18,14 @@
 
   1. [20221008] node.js 这部分讲的真的很难顶，真想直接跳到vue。这个老师思想跳跃很大，讲课基于自己而不是基于受众。且不提我，很多老师体到的东西屏幕里的学生都很懵。前面说着说着就说到一些超纲知识点，说了又不详解，只会说后面会讲，会面会讲就不要体到前面，很多知识点之间跳跃性很大，缺乏逻辑性串讲。
   2. [20221010] 感觉node.js的主讲老师，很多常见的函数api都记不住，动不动就要查，跟着敲代码都要改来改去，脑阔痛。
+  2. [20221017] 讲到cors的时候，老师本来想要直接复制代码，还说：“如果这段代码你没有看懂，说明前面的你没有认真听。” 我：？？？直接上PUA了可还行。
 
 - 摘抄
 
   1. 父元素设置 `position: relative`；子元素设置 `position: absolute; left: 50%; transform: translateX(-50%)`，可以实现内容的居中显示
   1. 激活当前元素，取消其他兄弟元素的激活：`$(this).addClass('active').siblings().removeClass('active')`
+  1. 直接启动http服务器：`npx http-server -p 9000`
+  1. 启动node.js服务器：`nodemon cors.js`、`node cors.js`
 
 - 学习时遇到的问题
 
@@ -3086,11 +3089,75 @@ DOM：Document Object Model
 
 #### ④ 跨域
 
-- jsonp
+##### jsonp
 
+- JSON with Padding，是 json 的一种"使用模式"，可以让网页从别的域名（网站）那获取资料，即跨域读取数据。
 
+- 为什么我们从不同的域（网站）访问数据需要一个特殊的技术( JSONP )呢？这是因为 **同源策略 ** 。
 
+- 同源策略，它是由 Netscape 提出的一个著名的安全策略，现在所有支持 JavaScript 的浏览器都会使用这个策略。所谓同源是指，域名，协议，端口相同。
 
+- 当一个百度浏览器执行一个脚本的时候会检查这个脚本是属于哪个页面的 即检查是否同源，只有和百度同源的脚本才会被执行。
+
+- **核心**：`<script>` 标签的src属性并不被同源策略所约束，所以可以获取任何服务器上脚本并执行。
+
+- 案例：通过访问另一个服务器的api，并通过传参的方式把当前的函数传过去，实现了跨域 传参+调用函数
+
+  - 当前html
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>jsonp</title>
+    </head>
+    
+    <body>
+        <script>
+            function getData(data) {
+                console.log(data);
+            }
+        </script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.js"></script>
+        <script src="http://localhost:8080/api/data?cb=getData"></script>
+    </body>
+    
+    </html>
+    ```
+
+  - html中引用的跨域的Node.js
+
+    ```js
+    const http = require('http')
+    const url = require('url')
+    
+    const server = http.createServer((req, res) => {
+        let urlstr = req.url
+    
+        // true 是为了解析 url中的query为一个字典
+        let urlObj = url.parse(urlstr, true)
+        switch(urlObj.pathname) {
+            case '/api/data':
+                res.write(`${urlObj.query.cb}("hello")`)
+                break
+            default:
+                res.write('page not found.')
+        }
+        res.end()
+    })
+    
+    server.listen(8080, ()=>{
+        console.log('localhost:8080');
+    })
+    ```
+
+##### cors
+
+- 核心：在请求头中加入：`'Access-Control-Allow-Origin': '*'`
 
 
 
