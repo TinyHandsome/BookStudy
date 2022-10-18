@@ -3159,6 +3159,71 @@ DOM：Document Object Model
 
 - 核心：在请求头中加入：`'Access-Control-Allow-Origin': '*'`
 
+##### middleware（http-proxy-middleware）
+
+- [中间件option详解](https://www.jianshu.com/p/a248b146c55a)
+
+  ```js
+  var options = {
+          target: 'http://www.example.org', // 目标服务器 host
+          changeOrigin: true,               // 默认false，是否需要改变原始主机头为目标URL
+          ws: true,                         // 是否代理websockets
+          pathRewrite: {
+              '^/api/old-path' : '/api/new-path',     // 重写请求，比如我们源访问的是api/old-path，那么请求会被解析为/api/new-path
+              '^/api/remove/path' : '/path'           // 同上
+          },
+          router: {
+              // 如果请求主机 == 'dev.localhost:3000',
+              // 重写目标服务器 'http://www.example.org' 为 'http://localhost:8000'
+              'dev.localhost:3000' : 'http://localhost:8000'
+          }
+      };
+  ```
+
+- 实操：
+
+  ```js
+  const http = require('http')
+  const url = require('url')
+  const { createProxyMiddleware } = require('http-proxy-middleware')
+  
+  const server = http.createServer((req, res) => {
+      let urlStr = req.url
+      if (/\/api/.test(urlStr)) {
+          // console.log(urlStr);
+          const proxy = createProxyMiddleware('/api', {
+              target: 'https://silkroad.csdn.net/',
+              changeOrigin: true
+          })
+  
+          proxy(req, res)
+      } else if (/\/aaa/.test(urlStr)) {
+          const proxy2 = createProxyMiddleware('/aaa', {
+              target: 'https://blog.csdn.net/',
+              changeOrigin: true,
+              pathRewrite: {
+                  '^/aaa': ''
+              }
+          })
+  
+          proxy2(req, res)
+  
+      } 
+      else {
+          console.log('error');
+      }
+  })
+  
+  server.listen(8070, () => {
+      console.log('localhost:8070');
+  })
+  ```
+
+- 第一种：通过正则表达式匹配，检测到 `api` 路由之后进行代理转发给target的字段中，同时 `api` 的字段以及后面的路由和参数都会保留，进行访问
+
+- 第二种：通过正则表达式匹配，检测到 `aaa` 路由之后进行代理转发给target的字段中，同时 `aaa` 的字段会被重写为 **空**，之后的路由和参数会保留，进行访问
+
+#### ⑤ 爬虫
 
 
 
@@ -3172,7 +3237,20 @@ DOM：Document Object Model
 
 
 
-学到P294
+
+
+
+
+
+
+
+
+
+
+
+
+
+学到P313
 
 
 ------
