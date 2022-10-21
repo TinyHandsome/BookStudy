@@ -19,6 +19,7 @@
   1. [20221008] node.js 这部分讲的真的很难顶，真想直接跳到vue。这个老师思想跳跃很大，讲课基于自己而不是基于受众。且不提我，很多老师体到的东西屏幕里的学生都很懵。前面说着说着就说到一些超纲知识点，说了又不详解，只会说后面会讲，会面会讲就不要体到前面，很多知识点之间跳跃性很大，缺乏逻辑性串讲。
   2. [20221010] 感觉node.js的主讲老师，很多常见的函数api都记不住，动不动就要查，跟着敲代码都要改来改去，脑阔痛。
   2. [20221017] 讲到cors的时候，老师本来想要直接复制代码，还说：“如果这段代码你没有看懂，说明前面的你没有认真听。” 我：？？？直接上PUA了可还行。
+  2. [20221020] 讲fs.stat，这老师的基础真是一言难尽，如果不知道函数的使用和功能，你查也行啊，总不能蒙吧。。。
 
 - 摘抄
 
@@ -2865,7 +2866,7 @@ DOM：Document Object Model
 
 ### 7.6 常用内置模块
 
-#### ① url
+#### 1. url
 
 - `url.parse(urlString[, parseQueryString[, slashesDenoteHost]])`：将链接解析为一连串的信息
 
@@ -2937,7 +2938,7 @@ DOM：Document Object Model
   URLSearchParams { 'id' => '2' }
   ```
 
-#### ② querystring
+#### 2. querystring
 
 - `querystring.parse(str[, sep[, eq[, options]]])`：参数的解析，将url中的参数部分解析为数据体（对象）
 
@@ -2990,7 +2991,7 @@ DOM：Document Object Model
   id=3&city=北京&url=https://www.baidu.com
   ```
 
-#### ③ http
+#### 3. http
 
 - node的浏览端调试：`node --inspect --inspect-brk server.js`
 
@@ -3087,7 +3088,7 @@ DOM：Document Object Model
   })
   ```
 
-#### ④ 跨域
+#### 4. 跨域
 
 ##### jsonp
 
@@ -3223,7 +3224,253 @@ DOM：Document Object Model
 
 - 第二种：通过正则表达式匹配，检测到 `aaa` 路由之后进行代理转发给target的字段中，同时 `aaa` 的字段会被重写为 **空**，之后的路由和参数会保留，进行访问
 
-#### ⑤ 爬虫
+#### 5. 爬虫
+
+- 工具：`cheerio`
+
+- 样例：爬取魅族官网
+
+  ```js
+  const http = require('http')
+  const https = require('https')
+  const cheerio = require('cheerio')
+  
+  function filterData(data) {
+      const $ = cheerio.load(data)
+      // console.log(data);
+  
+      $('.section-item-box p').each((index, el) => {
+          console.log(index);
+          console.log($(el).text());
+      })
+  }
+  
+  const server = http.createServer((req, res) => {
+      let data = ''
+      https.get('https:www.meizu.com', (result) => {
+          result.on('data', (chunk) => {
+              data += chunk
+          })
+          result.on('end', () => {
+              filterData(data)
+          })
+      })
+  })
+  
+  server.listen(8080, () => {
+      console.log('localhost:8080');
+  })
+  ```
+
+#### 6. events
+
+事件触发
+
+```js
+const EventEmitter = require('events')
+
+class MyEventEmitter extends EventEmitter { }
+
+
+const event = new MyEventEmitter()
+
+event.on('play', (value) => {
+    console.log(value);
+})
+
+event.on('play', (value) => {
+    console.log('another' + value);
+})
+
+
+// 触发
+event.emit('play', 'movie')
+event.emit('play', 'movie')
+event.emit('play', 'movie')
+```
+
+#### 7. File System
+
+- 文件夹操作
+
+  - 增：`fs.mkdir`
+  - 删：`fs.rmdir`
+  - 改：`fs.rename`
+  - 查：`fs.readdir`
+
+- 回调是异步的，因为函数是传进去的。
+
+- 同步的方法需要在后面加上 `Sync`，比如文件的读取对应的同步函数为：`fs.readFileSync`
+
+- 文件操作
+
+  - 增：`fs.writeFile`
+
+  - 删：`fs.unlink`
+
+  - 改：`fs.appendFile`
+
+  - 查：`fs.readFile`
+
+    - 这样获取到的值是buffer，转换成字符串有两种方法，一种是在参数中增加 `utf-8`；另一种是在输出时增加 `.toString()`
+
+      ```js
+      fs.readFile('./logs/log1.log', 'utf-8', (err, result) => {
+          console.log(result.toString());
+      })
+      ```
+
+- `fs.stat`：读取文件（夹）信息，再调用 `.isDirectory()` 判断是否是文件夹
+
+- 递归获取文件目录下所有文档的内容
+
+  ```js
+  function readDir(dir) {
+      fs.readdir(dir, (err, content) => {
+          content.forEach((value, index) => {
+              let joinDir = `${dir}/${value}`
+              fs.stat(joinDir, (err, stats) => {
+                  if (stats.isDirectory()) {
+                      readDir(joinDir)
+                  } else {
+                      fs.readFile(joinDir, 'utf-8', (err, content) => {
+                          console.log(content);
+                      })
+                  }
+              })
+          })
+      })
+  }
+  ```
+
+- `fs.watch`：监视文件（夹）的变化
+
+#### 8. Stream 和 Zlib
+
+- 读取流和写入流和压缩流
+
+  ```js
+  const fs = require('fs')
+  const zlib = require('zlib');
+  
+  const gzip = zlib.createGzip()
+  
+  const readStream = fs.createReadStream('./logs/log1.log')
+  const writeStream = fs.createWriteStream('./logs/logs.gzip')
+  
+  readStream
+  .pipe(gzip)
+  .pipe(writeStream)
+  ```
+
+####  9. readline
+
+- 逐行读入
+
+  ```js
+  const readline = require('readline');
+  
+  const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+  })
+  
+  rl.question('你如何看到你爹', (answer) => {
+      // 记录
+      console.log(`thx for your answer: ${answer}`);
+      rl.close()
+  })
+  ```
+
+####  10. Crypto
+
+- 加密模块，既可以做对称加密，也可以做非对称加密
+
+  ```js
+  const crypto = require('crypto');
+  const password = 'abc123'
+  
+  const hash = crypto.createHash('sha1').update(password, 'utf-8').digest('hex')
+  
+  console.log(hash);
+  ```
+
+### 7.7 路由
+
+- 通过url的 switch case，实现路由的分发
+
+  ```js
+  const fs = require('fs');
+  require('http').createServer((req, res) => {
+      // res.end('ok')
+      const urlString = req.url
+      switch (urlString) {
+          case '/':
+              res.end('hello')
+              break;
+          case '/home':
+              fs.readFile('./home.html', (err, content) => {
+                  res.end(content)
+              })
+              break;
+          case '/home.js':
+              fs.readFile('./home.js', (err, content) => {
+                  res.end(content)
+              })
+              break
+          case '/pics/a.png':
+              fs.readFile('./pics/a.png', (err, content) => {
+                  res.end(content)
+              })
+              break
+          default:
+              res.end('page 404')
+      }
+  })
+      .listen(8088, () => {
+          console.log('localhost: 8088');
+      })
+  ```
+
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>home</title>
+      <script src="home.js"></script>
+  </head>
+  <body>
+      home
+      <img src="./pics/a.png" alt="">
+  </body>
+  </html>
+  ```
+
+- 上述路由的分发存在一个问题：需要对涉及到的资源也要配上路由分发
+
+- 利用package：mime，通过文件类型 设置 content-type，自动获取url对应的静态文件
+
+  ```js
+  const fs = require('fs');
+  const mime = require('mime')
+  
+  require('http').createServer((req, res) => {
+      const urlString = req.url
+      const type = mime.getType(urlString.split('.')[1])
+      res.writeHead(200, {
+          'content-type': type
+      })
+  
+      const file = fs.readFileSync(`./${urlString}`)
+      res.end(file)
+  })
+      .listen(8088, () => {
+          console.log('localhost: 8088');
+      })
+  ```
 
 
 
@@ -3248,9 +3495,7 @@ DOM：Document Object Model
 
 
 
-
-
-学到P313
+学到P324
 
 
 ------

@@ -16,6 +16,7 @@
 **/password.py
 **/model_dir
 **/chrome data
+**/logs
 
 # nodejs包
 **/node_modules
