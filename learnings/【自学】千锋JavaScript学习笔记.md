@@ -3090,6 +3090,8 @@ DOM：Document Object Model
 
 #### 4. 跨域
 
+- jsonp利用 `script` 标签加载js不跨域的特性，从后端拉取js代码运行，jsonp中的p是padding（包裹数据的函数），拿到callback后，传入数据调用函数；cors就是在后台给前端返回一个首部字段：`Access-Control-Allow-Origin`；middleware：通过http-proxy-middleware实现地址的代理，从而实现了跨域。
+
 ##### jsonp
 
 - JSON with Padding，是 json 的一种"使用模式"，可以让网页从别的域名（网站）那获取资料，即跨域读取数据。
@@ -3472,6 +3474,92 @@ event.emit('play', 'movie')
       })
   ```
 
+### 7.8 静态资源服务
+
+- server.js：
+
+  ```js
+  const http = require('http');
+  const path = require('path');
+  const readStaticFile = require('./fileStatic');
+  
+  http.createServer(async (req, res) => {
+      let urlString = req.url
+      let filePathName = path.join(__dirname, './public', urlString)
+      console.log(filePathName);
+  
+      let { data, mimeType } = await readStaticFile(filePathName)
+  
+      res.writeHead(200, {
+          'content-type': `${mimeType}; charset=utf-8`
+      })
+      res.write(data)
+      res.end()
+  }).listen(8888, () => {
+      console.log('visit success');
+  })
+  ```
+
+- fileStatic.js
+
+  ```js
+  const path = require('path');
+  const mime = require('mime');
+  const fs = require('fs');
+  
+  
+  function myReadFile(file) {
+      return new Promise((resolve, reject) => {
+          fs.readFile(file, (err, data) => {
+              if (err) {
+                  resolve('You visit a folder that index.html not in. / 你访问的文件夹里面没有index.html')
+              } else {
+                  resolve(data)
+              }
+          })
+      })
+  }
+  
+  async function readStaticFile(filePathName) {
+      let ext = path.parse(filePathName).ext
+      // 如果前面的值为none，则取后面的值
+      let mimeType = mime.getType(ext) || 'text/html'
+      let data
+  
+      // 判断文件是否存在
+      if (fs.existsSync(filePathName)) {
+          if (ext) {
+              // await myReadFile(filePathName).then(result => data = result)
+              //     .catch((err) => data = err)
+              data = await myReadFile(filePathName)
+          } else {
+              // await myReadFile(path.join(filePathName, '/index.html')).then(result => data = result)
+              //     .catch((err) => data = err)
+              data = await myReadFile(path.join(filePathName, '/index.html'))
+          }
+      } else {
+          // console.log('file is not found');
+          // res.end('file not found')
+          data = 'file or folder not found'
+      }
+  
+      return {
+          data,
+          mimeType
+      }
+  }
+  
+  module.exports = readStaticFile
+  ```
+
+### 7.9 Yarn
+
+- `yarn init`
+- `yarn add`
+- `yarn add [–-dev –-peer -–optional]`
+- `peerDependencies`：同等依赖，也叫同伴依赖，用于指定当前包兼容的宿主版本
+- `optionalDependencies`：可选依赖，如果有一些依赖包即使安装失败，项目仍然能够运行或者希望npm继续运行，就可以使用。会覆盖 `dependencies` 中的同名依赖包，不要在两个地方都写
+- `bundledDependencies/bundleDependencies`：
 
 
 
@@ -3494,8 +3582,7 @@ event.emit('play', 'movie')
 
 
 
-
-学到P324
+学到P330
 
 
 ------
