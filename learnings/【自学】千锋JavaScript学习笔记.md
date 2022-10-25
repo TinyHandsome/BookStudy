@@ -20,6 +20,7 @@
   2. [20221010] 感觉node.js的主讲老师，很多常见的函数api都记不住，动不动就要查，跟着敲代码都要改来改去，脑阔痛。
   2. [20221017] 讲到cors的时候，老师本来想要直接复制代码，还说：“如果这段代码你没有看懂，说明前面的你没有认真听。” 我：？？？直接上PUA了可还行。
   2. [20221020] 讲fs.stat，这老师的基础真是一言难尽，如果不知道函数的使用和功能，你查也行啊，总不能蒙吧。。。
+  2. [20221025] 讲express，中间件栈？明明是队列，自己编了个名字可还行，讲得乱七八糟、不知所云。我的评价是：稀烂。不就是路由匹配的问题嘛？加个next可以使得后面的路由继续被匹配到，这么简单的东西我一看就知道要说啥，真是服了。主动增加学习难度了这是。。。
 
 - 摘抄
 
@@ -3554,14 +3555,45 @@ event.emit('play', 'movie')
 
 ### 7.9 Yarn
 
+- Yarn是facebook发布的一款取代npm的包管理工具
+
+  - 速度超快：Yarn 缓存了每个下载过的包，所以再次使用时无需重复下载。 同时利用并行下载以最大化资源利用率，因此安装速度更快。
+  - 超级安全：在执行代码之前，Yarn 会通过算法校验每个安装包的完整性。
+  - 超级可靠：使用详细、简洁的锁文件格式和明确的安装算法，Yarn 能够保证在不同系统上无差异的工作。
+
+- 参考链接：https://blog.csdn.net/yw00yw/article/details/81354533
+
 - `yarn init`
+
 - `yarn add`
+
 - `yarn add [–-dev –-peer -–optional]`
+
 - `peerDependencies`：同等依赖，也叫同伴依赖，用于指定当前包兼容的宿主版本
+
 - `optionalDependencies`：可选依赖，如果有一些依赖包即使安装失败，项目仍然能够运行或者希望npm继续运行，就可以使用。会覆盖 `dependencies` 中的同名依赖包，不要在两个地方都写
+
 - `bundledDependencies/bundleDependencies`：
 
+- yarn 源：`yarn config get`
 
+  ![](https://img-blog.csdn.net/20180802111644352?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3MDB5dw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+### 7.10 Express
+
+- 基于Node.js 平台，快速、开放、极简的Web开发框架
+- 创建Express项目
+  - 初始化：`yarn init -y`，这里y是yes，只直接跳过交互式对话初始化一个项目
+  - 安装生产环境的包：`yarn add express -S`
+- 之前是 `res.write(); res.end()`，express是 `res.send()`
+- 注意：这里路由的匹配，也是从前往后匹配。`/`和`/api`为例，将永远匹配不到后者；解决方案上，在代码中将 `/api` 放在 `/` 的前面
+- 回调函数又被称为中间件
+- 通过给中间件增加 `next()` 的参数和函数，使得后续的路由依然可以被匹配和执行
+- MVC -> MVP：Model-View-Presenter。它们的基本思想有相通的地方：Controller/Presenter负责逻辑的处理，Model提供数据，View负责显示。在MVP里，Presenter完全把Model和View进行了分离，主要的程序逻辑在Presenter里实现。
+  - View与Model完全隔离
+  - Presenter与View的具体实现技术无关
+  - 可以进行View的模拟测试
+  - RMVP：R->route，路由
 
 
 
