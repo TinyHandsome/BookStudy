@@ -3582,19 +3582,102 @@ event.emit('play', 'movie')
 ### 7.10 Express
 
 - 基于Node.js 平台，快速、开放、极简的Web开发框架
+
 - 创建Express项目
+
   - 初始化：`yarn init -y`，这里y是yes，只直接跳过交互式对话初始化一个项目
   - 安装生产环境的包：`yarn add express -S`
+
 - 之前是 `res.write(); res.end()`，express是 `res.send()`
+
 - 注意：这里路由的匹配，也是从前往后匹配。`/`和`/api`为例，将永远匹配不到后者；解决方案上，在代码中将 `/api` 放在 `/` 的前面
+
 - 回调函数又被称为中间件
+
+  - 自定义中间件：自己用use写回调函数， 自己调用next
+  - 路由中间件：`express.Router()`
+  - 第三方中间件：`body-parser`
+
 - 通过给中间件增加 `next()` 的参数和函数，使得后续的路由依然可以被匹配和执行
+
 - MVC -> MVP：Model-View-Presenter。它们的基本思想有相通的地方：Controller/Presenter负责逻辑的处理，Model提供数据，View负责显示。在MVP里，Presenter完全把Model和View进行了分离，主要的程序逻辑在Presenter里实现。
+
   - View与Model完全隔离
   - Presenter与View的具体实现技术无关
   - 可以进行View的模拟测试
   - RMVP：R->route，路由
 
+- express路由配置
+
+  - server.js
+
+    ```js
+    const express = require('express');
+    const app = express()
+    
+    const router = require('./router/index');
+    
+    app.use('/', router)
+    
+    app.listen(8088, () => {
+        console.log('assaas');
+    })
+    ```
+
+  - router/index.js
+
+    ```js
+    const express = require('express');
+    // 路由中间件
+    const router = express.Router()
+    
+    router.get('/', (req, res, next) => {
+        res.send('hello wwww')
+    })
+    
+    router.get('/index', (req, res, next) => {
+        res.send('index pages')
+    })
+    
+    module.exports = router
+    ```
+
+- 获取前端数据
+
+  - get：`const query = req.query`，获取数据
+
+  - post：添加数据
+
+    ```js
+    const bodyParser = require('body-parser');
+    const router = require('./router/index');
+    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use('/', router)
+    
+    
+    router.post('/index', (req, res, next) => {
+        const data = req.body
+        console.log(data);
+        res.send(data)
+    })
+    ```
+
+  - put、patch、delete：覆盖式修改数据、增量修改数据、删除数据
+
+  - `router.all`：接收上述所有的请求
+
+  - 工具：`body-parser`
+
+    - 解析form：`app.use(bodyParser.urlencoded({ extended: false }))`
+    - 解析json：`app.use(bodyParser.json())`
+
+- 服务端渲染与客户端渲染
+
+  - express template
+    - ejs
+    - pug
+    - jade
+    - art-template
 
 
 
@@ -3614,7 +3697,8 @@ event.emit('play', 'movie')
 
 
 
-学到P330
+
+学到P333
 
 
 ------

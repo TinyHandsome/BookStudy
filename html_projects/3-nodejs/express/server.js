@@ -9,7 +9,7 @@ app.use('/api', (req, res) => {
 app.use('/', (req, res) => {
     console.log(0);
     res.send('hello')
-})
+}, )
 
 app.listen(8080, () => {
     console.log('asdasd');
