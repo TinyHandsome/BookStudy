@@ -1,9 +1,9 @@
 const express = require('express');
-const { list } = require('../controller/index');
 // 路由中间件
 const router = express.Router()
+const { list } = require('../controller/index');
 
-router.get('/', list)
+router.get('/api/list', list)
 
 // router.get('/index', (req, res, next) => {
 //     const query = req.query

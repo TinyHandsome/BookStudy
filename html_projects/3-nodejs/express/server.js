@@ -1,16 +1,18 @@
 const express = require('express');
-
 const app = express()
 
-app.use('/api', (req, res) => {
-    res.send('world')
-})
+const bodyParser = require('body-parser');
 
-app.use('/', (req, res) => {
-    console.log(0);
-    res.send('hello')
-}, )
+const router = require('./router/index');
 
-app.listen(8080, () => {
-    console.log('asdasd');
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+// 静态资源
+app.use(express.static('./public'))
+
+app.use('/', router)
+
+app.listen(8088, () => {
+    console.log('localhost:8088');
 })

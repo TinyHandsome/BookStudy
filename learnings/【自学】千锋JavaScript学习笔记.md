@@ -3597,6 +3597,7 @@ event.emit('play', 'movie')
   - 自定义中间件：自己用use写回调函数， 自己调用next
   - 路由中间件：`express.Router()`
   - 第三方中间件：`body-parser`
+  - 静态资源服务中间件（内置中间件）：`app.use(express.static('public'))`
 
 - 通过给中间件增加 `next()` 的参数和函数，使得后续的路由依然可以被匹配和执行
 
@@ -3677,7 +3678,11 @@ event.emit('play', 'movie')
     - ejs
     - pug
     - jade
-    - art-template
+    - **art-template**
+  - 页面 render
+    - SSR：Server Side Render，服务端渲染
+    - CSR：Client Side Render，客户端渲染
+
 
 
 
