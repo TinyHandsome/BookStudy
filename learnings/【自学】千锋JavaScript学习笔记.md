@@ -3683,6 +3683,10 @@ event.emit('play', 'movie')
     - SSR：Server Side Render，服务端渲染
     - CSR：Client Side Render，客户端渲染
 
+- art-template
+
+  - install：`yarn add art-template express-art-template -S`
+
 
 
 
