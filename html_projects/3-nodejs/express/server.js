@@ -14,10 +14,11 @@ app.use(express.static('./public'))
 
 // view engine setup
 app.engine('art', require('express-art-template'))
-app.set('view', {
-    debug: process.env.NODE_ENV !== 'production'
+app.set('view options', {
+    debug: process.env.NODE_ENV !== 'production',
+    escape: false
 })
-app.set('view', path.join(__dirname, 'views'))
+app.set('views', path.join(__dirname, 'view'))
 app.set('view engine', 'art')
 
 app.use('/', router)
