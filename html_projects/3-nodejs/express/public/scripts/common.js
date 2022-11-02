@@ -1,13 +1,16 @@
 $.ajax({
     url: '/api/list',
     success(result) {
-        let templateStr = 
-        `
+        let templateStr =
+            `
             <ul>
                 {{each data}}
                     <li>{{$value}}</li>
                 {{/each}}
             </ul>
+            <div>
+                <b>{{x}}</b>
+            </div>
         `
 
         // let html = '<ul>'
@@ -17,7 +20,10 @@ $.ajax({
         // html += '</ul>'
 
         let html = template.render(templateStr,
-            { data: result.data }
+            {
+                data: result.data,
+                x: 'hello'
+            }
         )
 
         $('#list').html(html)

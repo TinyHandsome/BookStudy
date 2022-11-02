@@ -3687,7 +3687,43 @@ event.emit('play', 'movie')
 
   - install：`yarn add art-template express-art-template -S`
 
+- CMS：Content Management System，内容管理系统
 
+### 7.11 MongoDB
+
+- MongoDB是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为WEB应用提供可扩展的高性能数据存储解决方案。
+
+- 特点：高性能、易部署、易使用，存储数据非常方便。
+
+- MongoDB的数据类型
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/b8d3dddafc574eb39cb4955d269888b6.png)
+
+- 数据库的常用命令
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/1b6a49cf1f86443e8f8ca7d3b1e132ba.png)
+
+- mongodb启动服务：`mongod --dbpath D:\mdb_database`，后面的路径是数据存放的路径
+
+- mongodb shell：开启另一个cmd，`mongodb`
+
+- 注意：删除数据库：`db.dropDatabase()` ，是删除当前打开的数据库
+
+- 集合操作：
+
+  - `db.createCollection('collextionName')`：创建一个集合
+  - `db.getCollection('account')`：得到指定名称的集合
+  - `db.getCollectionNames()`：得到当前db的所有集合
+  - `db.printCollectionStats()`：显示当前db所有集合的状态
+
+- 文档操作
+
+  - 插入数据：
+    - `db.mabaoguo.insert([{name: 'm1', release: '2020-12-05'}])`
+    - ` db.mabaoguo.insert([{name: 'm2', release: '2020-12-06'}, {name: 'm3', release: '2020-12-07'}])`
+    - ` db.mabaoguo.save([{name: 'm4', release: '2020-12-06'}, {name: 'm5', release: '2020-12-07'}])`
+
+  - 查询数据：`db.mabaoguo.find()`
 
 
 
