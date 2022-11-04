@@ -3719,14 +3719,148 @@ event.emit('play', 'movie')
 - 文档操作
 
   - 插入数据：
+
     - `db.mabaoguo.insert([{name: 'm1', release: '2020-12-05'}])`
     - ` db.mabaoguo.insert([{name: 'm2', release: '2020-12-06'}, {name: 'm3', release: '2020-12-07'}])`
     - ` db.mabaoguo.save([{name: 'm4', release: '2020-12-06'}, {name: 'm5', release: '2020-12-07'}])`
+    - `db.mabaoguo.insert([{name: 'm1', release: '2020-12-05', publishNum: 100}])`
 
-  - 查询数据：`db.mabaoguo.find()`
+  - 修改数据：
+
+    - `db.mabaoguo.update({name: 'm1'}, {$set: {release: '2022-11-11'}})`：修改name为m1的release为2022-11-11，默认只修改第一个找到的
+    - `db.mabaoguo.update({name: 'm1'}, {$inc: {publishNum: 200}})`：找到第一条符合的记录，然后增加记录中对应字段publishNum的值+200
+    - ` db.mabaoguo.update({name: 'm12'}, {$inc: {publishNum: 200}}, true)`：后面的true是：找不到就创建该条数据；如果是false，就无事发生
+    - ` db.mabaoguo.update({name: 'm1'}, {$inc: {publishNum: 200}}, true, true)`：最后的true是：是否匹配所有，例子中的代码就是找到所有符合条件的，然后都加200
+
+  - 删除数据：
+
+    - ` db.mabaoguo.remove({name: 'm12'})`
+
+  - 查询数据：
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/ba2dc75840254e27aa858959ae4798e5.png)
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/1f3868f7d751402f9bb0b137ea3a7c43.png)
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/07f097801255425282dbac005d2dbf39.png)
+
+    - `db.mabaoguo.find()` 查看所有数据
+    - `db.mabaoguo.distinct('name')` 查看name字段的去重数据
+    - `db.mabaoguo.find({release: '2020-12-06'})` 查询满足条件的数据
+    - `db.mabaoguo.find({release: {$gt: '2020-12-06'}})` 查询数据大于该值的数据；所以小于就是 `lt`；大于等于是 `gte`
+    - `db.mabaoguo.find({release: {$gt: '2020-12-05', $lt: '2020-12-07'}})` 查询区间内的数据
+    - `db.mabaoguo.find({name: /1/})` 查询name中包含1的 类似`%1%`
+    - `db.mabaoguo.find({name: /^1/})` 查询name中包含1，且1开头的，类似 `1%`；同样的 `/1$/`，则是类似 `%1`
+    - `db.mabaoguo.find({}, {_id: 0, publishNum: 0})` 查询结果中不显示id和publishNum
+    - `db.mabaoguo.find({name: /1$/}, {_id: 0, publishNum: 0})` 查询name以1结尾的数据
+    - `db.mabaoguo.find().sort({release: 1})` 排序，按照对应字段的 1：升序；-1：降序 排序
+    - `db.mabaoguo.find().limit(3)` 只要查询结果的前3条数据
+    - ` db.mabaoguo.find().limit(3).skip(2)` 查询结果跳过前2条后取前3条数据
+    - **无论 find limit sort 的顺序如何，都是先sort后find最后limit** 
+    - ` db.mabaoguo.find({$or: [{release: '2020-12-05'}, {release: '2020-12-07'}]})` or 或 条件查询
+    - `db.mabaoguo.findOne()` 获取第一条记录
+    - `db.mabaoguo.find().count()` 输出结果集的记录数
 
 
+### 7.12 JWT基础
 
+- cookie和session：前端存cookie，后端存session，通过cookie和session对比或者dict[cookie] == session 来判断用户信息
+
+- token：第一次访问时，后端返回给前端，之后每一次前端访问都带token，通过对token的验证了判断用户信息
+
+- jwt：生成token的方法，json web token
+
+-  密钥生成
+
+  - `openssl`
+  - 生成私钥：`genrsa -out rsa_private_key.pem 2048`
+  - 根据私钥生成公钥：`rsa -in rsa_private_key.pem -pubout -out rsa_public_key.pem`
+
+- 加密解密：
+
+  ```js
+  var template = require('art-template');
+  var path = require('path');
+  var fs = require('fs');
+  var jwt = require('jsonwebtoken');
+  
+  const listModel = require('../model/list');
+  
+  const list = (req, res, next) => {
+      // let data = '<ul>'
+      // for (let i = 0; i < 100; i++) {
+      //     data += `<li>line ${i}</li>`
+      // }
+      
+      // data += '</ul>'
+      // res.send(data)
+  
+      // let dataObj = {
+      //     ret: true,
+      //     data: []
+      // }
+      // for(var i = 0; i<100; i++) {
+      //     dataObj.data.push('line' + i)
+      // }
+      // res.send(dataObj)
+  
+      // let dataArray = []
+      // for (let i = 0; i < 1000; i++) {
+      //     dataArray.push('line' + i)
+      // }
+  
+      // res.set('content-type', 'application/json;charset=utf-8')
+      // res.header('Content-Type', 'application/json;charset=utf-8')
+  
+      // res.render('list', {
+      //     data: JSON.stringify(dataArray)
+      // })
+  
+      // res.render('list-html', {
+      //     data: dataArray
+      // })
+  
+      var html = template(path.join(__dirname, '../view/list-html.art'), {
+          data: listModel.dataArray
+      })
+      fs.writeFileSync(path.join(__dirname, '../public/list.html'), html)
+      // console.log(html);
+      res.send(html)
+  }
+  
+  const token = (req, res, next) => {
+      // res.send('ok')
+  
+      // 对称加密
+      const token = jwt.sign({username: 'admin'}, 'hahaha')
+      // res.send(token)
+      const result = jwt.verify(token, 'hahaha')
+      // res.send(result)
+  
+      // 非对称加密
+      const privateKey = fs.readFileSync(path.join(__dirname, '../keys/rsa_private_key.pem'))
+      const tk = jwt.sign({username: 'admin'}, privateKey, {algorithm: 'RS256'})
+      const publicKey = fs.readFileSync(path.join(__dirname, '../keys/rsa_public_key.pem'))
+      const result2 = jwt.verify(tk, publicKey)
+      res.send(result2)
+  
+  }
+      
+  exports.list = list
+  exports.token = token
+  ```
+
+### 7.13 Socket
+
+- 网络上的两个程序通过一个双向的通信连接实现数据的交换，这个连接的一端称为一个socket
+
+  ![在这里插入图片描述](https://img-blog.csdnimg.cn/70486d5432f142cd9832429b32bec0fe.png)
+
+- 实现
+
+  - 基于net模块实现socket
+  - WebSocket
+  - Socket.io
 
 
 

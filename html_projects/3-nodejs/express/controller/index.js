@@ -1,6 +1,7 @@
 var template = require('art-template');
 var path = require('path');
 var fs = require('fs');
+var jwt = require('jsonwebtoken');
 
 const listModel = require('../model/list');
 
@@ -45,5 +46,24 @@ const list = (req, res, next) => {
     // console.log(html);
     res.send(html)
 }
+
+const token = (req, res, next) => {
+    // res.send('ok')
+
+    // 对称加密
+    const token = jwt.sign({username: 'admin'}, 'hahaha')
+    // res.send(token)
+    const result = jwt.verify(token, 'hahaha')
+    // res.send(result)
+
+    // 非对称加密
+    const privateKey = fs.readFileSync(path.join(__dirname, '../keys/rsa_private_key.pem'))
+    const tk = jwt.sign({username: 'admin'}, privateKey, {algorithm: 'RS256'})
+    const publicKey = fs.readFileSync(path.join(__dirname, '../keys/rsa_public_key.pem'))
+    const result2 = jwt.verify(tk, publicKey)
+    res.send(result2)
+
+}
     
 exports.list = list
+exports.token = token
