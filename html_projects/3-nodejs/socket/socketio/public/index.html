@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>socket.io</title>
+  <script src="./scripts/socket.io.js" charset="utf-8"></script>
+</head>
+<body>
+  <h1>嗯嗯交流区</h1>
+  <div id="content" name="name" style="overflow-y: scroll; width: 400px; height: 300px; border: solid 1px #000"></div>
+  <br />
+  <div>
+    <input type="text" id="msg" style="width: 200px;">
+  </div>
+  <button id="submit">提交</button>
+  <script>
+    var socket = io.connect('http://10.193.68.138:3000');
+    const content = document.getElementById('content')
+    document.querySelector('#submit')
+      .addEventListener('click', function () {
+        var msg2 = msg.value
+        socket.emit('receive', msg2) // 核心代码
+        msg.value = ''
+        content.innerHTML += msg2 + '<br/>'
+      }, false)
+
+      socket.on('message', function(msg){
+        content.innerHTML += msg + '<br/>'
+      })
+  </script>
+</body>
+</html>

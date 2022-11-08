@@ -3860,7 +3860,27 @@ event.emit('play', 'movie')
 
   - 基于net模块实现socket
   - WebSocket
+    - 缺点：浏览器必须支持html5
   - Socket.io
+    - 优点：可以兼容ie8
+
+### 7.14 Node.js项目
+
+1. 前端 Frontend
+   - 前端工程化环境 webpack
+   - CSS 预处理工具 sass
+   - JS库 jQuery
+   - SPA：single page application，路由：SME-Router
+   - JS模块化：ES Module，CommonJS Module
+   - UI 组件库：Bootstrap（AdminLTE）
+2. 后端 Backend
+   - Node.js
+   - Express
+   - MongoDB（Mongoose）
+
+
+
+
 
 
 
