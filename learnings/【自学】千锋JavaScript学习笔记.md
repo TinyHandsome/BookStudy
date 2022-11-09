@@ -3873,6 +3873,7 @@ event.emit('play', 'movie')
    - SPA：single page application，路由：SME-Router
    - JS模块化：ES Module，CommonJS Module
    - UI 组件库：Bootstrap（AdminLTE）
+   - RMVC：Art-template
 2. 后端 Backend
    - Node.js
    - Express
