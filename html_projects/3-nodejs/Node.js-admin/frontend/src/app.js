@@ -1,8 +1,6 @@
-import indexTpl from './views/index.art'
-import signinTpl from './views/signin.art'
+// 载入css
+import './assets/common.css'
 
-console.log(indexTpl);
-// const html = indexTpl({})
-const html = signinTpl({})
-
-$('#root').html(html)
+// 载入路由
+import router from './routes'
+router.go('/index')

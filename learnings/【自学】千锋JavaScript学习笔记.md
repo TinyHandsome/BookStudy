@@ -3874,6 +3874,9 @@ event.emit('play', 'movie')
    - JS模块化：ES Module，CommonJS Module
    - UI 组件库：Bootstrap（AdminLTE）
    - RMVC：Art-template
+   - **常用bootstrap框架**
+     - [adminlte](http://adminlte.la998.com/index2.html)
+     - [其他框架汇总](http://sudasuta.com/bootstrap-admin-templates.html)
 2. 后端 Backend
    - Node.js
    - Express

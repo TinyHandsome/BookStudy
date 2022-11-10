@@ -24,6 +24,10 @@ module.exports = {
             {
                 test: /\.art$/,
                 use: { loader: 'art-template-loader' }
+            },
+            {
+                test: /\.css$/,
+                loaders: ['style-loader', 'css-loader']
             }
         ]
     },
