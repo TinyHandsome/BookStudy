@@ -3881,6 +3881,9 @@ event.emit('play', 'movie')
    - Node.js
    - Express
    - MongoDB（Mongoose）
+3. 开发架构
+   - 前后端分离的开发架构
+   - 
 
 
 
