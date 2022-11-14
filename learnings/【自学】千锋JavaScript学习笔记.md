@@ -3760,6 +3760,10 @@ event.emit('play', 'movie')
     - ` db.mabaoguo.find({$or: [{release: '2020-12-05'}, {release: '2020-12-07'}]})` or 或 条件查询
     - `db.mabaoguo.findOne()` 获取第一条记录
     - `db.mabaoguo.find().count()` 输出结果集的记录数
+  
+  - 注意：
+  
+    - 创建表的时候（schema）会自动给表名加s
 
 
 ### 7.12 JWT基础
