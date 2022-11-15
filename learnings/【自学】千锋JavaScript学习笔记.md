@@ -28,6 +28,7 @@
   1. 激活当前元素，取消其他兄弟元素的激活：`$(this).addClass('active').siblings().removeClass('active')`
   1. 直接启动http服务器：`npx http-server -p 9000`
   1. 启动node.js服务器：`nodemon cors.js`、`node cors.js`
+  1. 
 
 - 学习时遇到的问题
 
@@ -36,6 +37,11 @@
   1. [nvm-windows安装教程](https://www.jianshu.com/p/13c0b3ca7c71)
   1. [查找第三方模块](npmjs.com)
   1. [npm 全局安装与本地安装、开发依赖和生产依赖](https://blog.csdn.net/qq_43456781/article/details/120077136)
+  1. [箭头函数和function的区别](https://blog.csdn.net/qq_30068487/article/details/82752466)
+     - this的指向：使用function定义的函数，this的指向随着调用环境的变化而变化，而箭头函数中的this指向是固定不变的，一直指向定义函数的环境。
+     - function是可以定义构造函数的，而箭头函数是不行的。
+     - 由于js的内存机制，function的级别最高，而用箭头函数定义函数的时候，需要var(let const定义的时候更不必说)关键词，而var所定义的变量不能得到变量提升，故箭头函数一定要定义于调用之前！
+     - 使用function声明函数时，可以使用arguments来获取传入函数的所有参数，而使用箭头函数声明的方法无法使用arguments来获取所有参数。
 
 - 直通车
 

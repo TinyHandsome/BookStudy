@@ -1,6 +1,8 @@
 import indexTpl from '../views/index.art'
 import signinTpl from '../views/signin.art'
 import usersTpl from '../views/users.art'
+import usersListTpl from '../views/users-list.art'
+import usersListPageTpl from '../views/users-pages.art'
 
 const htmlIndex = indexTpl({})
 const htmlSignin = signinTpl({})
@@ -18,15 +20,56 @@ const _signup = () => {
     // 提交表单
     const data = $('#users-form').serialize()
     $.ajax({
+        // url: 'http://localhost:3000/api/users/signup',
         url: '/api/users/signup',
         type: 'post',
         data: data,
         success(res) {
             console.log(res);
+            _list()
+        },
+        error(res) {
+            console.log(res);
         }
     })
 
     $btnClose.click()
+}
+
+const _pagination = (data) => {
+    const pageSize = 10
+    const total = data.length
+    const pageCount = Math.ceil(total / pageSize)
+    const pageArray = new Array(pageCount)
+
+    const htmlPage = usersListPageTpl({
+        pageArray
+    })
+
+    $('#users-page').html(htmlPage)
+
+    // 第一页实现高亮
+    $('#users-page-list li:nth-child(2)').addClass('active')
+    // 实现其他页点击事件的高亮
+    $('#users-page-list li:not(:first-child, :last-child)').on('click', function() {
+        $(this).addClass('active').siblings().removeClass('active')
+        // console.log($(this).index());
+    })
+}
+
+// 获取列表数据，并把结果放到html中
+const _list = () => {
+    $.ajax({
+        url: '/api/users/list',
+        success(result) {
+            $('#users-list').html(usersListTpl({
+                data: result.data
+            }))
+
+            // 分页
+            _pagination(result.data)
+        }
+    })
 }
 
 const signin = (router) => {
@@ -37,7 +80,7 @@ const signin = (router) => {
     }
 }
 
-const signup = () => {}
+const signup = () => { }
 
 const index = (router) => {
     return (req, res, next) => {
@@ -48,6 +91,9 @@ const index = (router) => {
 
         // 填充用户列表
         $('#content').html(usersTpl())
+
+        // 渲染list
+        _list()
 
         // 点击保存，提交表单
         $('#users-save').on('click', _signup)

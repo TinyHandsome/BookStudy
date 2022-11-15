@@ -11,24 +11,11 @@
                 <th>用户名 </th>
                 <th style="width: 100px">操作</th>
             </tr>
-            <tr>
-                <td>1.</td>
-                <td>admin</td>
-                <td>
-                    <button class="btn btn-danger">删除</button>
-                </td>
-            </tr>
+            <tbody id="users-list"></tbody>
         </table>
     </div>
     <!-- /.box-body -->
-    <div class="box-footer clearfix">
-        <ul class="pagination pagination-sm no-margin pull-right">
-            <li><a href="#">&laquo;</a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">&raquo;</a></li>
-        </ul>
+    <div class="box-footer clearfix" id="users-page">
     </div>
 </div>
 <!-- /.box -->
@@ -57,7 +44,6 @@
                                 <input type="password" class="form-control" id="password" name="password"
                                     placeholder="请输入密码">
                             </div>
-
                         </div>
                     </form>
                 </div>
