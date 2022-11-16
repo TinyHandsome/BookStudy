@@ -6,6 +6,9 @@ import usersListPageTpl from '../views/users-pages.art'
 
 const htmlIndex = indexTpl({})
 const htmlSignin = signinTpl({})
+const pageSize = 10
+let dataList = []
+
 
 const _handleSubmit = (router) => {
     return (e) => {
@@ -24,9 +27,11 @@ const _signup = () => {
         url: '/api/users/signup',
         type: 'post',
         data: data,
-        success(res) {
-            console.log(res);
-            _list()
+        async success(res) {
+            // console.log(res);
+            // 添加数据后渲染
+            await _loadData()
+            _list(1)
         },
         error(res) {
             console.log(res);
@@ -37,7 +42,6 @@ const _signup = () => {
 }
 
 const _pagination = (data) => {
-    const pageSize = 10
     const total = data.length
     const pageCount = Math.ceil(total / pageSize)
     const pageArray = new Array(pageCount)
@@ -51,25 +55,32 @@ const _pagination = (data) => {
     // 第一页实现高亮
     $('#users-page-list li:nth-child(2)').addClass('active')
     // 实现其他页点击事件的高亮
-    $('#users-page-list li:not(:first-child, :last-child)').on('click', function() {
+    $('#users-page-list li:not(:first-child, :last-child)').on('click', function () {
         $(this).addClass('active').siblings().removeClass('active')
         // console.log($(this).index());
+        _list($(this).index())
+    })
+}
+
+const _loadData = () => {
+    return $.ajax({
+        url: '/api/users/list',
+        // async: false,
+        success(result) {
+            dataList = result.data
+            // 分页
+            _pagination(result.data)
+            _list(1)
+        }
     })
 }
 
 // 获取列表数据，并把结果放到html中
-const _list = () => {
-    $.ajax({
-        url: '/api/users/list',
-        success(result) {
-            $('#users-list').html(usersListTpl({
-                data: result.data
-            }))
-
-            // 分页
-            _pagination(result.data)
-        }
-    })
+const _list = (pageNo) => {
+    let start = (pageNo - 1) * pageSize
+    $('#users-list').html(usersListTpl({
+        data: dataList.slice(start, start + pageSize)
+    }))
 }
 
 const signin = (router) => {
@@ -83,7 +94,7 @@ const signin = (router) => {
 const signup = () => { }
 
 const index = (router) => {
-    return (req, res, next) => {
+    return async (req, res, next) => {
         res.render(htmlIndex)
 
         // 让页面撑满整个屏幕
@@ -92,8 +103,9 @@ const index = (router) => {
         // 填充用户列表
         $('#content').html(usersTpl())
 
-        // 渲染list
-        _list()
+        // 初次渲染list
+        await _loadData()
+        _list(1)
 
         // 点击保存，提交表单
         $('#users-save').on('click', _signup)
