@@ -37,7 +37,7 @@ const signup = async (req, res, next) => {
 }
 
 // 用户列表
-const list = async (req, res) => {
+const list = async (req, res, next) => {
     res.set('content-type', 'application/json;charset=utf-8')
 
     const listResult = await usersModel.findList()
@@ -46,5 +46,12 @@ const list = async (req, res) => {
     })
 }
 
+// 删除用户
+const remove = async (req, res, next) => {
+    const { id } = req.body
+    usersModel.remove(id)
+}
+
 exports.signup = signup
 exports.list = list
+exports.remove = remove

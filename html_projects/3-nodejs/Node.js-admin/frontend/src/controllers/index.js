@@ -24,16 +24,16 @@ const _signup = () => {
     const data = $('#users-form').serialize()
     $.ajax({
         // url: 'http://localhost:3000/api/users/signup',
-        url: '/api/users/signup',
+        url: '/api/users',
         type: 'post',
         data: data,
-        async success(res) {
+        success: (res) => {
             // console.log(res);
             // 添加数据后渲染
-            await _loadData()
+            _loadData()
             _list(1)
         },
-        error(res) {
+        error: (res) => {
             console.log(res);
         }
     })
@@ -63,13 +63,14 @@ const _pagination = (data) => {
 }
 
 const _loadData = () => {
-    return $.ajax({
-        url: '/api/users/list',
+    $.ajax({
+        url: '/api/users',
         // async: false,
         success(result) {
             dataList = result.data
             // 分页
             _pagination(result.data)
+            // 数据渲染
             _list(1)
         }
     })
@@ -86,7 +87,6 @@ const _list = (pageNo) => {
 const signin = (router) => {
     return (req, res, next) => {
         res.render(htmlSignin)
-
         $('#signin').on('submit', _handleSubmit(router))
     }
 }
@@ -94,7 +94,7 @@ const signin = (router) => {
 const signup = () => { }
 
 const index = (router) => {
-    return async (req, res, next) => {
+    return (req, res, next) => {
         res.render(htmlIndex)
 
         // 让页面撑满整个屏幕
@@ -102,10 +102,12 @@ const index = (router) => {
 
         // 填充用户列表
         $('#content').html(usersTpl())
+        $('#users-list').on('click', '.remove', () => {
+            console.log(0);
+        })
 
         // 初次渲染list
-        await _loadData()
-        _list(1)
+        _loadData()
 
         // 点击保存，提交表单
         $('#users-save').on('click', _signup)
