@@ -49,7 +49,21 @@ const list = async (req, res, next) => {
 // 删除用户
 const remove = async (req, res, next) => {
     const { id } = req.body
-    usersModel.remove(id)
+    let result = await usersModel.remove(id)
+    // console.log(result);
+    if (result) {
+        res.render('success', {
+            data: JSON.stringify({
+                message: '用户删除成功'
+            })
+        })
+    } else {
+        res.render('success', {
+            data: JSON.stringify({
+                message: '用户删除失败'
+            })
+        })
+    }
 }
 
 exports.signup = signup
