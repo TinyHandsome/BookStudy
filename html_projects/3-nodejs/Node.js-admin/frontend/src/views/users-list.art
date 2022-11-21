@@ -3,7 +3,7 @@
     <td>{{$index+1}}.</td>
     <td>{{$value.username}}</td>
     <td>
-        <button class="btn btn-danger">删除</button>
+        <button data-id="{{$value._id}}" class="btn btn-danger remove">删除</button>
     </td>
 </tr>
 {{/each}}

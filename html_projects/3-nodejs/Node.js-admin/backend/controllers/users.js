@@ -58,7 +58,7 @@ const remove = async (req, res, next) => {
             })
         })
     } else {
-        res.render('success', {
+        res.render('fail', {
             data: JSON.stringify({
                 message: '用户删除失败'
             })

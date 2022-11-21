@@ -6,7 +6,9 @@ import usersListPageTpl from '../views/users-pages.art'
 
 const htmlIndex = indexTpl({})
 const htmlSignin = signinTpl({})
-const pageSize = 10
+const pageSize = 3
+
+let curPage = 1
 let dataList = []
 
 
@@ -31,11 +33,11 @@ const _signup = () => {
             // console.log(res);
             // 添加数据后渲染
             _loadData()
-            _list(1)
+            _list(curPage)
         },
         error: (res) => {
             console.log(res);
-        }
+        }33
     })
 
     $btnClose.click()
@@ -53,13 +55,8 @@ const _pagination = (data) => {
     $('#users-page').html(htmlPage)
 
     // 第一页实现高亮
-    $('#users-page-list li:nth-child(2)').addClass('active')
-    // 实现其他页点击事件的高亮
-    $('#users-page-list li:not(:first-child, :last-child)').on('click', function () {
-        $(this).addClass('active').siblings().removeClass('active')
-        // console.log($(this).index());
-        _list($(this).index())
-    })
+    // $('#users-page-list li:nth-child(2)').addClass('active')
+    _setPageActive(curPage)
 }
 
 const _loadData = () => {
@@ -71,7 +68,7 @@ const _loadData = () => {
             // 分页
             _pagination(result.data)
             // 数据渲染
-            _list(1)
+            _list(curPage)
         }
     })
 }
@@ -91,6 +88,14 @@ const signin = (router) => {
     }
 }
 
+const _setPageActive = (index) => {
+    $('#users-page #users-page-list li:not(:first-child, :last-child)')
+        .eq(index - 1)
+        .addClass('active')
+        .siblings() 
+        .removeClass('active')
+}
+
 const signup = () => { }
 
 const index = (router) => {
@@ -102,8 +107,28 @@ const index = (router) => {
 
         // 填充用户列表
         $('#content').html(usersTpl())
-        $('#users-list').on('click', '.remove', () => {
-            console.log(0);
+
+        // 通过绑定代理，将父级的点击事件给子级
+        $('#users-list').on('click', '.remove', function () {
+            $.ajax({
+                url: '/api/users',
+                type: 'delete',
+                data: {
+                    id: $(this).data('id')
+                },
+                success: () => {
+                    _loadData()
+                }
+            })
+        })
+
+        // 实现其他页点击事件的高亮
+        $('#users-page').on('click', '#users-page-list li:not(:first-child, :last-child)', function () {
+            const index = $(this).index()
+            // console.log($(this).index());
+            _list(index)
+            curPage = index
+            _setPageActive(index)
         })
 
         // 初次渲染list
