@@ -5,7 +5,7 @@ const router = new SMERouter('root')
 
 import { signin, index } from '../controllers'
 
-router.route('/', signin(router))
+router.route('/signin', signin(router))
 
 router.route('/index', index(router))
 

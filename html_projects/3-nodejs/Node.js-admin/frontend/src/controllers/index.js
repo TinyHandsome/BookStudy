@@ -4,6 +4,8 @@ import usersTpl from '../views/users.art'
 import usersListTpl from '../views/users-list.art'
 import usersListPageTpl from '../views/users-pages.art'
 
+import router from '../routes'
+
 const htmlIndex = indexTpl({})
 const htmlSignin = signinTpl({})
 const pageSize = 10
@@ -107,7 +109,8 @@ const index = (router) => {
 
         // 填充用户列表
         $('#content').html(usersTpl())
-        // 【删除】通过绑定代理，将父级的点击事件给子级
+
+        // 【删除事件绑定】通过绑定代理，将父级的点击事件给子级
         $('#users-list').on('click', '.remove', function () {
             $.ajax({
                 url: '/api/users',
@@ -125,7 +128,7 @@ const index = (router) => {
                 }
             })
         })
-        // 实现其他页点击事件的高亮
+        // 【分页事件绑定】实现其他页点击事件的高亮
         $('#users-page').on('click', '#users-page-list li:not(:first-child, :last-child)', function () {
             const index = $(this).index()
             // console.log($(this).index());
@@ -147,6 +150,12 @@ const index = (router) => {
                 _list(curPage)
                 _setPageActive(curPage)
             }
+        })
+
+        // 【登出事件绑定】
+        $('#users-signout').on('click', (e) => {
+            e.preventDefault()
+            router.go('/signin')
         })
 
         // 初次渲染list

@@ -36,6 +36,23 @@ const signup = async (req, res, next) => {
     }
 }
 
+// 用户登录
+const signin = async (req, res, next) => {
+    const { username, _password } = req.body
+    let result = await usersModel.findUser(username)
+
+    if (result) {
+        let { password } = result
+    } else {
+        res.render('success', {
+            data: JSON.stringify({
+                message: '用户名错误'
+            })
+        })
+    }
+
+}
+
 // 用户列表
 const list = async (req, res, next) => {
     res.set('content-type', 'application/json;charset=utf-8')
@@ -67,5 +84,6 @@ const remove = async (req, res, next) => {
 }
 
 exports.signup = signup
+exports.signin = signin
 exports.list = list
 exports.remove = remove

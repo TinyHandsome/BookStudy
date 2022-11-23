@@ -12,3 +12,9 @@ exports.hash = (myPlaintextPassword) => {
         })
     })
 }
+
+exports.compare = () => {
+    bcrpt.compare(myPlaintextPassword, hash, function(err, result){
+        
+    })
+}
