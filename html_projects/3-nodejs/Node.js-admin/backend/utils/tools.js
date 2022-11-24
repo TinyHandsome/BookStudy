@@ -13,8 +13,10 @@ exports.hash = (myPlaintextPassword) => {
     })
 }
 
-exports.compare = () => {
-    bcrpt.compare(myPlaintextPassword, hash, function(err, result){
-        
+exports.compare = (myPlaintextPassword, hash) => {
+    return new Promise((resolve, reject) => {
+        bcrpt.compare(myPlaintextPassword, hash, function (err, result) {
+            resolve(result)
+        })
     })
 }

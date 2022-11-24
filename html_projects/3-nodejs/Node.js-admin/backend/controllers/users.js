@@ -1,5 +1,6 @@
 const usersModel = require('../models/users');
-const { hash } = require('../utils/tools');
+const { hash, compare } = require('../utils/tools');
+// const randomstring = require('randomstring');
 
 // 注册用户
 const signup = async (req, res, next) => {
@@ -38,19 +39,52 @@ const signup = async (req, res, next) => {
 
 // 用户登录
 const signin = async (req, res, next) => {
-    const { username, _password } = req.body
+    const { username, password } = req.body
     let result = await usersModel.findUser(username)
 
+    // 验证用户是否是合法用户
     if (result) {
-        let { password } = result
+        let { password: hash } = result
+        let compareResult = await compare(password, hash)
+        if (compareResult) {
+            // const sessionId = randomstring.generate()
+            // res.set('Set-Cookie', `sessionId=${sessionId}; Path=/; HttpOnly`)
+
+            req.session.username = username
+            // console.log(req.session);
+
+            res.render('success', {
+                data: JSON.stringify({
+                    username
+                })
+            })
+
+        } else {
+            // 密码错误
+            res.render('fail', {
+                data: JSON.stringify({
+                    message: '用户名或密码错误'
+                })
+            })
+        }
     } else {
-        res.render('success', {
+        // 用户名错误
+        res.render('fail', {
             data: JSON.stringify({
-                message: '用户名错误'
+                message: '用户名或密码错误'
             })
         })
     }
+}
 
+// 用户登出
+const signout = async (req, res, next) => {
+    req.session = null
+    res.render('success', {
+        data: JSON.stringify({
+            message: '成功退出登录'
+        })
+    })
 }
 
 // 用户列表
@@ -87,3 +121,4 @@ exports.signup = signup
 exports.signin = signin
 exports.list = list
 exports.remove = remove
+exports.signout = signout
