@@ -17,10 +17,27 @@ let dataList = []
 const _handleSubmit = (router) => {
     return (e) => {
         e.preventDefault();
-        router.go('/index')
+
+        // 提交表单
+        const data = $('#signin').serialize()
+        $.ajax({
+            url: '/api/users/signin',
+            type: 'post',
+            dataType: 'json',
+            data: data,
+            success: (res) => {
+                if (res.ret) {
+                    router.go('/index')
+                }
+            },
+            error: (res) => {
+                console.log(res);
+            }
+        })
     }
 }
 
+// 注册
 const _signup = () => {
     const $btnClose = $('#users-close')
 
@@ -35,7 +52,6 @@ const _signup = () => {
             // console.log(res);
             // 添加数据后渲染
             _loadData()
-            _list(curPage)
         },
         error: (res) => {
             console.log(res);
@@ -102,6 +118,19 @@ const signup = () => { }
 
 const index = (router) => {
     return (req, res, next) => {
+        $.ajax({
+            url: '/api/users/isAuth',
+            dataType: 'json',
+            success(result) {
+                if (result.ret) {
+                    router.go('/index')
+                } else {
+                    router.go('/signin')
+                }
+            }
+        })
+
+        // 渲染首页        
         res.render(htmlIndex)
 
         // 让页面撑满整个屏幕
@@ -155,7 +184,16 @@ const index = (router) => {
         // 【登出事件绑定】
         $('#users-signout').on('click', (e) => {
             e.preventDefault()
-            router.go('/signin')
+            // router.go('/signin')
+            $.ajax({
+                url: '/api/users/signout',
+                dataType: 'json',
+                success(result) {
+                    if (result.ret) {
+                        location.reload()
+                    }
+                }
+            })
         })
 
         // 初次渲染list

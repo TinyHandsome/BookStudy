@@ -117,8 +117,26 @@ const remove = async (req, res, next) => {
     }
 }
 
+// 验证用户登录状态
+const isAuth = async (req, res, next) => {
+    if (req.session.username) {
+        res.render('success', {
+            data: JSON.stringify({
+                username: req.session.username
+            })
+        })
+    } else {
+        res.render('fail', {
+            data: JSON.stringify({
+                message: '请登录'
+            })
+        })
+    }
+}
+
 exports.signup = signup
 exports.signin = signin
 exports.list = list
 exports.remove = remove
 exports.signout = signout
+exports.isAuth = isAuth

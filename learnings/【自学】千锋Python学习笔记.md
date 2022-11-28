@@ -62,6 +62,13 @@
 
 - input输入的数据为字符串
 
+- 逻辑运算符：返回True、False
+
+  - and
+  - or
+  - not
+
+
 
 
 
