@@ -3,8 +3,10 @@ import SMERouter from 'sme-router'
 const router = new SMERouter('root')
 
 
-import { signin, index } from '../controllers'
+import index from '../controllers/index'
+import signin from '../controllers/signin'
 
+// 路由守卫
 router.use((req) => {
     // 第一个打开的界面
     $.ajax({

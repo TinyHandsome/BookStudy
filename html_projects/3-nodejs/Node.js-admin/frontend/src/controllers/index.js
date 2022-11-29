@@ -1,41 +1,13 @@
 import indexTpl from '../views/index.art'
-import signinTpl from '../views/signin.art'
 import usersTpl from '../views/users.art'
 import usersListTpl from '../views/users-list.art'
 import usersListPageTpl from '../views/users-pages.art'
 
-import router from '../routes'
-
-const htmlIndex = indexTpl({})
-const htmlSignin = signinTpl({})
 const pageSize = 10
 
-let curPage = 1
+const htmlIndex = indexTpl({})
 let dataList = []
 
-
-const _handleSubmit = (router) => {
-    return (e) => {
-        e.preventDefault();
-
-        // 提交表单
-        const data = $('#signin').serialize()
-        $.ajax({
-            url: '/api/users/signin',
-            type: 'post',
-            dataType: 'json',
-            data: data,
-            success: (res) => {
-                if (res.ret) {
-                    router.go('/index')
-                }
-            },
-            error: (res) => {
-                console.log(res);
-            }
-        })
-    }
-}
 
 // 注册
 const _signup = () => {
@@ -61,22 +33,7 @@ const _signup = () => {
     $btnClose.click()
 }
 
-const _pagination = (data) => {
-    const total = data.length
-    const pageCount = Math.ceil(total / pageSize)
-    const pageArray = new Array(pageCount)
-
-    const htmlPage = usersListPageTpl({
-        pageArray
-    })
-
-    $('#users-page').html(htmlPage)
-
-    // 第一页实现高亮
-    // $('#users-page-list li:nth-child(2)').addClass('active')
-    _setPageActive(curPage)
-}
-
+// 从后端加载数据
 const _loadData = () => {
     $.ajax({
         url: '/api/users',
@@ -99,37 +56,47 @@ const _list = (pageNo) => {
     }))
 }
 
-const signin = (router) => {
-    return (req, res, next) => {
-        res.render(htmlSignin)
-        $('#signin').on('submit', _handleSubmit(router))
-    }
-}
-
-const _setPageActive = (index) => {
-    $('#users-page #users-page-list li:not(:first-child, :last-child)')
-        .eq(index - 1)
-        .addClass('active')
-        .siblings()
-        .removeClass('active')
-}
-
-const signup = () => { }
-
-const index = (router) => {
-    return (req, res, next) => {
+const _methods = () => {
+    // 【删除事件绑定】通过绑定代理，将父级的点击事件给子级
+    $('#users-list').on('click', '.remove', function () {
         $.ajax({
-            url: '/api/users/isAuth',
-            dataType: 'json',
-            success(result) {
-                if (result.ret) {
-                    router.go('/index')
-                } else {
-                    router.go('/signin')
+            url: '/api/users',
+            type: 'delete',
+            data: {
+                id: $(this).data('id')
+            },
+            success: () => {
+                _loadData()
+
+                if (dataList.length % pageSize === 1 && Math.ceil(dataList.length / pageSize) === curPage && curPage > 0) {
+                    curPage--
                 }
             }
         })
+    })
 
+    // 【登出事件绑定】
+    $('#users-signout').on('click', (e) => {
+        e.preventDefault()
+        // router.go('/signin')
+        $.ajax({
+            url: '/api/users/signout',
+            dataType: 'json',
+            success(result) {
+                if (result.ret) {
+                    location.reload()
+                }
+            }
+        })
+    })
+
+    // 点击保存，提交表单
+    $('#users-save').on('click', _signup)
+}
+
+const index = (router) => {
+
+    const loadIndex = (res) => {
         // 渲染首页        
         res.render(htmlIndex)
 
@@ -138,74 +105,28 @@ const index = (router) => {
 
         // 填充用户列表
         $('#content').html(usersTpl())
-
-        // 【删除事件绑定】通过绑定代理，将父级的点击事件给子级
-        $('#users-list').on('click', '.remove', function () {
-            $.ajax({
-                url: '/api/users',
-                type: 'delete',
-                data: {
-                    id: $(this).data('id')
-                },
-                success: () => {
-                    _loadData()
-
-                    if (dataList.length % pageSize === 1 && Math.ceil(dataList.length / pageSize) === curPage && curPage > 0) {
-                        curPage--
-                    }
-
-                }
-            })
-        })
-        // 【分页事件绑定】实现其他页点击事件的高亮
-        $('#users-page').on('click', '#users-page-list li:not(:first-child, :last-child)', function () {
-            const index = $(this).index()
-            // console.log($(this).index());
-            _list(index)
-            curPage = index
-            _setPageActive(index)
-        })
-        // 绑定上一页下一页逻辑
-        $('#users-page').on('click', '#users-page-list li:last-child', function () {
-            if (curPage < Math.ceil(dataList.length / pageSize)) {
-                curPage++
-                _list(curPage)
-                _setPageActive(curPage)
-            }
-        })
-        $('#users-page').on('click', '#users-page-list li:first-child', function () {
-            if (curPage > 1) {
-                curPage--
-                _list(curPage)
-                _setPageActive(curPage)
-            }
-        })
-
-        // 【登出事件绑定】
-        $('#users-signout').on('click', (e) => {
-            e.preventDefault()
-            // router.go('/signin')
-            $.ajax({
-                url: '/api/users/signout',
-                dataType: 'json',
-                success(result) {
-                    if (result.ret) {
-                        location.reload()
-                    }
-                }
-            })
-        })
-
         // 初次渲染list
         _loadData()
 
-        // 点击保存，提交表单
-        $('#users-save').on('click', _signup)
+        // 页面事件绑定
+        _methods()
+
+    }
+
+    return (req, res, next) => {
+        $.ajax({
+            url: '/api/users/isAuth',
+            dataType: 'json',
+            async: false,
+            success(result) {
+                if (result.ret) {
+                    loadIndex(res)
+                } else {
+                    router.go('/signin')
+                }
+            }
+        })
     }
 }
 
-export {
-    signin,
-    signup,
-    index
-}
+export default index
