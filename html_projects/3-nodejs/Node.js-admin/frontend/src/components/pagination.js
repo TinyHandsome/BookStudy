@@ -1,3 +1,5 @@
+import usersListPageTpl from '../views/users-pages.art'
+
 // 【分页事件绑定】实现其他页点击事件的高亮
 $('#users-page').on('click', '#users-page-list li:not(:first-child, :last-child)', function () {
     const index = $(this).index()
@@ -22,7 +24,7 @@ $('#users-page').on('click', '#users-page-list li:first-child', function () {
     }
 })
 
-const _pagination = (data) => {
+const pagination = (data) => {
     const total = data.length
     const pageCount = Math.ceil(total / pageSize)
     const pageArray = new Array(pageCount)
@@ -45,3 +47,6 @@ const _setPageActive = (index) => {
         .siblings()
         .removeClass('active')
 }
+
+
+export default pagination

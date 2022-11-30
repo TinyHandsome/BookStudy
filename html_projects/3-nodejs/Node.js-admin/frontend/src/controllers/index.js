@@ -1,7 +1,6 @@
 import indexTpl from '../views/index.art'
 import usersTpl from '../views/users.art'
 import usersListTpl from '../views/users-list.art'
-import usersListPageTpl from '../views/users-pages.art'
 
 const pageSize = 10
 
@@ -41,7 +40,7 @@ const _loadData = () => {
         success(result) {
             dataList = result.data
             // 分页
-            _pagination(result.data)
+            pagination(result.data, pageSize, curPage)
             // 数据渲染
             _list(curPage)
         }
