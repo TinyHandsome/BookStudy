@@ -1,7 +1,9 @@
 import indexTpl from '../views/index.art'
 import usersTpl from '../views/users.art'
 import usersListTpl from '../views/users-list.art'
+import pagination from '../components/pagination'
 
+let curPage = 1
 const pageSize = 10
 
 const htmlIndex = indexTpl({})
@@ -93,6 +95,12 @@ const _methods = () => {
     $('#users-save').on('click', _signup)
 }
 
+const _subscribe = () => {
+    $.on('changeCurPage', () => {
+        console.log(0);
+    })
+}
+
 const index = (router) => {
 
     const loadIndex = (res) => {
@@ -110,6 +118,8 @@ const index = (router) => {
         // 页面事件绑定
         _methods()
 
+        // 订阅事件
+        _subscribe()
     }
 
     return (req, res, next) => {

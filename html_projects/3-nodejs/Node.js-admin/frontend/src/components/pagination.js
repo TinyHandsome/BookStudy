@@ -6,6 +6,7 @@ $('#users-page').on('click', '#users-page-list li:not(:first-child, :last-child)
     // console.log($(this).index());
     _list(index)
     curPage = index
+    $.trigger('changeCurPage', curPage)
     _setPageActive(index)
 })
 // 绑定上一页下一页逻辑
@@ -23,8 +24,8 @@ $('#users-page').on('click', '#users-page-list li:first-child', function () {
         _setPageActive(curPage)
     }
 })
-
-const pagination = (data) => {
+ 
+const pagination = (data, pageSize, curPage) => {
     const total = data.length
     const pageCount = Math.ceil(total / pageSize)
     const pageArray = new Array(pageCount)
