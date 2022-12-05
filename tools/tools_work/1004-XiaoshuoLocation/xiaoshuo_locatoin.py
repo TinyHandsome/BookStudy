@@ -18,22 +18,22 @@
 # 这里是获取vscode配置文件json，读取成dict的过程
 # import sys
 # sys.path.append("E:/1-Work/3-Code/tools/tools_py")
+import os
+from math import ceil
+from dataclasses import dataclass
 from vscode_settings_tool import VSCODE
 vs = VSCODE()
 vscode_json_dict = vs.get_vscode_json_dict()
 # --------------------------------------------------
 
 
-from dataclasses import dataclass
-from math import ceil
-import os
-
-
 # 可以直接把文件路径粘到这里就行，不需要像我这样从vscode的配置文件中
+CURRENT_PAGE_PARAM = "thiefBook.currPageNumber"
 book_path = vscode_json_dict.get("thiefBook.filePath")
 page_size = vscode_json_dict.get("thiefBook.pageSize")
-current_page = vscode_json_dict.get("thiefBook.currPageNumber")
+current_page = vscode_json_dict.get(CURRENT_PAGE_PARAM)
 book_name = os.path.split(book_path)[-1]
+
 
 @dataclass
 class XiaoshuoLocation:
@@ -83,13 +83,15 @@ class XiaoshuoLocation:
     def search_words(self, aim_words):
         """寻找文字所在行"""
         find_count = 0
+        page_dict = {}
 
         # 在原始文件中找
         count = 1
         for line in self.view_list:
             if aim_words in line:
                 find_count += 1
-                print(count, ": ", line)
+                print('[{}]'.format(find_count), count, ": ", line)
+                page_dict[find_count] = count
             count += 1
 
         # 如果一直没有查到，将view_list换成往后偏移半个【line_length】的身位，放置查找的信息在边界
@@ -98,8 +100,12 @@ class XiaoshuoLocation:
             for line in self.after_half_view_list:
                 if aim_words in line:
                     find_count += 1
-                    print(count - 1, ": ", line)
+                    print('[{}]'.format(find_count), count - 1, ": ", line)
+                    page_dict[find_count] = count
+
                 count += 1
+
+        return page_dict
 
     def get_aim_line_info(self, page):
         return self.view_list[page-1]
@@ -151,5 +157,11 @@ if __name__ == '__main__':
             xsloc.set_line_length(int(new_line_length))
             xsloc.show_current_info()
 
-        xsloc.search_words(info)
+        page_dict = xsloc.search_words(info)
+        if page_dict:
+            index = input('请输入编号：\n')
+            line_index = page_dict.get(int(index))
+            vs.update_param(CURRENT_PAGE_PARAM, line_index)
+            print('【修改成功】已经更新页码...')
+
         print('\n')

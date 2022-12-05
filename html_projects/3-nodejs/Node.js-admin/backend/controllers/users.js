@@ -1,5 +1,5 @@
 const usersModel = require('../models/users');
-const { hash, compare } = require('../utils/tools');
+const { hash, compare, sign, verify } = require('../utils/tools');
 // const randomstring = require('randomstring');
 
 // 注册用户
@@ -50,8 +50,11 @@ const signin = async (req, res, next) => {
             // const sessionId = randomstring.generate()
             // res.set('Set-Cookie', `sessionId=${sessionId}; Path=/; HttpOnly`)
 
-            req.session.username = username
+            // req.session.username = username
             // console.log(req.session);
+
+            const token = sign(username)
+            res.set('X-Access-Token', token)
 
             res.render('success', {
                 data: JSON.stringify({

@@ -2,9 +2,10 @@ import indexTpl from '../views/index.art'
 import usersTpl from '../views/users.art'
 import usersListTpl from '../views/users-list.art'
 import pagination from '../components/pagination'
+import page from '../databus/page'
 
-let curPage = 1
-const pageSize = 10
+let curPage = page.curPage
+let pageSize = page.pageSize
 
 const htmlIndex = indexTpl({})
 let dataList = []
@@ -24,6 +25,7 @@ const _signup = () => {
         success: (res) => {
             // console.log(res);
             // 添加数据后渲染
+            page.setCurPage(1)
             _loadData()
         },
         error: (res) => {
@@ -69,8 +71,12 @@ const _methods = () => {
             success: () => {
                 _loadData()
 
-                if (dataList.length % pageSize === 1 && Math.ceil(dataList.length / pageSize) === curPage && curPage > 0) {
-                    curPage--
+                const isLastPage = Math.ceil(dataList.length / pageSize) === page.curPage
+                const restOne = dataList.length % pageSize === 1
+                const notPageFirtst = page.curPage > 0
+
+                if (restOne && isLastPage && notPageFirtst) {
+                    page.setCurPage(page.curPage - 1)
                 }
             }
         })
@@ -96,8 +102,9 @@ const _methods = () => {
 }
 
 const _subscribe = () => {
-    $.on('changeCurPage', () => {
-        console.log(0);
+    $('body').on('changeCurPage', () => {
+        _list(page.curPage)
+        // console.log(page.curPage);
     })
 }
 

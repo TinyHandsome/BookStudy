@@ -1,4 +1,12 @@
 class Page {
-    static pageSize = 10
-    static curPage = 1
+    constructor() {
+        this.curPage = 1
+        this.pageSize = 2
+    }
+
+    setCurPage(curPage) {
+        this.curPage = curPage
+    }
 }
+
+export default new Page()
