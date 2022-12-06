@@ -122,19 +122,37 @@ const remove = async (req, res, next) => {
 
 // 验证用户登录状态
 const isAuth = async (req, res, next) => {
-    if (req.session.username) {
+    let token = req.get('X-Access-Token')
+    try {
+        let result = verify(token)
+        // console.log(result);
         res.render('success', {
             data: JSON.stringify({
-                username: req.session.username
+                username: result.username
             })
         })
-    } else {
+
+    } catch (e) {
         res.render('fail', {
             data: JSON.stringify({
                 message: '请登录'
             })
         })
     }
+
+    // if (req.session.username) {
+    //     res.render('success', {
+    //         data: JSON.stringify({
+    //             username: req.session.username
+    //         })
+    //     })
+    // } else {
+    //     res.render('fail', {
+    //         data: JSON.stringify({
+    //             message: '请登录'
+    //         })
+    //     })
+    // }
 }
 
 exports.signup = signup

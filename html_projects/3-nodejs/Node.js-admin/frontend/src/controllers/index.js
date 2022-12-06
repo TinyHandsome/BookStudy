@@ -21,6 +21,9 @@ const _signup = () => {
         // url: 'http://localhost:3000/api/users/signup',
         url: '/api/users',
         type: 'post',
+        headers: {
+            'X-Access-Token': localStorage.getItem('lg-token') || ''
+        },
         data: data,
         success: (res) => {
             // console.log(res);
@@ -32,7 +35,6 @@ const _signup = () => {
             console.log(res);
         }
     })
-
     $btnClose.click()
 }
 
@@ -40,6 +42,9 @@ const _signup = () => {
 const _loadData = () => {
     $.ajax({
         url: '/api/users',
+        headers: {
+            'X-Access-Token': localStorage.getItem('lg-token') || ''
+        },
         // async: false,
         success(result) {
             dataList = result.data
@@ -65,6 +70,9 @@ const _methods = () => {
         $.ajax({
             url: '/api/users',
             type: 'delete',
+            headers: {
+                'X-Access-Token': localStorage.getItem('lg-token') || ''
+            },
             data: {
                 id: $(this).data('id')
             },
@@ -89,6 +97,9 @@ const _methods = () => {
         $.ajax({
             url: '/api/users/signout',
             dataType: 'json',
+            headers: {
+                'X-Access-Token': localStorage.getItem('lg-token') || ''
+            },
             success(result) {
                 if (result.ret) {
                     location.reload()
@@ -133,6 +144,9 @@ const index = (router) => {
         $.ajax({
             url: '/api/users/isAuth',
             dataType: 'json',
+            headers: {
+                'X-Access-Token': localStorage.getItem('lg-token') || ''
+            },
             async: false,
             success(result) {
                 if (result.ret) {

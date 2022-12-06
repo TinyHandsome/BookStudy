@@ -12,7 +12,9 @@ const _handleSubmit = (router) => {
             type: 'post',
             dataType: 'json',
             data: data,
-            success: (res) => {
+            success: (res, textStatus, jqXHR) => {
+                const token = jqXHR.getResponseHeader('X-Access-Token')
+                localStorage.setItem('lg-token', token)
                 if (res.ret) {
                     router.go('/index')
                 }
