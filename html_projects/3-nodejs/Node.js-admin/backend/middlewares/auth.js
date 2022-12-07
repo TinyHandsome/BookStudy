@@ -1,3 +1,5 @@
+const { hash, compare, sign, verify } = require('../utils/tools');
+
 const auth = (req, res, next) => {
     // if (req.session.username) {
     //     next()

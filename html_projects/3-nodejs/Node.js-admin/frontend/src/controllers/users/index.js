@@ -1,8 +1,10 @@
-import indexTpl from '../views/index.art'
-import usersTpl from '../views/users.art'
-import usersListTpl from '../views/users-list.art'
-import pagination from '../components/pagination'
-import page from '../databus/page'
+import indexTpl from '../../views/index.art'
+import usersTpl from '../../views/users.art'
+import usersListTpl from '../../views/users-list.art'
+import pagination from '../../components/pagination'
+import page from '../../databus/page'
+
+import { addUser } from './add-user'
 
 let curPage = page.curPage
 let pageSize = page.pageSize
@@ -11,32 +13,6 @@ const htmlIndex = indexTpl({})
 let dataList = []
 
 
-// 注册
-const _signup = () => {
-    const $btnClose = $('#users-close')
-
-    // 提交表单
-    const data = $('#users-form').serialize()
-    $.ajax({
-        // url: 'http://localhost:3000/api/users/signup',
-        url: '/api/users',
-        type: 'post',
-        headers: {
-            'X-Access-Token': localStorage.getItem('lg-token') || ''
-        },
-        data: data,
-        success: (res) => {
-            // console.log(res);
-            // 添加数据后渲染
-            page.setCurPage(1)
-            _loadData()
-        },
-        error: (res) => {
-            console.log(res);
-        }
-    })
-    $btnClose.click()
-}
 
 // 从后端加载数据
 const _loadData = () => {
@@ -94,28 +70,31 @@ const _methods = () => {
     $('#users-signout').on('click', (e) => {
         e.preventDefault()
         // router.go('/signin')
-        $.ajax({
-            url: '/api/users/signout',
-            dataType: 'json',
-            headers: {
-                'X-Access-Token': localStorage.getItem('lg-token') || ''
-            },
-            success(result) {
-                if (result.ret) {
-                    location.reload()
-                }
-            }
-        })
-    })
+        localStorage.setItem('lg-token', '')
+        location.reload()
 
-    // 点击保存，提交表单
-    $('#users-save').on('click', _signup)
+        // $.ajax({
+        //     url: '/api/users/signout',
+        //     dataType: 'json',
+        //     headers: {
+        //         'X-Access-Token': localStorage.getItem('lg-token') || ''
+        //     },
+        //     success(result) {
+        //         if (result.ret) {
+        //             location.reload()
+        //         }
+        //     }
+        // })
+    })
 }
 
 const _subscribe = () => {
     $('body').on('changeCurPage', () => {
         _list(page.curPage)
         // console.log(page.curPage);
+    })
+    $('body').on('addUser', () => {
+        _loadData()
     })
 }
 
@@ -130,6 +109,7 @@ const index = (router) => {
 
         // 填充用户列表
         $('#content').html(usersTpl())
+        $('#add-user-btn').on('click', addUser)
         // 初次渲染list
         _loadData()
 
