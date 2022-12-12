@@ -5,6 +5,9 @@ import pagination from '../../components/pagination'
 import page from '../../databus/page'
 
 import { addUser } from './add-user'
+import { usersList as usersListModel } from '../../models/users-list'
+import { auth as authModel } from '../../models/auth'
+import { usersRemove as usersRemoveModel } from '../../models/users-remove'
 
 let curPage = page.curPage
 let pageSize = page.pageSize
@@ -15,21 +18,13 @@ let dataList = []
 
 
 // 从后端加载数据
-const _loadData = () => {
-    $.ajax({
-        url: '/api/users',
-        headers: {
-            'X-Access-Token': localStorage.getItem('lg-token') || ''
-        },
-        // async: false,
-        success(result) {
-            dataList = result.data
-            // 分页
-            pagination(result.data, pageSize, curPage)
-            // 数据渲染
-            _list(curPage)
-        }
-    })
+const _loadData = async () => {
+    let result = await usersListModel()
+    dataList = result.data
+    // 分页
+    pagination(result.data, pageSize, curPage)
+    // 数据渲染
+    _list(curPage)
 }
 
 // 获取列表数据，并把结果放到html中
@@ -42,28 +37,19 @@ const _list = (pageNo) => {
 
 const _methods = () => {
     // 【删除事件绑定】通过绑定代理，将父级的点击事件给子级
-    $('#users-list').on('click', '.remove', function () {
-        $.ajax({
-            url: '/api/users',
-            type: 'delete',
-            headers: {
-                'X-Access-Token': localStorage.getItem('lg-token') || ''
-            },
-            data: {
-                id: $(this).data('id')
-            },
-            success: () => {
-                _loadData()
-
-                const isLastPage = Math.ceil(dataList.length / pageSize) === page.curPage
-                const restOne = dataList.length % pageSize === 1
-                const notPageFirtst = page.curPage > 0
-
-                if (restOne && isLastPage && notPageFirtst) {
-                    page.setCurPage(page.curPage - 1)
-                }
+    $('#users-list').on('click', '.remove', async function () {
+        let result = await usersRemoveModel($(this).data('id'))
+        if(result.ret){
+            _loadData()
+    
+            const isLastPage = Math.ceil(dataList.length / pageSize) === page.curPage
+            const restOne = dataList.length % pageSize === 1
+            const notPageFirtst = page.curPage > 0
+    
+            if (restOne && isLastPage && notPageFirtst) {
+                page.setCurPage(page.curPage - 1)
             }
-        })
+        }
     })
 
     // 【登出事件绑定】
@@ -120,22 +106,13 @@ const index = (router) => {
         _subscribe()
     }
 
-    return (req, res, next) => {
-        $.ajax({
-            url: '/api/users/isAuth',
-            dataType: 'json',
-            headers: {
-                'X-Access-Token': localStorage.getItem('lg-token') || ''
-            },
-            async: false,
-            success(result) {
-                if (result.ret) {
-                    loadIndex(res)
-                } else {
-                    router.go('/signin')
-                }
-            }
-        })
+    return async (req, res, next) => {
+        let result = await authModel()
+        if (result.ret) {
+            loadIndex(res)
+        } else {
+            router.go('/signin')
+        }
     }
 }
 

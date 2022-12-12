@@ -1,28 +1,19 @@
 import signinTpl from '../views/signin.art'
 const htmlSignin = signinTpl({})
+import { signin as signinModel } from '../models/signin'
 
 const _handleSubmit = (router) => {
-    return (e) => {
+    return async (e) => {
         e.preventDefault();
 
         // 提交表单
         const data = $('#signin').serialize()
-        $.ajax({
-            url: '/api/users/signin',
-            type: 'post',
-            dataType: 'json',
-            data: data,
-            success: (res, textStatus, jqXHR) => {
-                const token = jqXHR.getResponseHeader('X-Access-Token')
-                localStorage.setItem('lg-token', token)
-                if (res.ret) {
-                    router.go('/index')
-                }
-            },
-            error: (res) => {
-                console.log(res);
-            }
-        })
+        let result = await signinModel(data)
+        const token = result.jqXHR.getResponseHeader('X-Access-Token')
+        localStorage.setItem('lg-token', token)
+        if (result.res.ret) {
+            router.go('/index')
+        }
     }
 }
 

@@ -5,12 +5,12 @@ const router = new SMERouter('root')
 
 import index from '../controllers/users/index'
 import signin from '../controllers/signin'
-import { routerGuard as rgModel } from '../models/router-guard'
+import { auth as authModel } from '../models/auth'
 
 // 路由守卫
 router.use(async (req) => {
     // 第一个打开的界面
-    let result = await rgModel()
+    let result = await authModel()
 
     if (result.ret) {
         router.go('/index')
