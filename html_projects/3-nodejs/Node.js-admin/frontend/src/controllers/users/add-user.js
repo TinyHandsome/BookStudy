@@ -19,10 +19,9 @@ export const addUser = () => {
             $('body').trigger('addUser')
             // _loadData()
         }
-
         // 点击关闭模态框
         const $btnClose = $('#users-close')
-        $btnClose.click()
+        $btnClos.click()
     }
 
     // 点击保存，提交表单

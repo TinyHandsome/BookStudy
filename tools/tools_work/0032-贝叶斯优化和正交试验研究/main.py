@@ -53,7 +53,9 @@ optimizer = Optimizer(
     random_state=1234
 )
 result = optimizer.tell(x0, y0)
-next_x = optimizer.ask()
+# next_x = optimizer.ask(n_points=None)
+next_x = optimizer._ask()
+print(next_x)
 
 
 '''
