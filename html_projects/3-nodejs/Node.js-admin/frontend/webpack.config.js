@@ -23,11 +23,25 @@ module.exports = {
         rules: [
             {
                 test: /\.art$/,
-                use: { loader: 'art-template-loader' }
+                use: {
+                    loader: 'art-template-loader',
+                    options: {
+                        escape: false
+                    }
+                }
             },
             {
                 test: /\.css$/,
                 loaders: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: {
+                    loader: 'url-loader',
+                    options: {
+                        limit: 8192
+                    }
+                }
             }
         ]
     },

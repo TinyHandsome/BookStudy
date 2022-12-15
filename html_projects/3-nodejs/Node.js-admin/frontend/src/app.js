@@ -4,5 +4,6 @@ import './assets/common.css'
 // 载入路由
 import router from './routes'
 
-router.go('/')
+const hash = locatino.hash.slice(1)
+router.go(hash)
 

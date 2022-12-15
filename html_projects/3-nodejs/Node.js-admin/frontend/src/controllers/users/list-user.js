@@ -1,4 +1,3 @@
-import indexTpl from '../../views/index.art'
 import usersTpl from '../../views/users.art'
 import usersListTpl from '../../views/users-list.art'
 import pagination from '../../components/pagination'
@@ -12,9 +11,7 @@ import { usersRemove as usersRemoveModel } from '../../models/users-remove'
 let curPage = page.curPage
 let pageSize = page.pageSize
 
-const htmlIndex = indexTpl({})
 let dataList = []
-
 
 
 // 从后端加载数据
@@ -86,15 +83,12 @@ const _subscribe = () => {
 
 const index = (router) => {
 
-    const loadIndex = (res) => {
-        // 渲染首页        
-        res.render(htmlIndex)
-
-        // 让页面撑满整个屏幕
-        $(window, '.wrapper').resize()
-
+    const loadIndex = (res, next) => {
         // 填充用户列表
-        $('#content').html(usersTpl())
+        // $('#content').html(usersTpl())
+        next()
+        res.render(usersTpl({}))
+
         $('#add-user-btn').on('click', addUser)
         // 初次渲染list
         _loadData()
@@ -109,7 +103,7 @@ const index = (router) => {
     return async (req, res, next) => {
         let result = await authModel()
         if (result.ret) {
-            loadIndex(res)
+            loadIndex(res, next)
         } else {
             router.go('/signin')
         }
