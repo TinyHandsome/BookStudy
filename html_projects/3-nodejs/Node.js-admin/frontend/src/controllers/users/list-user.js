@@ -87,7 +87,7 @@ const index = (router) => {
         // 填充用户列表
         // $('#content').html(usersTpl())
         next()
-        res.render(usersTpl({}))
+        res.render(usersTpl())
 
         $('#add-user-btn').on('click', addUser)
         // 初次渲染list
