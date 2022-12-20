@@ -21,7 +21,7 @@ export const addUser = () => {
         }
         // 点击关闭模态框
         const $btnClose = $('#users-close')
-        $btnClos.click()
+        $btnClose.click()
     }
 
     // 点击保存，提交表单

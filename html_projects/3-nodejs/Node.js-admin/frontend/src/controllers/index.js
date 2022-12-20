@@ -25,7 +25,9 @@ const index = (router) => {
             const $as = $('#sidebar-menu li:not(:first-child) a')
             // let hash = location.hash.slice(1)
             let hash = location.hash
-            $as.find(`[href="${hash}"]`).parent().addClass('active').siblings().removeClass('active')
+            // $as.find(`[href="${hash}"]`).parent().addClass('active').siblings().removeClass('active')
+            // console.log($as.eq(0).attr('href'));
+            $as.filter(`[href="${hash}"]`).parent().addClass('active').siblings().removeClass('active');
 
         } else {
             router.go('/signin')
