@@ -1,5 +1,5 @@
 import page from '../../databus/page'
-import usersAddTpl from '../../views/users-addUser.art'
+import usersAddTpl from '../../views/users-add.art'
 import { usersAdd as usersAddModel } from '../../models/users-add'
 
 

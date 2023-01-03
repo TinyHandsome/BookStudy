@@ -1,5 +1,6 @@
 import indexTpl from '../views/index.art'
 import { auth as authModel } from '../models/auth'
+import pageHeader from '../components/pageheader'
 
 import img from '../assets/user2-160x160.jpg'
 
@@ -15,6 +16,9 @@ const index = (router) => {
             next(html)
             // 让页面撑满整个屏幕
             $(window, '.wrapper').resize()
+
+            // 加载页面导航栏
+            pageHeader()
 
 
             // $lis.on('click', function () {

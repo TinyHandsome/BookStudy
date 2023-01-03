@@ -3891,15 +3891,22 @@ event.emit('play', 'movie')
      - [adminlte](http://adminlte.la998.com/index2.html)
      - [其他框架汇总](http://sudasuta.com/bootstrap-admin-templates.html)
    - 启动：`npm run dev`
+   
 2. 后端 Backend
    - Node.js
    - Express
    - MongoDB（Mongoose）
    - 启动：`yarn start`
+   
 3. 开发架构
    - 前后端分离的开发架构
+   
 4. 笔记
    - 自定义首字段是以 `x` 开头的，比如把token放在头部字段中
+   
+   - 翻页点一次会执行多次是因为分页功能中绑定了多次，每次触发分页都会绑定一次。所以需要在绑定事件中，对第一个点击事件进行解绑，即：
+   
+     `$('#users-page').off('click').on('click', ...）`
 
 
 

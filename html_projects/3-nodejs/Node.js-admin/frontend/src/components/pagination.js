@@ -3,7 +3,7 @@ import page from '../databus/page'
 
 const _bindEvent = (data, pageSize) => {
     // 【分页事件绑定】实现其他页点击事件的高亮
-    $('#users-page').on('click', '#users-page-list li:not(:first-child, :last-child)', function () {
+    $('#users-page').off('click').on('click', '#users-page-list li:not(:first-child, :last-child)', function () {
         const index = $(this).index()
         // console.log($(this).index());
         // _list(index)
