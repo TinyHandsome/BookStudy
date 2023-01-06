@@ -17,7 +17,7 @@
                                 <input type="text" class="form-control" id="company-logo" name="company-logo"
                                     placeholder="请输入公司名称">
                             </div>
-                            <div class="form-group">
+                                <div class="form-group">
                                 <label for="position-name">职位名称</label>
                                 <input type="text" class="form-control" id="position-name" name="position-name"
                                     placeholder="请输入职位名称">

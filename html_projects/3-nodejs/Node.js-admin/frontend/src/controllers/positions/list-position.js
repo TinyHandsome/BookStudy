@@ -10,6 +10,7 @@ import { auth as authModel } from "../../models/auth";
 import positionsTpl from '../../views/positions.art'
 import positionsAddTpl from '../../views/positions-add.art'
 import pagination from '../../components/pagination'
+import positionsListTpl from '../../views/positions-list.art'
 
 const listPositions = (router) => {
     console.log('object');
@@ -19,10 +20,16 @@ const listPositions = (router) => {
             next()
             res.render(positionsTpl())
 
+            // 渲染list
+            $('#positions-list').html(positionsListTpl({
+                data: ['a', 'b', 'c', 'd']
+            }))
+            
+            // 分页
+            pagination(['a', 'b', 'c', 'd'], 2)
+
+            // 职位添加
             $('#positions-list-box').after(positionsAddTpl())
-
-            pagination(['a', 'b', 'c', 'd'], 3)
-
             $('#positions-save').off('click').on('click', () => {
                 const formbody = $('#position-form').serialize()
                 console.log(formbody);

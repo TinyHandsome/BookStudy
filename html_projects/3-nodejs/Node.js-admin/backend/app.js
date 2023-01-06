@@ -13,6 +13,7 @@ var cookieSession = require('cookie-session');
 var app = express();
 
 const userRouter = require('./routes/users');
+const positionRouter = require('./routes/positions');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +37,7 @@ app.use(cookieSession({
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 app.use('/api/users', userRouter)
+app.use('/api/positions', positionRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

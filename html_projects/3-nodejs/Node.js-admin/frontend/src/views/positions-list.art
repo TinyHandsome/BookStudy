@@ -1,0 +1,15 @@
+{{each data}}
+<tr>
+    <td>1.</td>
+    <td><img src="https://himg.bdimg.com/sys/portraitn/item/public.1.f2f451c9.cVsVkZmis-73I0Mh7a4yvg" width="50" height="50" alt=""></td>
+    <td>abc</td>
+    <td>abc</td>
+    <td>abc</td>
+    <td>abc</td>
+    <td>abc</td>
+    <td>
+        <button data-id="{{$value._id}}" class="btn btn-primary update">修改</button>
+        <button data-id="{{$value._id}}" class="btn btn-danger remove">删除</button>
+    </td>
+</tr>
+{{/each}}
