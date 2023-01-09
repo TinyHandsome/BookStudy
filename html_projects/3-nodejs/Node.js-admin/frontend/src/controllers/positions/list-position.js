@@ -11,6 +11,7 @@ import positionsTpl from '../../views/positions.art'
 import positionsAddTpl from '../../views/positions-add.art'
 import pagination from '../../components/pagination'
 import positionsListTpl from '../../views/positions-list.art'
+import { positionList } from "../../models/positions-list";
 
 const listPositions = (router) => {
     console.log('object');
@@ -20,19 +21,22 @@ const listPositions = (router) => {
             next()
             res.render(positionsTpl())
 
+            const list = await positionList()
+            console.log(list);
+
             // 渲染list
             $('#positions-list').html(positionsListTpl({
-                data: ['a', 'b', 'c', 'd']
+                data: list
             }))
             
             // 分页
-            pagination(['a', 'b', 'c', 'd'], 2)
+            pagination(list)
 
             // 职位添加
             $('#positions-list-box').after(positionsAddTpl())
             $('#positions-save').off('click').on('click', () => {
                 const formbody = $('#position-form').serialize()
-                console.log(formbody);
+                // console.log(formbody);
 
                 $('#positions-close').click()
             })

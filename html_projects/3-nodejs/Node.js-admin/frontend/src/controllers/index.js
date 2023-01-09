@@ -1,6 +1,7 @@
 import indexTpl from '../views/index.art'
 import { auth as authModel } from '../models/auth'
 import pageHeader from '../components/pageheader'
+import page from '../databus/page'
 
 import img from '../assets/user2-160x160.jpg'
 
@@ -32,6 +33,11 @@ const index = (router) => {
             // $as.find(`[href="${hash}"]`).parent().addClass('active').siblings().removeClass('active')
             // console.log($as.eq(0).attr('href'));
             $as.filter(`[href="${hash}"]`).parent().addClass('active').siblings().removeClass('active');
+
+            
+
+            // 当前url保存
+            page.setCurRoute(hash)
 
         } else {
             router.go('/signin')

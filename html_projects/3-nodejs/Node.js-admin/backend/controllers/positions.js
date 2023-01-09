@@ -1,3 +1,41 @@
-exports.add = (req, res, next) => {
-    res.send('positions')
+const moment = require('moment');
+const positionsModel = require('../models/positions');
+
+exports.add = async (req, res, next) => {
+    // console.log(req.body);
+    // console.log(moment().format('YYYY年MM月DD日 HH:mm'));
+
+    res.set('content-type', 'application/json;charset=utf-8')
+    let result = await positionsModel.add({
+        ...req.body,
+        createTime: moment().format('YYYY年MM月DD日 HH:mm')
+    })
+    // console.log(result);
+
+    if (result) {
+        res.render('success', {
+            data: JSON.stringify({
+                message: '职位添加成功'
+            })
+        })
+    } else {
+        res.render('fail', {
+            data: JSON.stringify({
+                message: '职位添加失败'
+            })
+        })
+    }
+}
+
+exports.list = async (req, res, next) => {
+    let result = await positionsModel.list()
+    if (result) {
+        res.json(result)
+    } else {
+        res.render('fail', {
+            data: JSON.stringify({
+                message: '获取数据失败'
+            })
+        })
+    }
 }
