@@ -30,8 +30,7 @@ router.route('/index/users', listUser(router))
 router.route('/index/positions', listPosition(router))
 
 router.route('*', (req, res, next) => {
-    res.redirect('/signin')
-    // res.redirect('/index/users')
+    res.redirect('/index/users')
 })
 
 // router.route('/signin', signin(router))

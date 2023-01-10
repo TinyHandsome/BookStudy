@@ -13,14 +13,13 @@ const index = (router) => {
                 subRouter: res.subRoute(),
                 img
             })
-            // 渲染首页        
+            // 渲染首页
             next(html)
             // 让页面撑满整个屏幕
             $(window, '.wrapper').resize()
 
             // 加载页面导航栏
             pageHeader()
-
 
             // $lis.on('click', function () {
             //     const url = $(this).attr('to')
@@ -34,7 +33,10 @@ const index = (router) => {
             // console.log($as.eq(0).attr('href'));
             $as.filter(`[href="${hash}"]`).parent().addClass('active').siblings().removeClass('active');
 
-            
+            // 是否重置page
+            if (hash !== page.curRoute) {
+                page.reset()
+            }
 
             // 当前url保存
             page.setCurRoute(hash)

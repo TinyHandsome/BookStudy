@@ -13,13 +13,13 @@
                     <form role="form" id="position-form">
                         <div class="box-body">
                             <div class="form-group">
-                                <label for="company-logo">公司名称</label>
-                                <input type="text" class="form-control" id="company-logo" name="company-logo"
+                                <label for="companyName">公司名称</label>
+                                <input type="text" class="form-control" id="companyName" name="companyName"
                                     placeholder="请输入公司名称">
                             </div>
                                 <div class="form-group">
-                                <label for="position-name">职位名称</label>
-                                <input type="text" class="form-control" id="position-name" name="position-name"
+                                <label for="positionName">职位名称</label>
+                                <input type="text" class="form-control" id="positionName" name="positionName"
                                     placeholder="请输入职位名称">
                             </div>
                             <div class="form-group">
