@@ -41,6 +41,26 @@ const index = (router) => {
             // 当前url保存
             page.setCurRoute(hash)
 
+            // 【登出事件绑定】
+            $('#users-signout').on('click', (e) => {
+                e.preventDefault()
+                // router.go('/signin')
+                localStorage.setItem('lg-token', '')
+                location.reload()
+
+                // $.ajax({
+                //     url: '/api/users/signout',
+                //     dataType: 'json',
+                //     headers: {
+                //         'X-Access-Token': localStorage.getItem('lg-token') || ''
+                //     },
+                //     success(result) {
+                //         if (result.ret) {
+                //             location.reload()
+                //         }
+                //     }
+                // })
+            })
         } else {
             router.go('/signin')
         }

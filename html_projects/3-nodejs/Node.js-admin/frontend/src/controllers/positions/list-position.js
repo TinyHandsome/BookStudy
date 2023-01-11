@@ -60,7 +60,6 @@ const listPositions = (router) => {
             // 点击添加职位
             addPosition()
 
-           
         } else {
             router.go('/signin')
         }
