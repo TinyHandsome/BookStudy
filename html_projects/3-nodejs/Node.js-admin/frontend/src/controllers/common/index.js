@@ -5,11 +5,12 @@ const remove = ({
     $box,
     url,
     loadData,
-    length
+    state
 }) => {
     // 【删除事件绑定】通过绑定代理，将父级的点击事件给子级
     $box.off('click').on('click', '.remove', async function () {
         // let result = await removeModel.remove($(this).data('id'))
+        length = state.list.length
         let result = await removeModel.remove({
             url,
             id: $(this).data('id')
@@ -24,8 +25,6 @@ const remove = ({
             if (restOne && isLastPage && notPageFirtst) {
                 page.setCurPage(page.curPage - 1)
             }
-            
-            length --
         }
     })
 }

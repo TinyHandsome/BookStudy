@@ -14,24 +14,27 @@ import { positionList} from "../../models/positions";
 import page from "../../databus/page";
 
 import { addPosition } from "./add-position";
+import { remove } from '../common'
 
 let pageSize = page.pageSize
 let curPage = page.curPage
-let dataList = []
+let state = {
+    list: []
+}
 
 // 获取列表数据，并把结果放到html中
 const _list = (pageNo) => {
     let start = (pageNo - 1) * pageSize
     $('#positions-list').html(positionsListTpl({
-        data: dataList.slice(start, start + pageSize)
+        data: state.list.slice(start, start + pageSize)
     }))
 }
 
 const _loadData = async () => {
     let list = await positionList()
-    dataList = list
+    state.list = list
     // 分页
-    pagination(dataList)
+    pagination(list)
     // 数据渲染
     _list(curPage)
 }
@@ -59,6 +62,14 @@ const listPositions = (router) => {
             _subscribe()
             // 点击添加职位
             addPosition()
+
+            remove({
+                $box: $('#positions-list'),
+                // 传递一个引用类型的值 state，在删除组件里能实时获取数据条数
+                state,
+                url: '/api/positions/remove',
+                loadData: _loadData
+            })
 
         } else {
             router.go('/signin')

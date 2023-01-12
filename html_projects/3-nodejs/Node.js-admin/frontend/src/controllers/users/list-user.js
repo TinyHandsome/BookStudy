@@ -12,15 +12,19 @@ import { remove } from '../common'
 let curPage = page.curPage
 let pageSize = page.pageSize
 
-let dataList = []
+let state = {
+    list: []
+}
 
 
 // 从后端加载数据
 const _loadData = async () => {
     let result = await usersListModel()
-    dataList = result.data
+
+    state.list = result.data
+
     // 分页
-    pagination(result.data, pageSize, curPage)
+    pagination(result.data)
     // 数据渲染
     _list(curPage)
 }
@@ -29,7 +33,7 @@ const _loadData = async () => {
 const _list = (pageNo) => {
     let start = (pageNo - 1) * pageSize
     $('#users-list').html(usersListTpl({
-        data: dataList.slice(start, start + pageSize)
+        data: state.list.slice(start, start + pageSize)
     }))
 }
 
@@ -60,7 +64,8 @@ const index = (router) => {
             // 页面事件绑定
             remove({
                 $box: $('#users-list'),
-                length: dataList.length,
+                // 传递一个引用类型的值 state，在删除组件里能实时获取数据条数
+                state,
                 url: '/api/users',
                 loadData: _loadData
             })

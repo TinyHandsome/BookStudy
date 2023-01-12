@@ -39,3 +39,30 @@ exports.list = async (req, res, next) => {
         })
     }
 }
+
+exports.remove = async (req, res, next) => {
+    res.set('content-type', 'application/json;charset=utf-8')
+    try {
+        let result = await positionsModel.remove(req.body.id)
+        if (result.deletedCount > 0) {
+            res.render('success', {
+                data: JSON.stringify({
+                    message: '职位删除成功'
+                })
+            })
+        } else {
+            res.render('fail', {
+                data: JSON.stringify({
+                    message: '职位删除失败，id错误'
+                })
+            })
+        }
+    } catch (err) {
+        res.render('fail', {
+            data: JSON.stringify({
+                message: '职位删除失败，数据库操作错误'
+            })
+        })
+        console.log(err);
+    }
+}

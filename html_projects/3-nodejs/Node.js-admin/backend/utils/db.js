@@ -20,6 +20,7 @@ var Users = mongoose.model('users', usersSchema)
 
 // 构建positions的Model
 var positionsSchema = mongoose.mongoose.Schema({
+    companyLogo: String,
     companyName: String,
     positionName: String,
     city: String,
