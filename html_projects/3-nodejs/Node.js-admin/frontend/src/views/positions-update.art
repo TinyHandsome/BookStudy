@@ -1,16 +1,16 @@
-<div class="modal fade" id="pos-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="pos-modal-update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">添加职位</h4>
+                <h4 class="modal-title">编辑职位</h4>
             </div>
             <div class="modal-body">
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <!-- form start -->
-                    <form role="form" id="position-form" enctype="multipart/form-data">
+                    <form role="form" id="position-form-update" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="companyLogo">公司Logo</label>

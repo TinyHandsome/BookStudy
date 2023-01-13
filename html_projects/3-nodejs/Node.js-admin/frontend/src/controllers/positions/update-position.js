@@ -1,10 +1,10 @@
 import page from '../../databus/page'
-import positionsAddTpl from '../../views/positions-add.art'
+import positionsUpdateTpl from '../../views/positions-update.art'
 import { positionsAdd } from '../../models/positions'
 
 // 添加职位
-export const addPosition = () => {
-    $('#positions-list-box').after(positionsAddTpl())
+export const updatePosition = () => {
+    $('#positions-list-box').after(positionsUpdateTpl())
 
     // 提交表单
     const _save = async () => {
@@ -12,14 +12,14 @@ export const addPosition = () => {
         // const data = $('#position-form').serialize()
 
         try {
-            let result = await positionsAdd()
+            // let result = await positionsAdd()
 
-            if (result.ret) {
-                page.setCurPage(1)
-                // 告知list页面要重新渲染
-                $('body').trigger('addPosition')
-                // _loadData()
-            }
+            // if (result.ret) {
+            //     page.setCurPage(1)
+            //     // 告知list页面要重新渲染
+            //     $('body').trigger('addPosition')
+            //     // _loadData()
+            // }
             // 点击关闭模态框
             const $btnClose = $('#positions-close')
             $btnClose.click()

@@ -14,6 +14,7 @@ import { positionList} from "../../models/positions";
 import page from "../../databus/page";
 
 import { addPosition } from "./add-position";
+import { updatePosition } from "./update-position";
 import { remove } from '../common'
 
 let pageSize = page.pageSize
@@ -62,6 +63,8 @@ const listPositions = (router) => {
             _subscribe()
             // 点击添加职位
             addPosition()
+            // 点击编辑职位
+            updatePosition()
 
             remove({
                 $box: $('#positions-list'),
