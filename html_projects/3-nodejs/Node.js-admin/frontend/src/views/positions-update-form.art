@@ -1,0 +1,30 @@
+<div class="box-body">
+    <div class="form-group">
+        <label for="companyLogo">公司Logo</label>
+        <img src="http://localhost:3000/uploads/{{data.companyLogo}}" alt="" style="width: 50px; height: 50px;">
+        <input type="file" class="form-control" id="companyLogo" name="companyLogo"
+            placeholder="请输入公司Logo">
+    </div>
+    <div class="form-group">
+        <label for="companyName">公司名称</label>
+        <input type="text" class="form-control" id="companyName" name="companyName"
+            placeholder="请输入公司名称" value="{{data.companyName}}">
+    </div>
+        <div class="form-group">
+        <label for="positionName">职位名称</label>
+        <input type="text" class="form-control" id="positionName" name="positionName"
+            placeholder="请输入职位名称" value="{{data.positionName}}">
+    </div>
+    <div class="form-group">
+        <label for="city">城市</label>
+        <input type="text" class="form-control" id="city" name="city"
+                placeholder="请输入城市" value="{{data.city}}">
+    </div>
+    <div class="form-group">
+        <label for="salary">职位薪资</label>
+        <input type="text" class="form-control" id="salary" name="salary"
+            placeholder="请输入职位薪资" value="{{data.salary}}">
+    </div>
+    <input type="hidden" name="id" value="{{data._id}}">
+    <input type="hidden" name="companyLogo_old" value="{{data.companyLogo}}">
+</div>

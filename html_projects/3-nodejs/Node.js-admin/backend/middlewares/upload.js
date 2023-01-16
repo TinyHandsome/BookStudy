@@ -70,13 +70,12 @@ const uploadMiddleware = (req, res, next) => {
                 const { companyLogo_old } = req.body
                 try {
                     fs.unlinkSync(path.join(__dirname, `../public/uploads/${companyLogo_old}`))
-                    req.companyLogo = fn
-                    next()
                 } catch (err) {
                     console.log(err);
                 }
-                next()
             }
+            req.companyLogo = fn
+            next()
         }
     })
 }

@@ -10,11 +10,11 @@ import { auth as authModel } from "../../models/auth";
 import positionsTpl from '../../views/positions.art'
 import pagination from '../../components/pagination'
 import positionsListTpl from '../../views/positions-list.art'
-import { positionList} from "../../models/positions";
+import { positionList } from "../../models/positions";
 import page from "../../databus/page";
 
 import { addPosition } from "./add-position";
-import { updatePosition } from "./update-position";
+import { updatePosition, fillPositionsUpdateTpl } from "./update-position";
 import { remove } from '../common'
 
 let pageSize = page.pageSize
@@ -63,8 +63,6 @@ const listPositions = (router) => {
             _subscribe()
             // 点击添加职位
             addPosition()
-            // 点击编辑职位
-            updatePosition()
 
             remove({
                 $box: $('#positions-list'),
@@ -72,6 +70,13 @@ const listPositions = (router) => {
                 state,
                 url: '/api/positions/remove',
                 loadData: _loadData
+            })
+
+            // 渲染修改模态框
+            updatePosition()
+            $('#positions-list').off('click').on('click', '.positions-update', function () {
+                // 编辑职位
+                fillPositionsUpdateTpl($(this).data('id'))
             })
 
         } else {

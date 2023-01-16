@@ -95,3 +95,16 @@ exports.update = async (req, res, next) => {
         })
     }
 }
+
+exports.listone = async (req, res, next) => {
+    let result = await positionsModel.listone(req.body.id)
+    if (result) {
+        res.json(result)
+    } else {
+        res.render('fail', {
+            data: JSON.stringify({
+                message: '获取数据失败'
+            })
+        })
+    }
+}

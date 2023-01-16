@@ -8,7 +8,7 @@
     <td>{{$value.salary}}</td>
     <td>{{$value.createTime}}</td>
     <td>
-        <button data-id="{{$value._id}}" class="btn btn-primary update" data-toggle="modal" data-target="#pos-modal-update">编辑</button>
+        <button data-id="{{$value._id}}" class="btn btn-primary positions-update" data-toggle="modal" data-target="#pos-modal-update">编辑</button>
         <button data-id="{{$value._id}}" class="btn btn-danger remove">删除</button>
     </td>
 </tr>
