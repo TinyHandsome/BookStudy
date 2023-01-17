@@ -12,7 +12,7 @@ export const updatePosition = () => {
     const _save = async () => {
 
         // const data = $('#position-form').serialize()
-
+ 
         try {
             let result = await positionsUpdate()
 
@@ -23,7 +23,7 @@ export const updatePosition = () => {
                 // _loadData()
             }
             // 点击关闭模态框
-            const $btnClose = $('#positions-close')
+            const $btnClose = $('#positions-close-update')
             $btnClose.click()
         } catch (err) {
             console.log(err);
@@ -31,7 +31,7 @@ export const updatePosition = () => {
     }
 
     // 点击保存，提交表单
-    $('#positions-save').off('click').on('click', _save)
+    $('#positions-save-update').off('click').on('click', _save)
 }
 
 export const fillPositionsUpdateTpl = async (id) => {

@@ -6,7 +6,7 @@ const fs = require('fs');
 // const upload = multer({
 //     dest: path.join(__dirname, '../public/uploads')
 // })
-let fn = ''
+// let fn = ''
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         let ext = mime.getExtension(file.mimetype)
-        fn = file.fieldname + '-' + Date.now() + '.' + ext
+        let fn = file.fieldname + '-' + Date.now() + '.' + ext
         cb(null, fn)
     }
 })
@@ -66,15 +66,20 @@ const uploadMiddleware = (req, res, next) => {
             })
         } else {
             // 一切都好
-            if (fn !== '') {
-                const { companyLogo_old } = req.body
+            const { companyLogo_old } = req.body
+            if (req.file && companyLogo_old) {
                 try {
                     fs.unlinkSync(path.join(__dirname, `../public/uploads/${companyLogo_old}`))
+                    req.companyLogo = req.file.filename
                 } catch (err) {
                     console.log(err);
                 }
+            } else if (!req.file && companyLogo_old){
+                req.companyLogo = companyLogo_old
+            } else {
+                req.companyLogo = req.file.filename
             }
-            req.companyLogo = fn
+
             next()
         }
     })

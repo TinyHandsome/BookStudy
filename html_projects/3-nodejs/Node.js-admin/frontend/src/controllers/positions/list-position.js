@@ -74,7 +74,7 @@ const listPositions = (router) => {
 
             // 渲染修改模态框
             updatePosition()
-            $('#positions-list').off('click').on('click', '.positions-update', function () {
+            $('#positions-list').off('click', '.positions-update').on('click', '.positions-update', function () {
                 // 编辑职位
                 fillPositionsUpdateTpl($(this).data('id'))
             })
