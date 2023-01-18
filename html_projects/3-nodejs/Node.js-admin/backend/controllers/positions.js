@@ -14,6 +14,7 @@ exports.add = async (req, res, next) => {
     // console.log(result);
 
     if (result) {
+        process.socket.emit('message', 'ok')
         res.render('success', {
             data: JSON.stringify({
                 message: '职位添加成功'
