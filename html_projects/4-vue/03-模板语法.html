@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        .red {
+            background-color: red;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+    </style>
+    <script src="lib/vue.js"></script>
+</head>
+
+<body>
+    <div id="box">
+        {{myname}}-{{myage}}
+        {{10>20?'aaa':'bbb'}}
+        <div :class="whichcolor">切换背景色1</div>
+        <div :class="isColor?'red':'yellow'">切换背景色2</div>
+
+        <img :src="imgpath">
+        <button @click="handleChange">change</button>
+
+        <!-- v-show v-if 指令 -->
+        <div v-show="isShow">我是动态显示和隐藏</div>
+        <div v-if="isCreated">我是动态创建和删除</div>
+
+        <!-- v-for 列表渲染的指令 -->
+        <ul>
+            <li v-for="(item, index) in list">
+                {{item}} - {{index}}
+            </li>
+        </ul>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#box",
+            data: {
+                myname: "kerwin",
+                myage: 100,
+                whichcolor: "red",
+                isColor: true,
+                imgpath: "",
+                isShow: false,
+                isCreated: false,
+
+                list: ["aaa", "bbb", "ccc", "ddd"]
+            },
+
+            // 方法
+            methods: {
+                handleChange() {
+                    console.log("handleChange", this);
+                    this.myname = "tiechui"
+                    this.myage = 18
+                    this.whichcolor = "yellow"
+                    this.isColor = !this.isColor
+                    this.imgpath = "https://img-blog.csdnimg.cn/c944cb785bb946898ed1a018ad717104.jpeg"
+                    this.isShow = !this.isShow
+                    this.isCreated = !this.isCreated
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -6,6 +6,8 @@
 
 - 封面 | 摘要 | 关键词
 
+  ![首页](https://img-blog.csdnimg.cn/c944cb785bb946898ed1a018ad717104.jpeg)
+
   千锋Vue学习笔记
 
   ```
@@ -27,7 +29,14 @@
 
 ## 1. 前言
 
-
+1. Vue是通过拦截变量的get和set方法，来进行监听和更新的
+2. `Object.defineProperty`有以下缺点：
+   1. 无法监听es6的Set、Map变化
+   2. 无法监听Class类型的数据
+   3. 属性的新加或者删除也无法监听
+   4. 数组元素的增加和删除也无法监听
+3. `:src`、`:class`这样的写法的完整写法是：`v-bind:src`
+4. 同理，事件 `@click`绑定的完整写法是：`v-on:click`
 
 
 
