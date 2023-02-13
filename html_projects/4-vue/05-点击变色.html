@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style: none;
+            display: flex;
+        }
+        li{
+            flex: 1;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+        }
+        .active{
+            background: green;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <ul>
+            <li v-for="(data,index) in datalist" :class="current===index?'active':''" @click="handleClick(index)">
+                {{data}}
+            </li>
+        </ul>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#box",
+            data: {
+                datalist: ["首页", "列表", "我的"],
+                current: 0,
+            },
+            methods: {
+                handleClick(index){
+                    this.current = index
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
