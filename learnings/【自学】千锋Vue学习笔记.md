@@ -72,6 +72,16 @@
    1. `v-bind:src`：`:src`
    2. `v-on:click`：`@click`
 
+4. 关于vue数据对象新增拦截属性的解决方案
+
+   - vue2：
+     - `Vue.set(vm.classobj, "dd", true)`
+     - `Vue.set(vm.styleobj, "fontSize", "30px")`
+   - vue3: 支持动态增加属性的拦截
+   - **动态切换这里可以用对象，也可以用数组，用数组的时候vue两个版本都正常**
+   - 注意：如果是直接操作 `:style` 的形式，需要按照js的语法去设置css，即需要用驼峰命名法
+   - 
+
 
 
 

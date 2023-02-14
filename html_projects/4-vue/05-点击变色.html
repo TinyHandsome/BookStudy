@@ -8,29 +8,47 @@
     <title>Document</title>
     <script src="lib/vue.js"></script>
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
         }
+
         ul {
             list-style: none;
             display: flex;
         }
-        li{
+
+        li {
             flex: 1;
             height: 50px;
             line-height: 50px;
             text-align: center;
         }
-        .active{
+
+        .active {
             background: green;
         }
-        
+
+        .aa {
+            background: red;
+        }
+
+        .bb {
+            color: blue;
+        }
+
+        .cc {
+            color: yellow;
+        }
     </style>
 </head>
 
 <body>
     <div id="box">
+        <div :class="classobj">动态切换class-1-对象</div>
+        <div :class="classarr">动态切换class-2-数组</div>
+
+        <div :style="styleobj">动态切换style-1-对象</div>
         <ul>
             <li v-for="(data,index) in datalist" :class="current===index?'active':''" @click="handleClick(index)">
                 {{data}}
@@ -43,13 +61,25 @@
             data: {
                 datalist: ["首页", "列表", "我的"],
                 current: 0,
+                classobj: {
+                    aa: true,
+                    bb: true,
+                    cc: false
+                },
+                classarr: ["aa", "bb"],
+                styleobj: {
+                    backgroundColor: 'brown'
+                }
             },
             methods: {
-                handleClick(index){
+                handleClick(index) {
                     this.current = index
                 }
             }
         })
+
+        // vue2的解决方案，Vue.set(vm.classobj, "dd", true)
+        // 
     </script>
 </body>
 
