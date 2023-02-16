@@ -62,6 +62,9 @@
 
    - `v-bind`：动态绑定属性
    - `v-if`：动态创建/删除
+     - `v-else`
+     - `v-else-if`
+     - `template v-if`：包装元素template不会被创建
    - `v-show`：动态显示/隐藏
    - `v-on:click`：绑定事件
    - `v-for`：遍历
@@ -80,7 +83,46 @@
    - vue3: 支持动态增加属性的拦截
    - **动态切换这里可以用对象，也可以用数组，用数组的时候vue两个版本都正常**
    - 注意：如果是直接操作 `:style` 的形式，需要按照js的语法去设置css，即需要用驼峰命名法
-   - 
+
+5. template是一个包装元素，可以控制子元素的同生共死，同时不会影响dom结构
+
+6. 列表渲染
+
+   1. `v-for`（特殊 v-for=“n in 10”）
+
+      1. in
+      2. of
+
+      没有区别
+
+   2. key
+
+      1. 跟踪每个节点的身份，从而重用和重新排序现有元素
+      2. 理想的key值是每项都有的且唯一的id，data.id
+
+   3. 数组更新检测
+
+      1. 使用以下方法操作数组，可以检测变动
+         - `push`
+         - `pop`
+         - `shift`
+         - `unshift`
+         - `splice`
+         - `soft`
+         - `reverse`
+      2. 新数组替换旧数组
+         - `filter`
+         - `concat`
+         - `slice`
+         - `map`
+      3. 不能检测以下变动的数组
+
+   4. vue 操作dom底层，虚拟dom
+
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/2785ead09eab41e688201be7a350a6ae.png)
+
+   5. 
+
 
 
 

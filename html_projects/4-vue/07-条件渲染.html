@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+</head>
+
+<body>
+    <div id="box">
+        <div v-if="isCreated">111</div>
+        <div v-if="!isCreated">222</div>
+
+        <h2>所有订单</h2>
+        <ul>
+            <li v-for="(item, index) in datalist" :key="index">
+                {{item.title}}--{{item.code}}
+                <span v-if="item.code === 0">未付款</span>
+                <span v-else-if="item.code === 1">代发货</span>
+                <span v-else-if="item.code === 2">已发货</span>
+                <span v-else="item.code === 3">已完成</span>
+            </li>
+        </ul>
+
+        <template v-if="isCreated">
+            <div>111</div>
+            <div>222</div>
+            <div>333</div>
+        </template>
+
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el: "#box",
+            data: {
+                isCreated: false,
+                datalist: [
+                    {
+                        title: "111",
+                        state: "未支付",
+                        code: 0
+                    },
+                    {
+                        title: "222",
+                        state: "待发货",
+                        code: 1,
+                    },
+                    {
+                        title: "333",
+                        state: "已发货",
+                        code: 2,
+                    },
+                    {
+                        title: "444",
+                        state: "已完成",
+                        code: 3,
+                    },
+                ]
+            }
+        })
+    </script>
+</body>
+
+</html>

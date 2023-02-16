@@ -9,7 +9,42 @@
 </head>
 <body>
     <div id="box">
-        
+        {{10+20}}
+        {{myname}}
+        {{mytext}}
+        <input type="text" v-model="mytext">
+        <button @click="handleAdd">add</button>
+
+        <div :class="classobj">动态切换class对象写法</div>
     </div>
+    <script>
+        // vue2
+        // var vm = new Vue({
+        //     el: "#box"
+        // })
+
+        // vue3
+        var obj = {
+            // 函数式
+            data() {
+                return {
+                    myname: "kerwin",
+                    mytext: "lalala",
+                    classobj: {
+                        aa: true,
+                        bb: true,
+                        cc: false
+                    }
+                }
+            },
+            methods: {
+                handleAdd(){
+                    console.log("object", this.mytext);
+                    this.classobj.dd = true
+                }
+            }
+        }
+        Vue.createApp(obj).mount("#box")
+    </script>
 </body>
 </html>
