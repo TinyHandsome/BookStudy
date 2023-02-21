@@ -110,18 +110,40 @@
          - `splice`
          - `soft`
          - `reverse`
+   
       2. 新数组替换旧数组
          - `filter`
          - `concat`
          - `slice`
          - `map`
+
       3. 不能检测以下变动的数组
 
-   4. vue 操作dom底层，虚拟dom
+         ```
+         vm.items[indexOfItem] = newValue
+         ```
 
+         *解决*：
+   
+         - `Vue.set(example1.items, indexOfItem, newValue)`
+         - splice
+   
+      4. 应用：显示过滤结果
+   
+   4. 事件处理
+   
+      1. 监听事件-直接触发代码
+      2. 方法事件处理器-写函数名 handleClick
+   
+   5. vue 操作dom底层，虚拟dom
+   
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/2785ead09eab41e688201be7a350a6ae.png)
-
-   5. 
+   
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/3ab4b9b9db954230a111a3118a7ea8f8.png)
+   
+   6. change和input的区别
+   
+      - change只有在输入框失去焦点，且内容发生改变时，才会触发函数
 
 
 
