@@ -110,7 +110,7 @@
          - `splice`
          - `soft`
          - `reverse`
-   
+
       2. 新数组替换旧数组
          - `filter`
          - `concat`
@@ -124,26 +124,49 @@
          ```
 
          *解决*：
-   
+
          - `Vue.set(example1.items, indexOfItem, newValue)`
          - splice
-   
+
       4. 应用：显示过滤结果
-   
+
    4. 事件处理
-   
+
       1. 监听事件-直接触发代码
       2. 方法事件处理器-写函数名 handleClick
-   
+      3. **内联处理器方法-执行函数表达式**  `handleClick($event)`，`$event` 事件对象
+         - 推荐
+         - 需要加对事件的引用的话，就直接$加上就行，全包~
+      4. 事件修饰符
+         - .stop
+         - .prevent
+         - .capture
+         - .self
+         - .once
+
    5. vue 操作dom底层，虚拟dom
-   
+
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/2785ead09eab41e688201be7a350a6ae.png)
-   
+
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/3ab4b9b9db954230a111a3118a7ea8f8.png)
-   
+
    6. change和input的区别
-   
+
       - change只有在输入框失去焦点，且内容发生改变时，才会触发函数
+
+   7. 函数加括号和不加括号的区别
+
+      - 需要传参的时候加括号
+
+      - 如果不加括号：可以**获取事件对象**
+
+        函数增加形参 `evt`，那么 `evt.target` 就是源dom，`evt.target.value` 就是input dom里的值
+
+      - 如果两种参数都需要传递的话，采用该方案：`handleAdd1($event, param_1, param_2, param_3)`
+
+        - 这里的 `$event` 是写死的，不能换其他的变量名
+
+      - 直接写表达式同样可以完成该请求：`count++`
 
 
 
