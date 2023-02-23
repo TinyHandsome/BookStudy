@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+        #overlay {
+            background: rgba(0, 0, 0, 0.6);
+            width: 100%;
+            margin: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        #center {
+            background: #ffff;
+            border-radius: 5px;
+            padding-top: 15px;
+            padding-left: 30px;
+            padding-bottom: 15px;
+            width: 290px;
+            height: 160px;
+            position: fixed;
+            margin: auto;
+            left: 0;
+            right: 0;
+            top: 0 bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 模态框 -->
+    <div id="box">
+        <button @click="isShow=true">登录</button>
+        <div id="overlay" v-show="isShow" @click.self="isShow=false">
+            <div id="center">
+                <div>用户名：<input type="text" @keyup.enter.ctrl="handleKeyup"></div>
+                <div>密码：<input type="password"></div>
+                <input type="checkbox" v-model="isRemember"> 记住用户名
+                <div><button @click="handleLogin"">登录</button></div>
+            </div>
+            <!-- <div>
+                <ul>
+                    <li v-for="(item, index) in datalist" :key="index">
+                        {{index}}-{{item}}
+                    </li>
+                </ul>
+            </div> -->
+        </div>
+
+        <div>{{mytext}}</div>
+        <textarea v-model="mytext" name="" id="" cols="30" rows="10"></textarea>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#box",
+            data: {
+                isShow: false,
+                mytext: "",
+                isRemember: false,
+                // datalist = []
+            },
+            methods: {
+                handleKeyup(evt) {
+                    // console.log(evt.keyCode);
+                    // if(evt.keyCode === 13){
+                    console.log("li add", evt.target.value);
+                    // }
+                },
+                handleLogin(){
+                    
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
