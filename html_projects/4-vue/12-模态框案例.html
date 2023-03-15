@@ -31,7 +31,17 @@
             margin: auto;
             left: 0;
             right: 0;
-            top: 0 bottom: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+        }
+        li img {
+            width: 100px;
         }
     </style>
 </head>
@@ -42,10 +52,10 @@
         <button @click="isShow=true">登录</button>
         <div id="overlay" v-show="isShow" @click.self="isShow=false">
             <div id="center">
-                <div>用户名：<input type="text" @keyup.enter.ctrl="handleKeyup"></div>
+                <div>用户名：<input type="text" @keyup.enter.ctrl="handleKeyup" v-model="username"></div>
                 <div>密码：<input type="password"></div>
                 <input type="checkbox" v-model="isRemember"> 记住用户名
-                <div><button @click="handleLogin"">登录</button></div>
+                <div><button @click="handleLogin">登录</button></div>
             </div>
             <!-- <div>
                 <ul>
@@ -58,15 +68,84 @@
 
         <div>{{mytext}}</div>
         <textarea v-model="mytext" name="" id="" cols="30" rows="10"></textarea>
+
+        <div>
+            <h2>注册页面-兴趣爱好</h2>
+            <input type="checkbox" v-model="checkedList" value="vue"> vue
+            <input type="checkbox" v-model="checkedList" value="react"> react
+            <input type="checkbox" v-model="checkedList" value="wx"> 小程序
+        </div>
+        {{checkedList}}
+
+        <div>
+            <h2>性别选择</h2>
+            <input type="radio" v-model="select" value="male"> 男
+            <input type="radio" v-model="select" value="female"> 女
+        </div>
+
+        <input type="checkbox" v-model="isAll" @change="handleAllChecked">全选
+        <ul>
+            <li v-for="(item, index) in datalist" :key="item.id">
+                <input type="checkbox" v-model="checkList" :value="item" @change="handleItemChecked">
+                <img :src="item.pic">
+                <div>
+                    <div>{{item.name}}</div>
+                    <div style="color: red;">￥{{item.price}}</div>
+                </div>
+
+                <div>
+                    <button @click="item.number--" :disabled="item.number===1">-</button>
+                    <span>{{item.number}}</span>
+                    <button @click="item.number++" :disabled="item.number===item.limit">+</button>
+                </div>
+                <div>
+                    <button @click="handleDeleteClick(index, item.id)">删除</button>
+                </div>
+            </li>
+        </ul>
+
+        <div>总金额：{{sum()}}</div>
+        {{checkList}}
     </div>
     <script>
         var vm = new Vue({
             el: "#box",
             data: {
+                isAll: false,
                 isShow: false,
+                username: localStorage.getItem("username"),
+                isRemember: true,
                 mytext: "",
-                isRemember: false,
-                // datalist = []
+                checkedList: [],
+                select: "female",
+                // 勾选的购物车数据
+                checkList: [],
+                datalist: [
+                    {
+                        name: "商品1",
+                        price: 10,
+                        number: 1,
+                        id: 1,
+                        limit: 5,
+                        pic: "https://pic1.zhimg.com/v2-abed1a8c04700ba7d72b45195223e0ff_l.jpeg"
+                    },
+                    {
+                        name: "商品2",
+                        price: 20,
+                        number: 2,
+                        id: 2,
+                        limit: 10,
+                        pic: "https://pic1.zhimg.com/v2-abed1a8c04700ba7d72b45195223e0ff_l.jpeg"
+                    },
+                    {
+                        name: "商品3",
+                        price: 20,
+                        number: 3,
+                        id: 3,
+                        limit: 15,
+                        pic: "https://pic1.zhimg.com/v2-abed1a8c04700ba7d72b45195223e0ff_l.jpeg"
+                    },
+                ]
             },
             methods: {
                 handleKeyup(evt) {
@@ -75,8 +154,42 @@
                     console.log("li add", evt.target.value);
                     // }
                 },
-                handleLogin(){
-                    
+                handleLogin() {
+                    if (this.isRemember) {
+                        localStorage.setItem("username", this.username)
+                    }
+                },
+                sum(){
+                    var total = 0;
+                    this.checkList.forEach(element => {
+                        total += element.price * element.number
+                    });
+                    return total;
+                },
+                handleAllChecked() {
+                    // console.log(this.isAll);
+                    if (this.isAll){
+                        this.checkList = this.datalist
+                    } else {
+                        this.checkList = []
+                    }
+                },
+                // 每项选择
+                handleItemChecked(){
+                    if(this.checkList.length === this.datalist.length){
+                        this.isAll = true
+                    } else {
+                        this.isAll = false
+                    }
+                },
+                // 删除
+                handleDeleteClick(index, id) {
+                    // 删除页面数组 对应的index的数据，删除1条
+                    this.datalist.splice(index, 1)
+                    // 同步勾选数组
+                    this.checkList = this.checkList.filter(item=>item.id!==id)
+                    // 同步状态
+                    this.handleItemChecked()
                 }
             }
         })

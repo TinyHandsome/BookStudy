@@ -21,6 +21,13 @@
 
 - 感想 | 摘抄
 
+  - vue的架构模式是mvvm（双向绑定）（不是mvc）
+  - 需要计算属性的逻辑，写在 `computed` 中，因为多次使用的话，函数会调用多次，而计算属性只会运行一次。
+  - ajax、fetch、xhr是什么关系
+    - ajax是异步或局部更新页面的技术
+    - xhr是实现ajax的方法，xhr过时了，改成fetch
+    - [fetch兼容性不好](https://caniuse.com/?search=fetch)，如果不支持可以用fetch-ie8，实际就是检测浏览器不支持fetch的话，就改为xhr
+
 - 学习时遇到的问题
 
 - 直通车
@@ -154,30 +161,37 @@
            - .shift
            - .delete
            - **注意，除了这些常用的按键之外，可以直接用类似 `@keyup.65` 键值的属性来模拟对应的按键**
-   
+
    5. vue 操作dom底层，虚拟dom
-   
+
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/2785ead09eab41e688201be7a350a6ae.png)
-   
+
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/3ab4b9b9db954230a111a3118a7ea8f8.png)
-   
+
    6. change和input的区别
-   
+
       - change只有在输入框失去焦点，且内容发生改变时，才会触发函数
-   
+
    7. 函数加括号和不加括号的区别
-   
+
       - 需要传参的时候加括号
-   
+
       - 如果不加括号：可以**获取事件对象**
-   
+
         函数增加形参 `evt`，那么 `evt.target` 就是源dom，`evt.target.value` 就是input dom里的值
-   
+
       - 如果两种参数都需要传递的话，采用该方案：`handleAdd1($event, param_1, param_2, param_3)`
-   
+
         - 这里的 `$event` 是写死的，不能换其他的变量名
-   
+
       - 直接写表达式同样可以完成该请求：`count++`
+
+7. 一些知识
+
+   - data：状态，被拦截
+   - 方法，methods：事件绑定，逻辑计算。可以不用return，没有缓存
+   - 计算属性（重视结果），computed：解决模板过重的问题，必须有return，只求结果，有缓存，同步。
+   - watch（重视过程）：监听一个值的改变，不用返回值，异步同步。
 
 
 
