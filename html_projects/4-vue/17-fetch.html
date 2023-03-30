@@ -7,29 +7,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="lib/vue.js"></script>
+    <script src="lib/axios.min.js"></script>
+    <style>
+        li {
+            overflow: hidden;
+            list-style: none;
+            padding: 10px;
+        }
+
+        li img {
+            float: left;
+            width: 100px;
+        }
+    </style>
 </head>
 
 <body>
     <div id="box">
-        <button @click="handleFetch">ajax-fetch</button>
+        <button @click="handleClick">ajax-fetch</button>
+        <ul>
+            <li v-for="(data, index) in dataList" :key="data.filmId">
+                <img :src="data.poster" alt="">
+                <div>{{data.name}} </div>
+                <div>观众评分：{{data.grade}}</div>
+            </li>
+        </ul>
     </div>
     <script type="text/javascript">
         var vm = new Vue({
             el: "#box",
             data: {
-
+                dataList: [],
             },
             methods: {
                 handleFetch() {
-                    fetch("./json/test.json").then(res => {
+                    fetch("./json/movie.json").then(res => {
                         // 状态码，响应头，拿不到真正的数据
                         return res.json()
                     }).then(res => {
                         console.log(res);
+                        this.dataList = res.data.films
                     }).catch(err => {
                         console.log(err);
                     })
+                },
+                handleClick(){
+                    axios.get("./json/movie.json").then(res=>{
+                        console.log(res.data.data.films);
+                        this.dataList = res.data.data.films
+                    })
                 }
+
+                // // post-1
+                // handleFetchPost1() {
+                //     fetch("**", {
+                //         method: 'post',
+                //         headers: {
+                //             "Content-Type": "application/x-www-form-urlencoded"
+                //         },
+                //         body: "name=kerwin&age=100",
+                //     }).then(res => res.json()).then(res => { console.log(res); })
+                // },
+                // // post-2
+                // handlejFetchPost2() {
+                //     fetch("**", {
+                //         method: 'post',
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //         },
+                //         body: JSON.stringify({
+                //             name: 'kervin',
+                //             age: 100
+                //         })
+                //     }).then(res => res.json()).then(res => { console.log(res); })
+                // }
             }
         })
     </script>

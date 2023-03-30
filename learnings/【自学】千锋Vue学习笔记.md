@@ -193,6 +193,119 @@
    - 计算属性（重视结果），computed：解决模板过重的问题，必须有return，只求结果，有缓存，同步。
    - watch（重视过程）：监听一个值的改变，不用返回值，异步同步。
 
+8. fetch
+
+   - get：
+
+     ```js
+     handleFetch() {
+         fetch("./json/test.json").then(res => {
+             // 状态码，响应头，拿不到真正的数据
+             return res.json()
+         }).then(res => {
+             console.log(res);
+         }).catch(err => {
+             console.log(err);
+         })
+     }
+     ```
+
+   - post：
+
+     ```js
+     // post-1
+     handleFetchPost1() {
+         fetch("**", {
+             method: 'post',
+             headers: {
+                 "Content-Type": "application/x-www-form-urlencoded"
+             },
+             body: "name=kerwin&age=100",
+         }).then(res => res.json()).then(res => { console.log(res); })
+     },
+     // post-2
+     handlejFetchPost2() {
+         fetch("**", {
+             method: 'post',
+             headers: {
+                 'Content-Type': 'application/json',
+             },
+             body: JSON.stringify({
+                 name: 'kervin',
+                 age: 100
+             })
+         }).then(res => res.json()).then(res => { console.log(res); })
+     }
+     ```
+
+   - 注意：fetch请求默认是不带cookie的，需要设置 `fetch(url, {credentials: 'include'})`
+
+9. axios：非官方的好用的库
+
+   ```js
+   handleClick(){
+       axios.get("./json/movie.json").then(res=>{
+           console.log(res.data.data.films);
+           this.dataList = res.data.data.films
+       })
+   }
+   ```
+
+10. 过滤器（管道符）：`|`
+
+  - 把原始数据通过管道送给过滤器进行加工
+
+    ```html
+    <img :src="item.img | imgFilter" />
+    ```
+
+  - 过滤器的定义
+
+    ```vue
+    Vue.filter("imgFilter", (url) => {
+    	return url.replace('w.h/', '')+'@1l_1e_1c_128w_180h'
+    })
+    ```
+
+  - 多个过滤器串行处理：`<img :src="item.img | imgFilter1 | imgFilter2" />`
+
+  - vue3不支持
+
+11. 组件定义
+
+    - `<swiper></swiper>`
+    
+    - Why?：扩展html元素，封装可重用的代码
+    
+    - 方案
+    
+      - 全局创建组件
+      - 局部创建组件
+    
+    - 注意：
+    
+      1. 起名字：组件名如果用了驼峰写法，在html中需要把大写换成小写，再用-隔开
+    
+         ```
+         <div id="box">
+             <yingjun-navbar></yingjun-navbar>
+         </div>
+         
+         Vue.component("yingjunNavbar"...
+         ```
+    
+      2. dom 片段没有代码提示，没有高亮显示：**vue单文件组件可以解决**
+    
+      3. css 只能写成行内：**vue单文件组件可以解决**
+    
+      4. template 包含一个根节点：**不能有兄弟节点**
+    
+      5. 组件是孤岛，无法直接访问外面组件的状态或者方法：**间接的组件通信来交流**
+    
+      6. 所有的组件都在一起，太乱了：**vue单文件组件可以解决**
+    
+12. 全局和局部
+
 
 
 

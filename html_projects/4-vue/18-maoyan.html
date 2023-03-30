@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <script src="lib/axios.min.js"></script>
+</head>
+<body>
+    <div id="box">
+        <button @click="handleAjax">click-ajax</button>
+        <ul>
+            <li v-for="(item, index) in dataList" :key="index">
+                <img :src="item.poster" alt="">
+                {{item.name}}
+            </li>
+        </ul>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#box',
+            data: {
+                dataList: [],
+            },
+            methods: {
+                handleAjax(){
+                    axios.get('./json/movie.json').then(res=>{
+                        console.log(res.data.data.films);
+                        this.dataList = res.data.data.films
+                    })
+                }
+            },
+        })
+    </script>
+</body>
+</html>
