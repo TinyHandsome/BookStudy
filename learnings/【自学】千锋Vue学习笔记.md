@@ -306,6 +306,34 @@
     
 12. 全局和局部
 
+    - 父传子：`props: ["变量名"]`
+
+    - 属性验证：改list为dict
+
+      ```
+      props: {
+          myname: String,
+          myright: Boolean
+      }
+      ```
+
+    - 加上默认值
+
+      ```
+      props: {
+          myname: {
+              type: String,
+              default: ""
+          },
+          myright: {
+              type: Boolean,
+              default: true
+          }
+      },
+      ```
+
+    - 父传子的理解：data中定义的a，可以传给模板component的**属性**，然后该属性在component的props中定义，这就实现了父类变量->子类变量的映射，从而实现传值，最后在template中使用该值。注意：上述**属性**前记得加 `:`
+
 
 
 

@@ -19,11 +19,13 @@
         // 定义一个全局的组件
         Vue.component("yingjunNavbar", {
             // dom, js, css
-            template: `<div style="background:red">
+            template: `<div style="background:red; border: 5px solid black">
                     <button @click="handleLeft">left</button>
                     猫眼电影-{{myname}}
                     <button @click="handleRight">right</button>
                     <child></child>
+
+                    <kerwin-child></kerwin-child>
                 </div>`,
             methods: {
                 handleLeft() {
@@ -36,7 +38,7 @@
             computed: {},
             watch: {},
             // 组件中data必须是函数的写法
-            data(){
+            data() {
                 return {
                     myname: 1111,
                 }
@@ -44,10 +46,15 @@
             components: {
                 "kerwinChild": {
                     template: `
-                        <div></div>
-                    `
-                }
-            }
+                        <div>child-{{myname}}</div>
+                    `,
+                    data() {
+                        return {
+                            myname: "junjun",
+                        }
+                    }
+                },
+            },
         })
 
         Vue.component("child", {
