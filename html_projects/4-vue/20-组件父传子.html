@@ -11,12 +11,36 @@
 
 <body>
     <div id="box">
+        <navbarr></navbarr>
+        <sidebar  v-show="isShow"></sidebar>
+
         <div style="background:yellow;">根组件标题</div>
         <navbar myname="电影" :myright="false" :myparent="parent"></navbar>
         <navbar myname="影院"></navbar>
     </div>
 
     <script>
+        Vue.component("navbarr", {
+            template: `<div style="background-color: red;">
+            <button @click="handleClick()">点击</button>-导航栏
+        </div>`,
+        methods: {
+            handleClick(){
+                
+            }
+        }
+        })
+        Vue.component("sidebar", {
+            template: `<div style="background-color: yellow;">
+            <ul>
+                <li>111</li>
+                <li>111</li>
+                <li>111</li>
+                <li>111</li>
+            </ul>
+        </div>
+`
+        })
         Vue.component("navbar", {
             // 接收myname属性，this.myname
             // props: ["myname", "myright"],
@@ -48,7 +72,8 @@
         new Vue({
             el: "#box",
             data: {
-                parent: "1111111"
+                parent: "1111111",
+                isShow: true,
             }
         })
     </script>
