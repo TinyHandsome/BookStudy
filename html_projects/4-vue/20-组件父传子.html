@@ -11,8 +11,8 @@
 
 <body>
     <div id="box">
-        <navbarr></navbarr>
-        <sidebar  v-show="isShow"></sidebar>
+        <navbarr @myevent="handleEvent"></navbarr>
+        <sidebar v-show="isShow"></sidebar>
 
         <div style="background:yellow;">根组件标题</div>
         <navbar myname="电影" :myright="false" :myparent="parent"></navbar>
@@ -24,11 +24,11 @@
             template: `<div style="background-color: red;">
             <button @click="handleClick()">点击</button>-导航栏
         </div>`,
-        methods: {
-            handleClick(){
-                
+            methods: {
+                handleClick() {
+                    this.$emit("myevent", 999999)
+                }
             }
-        }
         })
         Vue.component("sidebar", {
             template: `<div style="background-color: yellow;">
@@ -74,6 +74,12 @@
             data: {
                 parent: "1111111",
                 isShow: true,
+            },
+            methods: {
+                handleEvent(data) {
+                    console.log("触发父类事件", data);
+                    this.isShow = !this.isShow
+                }
             }
         })
     </script>

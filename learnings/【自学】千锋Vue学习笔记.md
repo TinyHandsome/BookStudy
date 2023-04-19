@@ -334,9 +334,15 @@
 
     - 父传子的理解：data中定义的a，可以传给模板component的**属性**，然后该属性在component的props中定义，这就实现了父类变量->子类变量的映射，从而实现传值，最后在template中使用该值。注意：上述**属性**前记得加 `:`
     
-    - 如果父传子靠组件，那么子传父靠的是事件
+    - 如果父传子靠**属性**，那么子传父靠的是**事件**
     
-    - 
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/e318f3bbf463403a8b22dbe570a43acc.png)
+    
+    - bus：中央事件总线，订阅发布模式
+    
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/a893d0f571d04e969c1da9a5c68b798e.png)
+    
+    - vuex：状态管理
 
 
 

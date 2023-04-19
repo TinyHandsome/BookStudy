@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .item {
+            overflow: hidden;
+            padding: 10px;
+            width: 400px;
+            border: 1px solid red;
+        }
+        .item img {
+            width: 100px;
+            float: left;
+        }
+        .film {
+            border: 1px solid #000;
+            height: 1500px;
+        }
+        .filminfo {
+            width: 300px;
+            min-height: 200px;
+            background: yellow;
+            position: fixed;
+            right: 50px;
+            top: 100px;
+            border: 1px solid blue;
+        }
+    </style>
+    <script src="lib/vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <button @click="handleAjax">ajax</button>
+        <file-item v-for="(item, index) in dataList" :key="item.filmId" :mydata="item" @event="handleEvent"></file-item>
+        <film-detail :film-data="filmData"></film-detail>
+    </div>
+    <script>
+        Vue.component("fileItem", {
+            props: ["mydata"],
+            template: `
+                <div class="item">
+                    {{mydata.name}}
+                    <img :src="mydata.poster">
+                    <button @click="handleClick">详情</button>
+                </div>
+            ` ,
+            methods: {
+                handleClick(){
+                    // console.log(this.mydata.synopsis);
+                    this.$emit("event", this.mydata.synopsis)
+                }
+            }
+        }),
+        Vue.component("filmDetail", {
+            props: ["filmData"],
+            template: `
+                <div class="filminfo">
+                    {{filmData}}
+                </di
+            `
+        })
+        new Vue({
+            el: "#box",
+            data: {
+                dataList: [],
+                filmData:"null",
+            },
+            methods: {
+                handleAjax(){
+                    fetch("./json/movie.json")
+                        .then(res => res.json())
+                        .then(res => {
+                            console.log(res);
+                            this.dataList = res.data.films
+                        })
+                },
+                // 自定义的事件处理器
+                handleEvent(data){
+                    this.filmData = data
+                }
+            }
+        })
+    </script>
+</body>
+</html>
