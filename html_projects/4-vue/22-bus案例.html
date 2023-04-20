@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,14 +13,17 @@
             width: 400px;
             border: 1px solid red;
         }
+
         .item img {
             width: 100px;
             float: left;
         }
+
         .film {
             border: 1px solid #000;
             height: 1500px;
         }
+
         .filminfo {
             width: 300px;
             min-height: 200px;
@@ -32,6 +36,7 @@
     </style>
     <script src="lib/vue.js"></script>
 </head>
+
 <body>
     <div id="box">
         <button @click="handleAjax">ajax</button>
@@ -39,6 +44,8 @@
         <film-detail></film-detail>
     </div>
     <script>
+        var bus = new Vue()
+
         Vue.component("fileItem", {
             props: ["mydata"],
             template: `
@@ -49,25 +56,39 @@
                 </div>
             ` ,
             methods: {
-                handleClick(){
-                    console.log(this.mydata.synopsis);
+                handleClick() {
+                    // console.log(this.mydata.synopsis);
+                    bus.$emit("kerwin", this.mydata.synopsis)
                 }
             }
         }),
-        Vue.component("filmDetail", {
-            template: `
+            Vue.component("filmDetail", {
+                // 组件刚刚创建好就开始订阅
+                data(){
+                    return {
+                        info: ""
+                    }
+                },
+                // 生命周期
+                mounted() {
+                    bus.$on('kerwin', (data) => {
+                        // console.log("1111", data);
+                        this.info = data
+                    })
+                },
+                template: `
                 <div class="filminfo">
-                    111
+                    {{info}}
                 </div>
             `
-        })
+            })
         new Vue({
             el: "#box",
             data: {
                 dataList: [],
             },
             methods: {
-                handleAjax(){
+                handleAjax() {
                     fetch("./json/movie.json")
                         .then(res => res.json())
                         .then(res => {
@@ -79,4 +100,5 @@
         })
     </script>
 </body>
+
 </html>

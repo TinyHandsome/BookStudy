@@ -343,6 +343,11 @@
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/a893d0f571d04e969c1da9a5c68b798e.png)
     
     - vuex：状态管理
+    
+    - 组件refs
+    
+      - ref 绑定dom节点，拿到的就是dom对象
+      - ref 绑定组件，拿到的就是 组件对象
 
 
 
