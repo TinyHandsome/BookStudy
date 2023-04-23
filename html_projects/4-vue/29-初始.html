@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="lib/vue.js"></script>
+    <style>
+        /* 进场动画 */
+        .yingjun-enter-active {
+            animation: aaa 0.5s;
+        }
+
+        /* 出场动画 */
+        .yingjun-leave-active {
+            animation: aaa 0.5s reverse;
+        }
+        @keyframes aaa {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <button @click="isShow = !isShow">change</button>
+        <!-- 动画入场和离场 -->
+        <transition enter-active-class="yingjun-enter-active" leave-active-class="yingjun-leave-active">
+            <div v-show="isShow">11111111111</div>
+        </transition>
+        <!-- 简写 -->
+        <transition name="yingjun" appear>
+            <div v-show="isShow">11111111111</div>
+        </transition>
+        <script>
+            new Vue({
+                el: "#box",
+                data: {
+                    isShow: true
+                }
+            })
+        </script>
+    </div>
+</body>
+</html>

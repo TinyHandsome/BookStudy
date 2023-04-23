@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+</head>
+
+<body>
+    <div id="box">
+        <navbarr>
+            <button @click="isShow=!isShow">点击</button>-导航栏
+        </navbarr>
+        <sidebar v-show="isShow"></sidebar>
+    </div>
+
+    <script>
+        Vue.component("navbarr", {
+            template: `<div style="background:lightblue">
+            navbar-<slot></slot>
+        </div>`,
+        })
+        Vue.component("sidebar", {
+            template: `<div style="background-color: yellow;">
+            <ul>
+                <li>111</li>
+                <li>111</li>
+                <li>111</li>
+                <li>111</li>
+            </ul>
+        </div>
+`
+        })
+        new Vue({
+            el: "#box",
+            data: {
+                parent: "1111111",
+                isShow: true,
+            },
+        })
+    </script>
+</body>
+
+</html>
