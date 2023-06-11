@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <div v-hello=" 'yellow' ">111</div>
+        <div v-hello=" 'red' ">222</div>
+        <div v-hello="whichColor">333</div>
+    </div>
+    <script>
+        Vue.directive("hello", (el, binding) => {
+            console.log("创建更新都会执行");
+            el.style.background = binding.value
+        })
+        var vm = new Vue({
+            el: "#box",
+            data: {
+                whichColor: 'blue'
+            }
+        })
+    </script>
+    
+</body>
+</html>

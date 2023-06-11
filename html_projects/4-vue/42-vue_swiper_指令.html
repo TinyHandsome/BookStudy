@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="lib/swiper/swiper-bundle.css">
+    <script src="lib/swiper/swiper-bundle.js"></script>
+    <script src="lib/vue.js"></script>
+
+    <style>
+        .kerwin {
+            height: 500px;
+        }
+    </style>
+</head>
+
+<<body>
+    <div id="box">
+        <header>导航</header>
+        <div class="swiper-container kerwin">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="(data, index) in datalist" :key="data" v-swiper="{
+                    index: index,
+                    length: datalist.length
+                }">
+                    <img :src="data" alt="">
+                </div>
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+
+        </div>
+        <footer>底部内容</footer>
+    </div>
+    <script>
+        Vue.directive("swiper", {
+            inserted(el, binding) {
+                // console.log(el);
+                let { index, length } = binding.value
+                if (index === length - 1) {
+                    new Swiper(".kerwin", {
+                        // direction: "vertical",
+                        loop: true,
+                        pagination: {
+                            el: '.swiper-pagination',
+                        },
+                        // 自动轮播
+                        autoplay: {
+                            delay: 2500,
+                            disableOnInteraction: false,
+                        },
+                        // 如果需要前进后退按钮
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        }
+                    })
+                }
+            }
+        })
+        new Vue({
+            el: "#box",
+            data: {
+                datalist: []
+            },
+            mounted() {
+                setTimeout(() => {
+                    this.datalist = [
+                        "https://img10.360buyimg.com/jdcms/s150x150_jfs/t1/152033/7/33227/59811/6470da06F34354015/6ee89bd541581412.jpg.avif",
+                        "https://img20.360buyimg.com/jdcms/s150x150_jfs/t1/134038/2/33560/145567/647453a2F67abec0e/49afdb473529ab93.jpg.avif",
+                        "https://img13.360buyimg.com/jdcms/s150x150_jfs/t1/54617/5/23983/73317/64745ba8F161aeeb2/957d11a01657dc06.jpg.avif"
+                    ]
+                }, 2000)
+                // 初始化过早，下面的会执行，因为上面的是异步的
+            },
+            // updated() {
+            //     new Swiper(".kerwin", {
+            //         // direction: "vertical",
+            //         loop: true,
+            //         pagination: {
+            //             el: '.swiper-pagination',
+            //         },
+            //         // 自动轮播
+            //         autoplay: {
+            //             delay: 2500,
+            //             disableOnInteraction: false,
+            //         },
+            //         // 如果需要前进后退按钮
+            //         navigation: {
+            //             nextEl: '.swiper-button-next',
+            //             prevEl: '.swiper-button-prev',
+            //         },
+            //     })
+            // }
+        })
+    </script>
+    </body>
+
+</html>

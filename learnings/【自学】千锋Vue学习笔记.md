@@ -269,25 +269,31 @@
 
 10. 过滤器（管道符）：`|`
 
-  - 把原始数据通过管道送给过滤器进行加工
+      - 把原始数据通过管道送给过滤器进行加工
 
-    ```html
-    <img :src="item.img | imgFilter" />
-    ```
+        ```html
+        <img :src="item.img | imgFilter" />
+        ```
 
-  - 过滤器的定义
 
-    ```vue
-    Vue.filter("imgFilter", (url) => {
-    	return url.replace('w.h/', '')+'@1l_1e_1c_128w_180h'
-    })
-    ```
+      - 过滤器的定义
+    
+        ```vue
+        Vue.filter("imgFilter", (url) => {
+        	return url.replace('w.h/', '')+'@1l_1e_1c_128w_180h'
+        })
+        ```
 
-  - 多个过滤器串行处理：`<img :src="item.img | imgFilter1 | imgFilter2" />`
 
-  - vue3不支持
+      - 多个过滤器串行处理：`<img :src="item.img | imgFilter1 | imgFilter2" />`
 
-11. 组件定义
+
+      - vue3不支持
+
+
+## 3. 组件
+
+1. 组件定义
 
     - `<swiper></swiper>`
 
@@ -387,199 +393,397 @@
       <component :is="which"></component>
       ```
 
-14. slot 插槽|内容分发
+4. slot 插槽|内容分发
 
-   扩展组件能力，让组件的封装性、复用性更好
+    - 扩展组件能力，让组件的封装性、复用性更好
+    - 父组件模板的内容在父组件作用域内编译，子组件模板的内容在子组件作用域内编译
 
-   父组件模板的内容在父组件作用域内编译，子组件模板的内容在子组件作用域内编译
+    - 获取组件里面的内容放入模板的 slot中
 
-   - 获取组件里面的内容放入模板的 slot中
+      ```html
+      <body>
+          <div id="box">
+              <child>
+                  <div>1111111</div>
+                  <div>222222222</div>
+              </child>
+          </div>
+          <script>
+              Vue.component("child", {
+                  template: `
+                      <div>
+                          child
+                          <slot></slot>
+                          <slot></slot>
+                      </div>
+                  `
+              })
+              new Vue({
+                  el: "#box"
+              })
+          </script>
+      </body>
+      ```
 
-     ```html
-     <body>
-         <div id="box">
-             <child>
-                 <div>1111111</div>
-                 <div>222222222</div>
-             </child>
-         </div>
-         <script>
-             Vue.component("child", {
-                 template: `
-                     <div>
-                         child
-                         <slot></slot>
-                         <slot></slot>
-                     </div>
-                 `
-             })
-             new Vue({
-                 el: "#box"
-             })
-         </script>
-     </body>
-     ```
+    - 具名插槽：`<slot name="a"></slot>`
 
-   - 具名插槽：`<slot name="a"></slot>`
+      ```html
+      <body>
+          <div id="box">
+              <child>
+                  <div slot="a">1111111</div>
+                  <div slot="b">222222222</div>
+                  <div slot="c">33333</div>
+                  <div>44444</div>
+              </child>
+          </div>
+          <script>
+              Vue.component("child", {
+                  template: `
+                      <div>
+                          child
+                          <slot name="a"></slot>
+                          <slot name="b"></slot>
+                          <slot name="b"></slot>
+                          <slot name="c"></slot>
+                          <slot></slot>
+                      </div>
+                  `
+              })
+              new Vue({
+                  el: "#box"
+              })
+          </script>
+      </body>
+      ```
 
-     ```html
-     <body>
-         <div id="box">
-             <child>
-                 <div slot="a">1111111</div>
-                 <div slot="b">222222222</div>
-                 <div slot="c">33333</div>
-                 <div>44444</div>
-             </child>
-         </div>
-         <script>
-             Vue.component("child", {
-                 template: `
-                     <div>
-                         child
-                         <slot name="a"></slot>
-                         <slot name="b"></slot>
-                         <slot name="b"></slot>
-                         <slot name="c"></slot>
-                         <slot></slot>
-                     </div>
-                 `
-             })
-             new Vue({
-                 el: "#box"
-             })
-         </script>
-     </body>
-     ```
+    - 新版slot写法 template
 
-   - 新版slot写法 template
-
-     ```vue
-     <body>
-         <div id="box">
-             <navbar>
-                 <!-- <button slot="left">aaa</button> -->
-                 <template #left>
-                     <div>
-                         <button>aaa</button>
-                     </div>
-                 </template>
-                 <!-- <i class="iconfont icon-all" slot="right">字体图标</i> -->
-                 <template #right>
-                     <div>
-                         <i class="iconfont icon-all">字体图标</i>
-                     </div>
-                 </template>
-             </navbar>
-             <child>
-                 <template v-slot:a>
-                     <div>
-                         1a1a1a
-                     </div>
-                 </template>
-                 <template #b>
-                     <div>
-                         2b2b2b2
-                     </div>
-                 </template>
-                 <!-- <div slot="a">1111111</div> -->
-                 <div slot="b">222222222</div>
-                 <div slot="c">33333</div>
-                 <div>44444</div>
-             </child>
-     
-         </div>
-         <script>
-             Vue.component("navbar", {
-                 template: `
-                     <div>
-                         <slot name="left"></slot>
-                         <span>navbar</span>
-                         <slot name="right"></slot>
-                     </div>
-                 
-                 `
-             })
-             Vue.component("child", {
-                 template: `
-                     <div>
-                         child
-                         <slot name="a"></slot>
-                         <slot name="b"></slot>
-                         <slot name="b"></slot>
-                         <slot name="c"></slot>
-                         <slot></slot>
-                     </div>
-                 `
-             })
-             new Vue({
-                 el: "#box"
-             })
-         </script>
-     </body>
-     ```
+      ```vue
+      <body>
+          <div id="box">
+              <navbar>
+                  <!-- <button slot="left">aaa</button> -->
+                  <template #left>
+                      <div>
+                          <button>aaa</button>
+                      </div>
+                  </template>
+                  <!-- <i class="iconfont icon-all" slot="right">字体图标</i> -->
+                  <template #right>
+                      <div>
+                          <i class="iconfont icon-all">字体图标</i>
+                      </div>
+                  </template>
+              </navbar>
+              <child>
+                  <template v-slot:a>
+                      <div>
+                          1a1a1a
+                      </div>
+                  </template>
+                  <template #b>
+                      <div>
+                          2b2b2b2
+                      </div>
+                  </template>
+                  <!-- <div slot="a">1111111</div> -->
+                  <div slot="b">222222222</div>
+                  <div slot="c">33333</div>
+                  <div>44444</div>
+              </child>
+      
+          </div>
+          <script>
+              Vue.component("navbar", {
+                  template: `
+                      <div>
+                          <slot name="left"></slot>
+                          <span>navbar</span>
+                          <slot name="right"></slot>
+                      </div>
+      
+                  `
+              })
+              Vue.component("child", {
+                  template: `
+                      <div>
+                          child
+                          <slot name="a"></slot>
+                          <slot name="b"></slot>
+                          <slot name="b"></slot>
+                          <slot name="c"></slot>
+                          <slot></slot>
+                      </div>
+                  `
+              })
+              new Vue({
+                  el: "#box"
+              })
+          </script>
+      </body>
+      ```
 
 15. 动画过渡
 
-   ```vue
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>Document</title>
-       <script type="text/javascript" src="lib/vue.js"></script>
-       <style>
-           /* 进场动画 */
-           .yingjun-enter-active {
-               animation: aaa 0.5s;
-           }
-   
-           /* 出场动画 */
-           .yingjun-leave-active {
-               animation: aaa 0.5s reverse;
-           }
-           @keyframes aaa {
-               0% {
-                   opacity: 0;
-                   transform: translateX(100px);
+       ```vue
+       <!DOCTYPE html>
+       <html lang="en">
+       <head>
+           <meta charset="UTF-8">
+           <meta http-equiv="X-UA-Compatible" content="IE=edge">
+           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+           <title>Document</title>
+           <script type="text/javascript" src="lib/vue.js"></script>
+           <style>
+               /* 进场动画 */
+               .yingjun-enter-active {
+                   animation: aaa 0.5s;
                }
-               100% {
-                   opacity: 1;
-                   transform: translateX(0px);
+    
+               /* 出场动画 */
+               .yingjun-leave-active {
+                   animation: aaa 0.5s reverse;
                }
-           }
-       </style>
-   </head>
-   <body>
-       <div id="box">
-           <button @click="isShow = !isShow">change</button>
-           <!-- 动画入场和离场 -->
-           <transition enter-active-class="yingjun-enter-active" leave-active-class="yingjun-leave-active">
-               <div v-show="isShow">11111111111</div>
-           </transition>
-           <!-- 简写 -->
-           <transition name="yingjun">
-               <div v-show="isShow">11111111111</div>
-           </transition>
-           <script>
-               new Vue({
-                   el: "#box",
-                   data: {
-                       isShow: false
+               @keyframes aaa {
+                   0% {
+                       opacity: 0;
+                       transform: translateX(100px);
                    }
-               })
-           </script>
-       </div>
-   </body>
-   </html>
+                   100% {
+                       opacity: 1;
+                       transform: translateX(0px);
+                   }
+               }
+           </style>
+       </head>
+       <body>
+           <div id="box">
+               <button @click="isShow = !isShow">change</button>
+               <!-- 动画入场和离场 -->
+               <transition enter-active-class="yingjun-enter-active" leave-active-class="yingjun-leave-active">
+                   <div v-show="isShow">11111111111</div>
+               </transition>
+               <!-- 简写 -->
+               <transition name="yingjun">
+                   <div v-show="isShow">11111111111</div>
+               </transition>
+               <script>
+                   new Vue({
+                       el: "#box",
+                       data: {
+                           isShow: false
+                       }
+                   })
+               </script>
+           </div>
+       </body>
+       </html>
+       ```
+
+- 初始添加动画：`<transition name="yingjun" appear>`
+
+- 给每个 li 加动画，需要用到 `transition-group`
+
+     - 需要注意的是，li一定要设置 `:key` 且不能重复
+
+     - `transition-group` 会实例化一个 `span` 标签加在 li 外面，`transition` 不会
+
+     - 支持一个参数 `tag` 用来设置这个标签是什么
+
+       `<transition-group name="yingjun" tag="ul">` ，一般tag设置为 ul 来代替外围的ul
+
+- 可复用过渡：通过把transition封装到组件的方式实现，变量交互为 `:name`，通过设置不同的css 的动画name，在使用时只需要传对应的name，就可以实现对应的css动画
+
+  ```vue
+  <sidebar v-show="isShow" mode="yingjun"></sidebar>
+  
+  Vue.component("sidebar", {
+              props:["mode"],
+              template: `
+              <transition :name="mode">
+              <ul style="background-color: yellow; width: 200px; height: 500px;">
+                  <li>111--{{mode}}</li>
+                  <li>111</li>
+                  <li>111</li>
+                  <li>111</li>
+              </ul>
+          	</transition>
+  			`
+  })
+  ```
+
+
+## 4. 生命周期
+
+1. Vue的生命周期
+
+   ![Vue 实例生命周期](https://v2.cn.vuejs.org/images/lifecycle.png)
+
+2. 创建阶段
+
+   - beforeCreate：没啥用
+
+   - ==created==：在create之后开始创建状态，可以在 `created` 函数中进行 **初始化状态或者挂在到当前实例的一些属性**，可以在这里定义全局变量，这里的全局变量**不可修改**。
+
+   - template：没有的话渲染el中的内容，有的话就会渲染template中的内容
+
+   - beforeMount：还没有替换dom节点，基本没啥用，可以获得解析之前的dom。在模板解析之前最后一次修改模板的节点
+
+   - ==mounted==：拿到真实的dom节点，可能会有一些依赖于dom创建之后，才进行初始化工作的插件，比如 **轮播插件**；订阅 `bus.$on`；**发ajax**
+     - 获取数据啊啥的，很关键！就不用点按钮了
+
+3. 更新阶段
+
+   - beforeUpdate：更新之前，可以记录旧的dom，这里可以用来记录进度条的位置啥的
+   - updated：更新完成后，获取更新后的dom节点，可以进行swiper轮播的初始化工作，数据更新完，并且已经到DOM中
+   - 虚拟dom创建，diff对比：状态立即更新，dom异步更新，也就是说，更新前无法获取页面的dom，**updated** 之后，dom才都成功上树
+
+4. 销毁阶段
+
+   - 销毁前后（`beforeDestroy`、`destroyed`）需要清除定时器、事件解绑等
+
+   - 倒计时的消除，windows函数的消除
+
+     ```js
+     clearInterval(this.id)
+     window.onresize = null
+     ```
+
+5. 面试问题：下列的描述都是问上面8个生命周期
+
+  - vue 组件 生命周期
+  - vue 组件的 钩子函数
+  - vue组件的生命周期钩子函数
+
+## 5. swiper
+
+1. `list.map(item=>${}`：js 中对数组进行map是映射，把列表中的每一个元素映射成一个字符串
+
+2. swiper的初始化要放到dom插入完成之后，动态生成dom的过程要放到swiper初始化之前
+
+3. 更新是异步的，会导致数据更新了dom没有更新，需要把swiper的初始化放在updated中，而数据更新放在mounted中
+
+4. 上述操作的缺点：
+
+   - 无法复用
+   - 修改其他状态，其他状态更新，update会重新运行，`new Swiper`会执行多次，产生bug
+
+5. swiper组件
+
+   1. 给swiper 加一个 `:key` ，值为数组的长度，这样就可以在数组发生变化的时候对swiper进行毁灭和重建，因此为 mounted - destroyed - monted。
+   2. 因为数据加载是异步的，那么数据没有加载到的时候，长度就为0，加载完了之后就为2，状态发生了变化。
+   3. 更进一步，不用 `:key` ，直接用 `v-if`，也就是说在没数据的时候，不要创建组件，有数据了再说
+
+6. Vue3的组件
+
+   1. 不再通过 `Vue.component` 定义
+
+   2. 需要通过函数的方式调用生成实例，再调用函数的方式生成
+
+      ```js
+      var obj = {
+          data() {
+              return {
+                  myname: "kerwin"
+              }
+          },
+          methods: {
+      
+          },
+          computed: {
+      
+          },
+      
+      }
+      const app = Vue.createApp(obj)
+      app.component("navbar", {
+          props: ["myname"],
+          template: `
+                  <div>
+                      navbar-{{myname}}
+                      <slot></slot>
+                  </div>
+              `
+      })
+      app.mount("#box")
+      ```
+
+   3. 生命周期名称替换：`destoryed` -> `unmounted`；`beforeDestroy` -> `beforeUnmount`
+   
+   4. Vue2中是以类的写法去实现的，Vue3中是以类（>90%是一样的）+hooks（函数）写法去实现的
+
+## 6. 指令
+
+1. 指令的出现：就是为了把一些dom操作封装在指令里面
+
+2. `directives`
+
+3. 生命周期函数
+
+   1. `bind`：类似 `create`。只调用一次，指令第一次绑定到元素的时候调用，在这里可以进行一次性的初始化设置
+   2. `inserted`：类似 `mounted`。当前节点 **第一次** 插入到父节点中时调用，仅保证父节点存在，但不一定已经被插入文档中
+   3. `update`：类似 `beforeUpdate`。当且节点 更新时 执行，但是可能发生在其子 **VNode** 更新之前。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新
+   4. `componentUpdated`：类似 `updated`。指令所在组件的VNode及其子 VNode 全部更新后调用
+   5. `unbind`：类似 `destroyed`。只调用一次，指令与元素解绑时调用
+
+   ```js
+   Vue.directive("hello", {
+       // 指令的生命周期函数
+       inserted(el, binding){
+           console.log("inserted", binding);
+           el.style.background = binding.value
+       },
+       update(el, binding) {
+           console.log("update");
+           el.style.background = binding.value
+       },
+   })
+   var vm = new Vue({
+       el: "#box",
+       data: {
+           whichColor: 'blue'
+       }
+   })
    ```
 
-   - 初始添加动画：`<transition name="yingjun" appear>`
-   - 
+4. 简写方式：将 `{}` 的内容，改为函数
 
+   ```js
+   Vue.directive("hello", (el, binding) => {
+       console.log("创建更新都会执行");
+       el.style.background = binding.value
+   })
+   var vm = new Vue({
+       el: "#box",
+       data: {
+           whichColor: 'blue'
+       }
+   })
+   ```
 
+5. vue3生命周期改变：
+
+   - `inserted` -> `mounted`，等等
+   - 除了没有 `beforeCreate` ，其他的7个生命周期都有
+
+6. nextTick
+
+   - 一个抄近道的方法，不适合用于封装
+
+   - 比updated走的都晚，而且只执行一次
+
+   - 一般在修改的状态后面，触发nextTick
+
+     ```js
+     this.$nextTick(() => {
+     	console.log("我比updated执行的都晚，而且只执行一次")
+     })
+     ```
+
+## 7. vue-cli
+
+1. 安装vue的脚手架，一次安装永久使用：``
 
 
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="lib/swiper/swiper-bundle.css">
+    <script src="lib/swiper/swiper-bundle.js"></script>
+
+    <style>
+        .kerwin {
+            height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>导航</header>
+    <div class="swiper-container kerwin">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">111 1</div>
+            <div class="swiper-slide">222 2</div>
+            <div class="swiper-slide">333 3</div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+
+        <!-- 如果需要导航按钮 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- 如果需要滚动条 -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+    </div>
+    <footer>底部内容</footer>
+    <script>
+        // 初始化swiper
+        new Swiper(".kerwin", {
+            // direction: "vertical",
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            // 自动轮播
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        })
+
+    </script>
+</body>
+
+</html>

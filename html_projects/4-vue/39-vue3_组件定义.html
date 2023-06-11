@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.global.js"></script>
+</head>
+
+<body>
+    <div id="box">
+        {{myname}}
+        <navbar myname="aaa">
+            <div>111</div>
+        </navbar>
+    </div>
+    <script>
+        var obj = {
+            data() {
+                return {
+                    myname: "kerwin"
+                }
+            },
+            methods: {
+
+            },
+            computed: {
+
+            },
+
+        }
+        const app = Vue.createApp(obj)
+        app.component("navbar", {
+            props: ["myname"],
+            template: `
+                    <div>
+                        navbar-{{myname}}
+                        <slot></slot>
+                    </div>
+                `
+        })
+        app.mount("#box")
+    </script>
+</body>
+
+</html>
