@@ -783,7 +783,13 @@
 
 ## 7. vue-cli
 
-1. 安装vue的脚手架，一次安装永久使用：``
+1. 安装vue的脚手架，一次安装永久使用：`npm i -g @vue/cli`
+
+2. 自定义安装：`vue create 项目名`
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/0936f2b0db8d4d46940600c998b1f166.png)
+
+3. 
 
 
 
