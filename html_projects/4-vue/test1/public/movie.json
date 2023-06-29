@@ -1,0 +1,456 @@
+{
+    "status": 0,
+    "data": {
+        "films": [
+            {
+                "filmId": 6174,
+                "name": "保你平安",
+                "poster": "https://pic.maizuo.com/usr/movie/34abe976a0baf62f0af6d9d41e7ef414.jpg",
+                "actors": [
+                    {
+                        "name": "大鹏",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/75741ac19a8019deccf3a9ba8709dc49.jpg"
+                    },
+                    {
+                        "name": "大鹏",
+                        "role": "演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/75741ac19a8019deccf3a9ba8709dc49.jpg"
+                    },
+                    {
+                        "name": "李雪琴",
+                        "role": "演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/39b92197f9ea61f1ba7f860059284fc7.jpg"
+                    },
+                    {
+                        "name": "尹正",
+                        "role": "演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/6ed7d96c8723a3272202283876622d28.jpg"
+                    },
+                    {
+                        "name": "王迅",
+                        "role": "演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/4347aebbc71d8dac53749fe63c19dc84.jpg"
+                    }
+                ],
+                "director": "大鹏",
+                "category": "剧情|喜剧",
+                "synopsis": "造谣一张嘴，辟谣跑断腿。中年落魄的魏平安（大鹏 饰）已过世的客户被人造谣抹黑。为了一句承诺，魏平安踏上了漫漫查谣言之路。一路阻碍重重，也笑料频出，连他自己也深陷谣言之中。他渐渐发现“做你觉得正确的事”最令人心安……《保你平安》是大鹏导演执导的现实主义喜剧，也是第四届海南岛国际电影节闭幕影片，将于12月31日全国上映。",
+                "filmType": { "name": "2D", "value": 1 },
+                "nation": "中国大陆",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1678406400,
+                "timeType": 3,
+                "runtime": 112,
+                "grade": "7.3",
+                "item": { "name": "2D", "type": 1 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6235,
+                "name": "雷霆沙赞！众神之怒",
+                "poster": "https://pic.maizuo.com/usr/movie/87b50aa11ab18ca02d2d64fcf29ebd71.jpg",
+                "actors": [
+                    {
+                        "name": "大卫·F·桑德伯格",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/d0426c9c98289186ded58bdc214563c9.jpg"
+                    },
+                    {
+                        "name": "扎克瑞·莱维",
+                        "role": "Shazam",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/be5ab40f6b8e9ff8e616015fd23c6232.jpg"
+                    },
+                    {
+                        "name": "亚瑟·安其",
+                        "role": "Billy Batson",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/b81dc042c96d76889e51dafda9dfd0dd.jpg"
+                    },
+                    {
+                        "name": "杰克·迪伦·格雷泽",
+                        "role": "Freddy Freeman",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/cb01a49224e3c818bad9a88d5d9ee1c0.jpg"
+                    },
+                    {
+                        "name": "海伦·米伦",
+                        "role": "Hespera",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/a85f506564c46c7862127abc61602167.jpg"
+                    }
+                ],
+                "director": "大卫·F·桑德伯格",
+                "category": "动作|冒险|喜剧",
+                "synopsis": "比利·巴特森和其他孩子们虽然获得了超凡的神力和成人的外表，但仍处在青春期的他们还在学习如何平衡内心与外在的不同。但是当阿特拉斯的女儿——复仇三女神来到地球，寻找很久以前被偷走的魔力时，比利·巴特森和家人们将为了守护他们的超能力、生命以及整个世界的命运而展开一场激战。",
+                "filmType": { "name": "2D", "value": 1 },
+                "nation": "美国",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1679011200,
+                "timeType": 3,
+                "runtime": 131,
+                "item": { "name": "2D", "type": 1 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6220,
+                "name": "回廊亭",
+                "poster": "https://pic.maizuo.com/usr/movie/d489be8070af8f8905e6c59816062dfe.jpg",
+                "actors": [
+                    {
+                        "name": "来牧宽",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/fe6e34f8c0248362db90d130a27e11a5.jpg"
+                    },
+                    {
+                        "name": "任素汐",
+                        "role": "周扬",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/2fd71f62af2dcf9bb2dcd8156cbbad98.jpg"
+                    },
+                    {
+                        "name": "刘敏涛",
+                        "role": "林珍惠",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/4bf2ab2c8af097c628c24f7340e7e461.jpg"
+                    },
+                    {
+                        "name": "李传缨",
+                        "role": "高山",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/07b68944e08fcc2e29597b8acb9456d5.jpg"
+                    },
+                    {
+                        "name": "芦芳生",
+                        "role": "高志",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/52a710a34c31fd60a635b4585254da47.jpg"
+                    }
+                ],
+                "director": "来牧宽",
+                "category": "犯罪|悬疑|爱情",
+                "synopsis": "根据东野圭吾畅销悬疑小说《长长的回廊》改编。回廊亭大宅中暗藏无数秘密，绝望女人为爱复仇的欲望纷争正在上演！富商病逝，他的亲属们聚集在回廊亭等待数⼗亿遗产将会如何分配，众⼈各怀⿁胎。关键时刻，律师周扬带着遗嘱和一本神秘日记而来，更牵扯出⼀场发⽣在一年前的⽕灾凶杀案，死者是富商流落在外的私⽣⼦，更是全部遗产的第⼀顺位继承⼈！凶⼿，似乎就隐藏在众⼈之中……",
+                "filmType": { "name": "2D", "value": 1 },
+                "nation": "中国大陆",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1678406400,
+                "timeType": 3,
+                "runtime": 100,
+                "grade": "7.4",
+                "item": { "name": "2D", "type": 1 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6229,
+                "name": "不止不休",
+                "poster": "https://pic.maizuo.com/usr/movie/a85333d455a9f9887eb511eaf763fcb4.jpg",
+                "actors": [
+                    {
+                        "name": "王晶",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/8e9133085f8eb538107ed6071ce8d660.jpg"
+                    },
+                    {
+                        "name": "白客",
+                        "role": "韩东",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/bd23f041d10ca51f4d6bc2060ecdf196.jpg"
+                    },
+                    {
+                        "name": "苗苗",
+                        "role": "小竹",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/b111a75caeb576d22d0486633a7d1ff8.jpg"
+                    },
+                    {
+                        "name": "张颂文",
+                        "role": "黄江",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/13f541f997302d8f3ca18d64462e6302.jpg"
+                    },
+                    {
+                        "name": "宋洋",
+                        "role": "张博",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/b941627a52ebc7b185da2f8a0336830e.jpg"
+                    }
+                ],
+                "director": "王晶",
+                "category": "剧情|励志",
+                "synopsis": "贾樟柯监制，白客、苗苗、张颂文、宋洋全员飙演技，国内外影迷千呼万唤的现实题材佳作！2003年的中国，社会变革激荡，人们野心勃勃。当时互联网尚未席卷一切，纸媒为王。没钱、没学历、没背景的“三无青年”韩东（白客 饰）怀揣新闻理想与女友小竹（苗苗 饰）开始了北漂生涯，期间在知名记者黄江（张颂文 饰）的帮助下进入报社实习，在一次案件调查中，韩东发现了背后更大的真相。一边是光明的前途，一边是心中的正义，韩东陷入两难抉择……",
+                "filmType": { "name": "2D", "value": 1 },
+                "nation": "中国大陆",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1679616000,
+                "timeType": 3,
+                "runtime": 117,
+                "item": { "name": "2D", "type": 1 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6240,
+                "name": "梅根",
+                "poster": "https://pic.maizuo.com/usr/movie/3c26b20d91010b563ee5e271b5cf0a82.jpg",
+                "actors": [
+                    {
+                        "name": "热拉尔·约翰斯通",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/bd82051a643da27985d42b3a0c76d494.jpg"
+                    },
+                    {
+                        "name": "艾莉森·威廉姆斯",
+                        "role": "Gemma",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/fd6ce4fdfd09dbdba163469df676824f.jpg"
+                    },
+                    {
+                        "name": "维奥莱特·麦格劳",
+                        "role": "Cady",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/31bec2b386cb426cd9d245907f11ef14.jpg"
+                    },
+                    {
+                        "name": "钱信伊",
+                        "role": "演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/aae9591d5fa2cfcd4f5fa1edcd4146e6.jpg"
+                    },
+                    {
+                        "name": "布莱恩·乔丹·阿尔瓦雷斯",
+                        "role": "Cole",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/a36819e7a3d6cfe86b3844568ac5d17e.jpg"
+                    }
+                ],
+                "director": "热拉尔·约翰斯通",
+                "category": "科幻|惊悚|恐怖",
+                "synopsis": "“她不只是个玩具，而是这个家的一份子。”梅根（M3GAN）是一个具备高度人工智能、栩栩如生的玩具人偶，被设计成小孩子最好的玩伴和令家长最安心的盟友。这款玩具人偶由一名玩具公司杰出的机器人专家洁玛（艾莉森•威廉姆斯 饰）精心设计，梅根能够借由聆听以及观察学习人类行为，并且成为她照顾的小孩的朋友、老师、玩伴和保护者。当洁玛突然成为她失去双亲的八岁侄女凯蒂（维奥莱特•麦格劳 饰）的监护人之后，洁玛并不确定也没有准备好能够成为一个好的家长，加上她的工作压力非常巨大，于是就决定将她设计的人工智能玩具人偶梅根和凯蒂配对，试图解決照顾凯蒂这个孤儿和纾解她工作压力这两个问题，但是她的这个决定却造成无法想像的严重后果。",
+                "filmType": { "name": "2D", "value": 1 },
+                "nation": "美国",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1679011200,
+                "timeType": 3,
+                "runtime": 102,
+                "item": { "name": "2D", "type": 1 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6118,
+                "name": "流浪地球2",
+                "poster": "https://pic.maizuo.com/usr/movie/228a4e54fecfdb1c843f83ed28f947d6.jpg",
+                "actors": [
+                    {
+                        "name": "郭帆",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/49d7bb00e0a2a9199441db5354b65f28.jpg"
+                    },
+                    {
+                        "name": "吴京",
+                        "role": "刘培强",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/80f93f06a5fcbbbf0a9085125b2a93b2.jpg"
+                    },
+                    {
+                        "name": "刘德华",
+                        "role": "图恒宇",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/a5fc45490b819cda18057b127816b7a3.jpg"
+                    },
+                    {
+                        "name": "李雪健",
+                        "role": "周喆直",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/6c377dc94628b41e23c924da29cc7ced.jpg"
+                    },
+                    {
+                        "name": "沙溢",
+                        "role": "张鹏",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/3900b570ca1c916ad7be53cdd05089b0.jpg"
+                    }
+                ],
+                "director": "郭帆",
+                "category": "科幻|冒险|灾难",
+                "synopsis": "太阳即将毁灭，人类在地球表面建造出巨大的推进器，寻找新的家园，然而宇宙之路危机四伏，为了拯救地球，流浪地球时代的年轻人再次挺身而出，展开争分夺秒的生死之战...",
+                "filmType": { "name": "2D", "value": 1 },
+                "nation": "中国大陆",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1674345600,
+                "timeType": 3,
+                "runtime": 173,
+                "grade": "7.1",
+                "item": { "name": "2D", "type": 1 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6210,
+                "name": "毒舌律师",
+                "poster": "https://pic.maizuo.com/usr/movie/c369975b6185cc09c33722d0b2e5d2d5.jpg",
+                "actors": [
+                    {
+                        "name": "吴炜伦",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/0fa24f36574890d5b148c22b4c8c40d0.jpg"
+                    },
+                    {
+                        "name": "黄子华",
+                        "role": "林凉水",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/8cfe1f737edaff3d09d33dba4d41c2e2.jpg"
+                    },
+                    {
+                        "name": "谢君豪",
+                        "role": "演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/871c1972e578934f663be5de62ecb53c.jpg"
+                    },
+                    {
+                        "name": "王丹妮",
+                        "role": "演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/0b65037d5893ea4a0ce69cbc8fc3d249.jpg"
+                    },
+                    {
+                        "name": "廖子妤",
+                        "role": "演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/2b9f4c007dc40dddfe5a752d6978826e.jpg"
+                    }
+                ],
+                "director": "吴炜伦",
+                "category": "剧情|喜剧",
+                "synopsis": "一宗国际名模涉嫌虐待女儿的冤案，竟成了法律界、权贵与名媛之间的角力场！社会金字塔顶层的钟氏家族，如何用尽权力与资源去自保？以林凉水（黄子华 饰）为代表的律师们又如何在重重困难下伸张正义？",
+                "filmType": { "name": "2D", "value": 1 },
+                "nation": "中国香港",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1677196800,
+                "timeType": 3,
+                "runtime": 132,
+                "grade": "7.9",
+                "item": { "name": "2D", "type": 1 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6196,
+                "name": "满江红",
+                "poster": "https://pic.maizuo.com/usr/movie/7a61b5f8e702ce6c705a9b51db7a62e7.jpg",
+                "actors": [
+                    {
+                        "name": "易烊千玺",
+                        "role": "孙均",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/3fc2e73e5b182083d6b64f46d33cc85a.jpg"
+                    },
+                    {
+                        "name": "张译",
+                        "role": "何立",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/ff9aafa8c6033a1277d5ecd65822f8ae.jpg"
+                    },
+                    {
+                        "name": "雷佳音",
+                        "role": "秦桧",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/f8bc995baa59dde9b10f81a3dea75bfd.jpg"
+                    },
+                    {
+                        "name": "张艺谋",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/901cd60e86dca068bdfbccb2457a28f6.jpg"
+                    },
+                    {
+                        "name": "沈腾",
+                        "role": "张大",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/48263e7ec640a0eb85b8afec2648bcc3.jpg"
+                    }
+                ],
+                "director": "张艺谋",
+                "category": "悬疑|喜剧|剧情",
+                "synopsis": "张艺谋集结绝版阵容再战春节档，双男主沈腾、易烊千玺首度同框飙戏，超强班底携手打造春节必看大片《满江红》！南宋绍兴年间，岳飞死后四年，秦桧率兵与金国会谈。会谈前夜，金国使者死在宰相驻地，所携密信也不翼而飞。小兵张大（沈腾 饰）与亲兵营副统领孙均（易烊千玺 饰）机缘巧合被裹挟进这巨大阴谋之中，宰相秦桧（雷佳音 饰）命两人限一个时辰之内找到凶手。伴随危机四伏的深入调查，宰相府总管何立（张译 饰）、副总管武义淳（岳云鹏 饰）、舞姬瑶琴（王佳怡 饰）等人卷入局中，案件的背后似乎隐藏着一场更大的阴谋。局中有局、人心叵测，一夜之间风云变幻，各方势力暗流涌动……",
+                "filmType": { "name": "4D", "value": 13 },
+                "nation": "中国大陆",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1674345600,
+                "timeType": 3,
+                "runtime": 159,
+                "grade": "7.6",
+                "item": { "name": "4D", "type": 13 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6197,
+                "name": "深海",
+                "poster": "https://pic.maizuo.com/usr/movie/a3096eb4b17355e4baf21554d682cc05.jpg",
+                "actors": [
+                    {
+                        "name": "苏鑫",
+                        "role": "配音演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/0894ea7a2f937c31e554d2f5d0e29e69.jpg"
+                    },
+                    {
+                        "name": "王亭文",
+                        "role": "配音演员",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/ac66ae8ceea95c8e73a5889b8715eef5.jpg"
+                    },
+                    {
+                        "name": "田晓鹏",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/3a0df4d24afe274ca19c6668846ff907.jpg"
+                    }
+                ],
+                "director": "田晓鹏",
+                "category": "奇幻|动画",
+                "synopsis": "大年初一，献给走过长夜的你。为心结所困的少女（参宿）误入梦幻深海世界，与来自“深海”的魔法船长南河，在一段奇幻冒险中寻找生命的答案......《大圣归来》导演田晓鹏7年全新力作，春节档必看巅峰视效大片！",
+                "filmType": { "name": "4D", "value": 13 },
+                "nation": "中国大陆",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1674345600,
+                "timeType": 3,
+                "runtime": 112,
+                "grade": "7.6",
+                "item": { "name": "4D", "type": 13 },
+                "isPresale": true,
+                "isSale": false
+            },
+            {
+                "filmId": 6211,
+                "name": "蚁人与黄蜂女：量子狂潮",
+                "poster": "https://pic.maizuo.com/usr/movie/6b1d822933f8a0d87e3be438f8d4834e.jpg",
+                "actors": [
+                    {
+                        "name": "佩顿·里德",
+                        "role": "导演",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/1449069b9e790f946224688a3964abc3.jpg"
+                    },
+                    {
+                        "name": "保罗·路德",
+                        "role": "蚁人 / 斯考特·朗 Scott Lang / Ant-Man",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/9319f13d050d91226e37b05dcb9fb719.jpg"
+                    },
+                    {
+                        "name": "伊万杰琳·莉莉",
+                        "role": "黄蜂女 / 霍普·凡·戴恩Hope van Dyne / Wasp",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/080f3ff31b4753caa6adf92057332b72.jpg"
+                    },
+                    {
+                        "name": "乔纳森·梅杰斯",
+                        "role": "征服者康 Kang the Conqueror",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/19ffca81bb32b7ff56ce3f54ad797603.jpg"
+                    },
+                    {
+                        "name": "米歇尔·菲佛",
+                        "role": "Janet Van Dyne / Wasp",
+                        "avatarAddress": "https://pic.maizuo.com/usr/movie/f84c0f49fa97748fca87227d87a2fac5.jpg"
+                    }
+                ],
+                "director": "佩顿·里德",
+                "category": "科幻|冒险",
+                "synopsis": "超级英雄斯科特·朗和霍普·凡·戴恩回归，继续作为蚁人和黄蜂的冒险。他们与霍普的父母汉克·皮姆和珍妮特·凡·戴恩，以及斯科特的女儿凯茜一起误入量子领域，与奇怪的新生物互动，并开始了一场超越他们想象极限的冒险。本片由佩顿·里德执导，凯文·费奇与斯蒂芬·布鲁萨德担任制片人。《蚁人与黄蜂女：量子狂潮》定档2023年2月17日北美上映。",
+                "filmType": { "name": "3D", "value": 2 },
+                "nation": "美国",
+                "language": "",
+                "videoId": "",
+                "premiereAt": 1676592000,
+                "timeType": 3,
+                "runtime": 125,
+                "grade": "7.5",
+                "item": { "name": "3D", "type": 2 },
+                "isPresale": true,
+                "isSale": false
+            }
+        ],
+        "total": 34
+    },
+    "msg": "ok"
+}

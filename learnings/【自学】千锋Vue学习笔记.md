@@ -789,11 +789,150 @@
 
    ![在这里插入图片描述](https://img-blog.csdnimg.cn/0936f2b0db8d4d46940600c998b1f166.png)
 
-3. 
+3. eslint导致的无法运行解决方案：
 
+   1. `npm run lint`
+   2. vscode自动修复eslin，安装eslint插件，并启用
+   3. 暂时关掉，最后用①统一修复 `(vue.config.js) lintOnSave: false`
 
+4. 整个项目中除了 `main.js` 不可以改，其他的都可以改
 
+5. 模块开发：在哪用，在哪引
 
+   ```js
+   import navbar from './components/Navbar'
+   import Vue from 'vue'
+   ```
+
+   - 全局注册：`Vue.component("navbar", navbar)`
+
+   - 局部注册：冒号可以省略，也不用导入Vue了
+
+     ```js
+     components: {
+         // navbar: navbar,
+         navbar
+     }
+     ```
+
+6. 局部作用域：`<style lang="scss" scoped>`
+
+   - 如果想局部影响：`scoped`
+   - 如果想全局影响：不加
+
+7. 子传父：
+
+   - 子组件 触发器（按钮）绑定点击事件，事件函数中：`this.$emit('event')`
+
+   - `event`事件在html的组件A中定义：`<navbar myname="home" :myright="false" @event="handleEvent">`
+
+   - 然后在函数中管理组件B的对应操作：`<sidebar v-show="isShown"></sidebar>`
+
+     ```js
+     handleEvent(){
+     	this.isShown = !this.isShown
+     }
+     ```
+
+8. 生命周期、指令、过滤器
+
+   ```js
+   import Vue from "vue";
+   
+   Vue.directive("hello", {
+     inserted(el, binding) {
+       console.log(el);
+       el.style.border = "1px solid black";
+     },
+   });
+   Vue.filter("imgFilter", (path) => {
+     return path.replace("/w.h", "") + "123123asdasd";
+   });
+   ```
+
+## 8. Vue.config.js
+
+1. 配置反向代理
+
+   ```vue
+     devServer: {
+       proxy: {
+         "/ajax": {
+           target: "https://m.maoyan.com",
+           changeOrigin: true
+         },
+   
+         // 凡是kerwin请求的，都会拦截之后，进行路径的替换和反向代理
+         "/kerwin": {
+           target: "https://m.maizuo.com",
+           changeOrigin: true,
+           pathRewrite: {
+             "/kerwin": ''
+           }
+         },
+       }
+     }
+   ```
+
+2. 别名：`@`，永远指向src的绝对路径，webpack配置的别名，即 `/src`
+
+## 9. SPA
+
+单页面应用：SinglePage Web Application, SPA
+
+多页面应用：MultiPage Web Application, MPA
+
+|                   | 单页面应用                                                   | 多页面应用                                   |
+| ----------------- | ------------------------------------------------------------ | -------------------------------------------- |
+| 组成              | 一个外壳页面和多个页面片段组成                               | 多个完整页面组成                             |
+| 资源共用(css, js) | 公用，只需在外壳部分加载                                     | 不共用，每个页面都需要加载                   |
+| 刷新方式          | 页面局部刷新或更改                                           | 整页刷新                                     |
+| url模式           | a.com/#/1, a.com/#/2                                         | a.com/1.html, a.com/2.html                   |
+| 用户体验          | 页面片段间的切换快，用户体验良好                             | 页面切换加载缓慢，流畅度不够，用户体验比较差 |
+| 转场动画          | 容易实现                                                     | 无法实现                                     |
+| 数据传递          | 容易                                                         | 依赖url传参，或者cookie，localStorage等      |
+| 搜索引擎优化(SEO) | 需要单独方案、实现较为困难、不利于SEO检索，可以利用服务器端渲染(SSR)优化 | 实现方法简易                                 |
+| 试用范围          | 高要求的体验度、追求界面流畅的应用                           | 适用于追求高度支持搜索引擎的应用             |
+| 开发成本          | 较高，常需借助专业的框架                                     | 较低，但页面重复代码多                       |
+| 维护成本          | 相对容易                                                     | 相对复杂                                     |
+
+1. vue-router 配置
+
+   ![在这里插入图片描述](https://img-blog.csdnimg.cn/3f6104ff87e94280bdced127c2a12446.png)
+
+2. 在 `index.js` 中通过设置 **mode: ‘history’** 来取消默认自带的 `/#/`
+
+3. 路由配置：
+
+   ```
+   const routes = [
+     {
+       path: '/films',
+       component: Films
+     },
+   ]
+   ```
+
+4. 首页重定向
+
+   ```
+   {
+       path: '/',
+       redirect: '/films'
+     }
+   ```
+
+5. 任意路径重定向：按顺序匹配，等到了通配符就会直接重定向
+
+   ```
+   // 最后一道防线，匹配不到就走这个
+   {
+       path: '*',
+       redirect: '/films'
+     }
+   ```
+
+6. 
 
 
 
