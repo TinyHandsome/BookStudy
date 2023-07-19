@@ -1,9 +1,10 @@
 <template>
   <div>
-    hello
-
+    <tabbar></tabbar>
     <!-- 路由容器 -->
-    <router-view></router-view>
+    <section>
+      <router-view></router-view>
+    </section>
   </div>
   <!-- <div>
     hello app --{{ myname }}
@@ -32,6 +33,7 @@ import navbar from "./components/Navbar";
 import sidebar from "./components/Sidebar.vue";
 import Vue from "vue";
 import axios from "axios";
+import tabbar from "@/components/Tabbar";
 
 // Vue.component("navbar", navbar)
 Vue.directive("hello", {
@@ -58,6 +60,7 @@ export default {
   components: {
     navbar,
     sidebar,
+    tabbar,
   },
   methods: {
     handleAdd() {
@@ -90,13 +93,21 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-$width: 300px;
+<style lang="scss">
+* {
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  height: 100%;
+}
 
 ul {
-  li {
-    background: red;
-    width: $width;
-  }
+  list-style: none;
+}
+
+section {
+  padding-bottom: 3.0625rem;
 }
 </style>

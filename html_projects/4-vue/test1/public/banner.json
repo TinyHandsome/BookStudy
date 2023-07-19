@@ -1,0 +1,18 @@
+{
+    "banner": [
+        {
+            "id": 1,
+            "imgUrl": "https://m15.360buyimg.com/mobilecms/jfs/t1/84302/28/24201/126558/64801cc5Fa2f08da5/53b1d3574f420f4e.jpg!cr_1053x420_4_0!q70.jpg",
+            "title": "车车"
+        },
+        {
+            "imgUrl": "https://m15.360buyimg.com/mobilecms/s1062x420_jfs/t1/87008/2/42092/104180/649d2f96F76391fc0/a89f91d9d639ce73.jpg!cr_1053x420_4_0!q70.jpg",
+            "title": "重重"
+        },
+        {
+            "id": 3,
+            "imgUrl": "https://m15.360buyimg.com/mobilecms/s1062x420_jfs/t1/222326/21/30735/51060/649d3000Feeb044af/d2746d39b3f110ba.jpg!cr_1053x420_4_0!q70.jpg",
+            "title": "幺幺"
+        }
+    ]
+}

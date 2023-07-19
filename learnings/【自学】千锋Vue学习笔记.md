@@ -29,7 +29,7 @@
     - ajax是异步或局部更新页面的技术
     - xhr是实现ajax的方法，xhr过时了，改成fetch
     - [fetch兼容性不好](https://caniuse.com/?search=fetch)，如果不支持可以用fetch-ie8，实际就是检测浏览器不支持fetch的话，就改为xhr
-    
+
   - diff算法在判断的时候，如果标签tag不一样，会当机立断直接换掉虚拟dom；如果没有key，且标签一样，则diff算法只会看值是否改变，所以动画就不会更新；如果给同样的div加上不同的key值，则可以让虚拟dom
 
     - 把树按照层级分解对比
@@ -43,6 +43,15 @@
     - 同组件对比
 
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/43ade5ca82994729984def73645eda45.png)
+
+  - 隐藏：
+
+    - `display: none`：不占位
+    - `visibility: hidden`：隐藏内容且占位
+
+  - 连接后面的随机数：强行刷新，不让浏览器拿缓存
+
+  - 善于使用 `v-if` 对应该初始化为null的数据加标签
 
 - 学习时遇到的问题
 
@@ -876,7 +885,7 @@
 
 2. 别名：`@`，永远指向src的绝对路径，webpack配置的别名，即 `/src`
 
-## 9. SPA
+## 9. 路由
 
 单页面应用：SinglePage Web Application, SPA
 
@@ -932,10 +941,384 @@
      }
    ```
 
-6. 
+6. a 链接跳转方式：不方便设置高亮等
+
+7. `router-link`：**声明式导航**，通过设置 `.router-link-active` 的样式来控制当前选择的导航高亮，同样可以设置自己的 `active-class` 属性以及对应的样式，来控制
+
+   - `to`
+
+   - `active-class`
+
+   - `tag`：当前标签会被tag指定的标签渲染，比如设置为 `li` 这样外面就不用再包裹 li 了
+
+     - 需要注意的是，tag在高版本 `router-link` 中，已经弃用了。替换的，要使用 `custom v-slot`
+
+       ```
+       <router-link to="/center" custom v-slot="{ navigate, isActive }">
+               <li @click="navigate">我的--{{ isActive }}</li>
+       </router-link>
+       ```
+
+8. 嵌套路由
+
+   - 在对应的路由下，增加孩子路由
+
+     ```
+     {
+         path: '/films',
+         component: Films,
+         children: [
+           {
+             path: '/films/nowplaying',
+             component: NowPlaying
+           },
+           {
+             path: '/films/comingsoon',
+             component: ComingSoon
+           },
+           {
+             path: '/films',
+             redirect: '/films/nowplaying'
+           }
+         ]
+       },
+     ```
+
+   - 对孩子路由中，设置重定向
+
+     ```
+     {
+             path: '/films',
+             redirect: '/films/nowplaying'
+     }
+     ```
+
+   - **编程式导航**
+
+     - 主要就是通过给tag加点击事件实现
+
+       ```
+       <li v-for="data in datalist" :key="data" @click="handleChangePage">
+       ```
+
+     - 然后函数里跳转到对应的页面
+
+       ```
+       location.href = "#/detail"
+       ```
+
+     - 上面是浏览器自带的，但是存在问题：**如果不是#这种路由模式，该方案就失效了**，所以推荐使用vue自带的
+
+       ```
+       this.$router.push("/detail")
+       ```
+
+   - 使用范围：
+
+     - 如果是固定的几个：声明式导航
+     - 如果有很多选项：编程式导航
+     - `this.$router === router`
+
+9. 列表到详情页开发流程
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/2795c2b131784d71b4c42901769f2b27.png)
+
+     - 动态路由 index.js
+
+         ```
+         {
+             // 动态路由
+             path: '/detail/:myid',
+             component: Detail
+           },
+         ```
+
+     - 拿到路由后面的通配符：`this.$route.params.名称（比如myid）`
+
+     - 命名路由
+
+         ```
+         {
+             // 动态路由
+             name: "detail",  // 命名路由
+             path: '/detail/:myid',
+             component: Detail
+           },
+         ```
+
+         通过命名路由跳转
+
+         ```
+         this.$router.push({
+                 name: "detail",
+                 params: {
+                   myid: id,
+                 },
+               });
+         ```
+
+     - 重定向：
+
+       - `{path: '/a', redirect: {name: 'foo'}}`
+       - `{path: '/a', redirect: '/b'}`
+
+     - 别名：`{path: '/a', component: A, alias: '/b'}`，当访问 `/b` 时，url保持为 `/b` ，但是路由匹配为 `/a`
+
+     - 如果路由中带 `#` ，那么一定是前端路由；不带的话，不好判断
+
+       - 如果不想要很丑的 hash，我们可以用路由的 **history 模式**，这种模式充分利用history.pushstate API 来完成 URL跳转而无须重新加载页面
+       - 使用 history 需要注意：如果后台没有正确的配置，浏览器看到url后会给后端发请求，这时候就会404，**浏览器不知道这是前端路由还是后端路由**
+       - 为了解决上述问题，需要在服务器增加一个覆盖所有情况的候选资源：如果URL匹配不到任何静态资源，则应该返回同一个 `index.html` 页面，这个页面就是app依赖的页面
+       - 有的软件在分享的时候会自动给url加上 `#` ，所以不能用 hash 的路由，否则会出问题，所以history路由很关键
+
+     - 返回上一页：`this.$router.back()`
+
+10. 路由拦截
+
+      - 全局拦截
+
+        ```
+        router.beforeEach((to, from, next) => {
+          if (某几个需要授权的路由) {
+            if (授权通过) {
+              next()
+            } else {
+              next("/login")
+            }
+          } else {
+            next()
+          }
+        })
+        ```
+
+      - 拦截后重定向到原来的页面
+
+        1. next中需要写`query`参数
+
+           ```
+           next({
+                   path: "/login",
+                   query: {
+                     redirect: to.fullPath
+                   }
+                 })
+           ```
+
+        2. 登录页面中，登录完后，跳转到redirect保存的url去
+
+           ```
+           handleLogin() {
+                 setTimeout(() => {
+                   localStorage.setItem("token", "asdfasdf");
+                   // this.$router.back();
+           
+                   // 1. 获取 query 字段
+                   console.log(this.$route.query.redirect);
+                   // 2. 跳转到当时想要跳的页面去
+                   this.$router.push(this.$route.query.redirect);
+                 }, 0);
+               }
+           ```
+
+      - 局部拦截
+
+        - 路由独享的守卫：对某些路由单独进行守卫
+
+          ```vue
+          {
+              path: '/center',
+              component: Center,
+              meta: {
+                isRequired: true,
+              },
+              beforeEach: (to, from, next) => {
+                next()
+              }
+            },
+          ```
+
+        - 组件内的守卫：对组件内的路由进行控制，**路由生命周期**
+
+          ```
+            beforeRouteEnter(to, from) {
+              // 在渲染该组件的对应路由被验证前调用
+              // 不能获取组件实例 `this` ！
+              // 因为当守卫执行时，组件实例还没被创建！
+            },
+            beforeRouteUpdate(to, from) {
+              // 在当前路由改变，但是该组件被复用时调用
+              // 举例来说，对于一个带有动态参数的路径 `/users/:id`，在 `/users/1` 和 `/users/2` 之间跳转的时候，
+              // 由于会渲染同样的 `UserDetails` 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+              // 因为在这种情况发生的时候，组件已经挂载好了，导航守卫可以访问组件实例 `this`
+            },
+            beforeRouteLeave(to, from) {
+              // 在导航离开渲染该组件的对应路由时调用
+              // 与 `beforeRouteUpdate` 一样，它可以访问组件实例 `this`
+            },
+          ```
+
+11. 路由懒加载
+
+      - 不要用直接导入：`import Login from '@/views/Login'`
+
+      - 在用的时候导入：
+
+        ```
+          {
+              path: '/order',
+              component: () => import("@/views/Order"),
+              meta: {
+                isRequired: true,
+              }
+            }
+        ```
+
+12. 路由原理
+
+      1. hash 路由
+           - location.hash：切换
+           - window.onhashchange：监听路径的切换
+      2. history 路由
+           - history.pushState：切换
+           - window.onpopstate：监听路径的切换
 
 
+## 10. 小练习
 
+1. rem
+
+   - 由于设备dpr的原因，所以在设计的时候，需要根据dpr的大小进行缩放
+
+   - 一般为2，所以长宽在设计的时候 ➗ 2
+   - dpr：device pixel ratio
+   - 可布局的宽度：`document.documentElement.clientWidth`
+   - 设置根节点的fontsize：`document.documentElement.style.fontSize='100px'`
+   - rem是基于根节点进行比例缩放的
+   - 所以rem基于的值应该针对不同的设备是变化的，这里就要设成可布局的宽度 ➗ 设计稿实际宽度（未缩放的，比如750）✖ 100 px，以根节点的100为单位
+   - 除此之外，还有不 ✖ 100，而是 ✖ 16，这样是以字体大小为基准的，因为字体是16；100好算，16不好算
+
+2. swiper
+   - components里面放公共的组件，或者当前组件的孩子组件
+
+   - views里面放页面的vue
+
+   - 如果只是单纯的 `new Swiper` 的话，用lint会报错 `no-new` ，因此可以在 `.eslintrc.js` 中关掉对应的rules
+
+   - 同理，可以关掉未用变量的规则
+
+     ```js
+     rules: {
+         'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+         'no-new': 'off',
+         'no-unused-vars': 'off'
+       }
+     ```
+
+3. 选项卡封装
+
+   1. public下的东西都可以直接通过 `/` 来找到
+
+   2. assets下的东西是通过模块化的方式来找到
+
+      ```
+      <script>
+      	import '../assets/iconfont/iconfont.css'
+      	export default {}
+      </script>
+      ```
+
+      以模块的方式导入的样式，都会做成 style 内部样式 插到head中
+
+4. 透传
+
+   - vue可以实现，在组件上加class，实际上传递到了组件内部最外面的tag上（跳过最外层的div）
+   - react做不到
+
+5. 吸顶功能：往下滑的时候，菜单黏在顶部
+
+   - top设置为0的时候，开始粘
+
+     ```css
+     .sticky {
+       position: sticky;
+       top: 0px;
+       background: white;
+     }
+     ```
+
+   - position一共有6个值
+
+     - static
+     - relative
+     - absolute
+     - fixed
+     - sticky
+     - inherit：继承父属性
+
+6. 对于axios封装
+
+   1. 直接对于数据请求的封装
+
+      ```js
+      import axios from "axios"
+      function http() {
+          return axios({
+              url: "https://m.maizuo.com/gateway?cityId=440300&pageNum=1&pageSize=10&type=1&k=3602463",
+              headers: {
+                  "X-Client-Info":
+                      '{"a":"3000","ch":"1002","v":"5.2.1","e":"1689149181904756335738881"}',
+                  "X-Host": "mall.film-ticket.film.list",
+              },
+          })
+      }
+      
+      export default http
+      ```
+
+   2. axios自带的封装方案
+   
+      ```js
+      
+      import axios from "axios"
+      const http = axios.create({
+          baseURL: "https://m.maizuo.com/gateway?cityId=440300&pageNum=1&pageSize=10&type=1&k=3602463",
+          timeout: 10000,
+          headers: {
+              "X-Client-Info":
+                  '{"a":"3000","ch":"1002","v":"5.2.1","e":"1689149181904756335738881"}',
+              "X-Host": "mall.film-ticket.film.list",
+          },
+      })
+      
+      export default http
+      ```
+   
+   3. 还可以在发请求之前拦截：showLoading
+   
+   4. 在成功后拦截：hideLoading
+   
+7. 动态绑定style，实现图像展示
+
+   ```js
+   <div
+     :style="{
+       backgroundImage: 'url(' + filmInfo.poster + ')',
+     }"
+     class="poster"
+   ></div>
+   ```
+
+   CSS 属性 `background-size: cover;` 可以使背景图片自动缩放和裁剪到完全覆盖背景区域。具体表现为： - 如果背景图片比背景区域更宽或更高，那么 `background-size: cover;` 属性值会自动适应并缩小图片，以便完全覆盖整个背景区域。 - 如果背景图片比背景区域更小或比例不对，那么 `background-size: cover;` 属性值会自动按比例拉伸图片，并裁剪多余的部分，以便完全覆盖背景区域。 该属性通常用于自适应响应式设计，可以使背景始终完全填充背景区域，在不同设备和屏幕尺寸下都有良好的显示效果。用法示例： 
+
+   ```css
+   .background {
+     background-image: url(my-background-image.jpg);
+     background-size: cover;
+   }
+   ```
+
+8. 
 
 
 
