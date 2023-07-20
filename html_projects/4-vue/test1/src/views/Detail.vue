@@ -11,12 +11,67 @@
       <div>{{ filmInfo.name }}</div>
       <div>
         <div class="content-bottom">{{ filmInfo.category }}</div>
-        <div class="content-bottom">{{ filmInfo.premiereAt * 1000 }}上映</div>
+        <div class="content-bottom">
+          {{ filmInfo.premiereAt | dataFilter }}上映
+        </div>
         <div class="content-bottom">
           {{ filmInfo.nation }} | {{ filmInfo.runtime }}分钟
         </div>
+        <div
+          class="content-bottom"
+          style="line-height: 15px"
+          :class="isHidden ? 'hidden' : ''"
+        >
+          {{ filmInfo.synopsis }}
+        </div>
+        <div style="text-align: center">
+          <i
+            class="iconfont"
+            :class="isHidden ? 'icon-caidan' : 'icon-chuangzuo'"
+            @click="isHidden = !isHidden"
+          ></i>
+        </div>
         <div class="content-bottom"></div>
-        <div class="content-bottom"></div>
+      </div>
+
+      <div>
+        <div>演职人员</div>
+        <detail-swiper :perview="3.5">
+          <detail-swiper-item
+            v-for="(data, index) in filmInfo.actors"
+            :key="index"
+          >
+            <div
+              :style="{
+                backgroundImage: 'url(' + data.avatarAddress + ')',
+              }"
+              class="avatar"
+            ></div>
+            <div style="text-align: center; font-size: 12px">
+              {{ data.name }}
+            </div>
+            <div style="text-align: center; font-size: 13px; color: grey">
+              {{ data.role }}
+            </div>
+          </detail-swiper-item>
+        </detail-swiper>
+      </div>
+
+      <div>
+        <div>剧照</div>
+        <detail-swiper :perview="2">
+          <detail-swiper-item
+            v-for="(data, index) in filmInfo.photos"
+            :key="index"
+          >
+            <div
+              :style="{
+                backgroundImage: 'url(' + data + ')',
+              }"
+              class="avatar"
+            ></div>
+          </detail-swiper-item>
+        </detail-swiper>
       </div>
     </div>
   </div>
@@ -25,12 +80,29 @@
 <script>
 import axios from "axios";
 import http from "@/util/http";
+import moment from "moment";
+import Vue from "vue";
+
+import detailSwiper from "@/components/detail/DetailSwiper";
+import detailSwiperItem from "@/components/detail/DetailSwiperItem";
+
+// 设置成中文
+moment.locale("zh-cn");
+
+Vue.filter("dataFilter", (date) => {
+  return moment(date * 1000).format("YYYY-MM-DD");
+});
 
 export default {
   data() {
     return {
       filmInfo: null,
+      isHidden: true,
     };
+  },
+  components: {
+    detailSwiper,
+    detailSwiperItem,
   },
   created() {
     // console.log("created", location.href);
@@ -74,5 +146,17 @@ export default {
     font-size: 12px;
     margin-top: 0.25rem;
   }
+}
+
+.hidden {
+  overflow: hidden;
+  height: 30px;
+}
+
+.avatar {
+  width: 100%;
+  height: 5.3125rem;
+  background-position: center;
+  background-size: cover;
 }
 </style>
