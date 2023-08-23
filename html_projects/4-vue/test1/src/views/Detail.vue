@@ -1,5 +1,8 @@
 <template>
   <div v-if="filmInfo">
+    <detail-header v-scroll="50">
+      {{ filmInfo.name }}
+    </detail-header>
     <!-- <img :src="filmInfo.poster" alt="" /> -->
     <div
       :style="{
@@ -36,7 +39,7 @@
 
       <div>
         <div>演职人员</div>
-        <detail-swiper :perview="3.5">
+        <detail-swiper :perview="3.5" name="actors">
           <detail-swiper-item
             v-for="(data, index) in filmInfo.actors"
             :key="index"
@@ -59,7 +62,7 @@
 
       <div>
         <div>剧照</div>
-        <detail-swiper :perview="2">
+        <detail-swiper :perview="2" name="photos">
           <detail-swiper-item
             v-for="(data, index) in filmInfo.photos"
             :key="index"
@@ -69,6 +72,7 @@
                 backgroundImage: 'url(' + data + ')',
               }"
               class="avatar"
+              @click="handlePreview(index)"
             ></div>
           </detail-swiper-item>
         </detail-swiper>
@@ -80,12 +84,14 @@
 <script>
 import axios from "axios";
 import http from "@/util/http";
+import obj from "@/util/mixinObj";
 import moment from "moment";
 import Vue from "vue";
 
 import detailSwiper from "@/components/detail/DetailSwiper";
 import detailSwiperItem from "@/components/detail/DetailSwiperItem";
-
+import detailHeader from "@/components/detail/DetailHeader";
+import { ImagePreview } from "vant";
 // 设置成中文
 moment.locale("zh-cn");
 
@@ -93,7 +99,32 @@ Vue.filter("dataFilter", (date) => {
   return moment(date * 1000).format("YYYY-MM-DD");
 });
 
+Vue.directive("scroll", {
+  inserted(el, binding) {
+    // el是绑定在谁身上，就拿到谁的dom节点
+    // console.log(el, binding);
+    el.style.display = "none";
+
+    window.onscroll = () => {
+      if (
+        (document.documentElement.scrollTop || document.body.scrollTop) >
+        binding.value
+      ) {
+        el.style.display = "block";
+      } else {
+        el.style.display = "none";
+      }
+    };
+  },
+
+  // 销毁执行
+  unbind() {
+    window.onscroll = null;
+  },
+});
+
 export default {
+  mixins: [obj],
   data() {
     return {
       filmInfo: null,
@@ -103,8 +134,19 @@ export default {
   components: {
     detailSwiper,
     detailSwiperItem,
+    detailHeader,
   },
-  created() {
+  methods: {
+    handlePreview(index) {
+      ImagePreview({
+        images: this.filmInfo.photos,
+        startPosition: index,
+        closeable: true,
+        closeIconPosition: "top-left",
+      });
+    },
+  },
+  mounted() {
     // console.log("created", location.href);
     console.log("created", this.$route.params.myid);
     // axios 利用id发请求到详情接口，获取详细拿数据，布局页面
@@ -126,6 +168,21 @@ export default {
       console.log(res.data);
       this.filmInfo = res.data.data.film;
     });
+  },
+
+  // mounted() {
+  //   window.onscroll = () => {
+  //     console.log("scroll");
+
+  //     if (document.documentElement.scrollTop > 50) {
+  //       console.log("显示");
+  //     } else {
+  //       console.log("隐藏");
+  //     }
+  //   };
+  // },
+  destroyed() {
+    window.onscroll = null;
   },
 };
 </script>

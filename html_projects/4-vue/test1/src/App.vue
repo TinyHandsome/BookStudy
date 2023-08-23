@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tabbar></tabbar>
+    <tabbar ref="mytabbar" v-show="$store.state.isTabbarShow"></tabbar>
     <!-- 路由容器 -->
     <section>
       <router-view></router-view>
@@ -9,7 +9,7 @@
   <!-- <div>
     hello app --{{ myname }}
     <img src="/2.3.jpg" alt="" />
-    <input type="text" v-model="mytext" />
+      <input type="text" v-model="mytext" />
     <button @click="handleAdd">add</button>
     <ul>
       <li v-for="data in datalist" :key="data">
@@ -33,7 +33,12 @@ import navbar from "./components/Navbar";
 import sidebar from "./components/Sidebar.vue";
 import Vue from "vue";
 import axios from "axios";
+
 import tabbar from "@/components/Tabbar";
+
+import Vant from "vant";
+import "vant/lib/index.css";
+Vue.use(Vant);
 
 // Vue.component("navbar", navbar)
 Vue.directive("hello", {
@@ -74,6 +79,7 @@ export default {
   computed: {},
   watch: {},
   mounted() {
+    console.log(111111, this.$refs.mytabbar.$el.offsetHeight);
     const config = {
       headers: {
         Authorization:

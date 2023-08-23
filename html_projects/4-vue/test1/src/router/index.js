@@ -7,6 +7,7 @@ import ComingSoon from '@/views/films/ComingSoon'
 import Search from '@/views/Search'
 import Detail from '@/views/Detail'
 import Login from '@/views/Login'
+import City from '@/views/City'
 
 // 注册两个全局组件 router-view router-link
 Vue.use(VueRouter)
@@ -42,6 +43,10 @@ const routes = [
   {
     path: '/cinemas',
     component: Cinemas
+  },
+  {
+    path: '/city',
+    component: City
   },
   {
     path: '/cinemas/search',

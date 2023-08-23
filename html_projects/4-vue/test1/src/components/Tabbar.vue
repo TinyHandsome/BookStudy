@@ -44,6 +44,7 @@ footer {
   width: 100%;
   height: 3.0625rem;
   background: white;
+  z-index: 100;
 
   ul {
     display: flex;

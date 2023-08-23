@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-container kerwin">
+  <div class="swiper-container" :class="name">
     <div class="swiper-wrapper">
       <slot></slot>
     </div>
@@ -15,9 +15,13 @@ export default {
       type: Number,
       default: 1,
     },
+    name: {
+      type: String,
+      default: "kerwin",
+    },
   },
   mounted() {
-    new Swiper(".kerwin", {
+    new Swiper("." + this.name, {
       slidesPerView: this.perview,
       spaceBetween: 30,
       freeMode: true,

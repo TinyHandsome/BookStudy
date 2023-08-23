@@ -19,6 +19,9 @@
 
 - 学习链接
 
+  1. [千锋HTML5前端开发教程1000集](https://www.bilibili.com/video/BV17z4y1D7Yj)：`[P428: P568]，共139集`
+  2. [千锋教育前端Vue3.0全套视频教程（Kerwin2023版，Vue.js零基础，Vue3入门到实操）](https://www.bilibili.com/video/BV1Ss4y1T7mZ/)
+
 - 感想 | 摘抄
 
   - vue的架构模式是mvvm（双向绑定）（不是mvc）
@@ -54,6 +57,12 @@
   - 善于使用 `v-if` 对应该初始化为null的数据加标签
 
   - 同一个tag里，动态绑定的 `:class`，和静态绑定的 `class` 会共存；style同理
+
+  - 在es6中合并数组的技巧：
+
+    - 已有数组：`a`
+    - 获取新的数组：`b`
+    - 合并数组：`a = [...a, ...b]`
 
 - 学习时遇到的问题
 
@@ -1185,7 +1194,7 @@
            - window.onpopstate：监听路径的切换
 
 
-## 10. 小练习
+## 10. 小练习和组件库
 
 1. rem
 
@@ -1223,7 +1232,7 @@
 
    2. assets下的东西是通过模块化的方式来找到
 
-      ```
+      ```html
       <script>
       	import '../assets/iconfont/iconfont.css'
       	export default {}
@@ -1279,7 +1288,7 @@
       ```
 
    2. axios自带的封装方案
-   
+
       ```js
       
       import axios from "axios"
@@ -1295,11 +1304,11 @@
       
       export default http
       ```
-   
+
    3. 还可以在发请求之前拦截：showLoading
-   
+
    4. 在成功后拦截：hideLoading
-   
+
 7. 动态绑定style，实现图像展示
 
    ```js
@@ -1323,11 +1332,298 @@
    }
    ```
 
-8. 
+8. 轮播图父传子会出现的bug：
+
+   - `<detail-swiper :perview="2">`，不同的组件中的props值不同，但是界面显示的并没有实现
+
+   - 解决方案：`new Swiper`的类名使用动态的
+
+     ```js
+     <div class="swiper-container" :class="name">
+     
+     mounted() {
+         new Swiper("." + this.name, {
+           slidesPerView: this.perview,
+           spaceBetween: 30,
+           freeMode: true,
+         });
+       },
+     ```
+
+9. 指令的最佳实践，根据滚动的距离，对绑定的tag进行隐藏和显示
+
+   ```js
+   Vue.directive("scroll", {
+     inserted(el, binding) {
+       // el是绑定在谁身上，就拿到谁的dom节点
+       // console.log(el, binding);
+       el.style.display = "none";
+   
+       window.onscroll = () => {
+         if (
+           (document.documentElement.scrollTop || document.body.scrollTop) >
+           binding.value
+         ) {
+           el.style.display = "block";
+         } else {
+           el.style.display = "none";
+         }
+       };
+     },
+   
+     // 销毁执行
+     unbind() {
+       window.onscroll = null;
+     },
+   });
+   ```
+
+10. 利用`better-scroll`进行滚动优化
+
+11. 限制浏览器滚动
+
+       ```css
+       .box {
+         height: 300px;
+         overflow: hidden;
+       }
+       ```
+
+12. 防止初始化过早
+
+       ```js
+       mounted() {
+           http({
+             url: "/gateway?cityId=440300&ticketFlag=1&k=4312294",
+             headers: {
+               "X-Host": "mall.film-ticket.cinema.list",
+             },
+           }).then((res) => {
+             console.log(res.data.data.cinemas);
+             this.cinemaList = res.data.data.cinemas;
+       
+             this.$nextTick(() => {
+               new BetterScroll(".box");
+             });
+           });
+         },
+       ```
+
+13. BetterScroll增加滚动bar，fade：自动隐藏
+
+       ```js
+       new BetterScroll(".box", {
+                 scrollbar: {
+                   fade: true,
+                 },
+               });
+       ```
+
+14. 修正滚动条的位置：`position: relative`
+
+15. 通过给组件加 `ref`，获取当前组件中tag的`offsetHeight`
+
+    ```
+    <tabbar ref="mytabbar"></tabbar>
+    
+    mounted() {
+        console.log(111111, this.$refs.mytabbar.$el.offsetHeight);
+        }
+    ```
+
+16. 组件库
+
+    1. element-ui：PC端，饿了吗团队推出
+
+    2. vant：移动端，有赞技术团队推出
+
+       - 使用下述代码，可以全局初始化Vant，不需要再引入组件
+
+         ```
+         import Vant from "vant";
+         import "vant/lib/index.css";
+         Vue.use(Vant);
+         ```
+
+17. 数据懒加载：直接用vant的列表
+
+    - 详情页面返回会出现 **触发到底的事件**，这是因为onLoad是瞬间执行的，而mounted中的axios是异步等待返回结果的
+
+    - 为了解决上述问题，则需要onLoad函数中的【总长度匹配禁用懒加载】的total（从axios请求返回的值）不为0，即等待axios加载完了之后再走这一部分逻辑
+
+      ```js
+      if (this.datalist.length === this.total && this.total != 0) {
+              this.finished = true;
+              return;
+            }
+            console.log("到底了");
+            this.current++;
+      ```
+
+18. loading框：在axios加载数据完毕后消失，在发请求之前加载，在发请求之后关闭
+
+    ```js
+    import axios from "axios"
+    import { Toast } from "vant";
+    
+    
+    const http = axios.create({
+        baseURL: "https://m.maizuo.com",
+        timeout: 10000,
+        headers: {
+            "X-Client-Info":
+                '{"a":"3000","ch":"1002","v":"5.2.1","e":"1689149181904756335738881"}',
+            // "X-Host": "mall.film-ticket.film.list",
+        },
+    })
+    
+    // 添加请求拦截器
+    http.interceptors.request.use(function (config) {
+        // 在发送请求之前做些什么
+        Toast.loading({
+            message: "加载中...",
+            forbidClick: true,
+            duration: 0,
+        });
+        return config;
+    }, function (error) {
+        // 对请求错误做些什么
+        return Promise.reject(error);
+    });
+    
+    // 添加响应拦截器
+    http.interceptors.response.use(function (response) {
+        // 对响应数据做点什么
+    
+        // 隐藏加载
+        Toast.clear();
+        return response;
+    }, function (error) {
+        // 对响应错误做点什么
+        return Promise.reject(error);
+    });
+    ```
+
+19. 传统的多页面跳转方案：
+
+    - `location.href = '#/cinemas?cityname=' + item.name`
+    - cookie、localStorage
+
+20. 单页面方案
+
+    - 中间人模式
+    - bus事件总线方案：`$on`、`$emit`
+
+## 11. vuex
+
+1. 状态管理模式，管理公共状态，保存到内存里，刷新就没了（浏览器的设置）
+
+   ![](https://vuex.vuejs.org/vuex.png)
+
+2. [vue-devtools最新版本安装教程（vue-devtools6.5.0）](https://blog.csdn.net/weixin_44315181/article/details/131580858)
+
+3. vue-devtools 5.1.1为教程版本
+
+4. vuex可以管理保存公共状态（分散在各个组件内的状态，统一管理）
+
+5. vuex默认是管理在内存中，一刷新页面，公共状态就丢失了
+
+6. vuex 项目应用
+
+   - 非父子的通信
+   - 后端数据的缓存快照，减少重复数据请求，减轻服务器压力，提高用户体验
+
+7. mutations中不支持异步，只能支持同步；能支持异步和同步的是actions
+
+8. 注意：
+
+   1. 应用层级的状态应该集中到单个store对象中
+   2. 提交mutation是更改状态的唯一方法，并且这个过程是同步的
+   3. 异步逻辑都应该封装到action里面
+
+9. vuex的第二种写法
+
+   - state：单一状态树，每个应用将仅仅包含一个store实例
+
+     - `this.$store.state.状态名字`
+
+     - `...mapState(["title"])`
+
+       ```
+       computed: {
+           ...mapState(["cinemaList"]),
+         },
+       // 或者
+       computed: mapState(["cinemaList"]),
+         
+         // 使用
+         this.cinemaList
+       ```
+
+       - `mapState`：函数返回的是store.state的对象
+       - 然后使用 `...` 可以解构结构体（解构字典）
+
+     - `mapActions`、`mapMutations`同理，不过不是放在computed中，而是放在methods中
+
+10. 底部选项卡控制
+
+    1. 普通实现：在mounted时提交修改 v-show 的变量为false的mution；在destoryed时提交修改 v-show 的变量为true 的mution
+
+    2. 混入实现：mixin，建一个对象，将上述过程中的mounted/created/destoryed写入改对象中，然后将改对象混入其中
+
+       ```js
+       export default {
+       	mixins: [obj],
+       	data(){},
+       	mounted(){},
+       	...
+       }
+       ```
+
+11. vuex的持久化
+
+    1. `vuex-persistedstate`
+
+    2. 下载：`cnpm i --save vuex-persistedstate`
+
+    3. 使用：
+
+       - 在 `store/index.js` 中导入：`import createPersistedState from 'vuex-persistedstate'`
+       - 在 `Vuex.Store` 中增加插件 `plugins: [createPersistedState()],`
+
+    4. 原理：每次存的时候，都会在localstorage中存一份
+
+    5. 默认是 localstorage，可以改为别的，比如 `window.sessionStorage`；默认是全部存储，可以通过 方法 `reducer` 只存储state中的部分数据
+
+       ```js
+       export default new Vuex.Store({
+         plugins: [createPersistedState({
+           reducer: (state) => {
+             return {
+               cityId: state.cityId,
+               cityName: state.cityName
+             }
+           }
+         })],
+         ...
+       )}
+       ```
 
 
+## 12. git
 
-
+1. 代码管理工具
+   1. 传统：u盘，app，飞秋，compare
+   2. svn，集中式代码管理工具
+   3. git，分布式代码管理工具
+2. `git init`：初始化本地仓库
+3. `git add`：代码区 -> 暂存区
+4. `git commit`：暂存区 -> 本地仓库
+5. `git log`：查看提交记录
+6. `git reset --hard HEAD^`：回退上一个版本，两个^就是回退两个版本
+7. `git reflog`：操作记录
+8. `git reset --hard 六位版本号`：回退指定版本（**可根据操作记录进行后悔**）
+9. `git diff 文件名`：查看当前代码和仓库中的代码有何不同
 
 
 

@@ -1,7 +1,15 @@
 <template>
   <div>
-    <ul>
-      <li
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="我是有底线的"
+      @load="onLoad"
+      :immediate-check="false"
+    >
+      <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
+
+      <van-cell
         v-for="data in datalist"
         :key="data.filmId"
         @click="handleChangePage(data.filmId)"
@@ -18,8 +26,8 @@
           </div>
         </div>
         <!-- <router-link to="/detail">{{ data }}</router-link> -->
-      </li>
-    </ul>
+      </van-cell>
+    </van-list>
   </div>
 </template>
 
@@ -38,6 +46,10 @@ export default {
   data() {
     return {
       datalist: [],
+      loading: false,
+      finished: false,
+      current: 1,
+      total: 0,
     };
   },
   mounted() {
@@ -57,9 +69,30 @@ export default {
     }).then((res) => {
       console.log(res.data.data.films);
       this.datalist = res.data.data.films;
+      this.total = res.data.data.total;
     });
   },
   methods: {
+    onLoad() {
+      // 总长度匹配，禁用懒加载功能
+      if (this.datalist.length === this.total && this.total != 0) {
+        this.finished = true;
+        return;
+      }
+      console.log("到底了");
+      this.current++;
+
+      http({
+        url: `/gateway?cityId=${this.$store.state.cityId}&pageNum=${this.current}&pageSize=10&type=1&k=3602463`,
+        headers: {
+          "X-Host": "mall.film-ticket.film.list",
+        },
+      }).then((res) => {
+        // console.log(res.dat  wa.data.films);
+        this.datalist = [...this.datalist, ...res.data.data.films];
+      });
+      this.loading = false;
+    },
     handleChangePage(id) {
       console.log(id);
       // 编程式导航
@@ -80,8 +113,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-ul {
-  li {
+.van-list {
+  .van-cell {
     overflow: hidden;
     padding: 0.9375rem;
 
