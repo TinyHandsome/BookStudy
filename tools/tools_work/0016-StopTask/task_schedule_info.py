@@ -15,22 +15,13 @@
 
 import pymysql
 import pandas as pd
+from password import ts_mysql_info
 
 
 class MysqlInfo:
 
     def __init__(self):
-        ts_mysql_info = {
-            # 最新环境
-            'host': '10.4.16.11',
-
-            # 开发环境
-            # 'host': '10.4.16.31',
-
-            'user': 'root',
-            'password': 'bigdata',
-            'database': 'priest_db'
-        }
+        ts_mysql_info = ts_mysql_info
         self.db = pymysql.connect(ts_mysql_info.get('host'), ts_mysql_info.get('user'), ts_mysql_info.get('password'),
                                   ts_mysql_info.get('database'))
         # 检查连接是否断开，如果断开就进行重连
