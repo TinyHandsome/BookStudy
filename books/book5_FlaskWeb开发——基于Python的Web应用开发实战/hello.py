@@ -27,6 +27,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
+from password import t1, t2
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 
@@ -49,9 +51,9 @@ app.config['MAIL_SERVER'] = 'smtp.qq.com'
 app.config['MAIL_PORT'] = 465
 # app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = '694317828@qq.com'
+app.config['MAIL_USERNAME'] = t1
 # app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_PASSWORD'] = 'smwdawctefwdbfga'
+app.config['MAIL_PASSWORD'] = t2
 
 bootstrap = Bootstrap(app)
 moment = Moment(app)
