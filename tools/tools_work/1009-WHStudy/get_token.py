@@ -8,7 +8,7 @@
 @software: pycharm
 @file: get_token.py
 @time: 2022/1/17 8:34
-@desc: 获取万华学习登录的token
+@desc: 获取whstudy登录的token
 
         参考链接：
             1. (史上最全！Selenium元素定位的30种方式)[https://blog.csdn.net/qq_32897143/article/details/80383502]
