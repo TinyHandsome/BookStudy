@@ -12,6 +12,7 @@
 - 关于blog数量：**博客园** 比 **CSDN** 少 **3** 个是因为：
   1. 两个java学习笔记csdn分别分了两个来写
   2. 因为大家都懂的原因，阴阳师在CSDN写了两次
+- 20230901：取消关于tools和writting的track，仅本地留档
 
 ## 读书笔记 | Books
 
@@ -51,7 +52,7 @@
 
 ### 4. AI | Illustrator
 
-## 钻研教程 | Practice
+## 钻研教程 | Notes
 
 1. [两步解决jetbrains-agent-latest.zip不能拖入工作区](https://blog.csdn.net/qq_21579045/article/details/108804218)
 
