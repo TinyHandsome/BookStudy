@@ -8,8 +8,11 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       "/ajax": {
-        target: "https://m.maoyan.com",
-        changeOrigin: true
+        target: "https://i.maoyan.com",
+        changeOrigin: true,
+        pathRewrite: {
+          "/ajax": ''
+        }
       },
 
       // 凡是kerwin请求的，都会拦截之后，进行路径的替换和反向代理
