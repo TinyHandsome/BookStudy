@@ -2,7 +2,7 @@
 
 件件有着落，事事有回音，凡事有交代。
 
-**——李英俊努力努力再努力 |** <span style="color: skyblue; font-weight: bold">更新时间：20220718</span>
+**——李英俊努力努力再努力 |** <span style="color: skyblue; font-weight: bold">更新时间：20230901</span>
 
 [TOC]
 
@@ -26,7 +26,7 @@
 
 ## 文档笔记 | Docs
 
-1. [Python魔法手册](https://github.com/TinyHandsome/BookStudy/tree/master/books/docs1_python%E9%AD%94%E6%B3%95%E6%89%8B%E5%86%8C)
+1. [Python魔法手册](https://github.com/TinyHandsome/BookStudy/tree/master/1-books/docs1_python%E9%AD%94%E6%B3%95%E6%89%8B%E5%86%8C)
 
 ## 视频笔记 | Learnings
 
