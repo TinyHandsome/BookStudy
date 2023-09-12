@@ -1484,6 +1484,273 @@
 3. `nginx.exe -c .\conf\liyingjun.conf`：启动nginx
 4. `nginx.exe -s stop`：停止
 5. `nginx.exe -s reload`：重启
+5. 配置好了，可以直接带着nginx复制到服务器上运行
+
+## 14. Vue3的组合式api
+
+1. 注册和挂载不一样，vue3使用了createApp
+
+2. 路由使用createRouter函数
+   1. `createWebHistory`：斜杠路由模式，history模式
+   2. `createWebHashHistory`：#路由模式，hash模式
+   
+3. vuex同上，使用createStore
+
+4. **组合式API**：react 类和函数写法（不支持状态，生命周期等，支持属性） ——》 react hooks（钩住函数写法的状态） ——》 vue3-hooks（即：composition api，见不到this了）
+   
+   1. `setup`：代替了vue3老写法或者vue2写法中，`beforeCreate` 和 `created` 生命周期
+   
+   2. `reactive`：创建响应式对象，类似模板中的状态（如果参数是字符串、数字会报警告）
+   
+   3. 如果同时使用 老式的 `data(){}` 和 组合式的 `setup(){}` ，定义的变量和生命周期会同时生效
+      - 在 `setup` 中没有this
+      - 两套东西不建议混用
+      - `reactive`：可以写多个
+   
+   4. template里可以写多个div 兄弟节点
+   
+   5. `ref`：
+   
+      - 过去 vue2中 dom 的引用
+   
+        ```
+        <input type="text" ref="mytextref">
+        
+        mounted() {
+                console.log("mounted", this.$refs.mytextref);
+        },
+        ```
+   
+      - 在新版vue3中，同样可以获取dom对象，但是需要通过 `.value` 拿到dom对象
+   
+        ```
+        const mytextref = ref()
+        
+        return {
+                    mytextref
+                }
+        ```
+   
+      - 在新版vue3中，通过ref跟踪变量，从而对组件进行赋值
+   
+        ```vue
+        <template>
+            <div>
+                <input type="text" ref="mytext">
+                <button @click="handleAdd">add</button>
+        
+                <ul>
+                    <li v-for="data in datalist" :key="data">
+                        {{ data }}
+                    </li>
+                </ul>
+            </div>
+        </template>
+        
+        <script>
+        import { ref } from "vue";
+        export default {
+            setup() {
+                const mytext = ref()
+                const datalist = ref([111, 222])
+        
+                const handleAdd = () => {
+                    console.log(mytext.value.value);
+                    datalist.value.push(mytext.value.value)
+                    mytext.value.value = ''
+                }
+        
+                return {
+                    handleAdd,
+                    mytext,
+                    datalist
+                }
+            }
+        }
+        </script>
+        ```
+   
+   6. `toRefs`：解决 `ref` 和 `reactive` 的最佳实践，reactive可以自动展开，但是不支持简单类型（int、str啥的）；ref啥都能用，但是不能自动展开，很难受。【但是】toRefs可以支持：
+   
+      - 定义阶段：使用 reative
+   
+      - return阶段：使用 `..toRefs()`，将变量解包为多个ref对象
+   
+      - 直接取长补短，我愿称之为绝杀
+   
+        ```vue
+        <template>
+            <div>
+                {{ myname }}
+                <button @click="handleClick">change</button>
+            </div>
+        </template>
+        
+        <script>
+        import { reactive, toRefs } from 'vue'
+        export default {
+            setup() {
+                console.log("setup");
+        
+                // 定义状态
+                const obj = reactive({
+                    myname: "kerwin",
+                    myage: 100
+                })
+                const handleClick = () => {
+                    obj.myname = "liyingjun"
+                }
+        
+                return {
+                    handleClick,
+                    ...toRefs(obj)
+                }
+            }
+        }
+        </script>
+        ```
+   
+   7. `props`：父传子解决方案
+   
+      1. 定义一个组件，接受参数 props
+   
+         ```vue
+         <template>
+             <div>
+                 <button>left</button>
+                 navbar -- {{ myname }}
+                 <button>right</button>
+             </div>
+         </template>
+         
+         <script>
+         export default {
+             props: ["myname"]
+         }
+         </script>
+         ```
+   
+      2. 主界面使用组件，传入参数
+   
+         ```vue
+         <template>
+             <div>
+                 通信
+                 <navbar myname="home"></navbar>
+             </div>
+         </template>
+         
+         <script>
+         import navbar from './components/navbar'
+         export default {
+             components: {
+                 navbar
+             }
+         }
+         </script>
+         ```
+   
+      3. 如果是在mounted中想要拿到这个值，或者是在setup中想要处理逻辑中包含这个值，常见的vue2和vue3写法如下
+   
+         ```
+         mounted() {
+                 console.log("222", this.myid);
+             },
+         
+         setup(props) {
+         	console.log(props.myid);
+         }
+         ```
+   
+         - setup默认传入第一个参数就是props的list
+         - setup比mounted的调用时间要早
+   
+   8. `emit`：子传父解决方案
+   
+      1. 触发的来源组件中，定义触发的函数，函数体内写 `emit` ，传参对应的事件名
+   
+         ```vue
+         <template>
+             <div>
+                 <button @click="handleShow">left</button>
+                 navbar -- {{ myname }}
+                 <button>right</button>
+             </div>
+         </template>
+         
+         <script>
+         export default {
+             props: ["myname", "myid"],
+             mounted() {
+                 console.log("222", this.myid);
+             },
+         
+             setup(props, { emit }) {
+                 console.log(props.myid);
+         
+                 const handleShow = () => {
+                     emit("event")
+                 }
+         
+                 return {
+                     handleShow
+                 }
+             }
+         }
+         </script>
+         ```
+   
+      2. 在被影响的组件，一般是主页的组件上，给调用触发组件的 dom 上定义事件名及其绑定的函数名，在script中编写函数的具体实现
+   
+         ```vue
+         <template>
+             <div>
+                 通信
+                 <navbar myname="home" myid="111" @event="change"></navbar>
+                 <sidebar v-show="obj.isShow"></sidebar>
+             </div>
+         </template>
+         
+         <script>
+         import navbar from './components/navbar'
+         import sidebar from './components/sidebar'
+         import { reactive } from "vue";
+         export default {
+             components: {
+                 navbar,
+                 sidebar
+             },
+         
+             setup() {
+                 const obj = reactive({
+                     isShow: true
+                 })
+         
+                 const change = () => {
+                     obj.isShow = !obj.isShow
+                 }
+         
+                 return {
+                     obj,
+                     change
+                 }
+             }
+         }
+         </script>
+         ```
+   
+      3. 选要注意的是，在vue2中 调用触发 的组件中，`emit`的写法是 `this.$emit()`，而在vue3中，类似props传参一样，第二个参数默认为闭包的 `emit`，所以第二个参数以 解包 的形式 获取 emit：`setup(props, { emit }) {...}`
+   
+   9. 生命周期
+
+
+
+
+
+
+
+
+
 
 
 
