@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="vue.js"></script>
+        <style>
+            .red {
+                background: red;
+            }
+            .yellow {
+                background: yellow;
+            }
+            .hide {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="box">
+            <div :class="isShow?'':'hide'">{{myname}}</div>
+            <div :class="color">asdfasdf</div>
+            <button @click="changeColor">changeColor</button>
+
+            <ul>
+                <li v-for="item in mylist" :key="item">{{ item }}</li>
+            </ul>
+        </div>
+
+        <script>
+            var obj = {
+                data() {
+                    return {
+                        myname: "kerwin",
+                        color: "red",
+                        isShow: true,
+                        mylist: [1, 2, 3],
+                    };
+                },
+                methods: {
+                    changeColor() {
+                        this.color = "yellow";
+                        this.isShow = false;
+                    },
+                },
+            };
+            Vue.createApp(obj).mount("#box");
+        </script>
+    </body>
+</html>

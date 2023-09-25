@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="vue.js"></script>
+
+        <style>
+            .activate {
+                background: red;
+            }
+        </style>
+    <body>
+        <div id="box">
+            <ul>
+                <li v-for="(item, index) in items" :key="item" :class="aim_index===index?'activate':''" @click="aim_index=index">
+                    {{ item }}
+                </li>
+            </ul>
+
+            <div v-html="htmlTest"></div>
+            <div :style="{
+                fontSize: '30px',
+                'background-color': 'yellow'
+            }">asd</div>
+
+            <div :style="imgObj"></div>
+            <button @click="handleAjax">click</button>
+        </div>
+
+        <script>
+            obj = {
+                data(){
+                    return {
+                        items: [1, 2, 3],
+                        aim_index: 0,
+                        htmlTest: "<b>asd</b>",
+                        imgObj: {
+                            width: "200px",
+                            height: "200px",
+                            backgroundSize: "cover",
+                        }
+                    }
+                },
+                methods: {
+                    handleAjax(){
+                        this.imgObj.backgroundImage = "url(https://static.maizuo.com/pc/v5/usr/movie/51ec9e9866ed2d2a0f905e4c100f9e27.jpg?x-oss-process=image/quality,Q_70"
+                    }
+                }
+            }
+            var app = Vue.createApp(obj).mount("#box");
+        </script>
+    </body>
+</html>

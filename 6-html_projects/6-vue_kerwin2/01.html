@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        {{10+20}}
+        {{myname}}
+    </div>
+
+    <script>
+        // var obj = {}
+        // Object.defineProperty(obj, "myname", {
+        //     get(){
+        //         console.log("get");
+        //     },
+        //     set(){
+        //         console.log("set");
+        //     }
+        // })
+
+        Vue.createApp({
+            data(){
+                return {
+                    myname: "junjun"
+                }
+            }
+        }).mount("#app")
+    </script>
+</body>
+</html>

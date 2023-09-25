@@ -8,17 +8,17 @@ vnoremap <s-tab> <gv
 " set timeout ttimeoutlen=50
 " asdfghjkl uiop
 " U
+inoremap <C-j>q <C-/>
 inoremap <C-j>o <Esc>o
-inoremap <C-j>i <Esc>O
+inoremap <C-j>k <Esc>O
 inoremap <C-j>l <Esc>la
-inoremap <C-j>k <Esc>i
+inoremap <C-j>h <Esc>i
 inoremap <C-j>j <Esc>
 inoremap <C-j>a +
 inoremap <C-j>s -
 inoremap <C-j>d *
 inoremap <C-j>f /
 inoremap <C-j>g (
-inoremap <C-j>h )
 inoremap <C-j>p %
 
 " 单词大写

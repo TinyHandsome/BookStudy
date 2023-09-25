@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="vue.js"></script>
+    </head>
+    <body>
+        <div id="box">
+            <input v-model="temp" type="text" />
+            <button @click="add">add</button>
+            <ul>
+                <li v-for="(item, index) in list" :key="item">
+                    {{ item }}
+                    <button @click="del(index)">delete</button>
+                </li>
+            </ul>
+
+            <div v-show="list.length === 0">暂无代办事项</div>
+        </div>
+        <script>
+            obj = {
+                data() {
+                    return {
+                        temp: "",
+                        list: [111, 222, 333],
+                    };
+                },
+                methods: {
+                    add() {
+                        this.list.push(this.temp);
+                        this.temp = "";
+                    },
+                    del(index) {
+                        this.list.splice(index, 1);
+                    },
+                },
+            };
+            var app = Vue.createApp(obj).mount("#box");
+        </script>
+    </body>
+</html>

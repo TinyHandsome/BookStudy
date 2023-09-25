@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="box"></div>
+    <script>
+        var obj = {}
+        var vm = new Proxy(obj, {
+            get(obj, key){
+                console.log("get");
+                return obj[key]
+            },
+            set(obj, key, value){
+                console.log("set");
+                obj[key] = value
+            }
+        })
+    </script>
+</body>
+</html>
