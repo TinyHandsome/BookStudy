@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="vue.js"></script>
+    </head>
+    <body>
+        <div id="box">
+            {{mytext}}
+            <textarea
+                name=""
+                id=""
+                cols="30"
+                rows="10"
+                v-model="mytext"
+            ></textarea>
+            <input type="checkbox" v-model="cc" value="1" />1
+            <input type="checkbox" v-model="cc" value="2" />2
+            <input type="checkbox" v-model="cc" value="3" />3
+        </div>
+        <script>
+            var obj = {
+                data() {
+                    return {
+                        mytext: "",
+                        cc: [],
+                    };
+                },
+            };
+            var app = Vue.createApp(obj).mount("#box");
+        </script>
+    </body>
+</html>

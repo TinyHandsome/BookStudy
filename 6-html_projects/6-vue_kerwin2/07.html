@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="vue.js"></script>
+    <style>
+        #overlay {
+            background: rgba(0, 0, 0, 0.6);
+            width: 100%;
+            margin: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        #center {
+            background: #fff;
+            border-radius: 5px;
+            padding-top: 15px;
+            padding-left: 30px;
+            width: 290px;
+            height: 160px;
+            position: fixed;
+            margin: auto;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <button @click="isShow=!isShow">模态框</button>
+        <div id="overlay" v-show="isShow" @click.self="isShow=false">
+            <div id="center">
+                用户名：<input type="text" />
+                <button @click="isShow=false">登录</button>
+            </div>
+        </div>
+        <!-- <div id="overlay" v-show="isShow" @click="isShow=false">
+                <div id="center" @click.stop>
+                    用户名：<input type="text" />
+                    <button @click="isShow=false">登录</button>
+                </div>
+            </div> -->
+    </div>
+
+    <script>
+        var obj = {
+            data() {
+                return {
+                    isShow: false,
+                };
+            },
+        };
+        const app = Vue.createApp(obj);
+        app.mount("#box");
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="vue.js"></script>
+
+</head>
+
+<body>
+    <div id="box">
+        <kerwin-navbar></kerwin-navbar>
+        <kerwin-navbar></kerwin-navbar>
+        <kerwin-navbar></kerwin-navbar>
+    </div>
+    <script>
+        var obj = {
+            data() {
+                return {}
+            }
+        }
+        const app = Vue.createApp(obj)
+        // 组件
+        app.component("kerwin-navbar", {
+            // 模板
+            template: `
+            <nav style="background:yellow;">
+                <div>
+                    <ul>
+                        <li>首页</li>
+                        <li>新闻中心</li>
+                        <li>产品</li>
+                    </ul>    
+                </div>
+            </nav>
+            `
+        })
+        app.mount("#box")
+    </script>
+</body>
+
+</html>

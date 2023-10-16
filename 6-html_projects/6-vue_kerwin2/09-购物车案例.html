@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="vue.js"></script>
+    <style>
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid lightgray;
+        }
+
+        li img {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <ul>
+            <li>
+                <div>
+                    <input type="checkbox" v-model="isAllChecked" @change="handleAllChange">
+                    <span>全选/全不选</span>
+                </div>
+            </li>
+
+            <template v-if="datalist.length">
+                <li v-for="(item, index) in datalist" :key="item.id">
+                    <div>
+                        <input type="checkbox" v-model="checkList" :value="item" @change="handleItemChange" />
+                    </div>
+                    <div>
+                        <img :src="item.poster" alt="" />
+                    </div>
+                    <div>{{item.title}}</div>
+                    <div style="color:red">价格：{{item.price}}</div>
+                    <div>
+                        <button @click="item.number--" :disabled="item.number===1">-</button>
+                        {{item.number}}
+                        <button @click="item.number++" :disabled="item.number===item.limit">+</button>
+                    </div>
+                    <div>
+                        <button @click="handleDel(index, item.id)">删除</button>
+                    </div>
+                </li>
+            </template>
+
+            <li v-else>购物车空空如也</li>
+
+            <li>
+                <div>总金额：{{sum()}}</div>
+            </li>
+        </ul>
+    </div>
+    <script>
+        var obj = {
+            data() {
+                return {
+                    isAllChecked: false,
+                    // 勾选的商品列表
+                    checkList: [],
+                    datalist: [
+                        {
+                            id: 1,
+                            title: "商品1",
+                            price: 10,
+                            number: 1,
+                            poster: "https://static.maizuo.com/pc/v5/usr/movie/6c850bf378a1d79fcb5b82664c5257f7.jpg?x-oss-process=image/quality,Q_70",
+                            limit: 5,
+                        },
+                        {
+                            id: 2,
+                            title: "商品2",
+                            price: 20,
+                            number: 1,
+                            poster: "https://static.maizuo.com/pc/v5/usr/movie/6652e14ebdc10d34351b46ed0b2a203b.jpg?x-oss-process=image/quality,Q_70",
+                            limit: 2,
+                        },
+                        {
+                            id: 3,
+                            title: "商品3",
+                            price: 30,
+                            number: 1,
+                            poster: "https://static.maizuo.com/pc/v5/usr/movie/82ebba150cec3b28261a1adb01c50def.jpg?x-oss-process=image/quality,Q_70",
+                            limit: 3,
+                        },
+                    ],
+                };
+            },
+            methods: {
+                sum() {
+                    // var total = 0
+                    // for (let index = 0; index < this.checkList.length; index++) {
+                    //     total += this.checkList[index].number * this.checkList[index].price;
+                    // }
+                    // return total
+
+                    // reduce
+                    return this.checkList.reduce((total, item) => total + item.price * item.number, 0)
+                },
+                // 处理删除
+                handleDel(index, id) {
+                    // console.log(index);
+                    this.datalist.splice(index, 1)
+                    // 同步更新checklist
+                    this.checkList = this.checkList.filter(item => item.id !== id)
+                    this.handleItemChange()
+                },
+                handleAllChange() {
+                    // console.log(this.isAllChecked);
+                    this.checkList = this.isAllChecked ? this.datalist : []
+                },
+                handleItemChange() {
+                    // console.log(this.checkList.length, this.datalist.length);
+                    if (this.datalist.length === 0) {
+                        this.isAllChecked = false
+                        return
+                    }
+                    this.isAllChecked = this.checkList.length === this.datalist.length
+                }
+
+            }
+        };
+        const app = Vue.createApp(obj).mount("#box");
+    </script>
+</body>
+
+</html>

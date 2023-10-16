@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="vue.js"></script>
+    </head>
+    <body>
+        <div id="box">
+            <!-- <input type="text" v-model="mytext" @input="handleInput" /> -->
+            <input type="text" v-model="mytext" @keyup.enter="handleKeyup" />
+            <button @click="add">add</button>
+            <ul>
+                <!-- <template v-for="item in mylist" :key="item">
+                    <li v-if="item.includes(mytext)">{{ item }}</li>
+                </template> -->
+                <li v-for="item in getNewList" :key="item.id">{{ item }}</li>
+            </ul>
+        </div>
+
+        <script>
+            obj = {
+                data() {
+                    return {
+                        mytext: "",
+                        mylist: ["asd", "bsd", "csa", "zas", "qdf"],
+                        // computedMylist: ["asd", "bsd", "csa", "zas", "qdf"],
+                    };
+                },
+                methods: {
+                    // handleInput() {
+                    //     this.computedMylist = this.mylist.filter((i) =>
+                    //         i.includes(this.mytext)
+                    //     );
+                    // },
+                    add() {
+                        this.mylist.push(this.mytext);
+                        this.mytext = "";
+                    },
+                    handleKeyup(evt) {
+                        console.log(evt);
+                        this.add();
+                    },
+                },
+                computed: {
+                    getNewList() {
+                        return this.mylist.filter((i) =>
+                            i.includes(this.mytext)
+                        );
+                    },
+                },
+            };
+
+            var app = Vue.createApp(obj).mount("#box");
+        </script>
+    </body>
+</html>

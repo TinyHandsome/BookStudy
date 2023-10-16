@@ -26,37 +26,57 @@
 - 感想 | 摘抄 | 问题
 
   - vue的架构模式是mvvm（双向绑定）（不是mvc）
-  - 需要计算属性的逻辑，写在 `computed` 中，因为多次使用的话，函数会调用多次，而计算属性只会运行一次。
-  - ajax、fetch、xhr是什么关系
+  
+  - **箭头函数的this跟外面的this是一样的，如果只是普通的function函数，那么this不再与外面的this相同**
 
+  - 需要计算属性的逻辑，写在 `computed` 中，因为多次使用的话，函数会调用多次，而计算属性只会运行一次。
+  
+  - ajax、fetch、xhr是什么关系
+  
     - ajax是异步或局部更新页面的技术
     - xhr是实现ajax的方法，xhr过时了，改成fetch
     - [fetch兼容性不好](https://caniuse.com/?search=fetch)，如果不支持可以用fetch-ie8，实际就是检测浏览器不支持fetch的话，就改为xhr
+  
   - diff算法在判断的时候，如果标签tag不一样，会当机立断直接换掉虚拟dom；如果没有key，且标签一样，则diff算法只会看值是否改变，所以动画就不会更新；如果给同样的div加上不同的key值，则可以让虚拟dom
 
     - 把树按照层级分解对比
-
+  
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/b281090eaede46d7acff0910504907f4.png)
     - 同key值对比
-
+  
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/ca008aa2eeac4bd1b910d6a583c48564.png)
     - 同组件对比
-
+  
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/43ade5ca82994729984def73645eda45.png)
+  
   - 隐藏：
-
+  
     - `display: none`：不占位
     - `visibility: hidden`：隐藏内容且占位
+  
   - 连接后面的随机数：强行刷新，不让浏览器拿缓存
+  
   - 善于使用 `v-if` 对应该初始化为null的数据加标签
+  
   - 同一个tag里，动态绑定的 `:class`，和静态绑定的 `class` 会共存；style同理
+  
   - 在es6中合并数组的技巧：
-
+  
     - 已有数组：`a`
     - 获取新的数组：`b`
     - 合并数组：`a = [...a, ...b]`
   
   - vue路由history模式怎么解决nginx部署刷新404的问题：[vue路由history模式刷新404问题解决方案](https://blog.csdn.net/weixin_42138029/article/details/116980747)
+  
+  - 数组常用函数
+  
+    - `filter`：`list.filter(item => item.id !== 3)`，过滤满足条件的项目
+    - `splice`：`list.splice(index, 1)`，删除index处的值，且删除一个
+    - `reduce`：`list.reduce((total, item) => total + item, 0)`，列表求和，开始值是0，item可以是一个字典，从而实现复杂的求和操作
+  
+  - 数组属性：
+  
+    - `length`：数组的长度
   
 - <span style="color: skyblue; font-weight: bold">PS：相关工程代码都在 Github 上 </span>
 
@@ -77,11 +97,12 @@
    ```
 
 2. `Object.defineProperty`有以下缺点：
+   
    1. 无法监听es6的Set、Map变化
    2. 无法监听Class类型的数据
    3. 属性的新加或者删除也无法监听
    4. 数组元素的增加和删除也无法监听
-
+   
 3. Vue3 使用的是 ES6 的 `Proxy` ，如果浏览器不支持es6那么自动降级为Vue2的方案
 
    ```js
@@ -123,14 +144,46 @@
 2. 指令：是带有 `v-` 前缀的特殊属性
 
    - `v-bind`：动态绑定属性
+
    - `v-if`：动态创建/删除，有更高的**切换**开销
      - `v-else`
+     
      - `v-else-if`，可以写多个
-     - `template v-if`：包装元素template不会被创建
+     
+     - `template v-if`：包装元素template不会被创建，通过这种方式可以让被template包装的内容同生共死
+     
+       ```html
+       <template v-if="isCreated">
+       	<div>111</div>
+       	<div>222</div>
+       </template>
+       ```
+     
    - `v-show`：动态显示/隐藏，有更高的**初始渲染**开销
+
    - `v-on:click`：绑定事件
-   - `v-for`：遍历
+
+   - `v-for`：遍历/循环【视频2新增下面内容】
+
+     - 可以通过 `v-for="({title, state}, index) in datalist"`的方式，对循环中的对象进行解构
+     - v-for 中的 `in` 关键字可以换成 `of`，因为 `of` 更像js的迭代器的感觉
+     - **v-for还可以对对象进行遍历**，`v-for="(value, key, index) in itemObj"`，可以拿到三个参数
+     - v-for还可以对数字进行range，`v-for="item in 10"` 类似于python的 `for i in range(1, 11)`，需要注意的是，vue是从1开始到值结束，是包含的
+     - **注意：** v-for 和 v-if  **不能同时使用**，如果有类似的需求可以先 v-for + template，然后 v-if 
+
    - `v-model`：双向绑定表单
+
+     - 【多选样例】cc的初始化用数组，这样勾选后会直接把value值加入到数组中，就不用每个checkbox绑定一个v-model的变量了
+
+       ```html
+       <input type="checkbox" v-model="cc" value="1" />1
+       <input type="checkbox" v-model="cc" value="2" />2
+       <input type="checkbox" v-model="cc" value="3" />3
+       ```
+
+     - 同样的，全选，就可以把所有的value放到数组中，全不选，就直接复制空数组
+
+     - radio和select（有value用value，没value用option的值）是类似的，只不过用字符串的变量绑定即可，变量的默认值如果是value中的某个值，则前端显示对应的默认值的勾选
 
 3. `v-html`
 
@@ -167,10 +220,12 @@
       2. of
 
       没有区别
+      
    2. key
 
       1. 跟踪每个节点的身份，从而重用和重新排序现有元素
       2. 理想的key值是每项都有的且唯一的id，data.id
+      
    3. 数组更新检测
 
       1. 使用以下方法操作数组，可以检测变动
@@ -182,13 +237,13 @@
          - `splice`
          - `soft`
          - `reverse`
-      2. 新数组替换旧数组
+      2. 新数组替换旧数组【需要将新数组赋值给变量】
 
-         - `filter`
-         - `concat`
-         - `slice`
-         - `map`
-      3. 不能检测以下变动的数组
+         - `filter`：过滤
+         - `concat`：拼接
+         - `slice`：切片
+         - `map`：映射
+      3. 不能检测以下变动的数组【vue2不行，vue3可以检测啦】
 
          ```
          vm.items[indexOfItem] = newValue
@@ -199,38 +254,117 @@
          - `Vue.set(example1.items, indexOfItem, newValue)`
          - splice
       4. 应用：显示过滤结果
+      
    4. 事件处理
 
       1. 监听事件-直接触发代码
+      
       2. 方法事件处理器-写函数名 handleClick
+      
       3. **内联处理器方法-执行函数表达式**  `handleClick($event)`，`$event` 事件对象
-         - 推荐
-         - 需要加对事件的引用的话，就直接$加上就行，全包~
+      
+         - 推荐内联函数调用
+         - 需要加对事件的引用的话，就直接$加上就行
+         - 【内联和方法事件】
+           - 内联：只能做简单的逻辑或是一个函数（`f()`）
+             - 可以在传入时，传入 `$event` 来传入事件，`f(1, 2, 3, $event)`
+             - 使用匿名函数时，可以用类似：`@click="(evt) => handleClick(1, 2, 3, evt)"`
+           - 方法事件处理器：`f`，只有一个函数的名字，不是调用
+             - 可以接受一个参数，即事件对象
+         
       4. 事件修饰符
-         - .stop：阻止事件向上冒泡
-         - .prevent
-         - .capture
-         - .self：只有点击自己的时候才会触发
+         - .stop：停止事件【类似`evt.stopPropagation()` 等价于 `@click.stop`
+      
+           ```html
+           <form action="" @submit.prevent="handleSubmit()">
+           ```
+      
+         - .prevent：阻止事件向上冒泡
+      
+         - .capture：在捕获阶段触发绑定的函数
+      
+         - .self：只有点击自己的时候才会触发【不接受冒泡触发】
+      
          - .once：只能触发一次，触发完之后解除事件绑定了
-         - .enter：`@keyup.enter`，回车触发事件；组合键：`@keyup.ctrl.enter`，按键修饰符：
+      
+         - .passive：一版用于触摸事件的监听器，可以用来改善移动端设备的滚屏性能
+      
+      5. 按键修饰符：.enter：`@keyup.enter`，回车触发事件；组合键：`@keyup.ctrl.enter`，
+      
            - .esc
+      
            - .up
+      
            - .down
-           - .left
+      
+           - .left 
+      
            - .right
+      
            - .space
+      
            - .ctrl
+      
            - .shift
+      
            - .delete
-           - **注意，除了这些常用的按键之外，可以直接用类似 `@keyup.65` 键值的属性来模拟对应的按键**
+      
+           - **注意，除了这些常用的按键之外，可以直接用类似 `@keyup.65` 键值的属性来模拟对应的按键** 【vue2中才能用键值的方式，vue3中取消了】
+      
+      6. 【例子】
+      
+         1. 既可以通过在子dom的click事件中设置 `.stop` 来阻止冒泡
+      
+            ```html
+            <div id="overlay" v-show="isShow" @click.self="isShow=false">
+                <div id="center">
+                    用户名：<input type="text" />
+                    <button @click="isShow=false">登录</button>
+                </div>
+            </div>
+            ```
+      
+         2. 又可以在父dom的click事件中设置 `.self` 独享事件
+      
+            ```html
+            <div id="overlay" v-show="isShow" @click="isShow=false">
+                <div id="center" @click.stop>
+                    用户名：<input type="text" />
+                    <button @click="isShow=false">登录</button>
+                </div>
+            </div>
+            ```
+         
+      7. 表单修饰符
+      
+         1. `.lazy`：在change事件后同步更新而不是input（失去焦点，且内容发生改变）
+         2. `.number`：用户输入自动转换为数字
+         3. `.trim`：默认自动去除用户输入内容中两端的空格
+      
    5. vue 操作dom底层，虚拟dom
 
-      ![在这里插入图片描述](https://img-blog.csdnimg.cn/2785ead09eab41e688201be7a350a6ae.png)
+      - 本质是js
 
+      - 类似于字典，例如
+      
+        ```js
+        {
+        	type: "li",
+            text: "aaa",
+            children: [...]
+        }
+        ```
+      
+      - 按索引标记修改、删除和增加
+      
+      ![在这里插入图片描述](https://img-blog.csdnimg.cn/2785ead09eab41e688201be7a350a6ae.png)
+      
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/3ab4b9b9db954230a111a3118a7ea8f8.png)
+      
    6. change和input的区别
 
       - change只有在输入框失去焦点，且内容发生改变时，才会触发函数
+
    7. 函数加括号和不加括号的区别
 
       - 需要传参的时候加括号
@@ -242,70 +376,134 @@
         - 这里的 `$event` 是写死的，不能换其他的变量名
       - 直接写表达式同样可以完成该请求：`count++`
 
-8. 一些知识
+8. 计算属性：
 
-   - data：状态，被拦截
-   - 方法，methods：事件绑定，逻辑计算。可以不用return，没有缓存
-   - 计算属性（重视结果），computed：解决模板过重的问题，必须有return，只求结果，有缓存，同步。
-   - watch（重视过程）：监听一个值的改变，不用返回值，异步同步。
+   - **需要return**
+   - 很聪明，会缓存，结果会被缓存
+   - 依赖修改之后，会重新计算一遍
+   - 使用多次的情况下：方法会执行多次，而计算属性只会执行一次
+   - 计算属性可写（通过定义set和get），但是大部分情况下是只读的
 
-9. fetch
+9. 监听器watch的对比
 
-   - get：
+   - **不需要return**
 
-     ```js
-     handleFetch() {
-         fetch("./json/test.json").then(res => {
-             // 状态码，响应头，拿不到真正的数据
-             return res.json()
-         }).then(res => {
-             console.log(res);
-         }).catch(err => {
-             console.log(err);
-         })
+   - `watch` 选项期望接受一个对象，其中键是需要侦听的响应式
+
+   - 可以拿到修改后的值和修改前的值
+
+   - 通过v-model进行绑定，watch中的同名函数写逻辑
+
+     ```
+     <input type="text" v-model="mytext">
+     
+     watch: {
+     	mytext(value, oldValue){...}
      }
      ```
-   - post：
 
-     ```js
-     // post-1
-     handleFetchPost1() {
-         fetch("**", {
-             method: 'post',
-             headers: {
-                 "Content-Type": "application/x-www-form-urlencoded"
-             },
-             body: "name=kerwin&age=100",
-         }).then(res => res.json()).then(res => { console.log(res); })
-     },
-     // post-2
-     handlejFetchPost2() {
-         fetch("**", {
-             method: 'post',
-             headers: {
-                 'Content-Type': 'application/json',
-             },
-             body: JSON.stringify({
-                 name: 'kervin',
-                 age: 100
-             })
-         }).then(res => res.json()).then(res => { console.log(res); })
+   - 因为computed不能做异步，所以不能发ajax，这里就可以用watch
+
+   - 另一种写法，直接把镜头后的处理逻辑放到methods中
+
+     ```
+     watch: {
+     	mytext: "anyfunc"
+     }
+     
+     methods: {
+     	anyfunc(value, oldValue){
+     		...
+     	}
      }
      ```
-   - 注意：fetch请求默认是不带cookie的，需要设置 `fetch(url, {credentials: 'include'})`
 
-10. axios：非官方的好用的库
+   - 默认情况下，watch是否无法监听对象的
 
-   ```js
-   handleClick(){
-       axios.get("./json/movie.json").then(res=>{
-           console.log(res.data.data.films);
-           this.dataList = res.data.data.films
-       })
-   }
-   ```
+     - （不推荐）可以通过 `.child` 的方式，指定对象里的元素进行监听
 
-11. 过滤器（管道符）：`|`
+     - 通过配置deep，以及将逻辑写到handler中实现，深层次的监听
+
+     - immediate：监听立即触发一次，即默认即触发
+
+       ```
+       obj: {
+       	handler(value, oldValue){
+       		...
+       	},
+       	deep: true,
+       	immediate: true
+       }
+       ```
+
+10. 一些知识
+
+       - data：状态，被拦截
+
+       - 方法，methods：事件绑定，逻辑计算。可以不用return，没有缓存
+
+       - 计算属性（重视结果），computed：解决模板过重的问题，必须有return，只求结果，有缓存，同步。
+
+       - watch（重视过程）：监听一个值的改变，不用返回值，异步同步。
+
+
+11. fetch
+
+    - get：
+
+      ```js
+      handleFetch() {
+          fetch("./json/test.json").then(res => {
+              // 状态码，响应头，拿不到真正的数据
+              return res.json()
+          }).then(res => {
+              console.log(res);
+          }).catch(err => {
+              console.log(err);
+          })
+      }
+      ```
+    - post：
+
+      ```js
+      // post-1
+      handleFetchPost1() {
+          fetch("**", {
+              method: 'post',
+              headers: {
+                  "Content-Type": "application/x-www-form-urlencoded"
+              },
+              body: "name=kerwin&age=100",
+          }).then(res => res.json()).then(res => { console.log(res); })
+      },
+      // post-2
+      handlejFetchPost2() {
+          fetch("**", {
+              method: 'post',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  name: 'kervin',
+                  age: 100
+              })
+          }).then(res => res.json()).then(res => { console.log(res); })
+      }
+      ```
+    - 注意：fetch请求默认是不带cookie的，需要设置 `fetch(url, {credentials: 'include'})`
+
+12. axios：非官方的好用的库
+
+    ```js
+    handleClick(){
+        axios.get("./json/movie.json").then(res=>{
+            console.log(res.data.data.films);
+            this.dataList = res.data.data.films
+        })
+    }
+    ```
+
+13. 过滤器（管道符）：`|`
 
     - 把原始数据通过管道送给过滤器进行加工
 
@@ -320,7 +518,7 @@
       })
       ```
     - 多个过滤器串行处理：`<img :src="item.img | imgFilter1 | imgFilter2" />`
-    - vue3不支持
+    - **vue3不支持**
 
 ## 3. 组件
 
@@ -2580,7 +2778,144 @@
       }
       ```
 
-7. 条件渲染
+7. 案例3：模糊搜索
+
+   - 方法1：使用template包装+includes检测字符串中是否包含输入的字符串
+
+     ```html
+     <ul>
+         <template v-for="item in mylist" :key="item">
+             <li v-if="item.includes(mytext)">{{ item }}</li>
+         </template>
+     </ul>
+     ```
+
+   - 方法2：使用 `@input` 事件控制，和复制的列表进行过滤和展示
+
+     ```js
+     this.computedMylist = this.mylist.filter((i) =>
+         i.includes(this.mytext)
+     );
+     ```
+
+   - 方法3：使用函数获取最新的展示列表
+
+     ```html
+     <li v-for="item in getNewList()" :key="item.id">{{ item }}</li>
+     ```
+
+     - 缺点，如果有多个该函数的调用，那么每次更新展示列表，就会计算多次该函数
+
+   - 方法4：computed，直接把上面的函数移到computed中，然后把使用到的地方的括号去掉
+
+     ```html
+     <li v-for="item in getNewList" :key="item.id">{{ item }}</li>
+     ```
+
+8. computed注意事项
+
+   1. Getter不应有副作用：计算属性的getter应只做计算而没有任何其他的副作用，这一点非常重要。 **不要在getter中做异步请求或者更改DOM**
+   2. 避免直接修改计算属性值
+
+9. 数据请求
+
+   - fetch
+
+     - 兼容性不好
+
+     - 获取json内容
+
+       ```js
+       fetch("./test.json")
+           .then(res => { return res.json() })
+           .then(res => {
+               console.log(res);
+           })
+       ```
+
+     - 不确定内容是不是json的话，获取文本内容
+
+       ```js
+       fetch("./test.json")
+           .then(res => { return res.text() })
+           .then(res => {
+               console.log(res);
+           })
+       ```
+
+     - post：在fetch的第二个参数中添加
+
+       ```js
+       fetch("./test.json", {
+       	method: "post",
+       	headers: {
+       		"content-type": "application/x-www-form-urlencoded",
+       	},
+       	body: "name-=xiaoming&age=19"
+       })
+           .then(res => { return res.json() })
+           .then(res => {
+               console.log(res);
+           })
+       ```
+
+   - axios
+
+     - Axios是一个基于promise的HTTP库，可以用在浏览器和node.js中
+
+     - get
+
+       ```js
+       axios.get(...).then(res=>{...}).catch(err=>{...})
+       ```
+
+     - post
+
+       - 默认是json
+
+         ```js
+         axios.get(..., {name: ..., age:...}).then(res=>{...}).catch(err=>{...})
+         ```
+
+       - form（application/x-www-form-urlencoded）
+
+         ```js
+         axios.get(..., "name=...&age=...").then(res=>{...}).catch(err=>{...})
+         ```
+
+     - 完整版用法
+
+       ```js
+       axios({
+       	method: "post",
+       	url: "",
+       	data: {}
+       }).then(res=>{}).catch(err=>{})
+       ```
+
+10. 过滤器
+
+    1. vue3中不支持过滤器了，建议使用method或者computed来替换
+
+    2. vue2过滤器
+
+       ```
+       <p>{{ accountBalance | currencyUSD }}</p>
+       
+       filters: {
+       	currencyUSD(value){
+       		return '$' + value
+       	}
+       }
+       ```
+
+
+### 3- 组件
+
+> 组件允许我们将UI划分为独立的、可重用的部分，并且可以对每个部分进行单独的思考。在实际应用中，组件常常被组织成层层嵌套的树状解构
+
+1. 
+
 
 
 
