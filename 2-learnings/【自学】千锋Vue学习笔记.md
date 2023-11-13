@@ -17,67 +17,123 @@
   前端
   千锋
   ```
-  
+
 - 学习链接
 
   1. [千锋HTML5前端开发教程1000集](https://www.bilibili.com/video/BV17z4y1D7Yj)：`[P428:P568]+[P971:P981]，共150集`
   2. [千锋教育前端Vue3.0全套视频教程（Kerwin2023版，Vue.js零基础，Vue3入门到实操）](https://www.bilibili.com/video/BV1Ss4y1T7mZ/)，[用于上述视频的查漏补缺](#vue3)
-  
+
 - 感想 | 摘抄 | 问题
 
   - vue的架构模式是mvvm（双向绑定）（不是mvc）
-  
+
   - **箭头函数的this跟外面的this是一样的，如果只是普通的function函数，那么this不再与外面的this相同**
 
   - 需要计算属性的逻辑，写在 `computed` 中，因为多次使用的话，函数会调用多次，而计算属性只会运行一次。
-  
+
   - ajax、fetch、xhr是什么关系
-  
+
     - ajax是异步或局部更新页面的技术
     - xhr是实现ajax的方法，xhr过时了，改成fetch
     - [fetch兼容性不好](https://caniuse.com/?search=fetch)，如果不支持可以用fetch-ie8，实际就是检测浏览器不支持fetch的话，就改为xhr
-  
+
   - diff算法在判断的时候，如果标签tag不一样，会当机立断直接换掉虚拟dom；如果没有key，且标签一样，则diff算法只会看值是否改变，所以动画就不会更新；如果给同样的div加上不同的key值，则可以让虚拟dom
 
     - 把树按照层级分解对比
-  
+
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/b281090eaede46d7acff0910504907f4.png)
     - 同key值对比
-  
+
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/ca008aa2eeac4bd1b910d6a583c48564.png)
     - 同组件对比
-  
+
       ![在这里插入图片描述](https://img-blog.csdnimg.cn/43ade5ca82994729984def73645eda45.png)
-  
+
   - 隐藏：
-  
+
     - `display: none`：不占位
     - `visibility: hidden`：隐藏内容且占位
-  
+
   - 连接后面的随机数：强行刷新，不让浏览器拿缓存
-  
+
   - 善于使用 `v-if` 对应该初始化为null的数据加标签
-  
+
   - 同一个tag里，动态绑定的 `:class`，和静态绑定的 `class` 会共存；style同理
-  
+
   - 在es6中合并数组的技巧：
-  
+
     - 已有数组：`a`
     - 获取新的数组：`b`
     - 合并数组：`a = [...a, ...b]`
-  
+
   - vue路由history模式怎么解决nginx部署刷新404的问题：[vue路由history模式刷新404问题解决方案](https://blog.csdn.net/weixin_42138029/article/details/116980747)
-  
+
   - 数组常用函数
-  
+
     - `filter`：`list.filter(item => item.id !== 3)`，过滤满足条件的项目
     - `splice`：`list.splice(index, 1)`，删除index处的值，且删除一个
     - `reduce`：`list.reduce((total, item) => total + item, 0)`，列表求和，开始值是0，item可以是一个字典，从而实现复杂的求和操作
-  
+
   - 数组属性：
-  
+
     - `length`：数组的长度
-  
+
+  - ES6导入导出方式
+
+    1. 第一种
+
+       ```
+       export default{
+       	createApp: function(){}
+       }
+       
+       import Vue from 'vue'
+       Vue.createApp
+       ```
+
+    2. 第二种
+
+       ```
+       export function createApp(){}
+       export {createApp}
+       
+       import {createApp} from 'vue'
+       ```
+
+  - vue-devtools能够检测到，但是没有面板
+
+    - Vue3
+
+      ```js
+      // vite.config.js
+      export default defineConfig({
+        ...
+        define: {
+          __VUE_PROD_DEVTOOLS__: true,
+        },
+      })
+      ```
+
+    - Vue2
+
+      ```js
+      Vue.config.devtools = true
+      ```
+
+    - 重启浏览器
+
+  - 箭头函数里的大括号有没有的区别：
+
+    - 有大括号： 需要在括号内加入return才能将内容返回
+    - 没有大括号：直接将符合条件的内容返回，不需要加return，但是只支持写一行代码
+
+  - 数据体的结构：
+
+    ```js
+    var obj = {name: "ll", age: 100, list: [1, 2, 3]}
+    var {list} = obj
+    ```
+
 - <span style="color: skyblue; font-weight: bold">PS：相关工程代码都在 Github 上 </span>
 
 ## 1. 前言
@@ -2635,7 +2691,7 @@
 
 3. 三目运算符：`表达式?true的话怎么办:false的话怎么办`
 
-### 2- 模板语法
+### 2-模板语法
 
 1. 类似 `disabled` 的属性，可以通过 `:disabled="temp"`，给 `temp` 赋值 true 或 false 来控制禁用的真和假
 
@@ -2909,12 +2965,836 @@
        }
        ```
 
-
-### 3- 组件
+### 3-组件
 
 > 组件允许我们将UI划分为独立的、可重用的部分，并且可以对每个部分进行单独的思考。在实际应用中，组件常常被组织成层层嵌套的树状解构
 
-1. 
+1. 全局组件和局部组件
+
+   ```js
+   var obj = {
+       data() {
+           return {}
+       }
+   }
+   const app = Vue.createApp(obj)
+   // 组件
+   app.component("kerwin-navbar", {
+       // 模板
+       template: `
+               <nav style="background:yellow;">
+                   <div>
+                       <ul>
+                           <li>首页</li>
+                           <li>新闻中心</li>
+                           <li>产品</li>
+                       </ul>    
+                   </div>
+               </nav>
+               `
+   })
+   app.component("kerwin-sidebar", {
+       template: `
+                   <aside>
+                       我是侧边栏
+                       <kerwin-button></kerwin-button>  
+                   </aside>
+               `,
+       // 局部组件定义
+       components: {
+           "kerwin-button": {
+               template: `<div style="background:red">
+                               <button>联系</button>
+                           </div>`
+           }
+       }
+   })
+   app.mount("#box")
+   ```
+
+2. 单文件组件
+
+   - 全局注册组件：在main.js中注册组件
+
+   - 局部注册组件：在vue中的script中引入，在components中注册
+
+     ```
+     components: {
+     	navbar,
+     },
+     ```
+
+   - import的内容需要写成驼峰的写法，在template中改成 `-` 连接，不过，如果在template中直接使用驼峰写法，也是可以的
+
+   - `scoped`：限制css样式只能影响当前页面的样式
+
+   - 反向代理：在 `vue.config.js` 中配置，配置完后需要重启服务器
+
+     ```js
+     devServer: {
+     	proxy: {
+             // 将接口开头为 /t 的代理到 下面的网站去
+     		'/t': {
+     			target: 'https://i.maoyan.com',
+     			changeOrigin: true
+     		}
+     	}
+     }
+     ```
+
+3. Vite
+
+   1. vue-cli基于webpack，源代码串联实现代码打包，第一次启动很慢
+
+   2. vite默认认为现代浏览器，如果是传统的浏览器可以使用插件 `@vite.js/plugin-legacy` 来支持
+
+   3. 安装和启动：`npm create vite@latest` ，可以直接使用该命令跳过安装的步骤并开始创建项目，如果不存在的vite，会提示安装
+
+   4. 在浏览器中可以直接使用 es6 模块化
+
+      ```html
+      <script type="module">
+      	import obj from './test.js'
+      	console.log(obj)
+      </script>
+      ```
+
+4. 父传子
+
+   1. 传递属性的时候，如果标签中的属性是 `-` 连接的，那么接受的时候，props中要写成驼峰的写法
+
+   2. 父类写法：
+
+      1. 通过属性传递：`<Navbar title="首页" left="返回" right="首页"></Navbar>`
+
+      2. 通过v-bind传递：
+
+         ```html
+         <Navbar v-bind="{
+                     title: 'aaa',
+                     'left': 'l',
+                     'right': 'r'
+                 }"></Navbar>
+         ```
+
+      3. 通过 `:` 动态绑定属性
+
+   3. props 遵行单向绑定的原则，不能在子组件中修改父组件的属性
+
+   4. 没有加 `:` 的都是静态绑定，传入的都是字符串
+
+   5. props进行属性校验
+
+      - 类型、是否必填、检验、默认值
+
+        ```js
+        props: {
+                title: String,
+                left: [String, Number],
+                right: {
+                    // 要求是否必填
+                    required: true,
+                    type: String,
+                    validator(value){
+                        return ['success', 'warning', 'danger'].includes(value)
+                    }
+                },
+                leftshow: Boolean,
+                rightshow: {
+                    type: Boolean,
+                    // 默认值
+                    default: true
+                }
+            }
+        ```
+
+   6. 属性透传：
+
+      - 主要是class、style、id
+      
+      - 同名属性会进行合并：`class="A B"`
+      - 如果子组件中调用了子组件，则会继续透传到子组件
+      - 绑定的事件也会透传到子组件上，并且多个节点都会触发事件
+      - 禁止透传：`inheritAttrs: false`
+        - 可以设置子组件某节点 `v-bind:"$attrs"`，将父组件的绑定事件透传给该节点
+        - 如果没有在子组件中进行设置，那么事件就会与根节点绑定
+      - 子传父的歪门邪道：
+        - 父中定义属性a，b
+        - 子A中接受属性a；子B中接受属性b，且button接受透传和设置禁止透传
+        - 父中定义B组件事件@b，修改b的状态，定义A组件 `:a="b"`
+        - 从而实现了点击button，完成A组件属性的传递
+
+5. 子传父
+
+   1. 父中定义事件-A>函数a，子中定义点击事件B->b
+   1. b触发事件A：`this.$emit("A", param1, param2)`
+   1. a中接受子的参数，实现子传父
+
+6. `$refs`
+
+   ——父组件的强权
+
+   - ref 如果绑定在dom节点上，拿到的就是原生 dom 节点
+
+     ```
+     <input ref="myinput">
+     
+     console.log(this.$refs.myinput);
+     ```
+
+   - ref 如果绑定在组件上，拿到的就是组件对象，可以实现通信功能
+
+     ```
+     <Child ref="myChild"></Child>
+     
+     console.log(this.$refs.myChild);
+     this.$refs.myChild.childtitle = "junjun"
+     ```
+
+7. `$parent`、`$root`
+
+   ——子组件的无法无天
+
+   - `this.$parent.$parent.属性`：拿到父/爷 辈的值
+
+8. 跨级通信：
+
+   - provide与inject
+
+   - provide与inject不是响应的，是断联的
+   - 如果传入的不是属性/状态，而是支持响应的对象（比如直接把this传给provide），则是响应的：`this.app.navTitle = this.item`
+   - 使用方法比较危险，耦合较高
+
+9. 订阅发布
+
+   ——非父子通信 （vuex的基本原理）
+
+   - 订阅者把对象存储到数组中
+
+   - 发布者遍历数组，拿出来调用
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/2c3396c38f514630b70b6b9f46ec023f.png)
+
+     ```js
+     datalist: [],
+     subscribe(cb){
+         this.datalist.push(cb)
+     },
+     publish(x){
+         this.datalist.forEach(cb => cb(x))
+     }
+     ```
+
+10. 动态组件
+
+    ——墙头草
+
+    - `<component :is="组件名"></component>`
+
+    - 动态组件在切换的时候，可能已经输入了部分数据，切换时会导致输入的数据丢失，因此需要保持组件状态存活，所以需要外面套一个 `keep-alive` 或者 `KeepAlive`
+
+      ```html
+      <keep-alive>
+      	<component :is="which"></component>
+      </keep-alive>
+      ```
+
+    - 通过指定 include 等于对应的组件名，使得keep-alive缓存对应的组件；此外，需要在组件中指定组件的名称：name，这个名称也可以用正则表达式、数组
+
+      ```
+      <keep-alive include="home,list">
+      	<component :is="which"></component>
+      </keep-alive>
+      
+      <script>
+          export default {
+              name: "home"
+          }
+      </script>
+      ```
+
+      正则表达式：`<keep-alive include="/home|list/">`
+
+      数组：`<keep-alive include="['home', 'list']">`
+
+    - 通过 `exclude` 不包含组件
+
+11. 组件中的v-model
+
+    - vmodel实现底层逻辑：
+
+      ```html
+      <input type="text" v-model="myvalue">
+      <!-- 等价于 -->
+      <input type="text" :value="myvalue" @input="myvalue=$event.target.value">
+      ```
+
+    - 组件绑定input的底层逻辑：
+
+      1. 父：通过 `:属性` 绑定一个变量传属性给子，定义 `@事件(value)` 把属性绑定的变量赋值value
+      2. 子：`props` 中接受父的属性，并绑定给input的属性 `:子属性=父属性` ；定义 `@input` 触发父类事件，传值 `evt.target.value`
+      3. 从而实现了组件input的双向绑定
+
+    - 组件绑定input的 vmodel 实现：
+
+      1. 父：直接 vmodel 绑定状态
+      2. 子：`props` 中接受 `modelValue` 固定的属性名，然后在input中绑定 `:属性=modelValue`；定义 `@input` 触发固定事件名：`this.$emit("update:modelValue", evt.target.value)`
+
+    - 修改上述子绑定中固定的modelValue写法
+
+      1. 父：`v-model:kerwin="属性"`
+      2. 子：接受的属性为 kerwin，input中绑定的同理，事件名改为：`update:kerwin`
+
+12. 异步组件
+
+    - 在大型项目中，我们可能需要拆分应用为更小的块，并仅在需要时再从服务器加载相关组件。Vue 提供了 `defineAsynccomponent` 方法来实现此功能
+
+      ```js
+      components: {
+              Navbar,
+              Tabbar,
+              Home: defineAsyncComponent(() => import('./views/Home.vue')),
+              List: defineAsyncComponent(() => import('./views/List.vue')),
+              Center: defineAsyncComponent({
+                  // 加载函数
+                  loader: () => import('./views/Center.vue'),
+                  // 加载异步组件时使用的组件
+                  loadingComponent: LoadingComponent,
+                  // 展示加载组件前的延迟时间，默认为200ms
+                  delay:200,
+                  // 加载失败后展示的组件
+                  errorComponent: ErrorComponent,
+                  // 如果提供了一个timeout时间限制，并超时了
+                  // 也会显示这里配置的报错组件，默认是：Infinity
+                  timeout: 2000
+              }),
+          }
+      ```
+
+13. 组件插槽
+
+    1. 插槽的基本应用
+       - 插槽内容可以访问到父组件的数据作用域，因为插槽内容本身是在父组件模板中定义的
+       - 插槽内容 **无法访问** 子组件的数据，Vue模板中的表达式只能访问其定义时所处的作用域，这和JavaScipt的词法作用域规则是一致的。即：**父组件模板中的表达式只能访问父组件的作用域；子组件模板中的表达式只能访问子组件的作用域**
+
+    2. 具名插槽
+
+       - 为了解决不同的内容，插入到不同插槽
+
+       - **不需要子传父，就可以实现事件和父状态的绑定**
+
+       - 子：给slot组件新增属性name
+
+         ```html
+         <slot name="one"></slot>
+         child
+         <slot name="two"></slot>
+         <slot></slot>
+         ```
+
+       - 父：使用 template 包装，并指定 `v-slot:name`，简写：`#name`
+
+         ```html
+         <Child>
+             <template v-slot:one>
+                 <div>我是app组件重的div</div>
+             </template>
+             <template #two>
+                 <div>我是插槽2</div>
+             </template>
+         
+             <div>3333</div>
+         </Child>
+         ```
+
+    3. 作用域插槽
+
+       - 子组件中通过在slot中赋值：`<slot :mylist="datalist" a=1 b=2>`
+
+       - 父组件在组件的tag中接受和使用：
+
+         ```html
+         <Nowplaying v-slot="myprops">
+             <ul>
+                 <li v-for="item in myprops.mylist" :key="item.filmId">
+                     <img :src="item.poster" alt="" style="width: 100px" />
+                     {{ item.name }}
+                 </li>
+             </ul>
+         </Nowplaying>
+         ```
+
+       - 作用：在极少改变父组件中组件tag的情况下，就能编辑子组件的表现样式，增加复用性（通过 将子的属性值传给父+插槽替换子slot里的内容 实现）
+
+       - 如果是具名插槽的话：`<Nowplaying v-slot:movie="myprops">`，简写：`<Nowplaying #movie="myprops">`
+
+14. 生命周期
+
+    1. 创建阶段
+
+       1. created能访问到data中的数据，beforeCreate访问不到
+       2. mounted可以拿到dom，beforeMount拿不到
+          - mounted中可以：订阅发布、ajax、setInterval、访问dom节点、原生js
+
+    2. 更新阶段
+
+       - updated可以拿到更新后的dom，beforeUpdate拿不到
+
+          - 可以在updated中拿到组件的配置并更新，比如`this.myChart.resize()`
+
+          - 缺点：任何状态更新都会走updated
+
+          - 改进：使用nextTick，一次性的监听器，紧邻着更新调用（调用的时间最晚）
+
+            ```js
+            handleClick(){
+            	this.mywidth = '800px'
+            	this.$nextTick(()=>{this.myChart.resize()})
+            }
+            ```
+
+    3. 销毁阶段
+
+       - unmounted已经销毁了，beforeUnmount还没
+       - 组件卸载的情况：v-if为假、路由切换
+       - 作用：对类似window等事件进行解绑：`window.onresize=null`
+
+15. 组件的封装
+
+    1. swiper的基本使用：https://swiper.com.cn/usage/index.html
+
+       - 需要在所有的dom初始化之后，才能基于js初始化swiper和对应的事件
+
+    2. swiper在vue的使用：
+
+       1. mouted获取数据
+       2. updated更新初始化
+
+       ```vue
+       <template>
+           <div>
+               <div class="swiper">
+                   <div class="swiper-wrapper">
+                       <div class="swiper-slide" v-for="data in datalist" :key="data">
+                           {{ data }}
+                       </div>
+                   </div>
+                   <div class="swiper-pagination"></div>
+               </div>
+           </div>
+       </template>
+       
+       <script>
+       import Swiper from "swiper";
+       import "swiper/css";
+       import "swiper/css/pagination";
+       import { Pagination } from "swiper/modules";
+       
+       export default {
+           data() {
+               return {
+                   datalist: [],
+               };
+           },
+           mounted() {
+               setTimeout(() => {
+                   this.datalist = ["aa", "bb", "cc"];
+               }, 2000);
+           },
+           updated() {
+               var mySwiper = new Swiper(".swiper", {
+                   modules: [Pagination],
+                   // 循环模式选项
+                   loop: true,
+       
+                   // 如果需要分页器
+                   pagination: {
+                       el: ".swiper-pagination",
+                   },
+                   on: {
+                       slideChange() {
+                           console.log("便咯" + this.activeIndex);
+                       },
+                   },
+               });
+           },
+       };
+       </script>
+       
+       <style scoped>
+       .swiper {
+           width: 600px;
+           height: 300px;
+       }
+       </style>
+       ```
+
+       优化：将update的内容放入 `$nextTick` 中
+
+       ```vue
+       <template>
+           <div>
+               <div class="swiper">
+                   <div class="swiper-wrapper">
+                       <div class="swiper-slide" v-for="data in datalist" :key="data">
+                           {{ data }}
+                       </div>
+                   </div>
+                   <div class="swiper-pagination"></div>
+               </div>
+           </div>
+       </template>
+       
+       <script>
+       import Swiper from "swiper";
+       import "swiper/css";
+       import "swiper/css/pagination";
+       import { Pagination } from "swiper/modules";
+       
+       export default {
+           data() {
+               return {
+                   datalist: [],
+               };
+           },
+           mounted() {
+               setTimeout(() => {
+                   this.datalist = ["aa", "bb", "cc"];
+                   this.$nextTick(() => {
+                       var mySwiper = new Swiper(".swiper", {
+                           modules: [Pagination],
+                           // 循环模式选项
+                           loop: true,
+       
+                           // 如果需要分页器
+                           pagination: {
+                               el: ".swiper-pagination",
+                           },
+                           on: {
+                               slideChange() {
+                                   console.log("便咯" + this.activeIndex);
+                               },
+                           },
+                       }); 
+                   });
+               }, 2000);
+           },
+           updated() {},
+       };
+       </script>
+       
+       <style scoped>
+       .swiper {
+           width: 600px;
+           height: 300px;
+       }
+       </style>
+       ```
+
+    3. swiper组件封装
+
+       1. 使用observer解决异步更新的问题：如果设置 `observer:true` ，那么 `loop:true` 将不好用
+
+       2. swiper的初始化放在组件的updated中
+
+       3. 实战
+
+          - 组件：MySwiper
+
+            ```vue
+            <template>
+                <div>
+                    <div class="swiper">
+                        <div class="swiper-wrapper">
+                            <slot></slot>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </template>
+            
+            <script>
+            import Swiper from "swiper";
+            import "swiper/css";
+            import "swiper/css/pagination";
+            import { Pagination } from "swiper/modules";
+            
+            export default {
+                props:{
+                    loop: {
+                        type: Boolean,
+                        default: true
+                    },
+                    slidesPerView: {
+                        type: Number,
+                        default: 1
+                    },
+                    spaceBetween: {
+                        type: Number,
+                        default: 0
+                    }
+                },
+                mounted() {
+                    var mySwiper = new Swiper(".swiper", {
+                        modules: [Pagination],
+                        // 循环模式选项
+                        loop: this.loop,
+                        slidesPerView: this.slidesPerView,
+                        spaceBetween: this.spaceBetween,
+            
+                        // 如果需要分页器
+                        pagination: {
+                            el: ".swiper-pagination",
+                        },
+                        on: {
+                            slideChange:() => {
+                                console.log("便咯" + mySwiper.activeIndex);
+                                this.$emit("kerwinSlideChange", mySwiper.activeIndex)
+                            },
+                        },
+                    });
+                },
+            };
+            </script>
+            
+            <style scoped>
+            .swiper {
+                width: 600px;
+                height: 300px;
+            }
+            </style>
+            ```
+
+          - 插槽里放子组件 MySwiperItem
+
+            ```vue
+            <template>
+                <div class="swiper-slide">
+                    <slot></slot>
+                </div>
+            </template>
+            
+            <script>
+            export default {};
+            </script>
+            
+            <style scoped></style>
+            ```
+
+          - 使用 App
+
+            ```vue
+            <template>
+                <div>
+                    <MySwiper v-if="items.length" :slidesPerView="3" :loop="false" @kerwinSlideChange="handleChange">
+                        <MySwiperItem v-for="item in items" :key="item">
+                            {{ item }}
+                        </MySwiperItem>
+                    </MySwiper>
+                </div>
+            </template>
+            
+            <script>
+            import MySwiper from "./MySwiper.vue";
+            import MySwiperItem from "./MySwiperItem.vue";
+            export default {
+                components: {
+                    MySwiper,
+                    MySwiperItem,
+                },
+                data() {
+                    return {
+                        items: [],
+                    };
+                },
+                mounted() {
+                    setTimeout(() => {
+                        this.items = ["aaa", "bbb", "ccc", "ddd", "eee"];
+                    }, 2000);
+                },
+                methods: {
+                    handleChange(index){
+                        console.log("asdf-", index);
+                    }
+                }
+            };
+            </script>
+            
+            <style scoped></style>
+            ```
+
+### 4-指令
+
+1. 指令写法与钩子
+
+   除了Vue内置的一系列指令（v-model 或者 v-show）之外，Vue还允许你注册自定义的指令（Custom Directives）。自定义指令主要是为了重用涉及普通元素的底层DOM访问逻辑。
+
+   - 全局指令：
+
+     ```js
+     const app = createApp({})
+     
+     // 使用v-foces，所有组件可用
+     app.directive('focus', {
+     	...
+     })
+     ```
+
+   - 局部指令：
+
+     ```js
+     const focus = {
+     	mounted: (el) => el.focus()
+     }
+     
+     export default{
+     	directives: {
+     		// 在模板中启用 v-focus
+     		focus
+     	}
+     }
+     ```
+
+   - 指令后面接等号，传入的直接是js的地盘，字符串要写 `v-kerwin="'aa'"`。通过第二个参数 `binding` 来进行参数传递，可以直接传递data中的状态
+
+     ```js
+     directives: {
+         aa: {
+             mounted(el, binding) {
+                 console.log("当前节点插入到父节点的时候调用", el);
+                 el.style.background = binding.value;
+             },
+         },
+     }
+     ```
+
+   - 指令的生命周期：（加粗为最常用）
+
+     - created(el, binding, vnode, prevVnode)
+     - beforeMount
+     - **mounted**
+     - beforeUpdate
+     - **updated**
+     - beforeUnmount
+     - unmounted
+
+   - 指令简写，mounted和updated都执行同样的内容
+
+     ```js
+     cc(el, binding){
+     	el.style.background = binding.value
+     }
+     ```
+
+2. 指令的应用
+
+   - 过去异步获取数据后，通过紧接着使用 `$nextTick` 初始化解决
+
+   - 指令跟组件是脱钩的，this拿不到data的状态
+
+   - 通过指令检测目标dom，如果能拿到，说明节点插入到了dom中。简单来说，指令的mounted执行的时候一定是 节点创建并插入到了dom中了。
+
+   - 上述情况会造成，循环的时候，每次都会执行一遍，所以需要找到最后一个节点。**通过把 v-for 中的index 作为参数传给 指令**，除了参数，还可以传对象，把index和length传入即可
+
+     ```html
+     <div class="swiper-wrapper">
+         <div
+             v-lt="{index, length:datalist.length}"
+             class="swiper-slide"
+             v-for="(data, index) in datalist"
+             :key="data"
+         >
+             {{ data }}
+         </div>
+     </div>
+     ```
+
+   - 通过index和length-1比较获得最后一个节点挂载完毕后，初始化swiper
+
+     ```vue
+     <template>
+         <div>
+             <div class="swiper">
+                 <div class="swiper-wrapper">
+                     <div
+                         v-lt="{ index, length: datalist.length }"
+                         class="swiper-slide"
+                         v-for="(data, index) in datalist"
+                         :key="data"
+                     >
+                         {{ data }}
+                     </div>
+                 </div>
+                 <div class="swiper-pagination"></div>
+             </div>
+         </div>
+     </template>
+     
+     <script>
+     import Swiper from "swiper";
+     import "swiper/css";
+     import "swiper/css/pagination";
+     import { Pagination } from "swiper/modules";
+     
+     export default {
+         data() {
+             return {
+                 datalist: [],
+             };
+         },
+         mounted() {
+             setTimeout(() => {
+                 this.datalist = ["aa", "bb", "cc"];
+             }, 2000);
+         },
+         directives: {
+             lt: {
+                 mounted(el, binding) {
+                     console.log("插进来啦");
+                     let { index, length } = binding.value;
+                     if (index === length - 1) {
+                         console.log("最后一个节点");
+                         var mySwiper = new Swiper(".swiper", {
+                             modules: [Pagination],
+                             // 循环模式选项
+                             loop: true,
+     
+                             // 如果需要分页器
+                             pagination: {
+                                 el: ".swiper-pagination",
+                             },
+                             on: {
+                                 slideChange() {
+                                     console.log("便咯" + this.activeIndex);
+                                 },
+                             },
+                         });
+                     }
+                 },
+             },
+         },
+     };
+     </script>
+     
+     <style scoped>
+     .swiper {
+         width: 600px;
+         height: 300px;
+     }
+     </style>
+     ```
+
+### 5-过渡效果
+
+Vue提供了两个内置组件，可以帮助你制作基于状态变化的过渡和动画：
+
+- `Transition`：会在一个元素或者组件进入和离开dom时应用动画
+- `TransitionGroup`：会在一个 `v-for` 列表中的元素或组件被插入、移动或者移除的时候应用动画
+
+1. 过渡效果
+
+
+
 
 
 

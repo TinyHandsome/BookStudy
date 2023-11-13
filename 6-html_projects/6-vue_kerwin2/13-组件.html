@@ -14,6 +14,7 @@
         <kerwin-navbar></kerwin-navbar>
         <kerwin-navbar></kerwin-navbar>
         <kerwin-navbar></kerwin-navbar>
+        <kerwin-sidebar></kerwin-sidebar>
     </div>
     <script>
         var obj = {
@@ -36,6 +37,22 @@
                 </div>
             </nav>
             `
+        })
+        app.component("kerwin-sidebar", {
+            template: `
+                <aside>
+                    我是侧边栏
+                    <kerwin-button></kerwin-button>  
+                </aside>
+            `,
+            // 局部组件定义
+            components: {
+                "kerwin-button": {
+                    template: `<div style="background:red">
+                            <button>联系</button>
+                        </div>`
+                }
+            }
         })
         app.mount("#box")
     </script>

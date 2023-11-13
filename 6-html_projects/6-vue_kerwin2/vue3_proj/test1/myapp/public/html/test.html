@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="/lib/swiper-bundle.css" />
+        <script src="/lib/swiper-bundle.js"></script>
+        <style>
+            .swiper {
+                width: 600px;
+                height: 300px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <!-- <div class="swiper-slide">Slide 1</div>
+                <div class="swiper-slide">Slide 2</div>
+                <div class="swiper-slide">Slide 3</div>
+                <div class="swiper-slide">Slide 4</div>
+                <div class="swiper-slide">Slide 5</div> -->
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+
+            <!-- 如果需要导航按钮 -->
+            <!-- <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div> -->
+
+            <!-- 如果需要滚动条 -->
+            <!-- <div class="swiper-scrollbar"></div> -->
+        </div>
+
+        <script>
+            var mySwiper = new Swiper(".swiper", {
+                // direction: "vertical", // 垂直切换选项
+                // loop: true, // 循环模式选项
+
+                // 如果需要分页器
+                pagination: {
+                    el: ".swiper-pagination",
+                },
+                sidesPerView: 3,
+                freeMode: true,
+                spaceBetween: 30,
+                on: {
+                    slideChange(){
+                        console.log("便咯" + this.activeIndex);
+                    }
+                }
+
+                // 如果需要前进后退按钮
+                // navigation: {
+                //     nextEl: ".swiper-button-next",
+                //     prevEl: ".swiper-button-prev",
+                // },
+
+                // 如果需要滚动条
+                // scrollbar: {
+                //     el: ".swiper-scrollbar",
+                // },
+            });
+
+            // ajax
+            setTimeout(() => {
+                var list = ["aaa", "bbb", "ccc"]
+                var newlist = list.map(item => `<div class="swiper-slide">${item}</div>`)
+                // console.log(newlist.join(""));
+                var owrapper = document.querySelector(".swiper-wrapper")
+                owrapper.innerHTML = newlist.join("")
+            }, 2000)
+        </script>
+    </body>
+</html>
