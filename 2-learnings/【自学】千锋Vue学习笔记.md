@@ -3793,7 +3793,368 @@ Vue提供了两个内置组件，可以帮助你制作基于状态变化的过�
 
 1. 过渡效果
 
+   - 默认添加Transition
 
+     ```vue
+     <template>
+         <div>
+             <button @click="isShow = !isShow">click</button>
+             <Transition>
+                 <div v-show="isShow">111</div>
+             </Transition>
+         </div>
+     </template>
+     
+     <script>
+     export default {
+         data() {
+             return {
+                 isShow: true,
+             };
+         },
+     };
+     </script>
+     
+     <style scoped>
+     .v-enter-active, .v-leave-active {
+         /* transition: opacity 0.5s ease; */
+         transition: all 0.5s ease;
+     }
+     .v-enter-from, .v-leave-to {
+         opacity: 0;
+         transform: translateX(100px);
+     }
+     html, body {
+         overflow-x: hidden;
+     }
+     </style>
+     ```
+
+   - 通过指定 name 给固定的Transition添加效果
+
+     ```vue
+     <Transition name="kerwin">
+     	<div v-show="isShow">111</div>
+     </Transition>
+     
+     <style scoped>
+     .kerwin-enter-active, .kerwin-leave-active {
+         /* transition: opacity 0.5s ease; */
+         transition: all 0.5s ease;
+     }
+     .kerwin-enter-from, .kerwin-leave-to {
+         opacity: 0;
+         transform: translateX(100px);
+     }
+     </style>
+     ```
+
+   - Transition中JS的钩子
+
+     ```js
+     <Transition
+     @before-enter="onBeforeEnter"
+     @enter = "onEnter"
+     @after-enter = "onAfterEnter"
+     @enter-cancelled = "onEnterCancelled"
+     @before-leave = "onBeforeLeave"
+     @leave = "onLeave"
+     @after-leave = "onAfterLeave"
+     @leave-cancelled = "onLeaveCancelled"
+     >
+     </Transition>
+     ```
+
+   - appear：第一次刷新的时候显示效果，`<Transition name="kerwin" appear></Transition>`
+
+   - 动画的交互：`v-if` 和 `v-else`
+
+     ```HTML
+     <Transition
+         enter-active-class="animate__bounceIn"
+         leave-active-class="animate__bounceOut"
+     >
+         <div v-if="isShow">333</div>
+         <div v-else="isShow">444</div>
+     </Transition>
+     ```
+
+     - 老版本vue2中不支持这样的方式，需要增加key的属性，来保证vue不进行性能的优化（只修改dom的value），从而实现动画的替换
+
+   - 设置动画的顺序：`mode`
+
+     - `in-out`：先进再出，不咋地啊这个
+     - `out-in`：先出再进，完美
+
+   - 组件同样的可以直接包裹 Transition 实现动画效果
+
+2. 列表过渡
+
+   - Transition 中只能包含单条或者逻辑为单个的 dom 或者 组件
+
+   - 如果需要包含复杂的内容，则需要用到TransitionGroup
+
+   - 使用TransitionGroup中的 `tag="ul"`，替换对应的 ul
+
+   - 整体的动画代码，末尾新增了两个样式来实现列表删除后，更新的时候也有动画
+
+     ```vue
+     <template>
+         <div>
+             <Navbar></Navbar>
+     
+             <!-- <Home v-if="which==='首页'"></Home>
+             <List v-else-if="which==='列表'"></List>
+             <Center v-else></Center> -->
+     
+             <!-- 内置的动态组件 -->
+             <keep-alive>
+                 <Transition name="jun" mode="out-in">
+                     <component :is="which"></component>
+                 </Transition>
+             </keep-alive>
+     
+             <Tabbar></Tabbar>
+     
+             <input type="text" v-model="mytext" />
+             <button @click="handleAdd">add</button>
+             <!-- <ul> -->
+             <TransitionGroup tag="ul" name="jun">
+                 <li v-for="(item, index) in items" :key="item">
+                     {{ item }}
+                     <button @click="handleDel(index)">del</button>
+                 </li>
+             </TransitionGroup>
+             <!-- </ul> -->
+         </div>
+     </template>
+     
+     <script>
+     import Navbar from "./Navbar.vue";
+     import Tabbar from "./Tabbar.vue";
+     import store from "./store";
+     import Center from "./views/Center.vue";
+     import Home from "./views/Home.vue";
+     import List from "./views/List.vue";
+     export default {
+         data() {
+             return {
+                 navTitle: "我的首页",
+                 which: "Home",
+                 mytext: "",
+                 items: [],
+             };
+         },
+         methods: {
+             handleAdd() {
+                 this.items.push(this.mytext);
+                 this.mytext = "";
+             },
+             handleDel(index) {
+                 this.items.splice(index, 1);
+             },
+         },
+         provide() {
+             return {
+                 navTitle: this.navTitle,
+                 app: this,
+             };
+         },
+         mounted() {
+             var obj = {
+                 首页: "Home",
+                 列表: "List",
+                 我的: "Center",
+             };
+             store.subscribe((value) => {
+                 // 列表 list
+                 // 首页 Home
+                 // 我的 Center
+                 this.which = obj[value];
+             });
+         },
+         components: {
+             Navbar,
+             Tabbar,
+             Home,
+             List,
+             Center,
+         },
+     };
+     </script>
+     
+     <style>
+     * {
+         margin: 0;
+         padding: 0;
+     }
+     
+     ul {
+         list-style: none;
+     }
+     
+     .kerwin-enter-active,
+     .kerwin-leave-active {
+         /* transition: opacity 0.5s ease; */
+         transition: all 0.5s ease;
+     }
+     .kerwin-enter-from,
+     .kerwin-leave-to {
+         opacity: 0;
+         transform: translateX(100px);
+     }
+     .jun-enter-active {
+         animation: junanimate 1s;
+     }
+     .jun-leave-active {
+         animation: junanimate 1s reverse;
+     }
+     
+     @keyframes junanimate {
+         0% {
+             transform: translateX(100px);
+             opacity: 0;
+         }
+         100% {
+             transform: translateX(0);
+             opacity: 1;
+         }
+     }
+     
+     html,
+     body {
+         overflow-x: hidden;
+     }
+     /* 列表上来的速度 */
+     .jun-move {
+         transition: all 0.5s ease;
+     }
+     /* 确保将离开的元素从布局流中删除，以便能够正确的计算移动的动画 */
+     .jun-leave-active {
+         position: absolute;
+     }
+     </style>
+     ```
+
+3. 可复用过渡
+
+   - 动画的写法
+
+     - 入场动画：name是自定义的变换名称，对应Transition中的name的值，animate_name是动画的名称，持续时间为1s；然后通过定义 `@keyframes` 来描述动画样式、关键帧等内容
+
+       ```css
+       .name-enter-active {
+       	animation: animate_name 1s
+       }
+       
+       @keyframes animate_name {
+           0%{
+               transform: translateX(-100px);
+               opacity: 0;
+           }
+           100%{
+               transform: translateX(0);
+               opacity: 1;
+           }
+       }
+       ```
+
+     - 出场动画：`name-leave-active`，与上述入场类似
+
+   - 动画的封装
+
+     ```vue
+     <template>
+         <div>
+             <Transition :name="myname">
+                 <slot></slot>
+             </Transition>
+         </div>
+     </template>
+     
+     <script>
+         export default {
+             props: ["myname"]
+         }
+     </script>
+     
+     <style scoped>
+     .l2r-enter-active{
+         animation: kerwinanimate 1s;
+     }
+     .l2r-leave-active{
+         animation: kerwinanimate 1s reverse;
+     }
+     
+     .r2l-enter-active{
+         animation: kerwinanimate2 1s;
+     }
+     .r2l-leave-active{
+         animation: kerwinanimate2 1s reverse;
+     }
+     
+     @keyframes kerwinanimate {
+         0%{
+             transform: translateX(-100px);
+             opacity: 0;
+         }
+         100%{
+             transform: translateX(0);
+             opacity: 1;
+         }
+     }
+     @keyframes kerwinanimate2 {
+         0%{
+             transform: translateX(100px);
+             opacity: 0;
+         }
+         100%{
+             transform: translateX(0);
+             opacity: 1;
+         }
+     }
+     </style>
+     ```
+
+### 6-VCA
+
+- 组合式API：VUE Composition API，最初定义的是函数式API，VUE Function API
+- 使用 setup 之后，this就不灵咯
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/a4601778ca864988a9e63c5c26cfe319.png)
+
+- 组合式的编程思想：把子逻辑拆开，然后导入到主逻辑中return
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/fabc776d4ef540308d3f88edbcbbbb3e.png)
+
+1. reactive：包装函数，将普通对象包装成响应式对象
+   - 因为 `new Proxy(obj)` 中传入的是对象
+   - 不支持简单数据的拦截，只能传入对象、数组
+2. ref：创建一个包装式对象，含有一个响应属性value
+   - 与reactive的差别：前者没有包装属性value
+   - `const count = ref(0)`
+   - 可以接收普通数据类型，`count.value++`
+   - 之前的作用是dom引用，现在是有新的能力。挂载在dom时：`<input type="text" ref="myinput">`
+     - js中定义：`const myinput = ref(null)`
+     - 获取dom：`myinput.value`
+     - 获取dom的值：`myinput.value.value`
+   - 其实是进行了一波类似reactive的包装
+     - `const myname = ref("kerwin")`
+     - 等价于：`new Proxy({value: "kerwin"})`
+   - 使用时，不需要 `.value`，自动实现，在dom中直接用 `myname`
+   - 在js中需要 `myname.value` 进项赋值等操作，就dom中可以省略
+   - **可以用基本类型，也可以用复杂类型**
+3. toRefs和toRef
+   - toRef：`return {mytext: toRef(status, 'mytext')}` ，把对象中的属性转换为ref对象的格式
+   - toRefs：`return {...toRefs(status)}`，也可以实现直接使用对象
+   - ref转reactive：直接在对象中加入ref对象：`state = {ref_location}`，直接加进去就行，修改的话，直接用 `ref_location.value = 新值` 或者用 `status.ref_location = 新值`
+4. 计算属性 | computed
+   - `const computedName = computed(()=>state.datalist.filter(item=>intem.includes(state.mytext)))`
+   - `return {computedName}`，则为对应的计算属性
+   - computed方法需要导入
+   - 自定义的hooks方法用 use 开头，setup中即使数据是异步获取的，依然会调用hooks方法和返回响应式对象
+5. watch
+   - 计算属性允许我们声明地计算衍生值。然而在有些情况下，我们需要在状态变化时执行一些“副作用”：例如更改DOM，或是根据异步操作的结果去修改另一处的状态。
 
 
 
