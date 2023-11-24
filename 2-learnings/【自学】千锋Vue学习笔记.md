@@ -127,12 +127,14 @@
     - 有大括号： 需要在括号内加入return才能将内容返回
     - 没有大括号：直接将符合条件的内容返回，不需要加return，但是只支持写一行代码
 
-  - 数据体的结构：
+  - 数据体的解构：
 
     ```js
     var obj = {name: "ll", age: 100, list: [1, 2, 3]}
     var {list} = obj
     ```
+    
+  - Vue3中，VCA的生命周期（即setup）跟VOA的生命周期写法有所不同，比如created和beforeCreate都改为了setup等等。
 
 - <span style="color: skyblue; font-weight: bold">PS：相关工程代码都在 Github 上 </span>
 
@@ -3307,7 +3309,7 @@
          </Child>
          ```
 
-    3. 作用域插槽
+    3. <a id="slot"> </a>作用域插槽
 
        - 子组件中通过在slot中赋值：`<slot :mylist="datalist" a=1 b=2>`
 
@@ -4130,6 +4132,7 @@ Vue提供了两个内置组件，可以帮助你制作基于状态变化的过�
 1. reactive：包装函数，将普通对象包装成响应式对象
    - 因为 `new Proxy(obj)` 中传入的是对象
    - 不支持简单数据的拦截，只能传入对象、数组
+
 2. ref：创建一个包装式对象，含有一个响应属性value
    - 与reactive的差别：前者没有包装属性value
    - `const count = ref(0)`
@@ -4144,17 +4147,362 @@ Vue提供了两个内置组件，可以帮助你制作基于状态变化的过�
    - 使用时，不需要 `.value`，自动实现，在dom中直接用 `myname`
    - 在js中需要 `myname.value` 进项赋值等操作，就dom中可以省略
    - **可以用基本类型，也可以用复杂类型**
+
 3. toRefs和toRef
    - toRef：`return {mytext: toRef(status, 'mytext')}` ，把对象中的属性转换为ref对象的格式
    - toRefs：`return {...toRefs(status)}`，也可以实现直接使用对象
    - ref转reactive：直接在对象中加入ref对象：`state = {ref_location}`，直接加进去就行，修改的话，直接用 `ref_location.value = 新值` 或者用 `status.ref_location = 新值`
+
 4. 计算属性 | computed
+
    - `const computedName = computed(()=>state.datalist.filter(item=>intem.includes(state.mytext)))`
    - `return {computedName}`，则为对应的计算属性
    - computed方法需要导入
    - 自定义的hooks方法用 use 开头，setup中即使数据是异步获取的，依然会调用hooks方法和返回响应式对象
+
 5. watch
+
    - 计算属性允许我们声明地计算衍生值。然而在有些情况下，我们需要在状态变化时执行一些“副作用”：例如更改DOM，或是根据异步操作的结果去修改另一处的状态。
+
+   - 可以获取新值和旧值
+
+     ```ts
+     const anotext = ref("")
+     watch(anotext, (newValue, oldValue) => {
+         console.log("同步/异步", ": ", newValue, "-", oldValue);
+     })
+     ```
+
+   - 第二种写法：通过箭头函数来跟踪
+
+     ```ts
+     const anotext = ref("")
+     watch(()=>anotext.value, (newValue, oldValue) => {
+         console.log("同步/异步", ": ", newValue, "-", oldValue);
+     })
+     ```
+
+   - 监听多个数据源：
+
+     ```ts
+     watch([anotext, select], (newValue, oldValue) => {
+         console.log("同步/异步", ": ", newValue, "-", oldValue);
+     }, {immediate:true, deep:true})
+     ```
+
+   - immediate：一开始立即触发一次
+
+   - deep：深度监听
+
+   - 监听reactive中的对象：
+
+     - 直接监听state：缺点是任一对象改变，都会触发
+     - 监听getter箭头函数 `()=>state.mytext`
+
+6. watchEffect
+
+   - watch：
+     - 具有一定的惰性lazy，第一次页面展示的时候不会执行，只有数据变化的时候才会执行
+     - 参数可以拿到当前值和原始值
+     - 可以监听多个数据的变化，用一个监听器承载
+   - watchEffect
+     - 立即执行，没有惰性，页面的首次加载就会执行
+     - 自动检测内部代码，代码中有依赖，便会执行
+     - 不需要传递要侦听的内容，会自动感知代码依赖，不需要传递很多参数，只要传递一个回调函数
+     - 不能获取之前数据的值，只能获取当前值
+     - 一些异步的操作放在这里会更加合适
+
+7. prop & emit
+
+   子传父的实现
+
+   ```ts
+   props: ["mytitle"], // 正常接收
+   setup(props, {emit}){
+   	const handleClick = () => {
+   		emit('kerwinevent')
+   	}
+   	
+   	return {
+   		hanleClicks
+   	}
+   }
+   ```
+
+8. provide & inject
+
+   provide、inject是vue-composition-api 的一个功能：依赖注入功能
+
+   ```js
+   import { provide, inject } from 'vue'
+   
+   // 跟组件共享自己的状态
+   const kerwinshow = ref(true)
+   provide('kerwinshow', kerwinshow)
+   
+   // detail组件
+   onMounted(() => {
+   	const kerwinshow = inject('kerwinshow')
+   	kerwinshow.value = false
+   })
+   ```
+
+9. VCA中的生命周期
+
+   |    原方法     |     升级后      |
+   | :-----------: | :-------------: |
+   | beforeCreate  |      setup      |
+   |    created    |      setup      |
+   |  beforeMount  |  onBeforeMount  |
+   |    mounted    |    onMounted    |
+   | beforeUpdate  | onBeforeUpdate  |
+   |    updated    |    onUpdated    |
+   | beforeDestroy | onBeforeUnmount |
+   |   destroyed   |   onUnmounted   |
+
+   - onBeforeMount：dom创建之前调用
+   - onMounted：订阅、ajax，dom创建之后，用于swiper、echarts初始化
+   - onBeforeUpdate：更新之前
+   - onUpdated：更新之后
+   - onUnmounted：清除定时器啥的
+   - **nextTick**可以直接从vue中导入，不需要this了，紧随状态的更新
+
+10. setup语法糖
+
+    - 优势：
+
+      - 更少的样本内容，更简洁的代码
+      - 能够使用纯TS声明props和自定义事件
+      - 更好的运行时性能：其模板会被编译成同一作用域内的渲染函数，避免了渲染上下文代理对象
+      - 更好的IDE类型推导性能（减少了语言服务器从代码中抽取类型的工作）
+
+    - toRefs用法：`const {myname, myage} = {..toRefs(state)}`
+
+    - 组件：直接import就行，不需要写components了
+
+    - 父子通信：
+
+      - 原来：`setup(props, {emit}){}`，或者没有setup时的：`props: {}`
+
+      - 现在：
+
+        ```ts
+        import {defineProps} from "vue"
+        
+        const props = defineProps({
+        	title: {
+        		type: String,
+        		default: "1"
+        	}
+        })
+        
+        // right为父组件传来的事件名称
+        const emit = defineEmits(["right"])
+        const handleRight = () => {
+            emit("right", "来自子组件的问候")
+        }
+        ```
+
+    - 动态组件
+
+      - `<component :is="List"></component>`，这里的List直接就是动态组件的变量名，**只能说很强大**
+      - 当然，还是可以用以前的方法，弄一个which，比如写一个三目表达式：`<component :is="which?List:Detail"></component>`
+
+    - 指令
+
+      通过v+驼峰写法定义
+
+      ```
+      <Navbar v-kerwin v-kerwin-dir></Navbar>
+      
+      // 局部指令
+      const vKerwin = {
+          beforeMount: (el) => {
+              ...
+          }
+      }
+      // 简写
+      const vKerwinDir = (el) => {
+      	el.style.background = "yellow"
+      }
+      ```
+
+### 7-路由
+
+Vue Router 是官方路由，与vue核心深度集成，让用vue构建单页应用变得轻而易举，功能包括：
+
+- 嵌套路由映射
+- 动态路由选择
+- 模块化、基于组件的路由配置
+- 路由参数、查询、通配符
+- 展示由vue的过渡系统提供的过渡效果
+- 细致的导航控制
+- 自动激活css类的链接
+- HTML5 history模式或者hash模式
+- 可定制的滚动行为
+- URL的正确编码
+
+---
+
+1. 路由的基本使用
+
+   - 我的理解：就是把组件写好，配置好路由跟组件之间的关系，然后在App.vue中放入需要显示组件的地方 `router-view` ，这样切换到对应路由的时候，对应的组件就会显示在插槽中
+
+   - 基本感觉就像：`component :is="which"`，这样是儿的。不过把这部分由状态which控制的情况改为了用路由来控制
+
+   - `./App.vue`
+
+     ```vue
+     <template>
+         <div>
+             App
+     
+             <!-- 路由插槽 -->
+             <router-view></router-view>
+             <router-view></router-view>
+         </div>
+     </template>
+     ```
+
+   - `./router/index.js`
+
+     ```js
+     import {createRouter, createWebHashHistory} from 'vue-router'
+     import Films from '../views/Films.vue'
+     import Cinemas from '../views/Cinemas.vue'
+     import Center from '../views/Center.vue'
+     
+     const routes = [
+         {
+             path: "/films",
+             component: Films
+         },
+         {
+             path: "/cinemas",
+             component: Cinemas
+         },
+         {
+             path: "/center",
+             component: Center
+         }
+     ]
+     
+     const router = createRouter({
+         history: createWebHashHistory(),
+         routes, // routes: routes的缩写
+     })
+     
+     export default router
+     ```
+
+   - 组件放在：`./views` 里面
+
+2. 路由重定向和别名
+
+   - notfound：
+
+     ```js
+     const routes = [
+       // pathMatch是参数的名称，例如，要去/not/found
+       // { params: { pathMatch: ['not', 'found'] }}
+      
+       // 最后一个*，它意味着重复的参数，如果您打算使用它的名称直接导航到未找到的路由，那么这是必要的
+       { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
+      
+       // 如果你省略了最后一个' * '，参数中的' / '字符将在解析或推入时被编码
+       { path: '/:pathMatch(.*)', name: 'bad-not-found', component: NotFound },
+     ]
+     ```
+
+   - 取名：name，用于重定向啊啥的找，路由里面不能用
+
+   - 别名：alias，用于不同路由指向同一个东西
+
+   - 例子
+
+     ```js
+     import {createRouter, createWebHashHistory} from 'vue-router'
+     import Films from '../views/Films.vue'
+     import Cinemas from '../views/Cinemas.vue'
+     import Center from '../views/Center.vue'
+     import NotFound from '../views/NotFound.vue'
+     
+     const routes = [
+     
+         // 重定向和起别名
+         {
+             path: "/",
+             // redirect: "/films"
+             redirect: {
+                 name: "c"
+             }
+         },
+         {
+             path: "/films",
+             component: Films
+         },
+         {
+             path: "/cinemas",
+             component: Cinemas,
+             name: "c"
+         },
+         {
+             path: "/center",	
+             alias: "/wode",
+             component: Center
+         },
+         // 其他匹配，pathMatch只是占位符，可以随便取名，(.*)*通配符：随便什么符号都行，且重复n次
+         {
+             path: '/:pathMatch(.*)*', 
+             component: NotFound
+         },
+     ]
+     
+     const router = createRouter({
+         history: createWebHashHistory(),
+         routes, // routes: routes的缩写
+     })
+     
+     export default router
+     ```
+
+3. 声明式导航
+
+   - 使用 `router-link`来声明导航，` <router-link to="/films">电影</router-link>`
+
+   - 老版本可以传入tag指定渲染的tag，不过已经没用了
+
+   - 新版使用方法：
+
+     ```html
+     <router-link to="/films" custom v-slot="{isActive, navigate}">
+                     <li :class="isActive" @click="navigate">电影</li>
+                 </router-link>
+     ```
+
+     - 这里的 `v-slot` 是 [作用域插槽](#slot) ，简单来说就是为了拿到子类的数据，也就是拿到 `isActive` 和 `navigate`。（子组件肯定就是 `:isActive` 和 `:navigate` 把值传递给了父）
+
+     - 这里 `v-slot` 可以简化为 `#` 
+
+       - 具名插槽是 `v-slot:name`，简写是 `#name`
+
+       - 具名作用域插槽是 `v-slot:name=props`，简写是 `#name=props`
+
+       - 所以完全可以知道，普通作用可以简写为 `#=props`
+
+         ```html
+         <router-link to="/films" custom #="{isActive, navigate}">
+                         <li :class="isActive" @click="navigate">电影</li>
+                     </router-link>
+         ```
+
+     - `isActive`：路由是否激活，bool
+
+     - `navigate`：跳转函数，绑定点击事件，主要实现路由、组件和url的切换
+
+4. 嵌套路由
+
+
 
 
 

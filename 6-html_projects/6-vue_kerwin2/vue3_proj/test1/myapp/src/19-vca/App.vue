@@ -23,6 +23,11 @@
         <div>
             <input type="text" v-model="anotext">
         </div>
+        <select name="" id="" v-model="select">
+            <option value="aaa">aaa</option>
+            <option value="bbb">bbb</option>
+            <option value="ccc">ccc</option>
+        </select>
 
 
     </div>
@@ -63,9 +68,13 @@ export default {
 
         // watch
         const anotext = ref("")
-        watch(anotext, () => {
-            console.log("同步/异步");
+        watch(anotext, (newValue, oldValue) => {
+            console.log("同步/异步", ": ", newValue, "-", oldValue);
         })
+        const select = ref("bbb")
+        watch([anotext, select], (newValue, oldValue) => {
+            console.log("同步/异步", ": ", newValue, "-", oldValue);
+        }, {immediate:true})
 
         return {
             obj,
@@ -75,6 +84,7 @@ export default {
             handleDel,
             myinput,
             anotext,
+            select
         };
     },
 };
