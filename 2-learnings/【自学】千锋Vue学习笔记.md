@@ -136,6 +136,11 @@
     
   - Vue3中，VCA的生命周期（即setup）跟VOA的生命周期写法有所不同，比如created和beforeCreate都改为了setup等等。
 
+  - 路由细节
+
+    - `$router`：拿到的是路由实例，负责路由的跳转等一系列操作：`$router.push("...")`
+    - `$route`：当前匹配到的路由对象，`.params`可以拿到动态路由路径中参数 `/:param`
+
 - <span style="color: skyblue; font-weight: bold">PS：相关工程代码都在 Github 上 </span>
 
 ## 1. 前言
@@ -4501,6 +4506,367 @@ Vue Router 是官方路由，与vue核心深度集成，让用vue构建单页应
      - `navigate`：跳转函数，绑定点击事件，主要实现路由、组件和url的切换
 
 4. 嵌套路由
+
+   - 通用写法：
+
+     ```js
+     const routes = [
+     
+         // 重定向和起别名
+         {
+             path: "/",
+             // redirect: "/films"
+             redirect: {
+                 name: "c"
+             }
+         },
+         {
+             path: "/films",
+             component: Films,
+             // redirect: { name: "np" },
+             redirect: "/films/nowplaying",
+             children: [
+                 {
+                     path: "/films/nowplaying",
+                     component: NowplayingVue,
+                     name: "np"
+                 },
+                 {
+                     path: "comingsoon",
+                     component: Comingsoon
+                 }
+             ]
+         },
+         {
+             path: "/cinemas",
+             component: Cinemas,
+             name: "c"
+         },
+         {
+             path: "/center",
+             alias: "/wode",
+             component: Center
+         },
+         // 其他匹配，pathMatch只是占位符，可以随便取名，(.*)*通配符：随便什么符号都行，且重复n次
+         {
+             path: '/:pathMatch(.*)*',
+             component: NotFound
+         },
+     ]
+     ```
+
+   - 这里的子路由的path，也可以写别的，跟主路由其实没有父子关系。只是可读性极差，感官上写成父子关系更易于开发。
+
+   - 如果希望能简写，不要重复写父路由，那么可以不加 `/` ，直接写子路由的名称
+
+   - 如果要写多级重定向，比如：`/` 重定向到 `/films`，`/films` 重定向到 `/films/nowplaying`，不要写name的形式，而是直接写路径
+
+5. 编程式导航，包括param传参和query传参
+
+   - 声明式：`<router-link :to="...">`
+   - 编程式：`router.push(...)`
+     - 例如：this.\$router.push( \`/detail/\${id} \` )
+   - **字符串路径**：`router.push('/users/eduardo')`
+   - **带有路径的对象**：`router.push({path: '/users/eduardo'})`
+   - **命名的路由，并加上参数**，让路由建立url：`router.push({ name: 'user', params: {username: 'eduardo'} })`
+   - **带查询参数**，结果是 `/register?plan=private` ：`router.push({path: '/register', query: {plan: 'private'}})`
+
+6. 动态路由匹配
+
+   你可以在同一个路由中设置有多个 路径参数，它们会映射到  `$route.params` （`$route.query`）上对应的字段，例如：
+
+   |            匹配模式            |         匹配路径         |            $route.params             |
+   | :----------------------------: | :----------------------: | :----------------------------------: |
+   |        /users/:username        |      /users/eduardo      |        {username: ‘eduardo’}         |
+   | /users/:username/posts/:postId | /users/eduardo/posts/123 | {username: ‘eduardo’, postId: ‘123’} |
+
+   - 返回：`this.$router.back()`
+
+   - 前进：`this.$router.forward()`
+
+   - 返回或者前进多级：`this.$router.go(1)`、`this.$router.go(-1)`
+
+   - 在当前页面push路由怎么拿到 路由的 param：通过 **watch**，监听 `$route.params`
+
+     ```js
+     watch: {
+         "$route.params": function() {
+             console.log(this.$route.params.filmId);
+         }
+     }
+     ```
+
+7. 路由模式
+
+   - hash模式：它在内部传递的实际URL之前使用了一个哈希字符#，由于这部分URL从未被发送到服务器，所以它不需要在服务器层面上进行任何特殊处理。不过，它在SEO中确实有不好的影响。如果你担心这个问题，可以使用HTML5模式。
+   - 用 `createWebHistory()` 创建HTML5模式，**推荐**使用这个模式：
+   - 注意：由于我们的应用是一个单页的客户端应用，如果没有适当的服务器配置，用户在浏览器中直接访问 `https://example.com/user/id`，就会得到一个404错误，这就尴尬了。
+   - 要解决这个问题，你需要做的就是：**在服务器上添加一个简单的回路路由，如果URL不匹配任何静态资源，它需要提供与你的应用程序中的index.html相同的页面**。
+
+8. 全局路由拦截
+
+   ```js
+   // 全局拦截：前置钩子
+   router.beforeEach((to, from, next) => {
+       if (to.name !== 'Login' && !isAuthenticated) next({name: 'Login'})
+       else next()
+   })
+   
+   // 后置钩子，一般用于收集log，用于分析、更改页面标题、声明页面等辅助功能以及许多其他事情都很有用
+   router.afterEach((to, from) => {
+       sendToAnalytics(to.fullPath)
+   })
+   ```
+
+   - meta：路由的属性
+
+     ```js
+     {
+         path: "/center",
+         alias: "/wode",
+         component: Center,
+             meta: {
+             	requiredAuth: true
+         	}
+     }
+     ```
+
+   - **通过给路由设置一个属性，然后再全局拦截里针对这个属性写判断逻辑，实现：多个路由的是否需要验证统一管理。** 
+
+   - 获取meta的属性：`to.meta.requiredAuth`
+
+9. 组件内的守卫
+
+   1. `beforeRouteEnter(to, from){}`
+
+      - 在渲染该组件的对应路由被验证前调用
+
+      - 不能获取组件实例 `this` ，因为当守卫执行时，组件实例还没有被创建
+
+        ```vue
+        <script>
+            export default {
+                async beforeRouteEnter(to, from, next){
+                    let isAuthenticated = await localStorage.getItem("token")
+        
+                    if (isAuthenticated) {
+                        next()
+                    }else{
+                        next({name: "Login"})
+                    }
+                }
+            }
+        </script>
+        ```
+
+   2. `beforeRouteUpdate(to, from){}`
+
+      - 在当前路由改变，但是该组件被复用时调用
+
+      - 举例来说，对于一个带有动态参数的路径 `/users/:id` ，在 `/users/1` 和 `/users/2` 之间跳转的时候
+
+      - 由于会渲染同样的 `UserDetails` 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。因为在这种情况发生的时候，组件已经挂载好了，导航首位可以访问组件实例 `this`
+
+      - **可以取代watch的功能，开发类似猜你喜欢的逻辑**
+
+        ```js
+        beforeRouteUpdate(to, from){
+        	console.log("接受猜你喜欢传来的参数", to.params.myid, "带着id参数请求后端接口")
+        }
+        ```
+
+   3. `beforeRouteLeave(to, from){}`
+
+      - 在导航离开渲染该组件的对应路由时调用
+
+      - 与 `beforeRouteUpdate` 一样，它可以访问组件实例 `this`
+
+        ```js
+        beforeRouteLeave(){
+        	const answer = window.confirm("你确定要离开吗？")
+        	if(!answer) return false
+        }
+        ```
+
+10. 路由懒加载
+
+    - 当打包构建应用时，js包会变得非常大，影响页面加载，如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应的组件，这样就会更加高效。
+    - vue router支持开箱即用的 **动态导入**，这意味着你可以用动态导入代替静态导入
+    - 在index.js中，将路由中的组件改为：`component: () => import('../views/Cinemas.vue')`
+
+11. VCA与路由
+
+    1. useRouter：跳转
+
+       ```js
+       import {useRouter} from 'vue-router'
+       const router = useRouter()
+       router.push("...")
+       ```
+
+    2. useRoute：接收
+
+       ```js
+       import {useRoute} from 'vue-router'
+       const route = useRoute()
+       console.log(route.params.id)
+       ```
+
+    3. 组件生命周期
+
+       ```js
+       import {onBeforeRouteUpdate, onBeforeRouteLeave} from 'vue-router'
+       
+       onBeforeRouteUpdate((to, from) => {
+           console.log("接收上一个页面传来的参数", to.params.myid, "带着id参数请求后端接口")
+       })
+       
+       onBeforeRouteLeave(() => {
+           const answer = windows.confirm("你确定要离开吗？")
+           if (!answer) return false
+       })
+       ```
+
+       注意：组合API和setup函数这种的VCA，只支持 `onBeforeRouteUpdate` 和 `onBeforeRouteLeave` 两个守卫，不能使用 `beforeRouteEnter`
+
+       原因：前置进入的时候，还没有this呢，所以setup里面没写也很正常
+
+       解决：
+
+       - 全局做首位拦截
+       - 既写一个setup的script，又写一个普通的script，然后在普通的script中写 `async beforeRouteEnter(to, from, next){...}`
+       - 写普通script+setup函数，`beforeRouteEnter` 写在setup外
+
+
+### 8-vuex
+
+Vuex是一个转为Vue.js应用程序开发的**状态管理模式+库**，它采用集中式存储管理应用和所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
+
+当我们的应用遇到**多个组件共享状态**时，单向数据流的简洁性很容易被破坏：
+
+- 多个视图依赖同一状态
+- 来自不同视图的行为需要变更同一状态
+
+---
+
+1. 引入
+
+   - 作用
+     - 页面有多个需要共享的状态，引入vuex，便于维护（非父子通信）
+     - 缓存部分异步数据，减少后端服务的访问，增加用户体验
+   - 注意：我们应该通过提交 mutation 的方式，而非直接改变 `store.state.count` ，是因为我们想要更明确的追踪到状态的变化。这个简单的约定能够让你的意图更加明显，这样你在阅读代码的时候，能够更容易的读应用内部的状态改变。此外，这样也让我们有机会去实现一些能记录每次状态改变，保存状态快照的调试工具。有了它，我们甚至可以实现如时间穿梭般的调试体验。
+
+2. vuex的基本使用
+
+   ![vuex](https://vuex.vuejs.org/vuex.png)
+
+   1. Mutation
+
+      - 能够在vue-tools插件中的vuex中，看到state状态的修改情况
+
+      - 在vue-tools的timeline的mutations中看到出发的mutations哪些被执行了
+
+      - vuex放在缓存、内存之中，如果刷新后就丢了
+
+      - 项目开发：字符串转变量
+
+        - 在 `store/type.js` 中定义每个页面的mutations函数名
+
+          ```js
+          // detail页面
+          const CHANGE_TABBAR = "changeTabbar"
+          
+          
+          export {CHANGE_TABBAR}
+          ```
+
+        - 在 `store/index.js` 中定义mutations
+
+          ```js
+          import {createStore} from 'vuex'
+          import { CHANGE_TABBAR } from './type'
+          
+          const store = createStore({
+              state(){
+                  return {
+                      isTabbarShow: true
+                  }
+              },
+              // 唯一修改状态的位置
+              mutations: {
+                  // showTabbar(state){
+                  //     state.isTabbarShow = true
+                  // },
+                  // hideTabbar(state){
+                  //     state.isTabbarShow = false
+                  // },
+                  [CHANGE_TABBAR](state, payload){
+                      state.isTabbarShow = payload
+                  }
+              }
+          })
+          
+          export default store
+          ```
+
+        - `[变量](){...}`：直接把**变量对应的字符串**作为该函数的名称，后面所有的组件中使用的时候使用的是**该变量**：`this.$store.commit(变量, ...)`
+
+   2. Actions
+
+      - Mutations中只能做同步，不能做异步
+
+      - 要做异步的话，需要通过Actions把数据拿回来，再走mutations
+
+      - 组件调用的时候，直接从store中拿数据
+
+        ```js
+        import {createStore} from 'vuex'
+        import { CHANGE_TABBAR } from './type'
+        
+        import axios from 'axios'
+        
+        const store = createStore({
+            state(){
+                return {
+                    isTabbarShow: true,
+                    cinemaList: [],
+                }
+            },
+            // 唯一修改状态的位置
+            mutations: {
+                [CHANGE_TABBAR](state, payload){
+                    state.isTabbarShow = payload
+                },
+                changeCinemaList(state, payload){
+                    state.cinemaList = payload
+                }
+            },
+            // 同步+异步
+            actions: {
+                async getCinemaList(store){
+                    console.log("ajax");
+                    var res = await axios({
+                        url: "https://m.maizuo.com/gateway?cityId=110100&ticketFlag=1&k=5385023",
+                        headers: {
+                            "X-Client-Info":
+                                '{"a":"3000","ch":"1002","v":"5.2.1","e":"1701324144895711134613505"}',
+                            "X-Host": "mall.film-ticket.cinema.list",
+                        },
+                    })
+                    // 提交mutation
+                    store.commit("changeCinemaList", res.data.data.cinemas)
+                }
+            }
+        })
+        
+        export default store
+        ```
+
+      - Getter
+
+
+
+
 
 
 
