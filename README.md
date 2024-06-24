@@ -1,17 +1,10 @@
 # 李英俊的学习笔记
 
-件件有着落，事事有回音，凡事有交代。
-
-**——李英俊努力努力再努力 |** <span style="color: skyblue; font-weight: bold">更新时间：20230901</span>
-
 [TOC]
 
 ## 写在前面 | Header
 
-- 笔记总览地址：https://github.com/TinyHandsome/BookStudy
-- 关于blog数量：**博客园** 比 **CSDN** 少 **3** 个是因为：
-  1. 两个java学习笔记csdn分别分了两个来写
-  2. 因为大家都懂的原因，阴阳师在CSDN写了两次
+- 20240624：更新js、nodejs和vue笔记链接，新增note一篇
 - 20230901：取消关于tools和writting的track，仅本地留档
 
 ## 读书笔记 | Books
@@ -30,7 +23,7 @@
 
 ## 视频笔记 | Learnings
 
-1. [ Linux学习笔记](https://blog.csdn.net/qq_21579045/article/details/95605401)
+1. [Linux学习笔记](https://blog.csdn.net/qq_21579045/article/details/95605401)
 2. [MySQL基础学习笔记](https://blog.csdn.net/qq_21579045/article/details/98111827)
 3. [MySQL高级学习笔记](https://blog.csdn.net/qq_21579045/article/details/99702766)
 4. [Java基础学习笔记](https://www.cnblogs.com/lyjun/p/11956413.html)
@@ -41,6 +34,9 @@
 9. [Django学习笔记](https://blog.csdn.net/qq_21579045/article/details/122486699)
 9. [Flask学习笔记](https://blog.csdn.net/qq_21579045/article/details/124550035)
 9. [HTML5+CSS3学习笔记](https://blog.csdn.net/qq_21579045/article/details/126626027)
+9. [JavaScript学习笔记](https://blog.csdn.net/qq_21579045/article/details/128727280)
+9. [Node.js学习笔记](https://blog.csdn.net/qq_21579045/article/details/128727454)
+9. [千锋Vue学习笔记](https://blog.csdn.net/qq_21579045/article/details/139767735)
 
 ## 设计笔记 | Designs
 
@@ -85,6 +81,8 @@
 15. [VSCode集成Cmder控制台输入中文乱码](https://blog.csdn.net/qq_21579045/article/details/121507825)
 
 15. [Typora启动报错解决](https://blog.csdn.net/qq_21579045/article/details/125818691)
+
+15. [Djongo操作MongoDB新增字段](https://blog.csdn.net/qq_21579045/article/details/125888666)
 
     
 
