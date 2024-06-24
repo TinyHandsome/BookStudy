@@ -1,5 +1,7 @@
 # 千锋Vue学习笔记
 
+我终于抓到申请宝贝啦！  ——20240618
+
 [toc]
 
 ## 写在前面
@@ -140,8 +142,6 @@
 
     - `$router`：拿到的是路由实例，负责路由的跳转等一系列操作：`$router.push("...")`
     - `$route`：当前匹配到的路由对象，`.params`可以拿到动态路由路径中参数 `/:param`
-
-- <span style="color: skyblue; font-weight: bold">PS：相关工程代码都在 Github 上 </span>
 
 ## 1. 前言
 
@@ -2804,7 +2804,7 @@
 
    1. 对象写法
 
-      1. 复合属性需要改为驼峰：`background-color` -> `backgroundColor`
+      1. v复合属性需要改为驼峰：`background-color` -> `backgroundColor`
 
       2. 或者把属性名改成字符串：`background-color` -> `“background-color”`
 
@@ -4862,41 +4862,2099 @@ Vuex是一个转为Vue.js应用程序开发的**状态管理模式+库**，它�
         export default store
         ```
 
-      - Getter
+   3. Getter
+
+      Vue允许我们在store中定义 getter，可以认为是store的计算属性
+
+      - 使用的时候可以直接在store中当计算属性用，取值为：`$store.getters.函数名`
+
+      - 如果需要传递参数，则在store中返回的就不是一个值，而是带参数的函数
+
+        ```js
+        getters: {
+            filterCinemaList(state) {
+                return (type) => state.cinemaList.filter(item => item.eTicketFlag === type)
+            }
+        }
+        ```
+
+        调用时需要加括号和传参，运行这个函数
+
+        ```html
+        <li v-for="item in $store.getters.filterCinemaList(type)" :key="item.cinemaId">
+        ```
+
+   4. 辅助函数
+
+      写法上舒服一些，但是缺点是容易跟其他函数混淆
+
+      1. `import {mapState} from 'vuex'`：用于将store中state取出状态的简化，即：
+
+         - 原来取值：`<Tabbar v-show="$store.state.isTabbarShow"></Tabbar>`
+
+         - 现在取值：`<Tabbar v-show="isTabbarShow"></Tabbar>`
+
+           其中，将原来取值的逻辑通过 `mapState` 封装在computed中：`computed: mapState(['isTabbarShow'])`
+
+         - 实际开发中会写成类似于：
+
+           ```js
+           computed: {
+           	...mapState(['isTabbarShow']),
+           	aaa(){},
+           	...
+           }
+           ```
+
+      2. `import {mapMutations} from 'vuex'`：之前mutations都是需要用commit来提交，现在可以直接用函数进行调用：`this.changeTabbar(false)`
+
+         ```js
+         methods: {
+         	...mapMutations([CHANGE_TABBAR]),
+         	aaa(){},
+         	...
+         }
+         ```
+
+      3. `mapActions`同理，写在methods中，`...` 展开
+
+      4. `mapGetters`同理，写在computed中，`...`展开
+
+   5. Module
+
+      > 由于使用单一状态树，应用的所有状态都会集中到一个比较大的对象中。当应用变得非常复杂时，store对象就有可能变得相当臃肿。
+      >
+      > 为了解决上述问题，vuex允许我们将store分割成**模块（module）**。每个模块拥有自己的state、mutations、actions、getters，甚至是嵌套子模块（从上至下进行同样方式的分割）。
+
+      ```
+      const moduleA = {
+      	// 开启命名空间
+      	namespaced: true,
+      	state: () => ({}),
+      	mutations: {},
+      	actions: {},
+      	getters: {}
+      }
+      
+      const moduleB = {
+      	state: () => ({}),
+      	mutations: {},
+      	actions: {},
+      }
+      
+      const store = createStore({
+      	modules: {
+      		a: moduleA,
+      		b: moduleB
+      	}
+      })
+      
+      // moduleA的状态
+      store.state.a
+      // moduleB的状态
+      store.state.b
+      ```
+
+      - 目录树：`/store/module`，创建各种子Module.js，`export default moduleA`来导出
+      - `/store/index.js`，合并各种Module.js
+      - 调用：`this.$store.state.TabbarModule.isTabbarShow`，只有state和getters像这样比较复杂
+      - **如果用辅助函数**，则在分割的子模块中需要开启命名空间，然后在使用时加上对应的命名空间对应的名称作为第一个参数：`computed: {...mapState('TabbarModule', ['isTabbarShow'])}`
+
+3. vca与vuex
+
+   1. 调用 `useStore`，可以直接setup中访问store，与 `this.$store` 等价
+
+      ```js
+      import {useStore} from 'vuex'
+      
+      export default {
+          setup(){
+              const store = useStore()
+          }
+      }
+      ```
+
+      - 开启命名空间后，需要在 **commit和dispatch** 的时候把命名空间加在函数名前面：`store.commit(“TabbarModule/changeTabbar”, false)`；在使用 **getter** 的时候也是加前面，不过 `.` 后面无法接 /，所以用方括号的方式获得： `store.getters['CinemaModule/filterCinemaLsit'](type)` ；在使用 **state** 的时候需要在前面点一下模块名称：`store.state.CinemaModule.cinemaList`
+      - 否则还是用map辅助函数写
+
+   2. 使用vca之后就不好用mapState等函数了，因为官方希望你用pinia去管理状态
+
+4. vuex持久化插件
+
+   - `npm install --save vuex-persistedstate`，其实就是存储在localStorage中
+
+     ```js
+     const store = createStore({
+         plugins: [createPersistedState({
+             reducer: (state) => {
+                 return {
+                     isTabbarShow: state.TabbarModule.isTabbarShow
+                 }
+             }
+         })],
+         ...
+     })
+     ```
+
+   - 比如：侧边栏的折叠和展开，需要持久化存储，属于个人偏好的行为
+
+### 9-pinia
+
+1. 简述使用
+
+   - `npm i pinia`
+
+     ```js
+     import { createApp } from 'vue'
+     // import './style.css'
+     import App from './24-pinia/App.vue'
+     import router from './24-pinia/router'
+     import { createPinia } from 'pinia'
+     
+     const pinia = createPinia()
+     var app = createApp(App)
+     
+     // 注册路由
+     app.use(router)
+     app.use(pinia)
+     app.mount('#app')
+     ```
+
+2. optionStore 风格（注意，不是说optionStore用option api，compositionStore用composition api，只是风格的不同罢了）
+
+   - 通过 `/store/tabbarStore.js` 创建一个pinia的store
+
+     ```js
+     import { defineStore } from 'pinia'
+     
+     // 第一个参数是唯一的store id
+     const useTabbarStore = defineStore("tabbar", {
+         // state: () => {
+         //     return {
+         //         isTabbarShow: true,
+         //     }
+         // }
+         // 简写
+         state: () => ({
+             isTabbarShow: true,
+         }),
+         actions: {
+             change(value){
+                 this.isTabbarShow = value
+             }
+         }
+     })
+     
+     
+     export default useTabbarStore
+     ```
+
+   - 在setup中使用
+
+     ```vue
+     <template>
+         <div>
+     
+             <!-- 路由插槽 -->
+             <router-view></router-view>
+     
+             <Tabbar v-show="store.isTabbarShow"></Tabbar>
+         </div>
+     </template>
+     
+     <script setup>
+     import Tabbar from './components/Tabbar.vue';
+     import useTabbarStore from './store/tabbarStore'
+     
+     const store = useTabbarStore()
+     console.log(store);
+     
+     // store 是一个
+     
+     </script>
+     
+     <style>
+     *{
+         margin: 0;
+         padding: 0;
+     }
+     ul{
+         list-style: none;
+     }
+     </style>
+     ```
+
+   - 注意：store是一个reactive包装的对象，直接结构可以拿到里面的值，但是会失去响应式，`const { isTabbarShow } = store`
+
+   - 如果非要解构拿出来，可以通过pinia的 `storeToRefs` 辅助函数：`const { isTabbarShow } = storeToRefs(store)`，**不推荐，没啥意义**
+
+   - 使用：
+
+     - ① 允许直接去修改状态：`store.isTabbarShow = false`
+
+     - ② 【推荐】状态合并：补丁式的调用，多个状态的改变就方便许多
+
+       ```js
+       store.$patch({
+           isTabbarShow: false
+       })
+       ```
+
+     - `store.$reset()`：设置状态重置
+
+   - pinia中没有mutations了，只有actions，同步和异步都能做
+
+     ③ 【推荐】使用actions进行状态修改：`store.change(false)`
+
+   - 改写成非setup，怎么用pinia
+
+     ```vue
+     <script>
+     import useTabbarStore from '../store/tabbarStore';
+     import {mapState, mapActions} from 'vuex'
+     
+     export default {
+         computed: {
+             ...mapState(useTabbarStore, ["isTabbarShow"])
+         },
+         methods: {
+             ...mapActions(useTabbarStore, ["change"])
+         }
+     }
+     </script>
+     ```
+
+3. Action
+
+   1. `store/cinemaStore.js` 定义store
+
+      ```js
+      import { defineStore } from "pinia";
+      import axios from 'axios';
+      
+      
+      const useCinemaStore = defineStore("cinema", {
+          // options store
+          state: () => ({
+              cinemaList: []
+          }),
+          actions: {
+              // 不要写成箭头函数，因为箭头函数中的this指向的不是本对象，而是windows
+              async getCinemaList() {
+                  console.log("ajax");
+                  var res = await axios({
+                      url: "https://m.maizuo.com/gateway?cityId=110100&ticketFlag=1&k=5385023",
+                      headers: {
+                          "X-Client-Info":
+                              '{"a":"3000","ch":"1002","v":"5.2.1","e":"1701324144895711134613505"}',
+                          "X-Host": "mall.film-ticket.cinema.list",
+                      },
+                  })
+                  // 提交mutation
+                  // store.commit("changeCinemaList", res.data.data.cinemas)
+                  this.cinemaList = res.data.data.cinemas
+              }
+          },
+          getters: {
+              filterCinemaList(state) {
+                  return (type) =>
+                      state.cinemaList.filter(item => item.eTicketFlag === type)
+              }
+          }
+      })
+      
+      export default useCinemaStore
+      ```
+
+   2. 使用时直接导入和调用
+
+      - `import useCinemaStore from "../store/cinemaStore";`
+      - 使用：`store.cinemaList`
+      - 调用函数：`store.getCinemaList()`
+
+4. Getter
+
+   - 类似computed，对store中的state进行过滤
+
+   - 使用时直接 `store.函数名` 进行使用
+
+   - 使用场景：如果界面中有一个列表展示，通过下拉选项可以展示过滤后的列表结果，那么就可以通过getter中进行过滤后的状态获取，并展示
+
+   - 返回结果需要根据传参的内容进行逻辑过滤，那么返回的就应该是一个箭头函数，该函数接收传参。调用时传参。
+
+     ```vue
+     <template>
+         <div>
+             <select name="" id="" v-model="type">
+                 <option :value="1">APP订票</option>
+                 <option :value="0">前台兑换</option>
+             </select>
+             <ul>
+                 <li
+                     v-for="item in store.filterCinemaList(type)"
+                     :key="item.cinemaId"
+                 >
+                     {{ item.name }}
+                 </li>
+             </ul>
+         </div>
+     </template>
+     
+     <script setup>
+     import { ref, onMounted } from "vue";
+     import useCinemaStore from "../store/cinemaStore";
+     
+     const type = ref(1)
+     const store = useCinemaStore()
+     onMounted(() => {
+         if (store.cinemaList.length === 0) {
+                 // 如果store中没有数据，就去拿数据
+                 store.getCinemaList()
+             } else {
+                 console.log("缓存");
+             }
+     })
+     
+     </script>
+     
+     <style scoped>
+     li {
+         padding: 2px;
+     }
+     </style>
+     ```
+
+5. setupStore
+
+   - 与optionStore仅仅是在创建的时候有区别，在使用的时候没有区别
+   - getter去掉之后，那么函数直接用 vue 的 `computed` 包装一下就行，与普通的VCA统一了，最后还是要用return回去
+   - 注意：ref 引用的响应式变量一定要用 `.value` 来进行取值和赋值
+
+6. pinia和vuex(<=4)的不同点：
+
+   - mutation已被弃用，初衷是带来devtools的集成方案，其实很冗余。
+   - 无需创建自定义的包装器来支持ts，pinia的设计方式是尽可能的利用ts的类型推理。
+   - 没有过多的魔法字符串注入，只需要导入函数并调用它们，享受自动补全。
+   - 无需动态添加store，默认就是动态的。
+   - 不再有嵌套结构的模块。直接store点就能用，不需要点state啥的了。
+   - 不再有可命名的模块。store的命名却决于他们的定义方式，所有的store都应该被命名。在最开始defineStore中，第一个参数就定义了store的命名空间。
+
+### 10-组件库
+
+1. element plus
+
+   1. elementPlus引入：`npm i element-plus`
+
+   2. 全局注册 `main.js`
+
+      ```js
+      import ElementPlus from 'element-plus'
+      import 'element-plus/dist/index.css'
+      
+      app.use(ElementPlus)
+      ```
+
+   3. Menu
+
+      1. 为了刷新完了之后还能有高亮显示，需要将当前的路由换算为对应高亮组件的 `default-active`：`<el-menu :router="true" :default-active="route.fullPath">`
+      1. 设置tag中的index是为了在点击的时候实现自动 url 的跳转，跳转的内容就是 index 中的路径，此外还需要将 router 设置为 true，开启该功能
+
+      ```vue
+      <template>
+          <el-container class="layout-container-demo" style="height: 500px">
+              <el-aside width="200px">
+                  <el-scrollbar>
+                      <el-menu :router="true" :default-active="route.fullPath">
+                          <el-menu-item index="/home">
+                              <el-icon><home-filled /></el-icon>
+                              <span>首页</span>
+                          </el-menu-item>
+                          <el-sub-menu index="/news">
+                              <template #title>
+                                  <el-icon><message /></el-icon>新闻管理
+                              </template>
+                              <el-menu-item index="/news/addnews">
+                                  <span>创建新闻</span>
+                              </el-menu-item>
+                              <el-menu-item index="/news/newslist">
+                                  <span>新闻列表</span>
+                              </el-menu-item>
+                          </el-sub-menu>
+                      </el-menu>
+                  </el-scrollbar>
+              </el-aside>
+      
+              <el-container>
+                  <el-header>
+                      <div>新闻管理系统</div>
+                      <div>欢迎回来</div>
+                  </el-header>
+      
+                  <el-main>
+                      <el-scrollbar>
+                          <router-view></router-view>
+                      </el-scrollbar>
+                  </el-main>
+              </el-container>
+          </el-container>
+      </template>
+      
+      <script lang="ts" setup>
+      import { ref } from "vue";
+      import { Menu as IconMenu, Message, Setting, HomeFilled } from "@element-plus/icons-vue";
+      import {useRoute} from "vue-router"
+      
+      const route = useRoute()
+      console.log(route.fullPath);
+      
+      const item = {
+          date: "2016-05-02",
+          name: "Tom",
+          address: "No. 189, Grove St, Los Angeles",
+      };
+      const tableData = ref(Array.from({ length: 20 }).fill(item));
+      </script>
+      
+      <style scoped>
+      .el-header{
+          background-color: lightcoral;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      </style>
+      ```
+
+   4. Form
+
+      1. `:model=form` 中绑定的是表单的状态，用于保存和使用
+
+      2. 同一个页面多次提交可能会导致，同一个引用的多次提交，所以可以在逻辑中进行控制，每一次push的内容都转换为一个新的引用：
+
+         ```js
+         import { defineStore } from 'pinia'
+         import { ref } from 'vue'
+         
+         // 第一个参数是唯一的store id
+         const useNewsStore = defineStore("news", () => {
+             const list = ref([])
+             const add = (value) => {
+                 list.value.push({...value})
+             }
+         
+             return {
+                 list,
+                 add
+             }
+         })
+         
+         export default useNewsStore
+         ```
+
+      3. form表单
+
+         ```vue
+         <template>
+             <el-form :model="form" label-width="120px">
+                 <el-form-item label="新闻标题">
+                     <el-input v-model="form.title" />
+                 </el-form-item>
+                 <el-form-item label="新闻分类">
+                     <el-select v-model="form.category" placeholder="请选择你的分类">
+                         <el-option label="经济" value="经济" />
+                         <el-option label="明星" value="明星" />
+                         <el-option label="科技" value="科技" />
+                     </el-select>
+                 </el-form-item>
+                 <el-form-item label="新闻内容">
+                     <el-input v-model="form.content" type="textarea" />
+                 </el-form-item>
+                 <el-form-item>
+                     <el-button type="primary" @click="onSubmit">Create</el-button>
+                     <el-button>Cancel</el-button>
+                 </el-form-item>
+             </el-form>
+         </template>
+         
+         <script setup>
+         import { reactive } from "vue";
+         import useNewsStore from "../store/news";
+         import { useRouter } from "vue-router";
+         
+         const store = useNewsStore();
+         const router = useRouter()
+         
+         // do not use same name with ref
+         const form = reactive({
+             title: "",
+             category: "",
+             content: "",
+         });
+         
+         const onSubmit = () => {
+             console.log("submit!", form);
+             store.add(form);
+             router.push('/news/newslist')
+         };
+         </script>
+         ```
+
+   5. Table
+
+      1. `prop` 需要准确的对应好当前对应属性的名称：`<el-table-column prop="date" label="日期" width="180" />`
+
+      2. 需要自定义某列的内容，那么可以去掉prop，并在 `el-table-column` 新建一个子tag `<template #default="scope">` ，其子内容即为想要自定义格式的内容，数据从 `scope.row` 中获取，比如：`<b style="margin-left: 10px; color: red">{{ scope.row.title }}</b>`
+
+      3. 总的：
+
+         ```vue
+         <template>
+             <div>
+                 NewsList
+                 <el-carousel :interval="4000" type="card" height="200px">
+                     <el-carousel-item v-for="item in 6" :key="item">
+                         <h3 text="2xl" justify="center">{{ item }}</h3>
+                     </el-carousel-item>
+                 </el-carousel>
+         
+                 <el-row
+                     :gutter="20"
+                     style="
+                         align-items: center;
+                         justify-content: space-between;
+                         background-color: lightgray;
+                     "
+                 >
+                     <el-col :span="8">
+                         <div class="grid-content ep-bg-purple">个人介绍</div>
+                     </el-col>
+                     <el-col :span="8">
+                         <div class="grid-content ep-bg-purple-light">公司介绍</div>
+                     </el-col>
+                     <el-col :span="8">
+                         <div class="grid-content ep-bg-purple">公司产品</div>
+                     </el-col>
+                 </el-row>
+         
+                 <el-table :data="store.list" style="width: 100%">
+                     <el-table-column label="标题" width="180">
+                         <template #default="scope">
+                             <b style="margin-left: 10px; color: red">{{ scope.row.title }}</b>
+                         </template>
+                     </el-table-column>
+                     <el-table-column prop="category" label="分类" width="180" />
+                     <el-table-column prop="content" label="内容" />
+                     <el-table-column>
+                         <template #default="scope">
+                             <div>
+                                 <el-button type="warning" round>编辑</el-button>
+                                 <el-button type="danger" round>删除</el-button>
+                             </div>
+                         </template>
+                     </el-table-column>
+                 </el-table>
+             </div>
+         </template>
+         
+         <script setup>
+         import useNewsStore from "../store/news";
+         
+         const store = useNewsStore();
+         console.log(store.list);
+         </script>
+         
+         <style scoped>
+         .el-carousel__item h3 {
+             color: #475669;
+             opacity: 0.75;
+             line-height: 200px;
+             margin: 0;
+             text-align: center;
+         }
+         
+         .el-carousel__item:nth-child(2n) {
+             background-color: #99a9bf;
+         }
+         
+         .el-carousel__item:nth-child(2n + 1) {
+             background-color: #d3dce6;
+         }
+         </style>
+         ```
+
+2. vant
+
+   1. vant引入，`npm i vant`
+
+   2. 全局注册 `main.js`
+
+      ```js
+      // 1. 引入需要的组件
+      import {Button} from 'vant'
+      // 2. 引入组件样式
+      import 'vant/lib/index.css'
+      
+      app.use(Button)
+      ```
+
+   3. 局部注册，其中 `[]` 为es6的写法，里面的字符串会转为js语法
+
+      ```js
+      import {Button} from 'vant'
+      
+      export default {
+      	components: {
+      		[Button.name] = Button
+      	}
+      }
+      ```
+
+   4. 用setup语法糖，只需要导入即可，不过导入的Button使用不能按名称 van-button，因为setup这种形式，对应的是 `export default {components: { Button }}` ，所以对应的名称应该是Button，可以重命名来解决。
+
+      ```vue
+      <script setup>
+      import { Button as vanButton } from "vant";
+      </script>
+      ```
+
+   5. Toast使用，一般用于axios的请求前后，显示转圈
+
+      - 使用
+
+        ```js
+        import { closeToast, showLoadingToast } from "vant";
+        
+        // 使用
+        showLoadingToast({
+            message: "加载中...",
+            forbidClick: true,
+        })
+        
+        // 隐藏
+        closeToast()
+        ```
+
+      - axios拦截器，`./util/config.js`
+
+        ```js
+        import axios from 'axios'
+        import { closeToast, showLoadingToast } from "vant";
+        
+        
+        // 添加请求拦截器
+        axios.interceptors.request.use(function (config) {
+            // 在发送请求之前做些什么
+            showLoadingToast({
+                message: "加载中...",
+                forbidClick: true,
+            })
+        
+            return config;
+        }, function (error) {
+            // 对请求错误做些什么
+            return Promise.reject(error);
+        });
+        
+        // 添加响应拦截器
+        axios.interceptors.response.use(function (response) {
+            // 2xx 范围内的状态码都会触发该函数。
+            // 对响应数据做点什么
+        
+            // 隐藏
+            closeToast()
+            return response;
+        }, function (error) {
+            // 超出 2xx 范围的状态码都会触发该函数。
+            // 对响应错误做点什么
+        
+            // 隐藏
+            closeToast()
+            return Promise.reject(error);
+        });
+        ```
+
+   6. swiper轮播
+
+      ```vue
+      <template>
+          <div>
+              <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+                  <van-swipe-item v-for="(item, index) in datalist" :key="item.id">
+                      <img :src="item.imgUrl" alt="" style="width: 100%">
+                  </van-swipe-item>
+              </van-swipe>
+      
+              <ul class="header">
+                  <router-link
+                      to="/films/nowplaying"
+                      custom
+                      v-slot="{ isActive, navigate }"
+                  >
+                      <li @click="navigate">
+                          <span :class="isActive ? 'kerwinactive' : ''"
+                              >正在热映</span
+                          >
+                      </li>
+                  </router-link>
+                  <router-link
+                      to="/films/comingsoon"
+                      custom
+                      #="{ isActive, navigate }"
+                  >
+                      <li @click="navigate">
+                          <span :class="isActive ? 'kerwinactive' : ''"
+                              >即将上映</span
+                          >
+                      </li>
+                  </router-link>
+              </ul>
+      
+              <router-view></router-view>
+          </div>
+      </template>
+      
+      <script setup>
+      import { Swipe as vanSwipe, SwipeItem as vanSwipeItem } from "vant";
+      import { ref } from "vue";
+      const datalist = ref([
+          {
+              id: 1,
+              imgUrl: "https://pic.maizuo.com/usr/movie/94d069d3e037bb221d7b4b581ccaff51.jpg",
+              title: "海王2：失落的王国",
+          },
+          {
+              id: 2,
+              imgUrl: "https://pic.maizuo.com/usr/movie/88ea8dff563db98b06efcfc07acf5283.jpg",
+              title: "三大队",
+          },
+          {
+              id: 3,
+              imgUrl: "https://pic.maizuo.com/usr/movie/b5ef931e6d7f3419dbc2e196afaf1fc7.jpg",
+              title: "一闪一闪亮星星",
+          },
+      ]);
+      </script>
+      
+      <style scoped lang="scss">
+      .header {
+          display: flex;
+          height: 50px;
+          line-height: 50px;
+          text-align: center;
+      
+          // 粘性定位，到top为0的时候sticky住，并且z轴在上面，不会被盖住，背景色白色，不会透视列表内容
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          background: white;
+      
+          li {
+              flex: 1;
+      
+              span {
+                  padding: 10px 0;
+              }
+          }
+      }
+      .kerwinactive {
+          color: red;
+          border-bottom: 3px solid red;
+      }
+      </style>
+      ```
+
+   7. List 列表
+
+      - 通过 `:deep(类名)` 深度选择器，来对调用的组件进行样式的覆盖
+
+        ```css
+        :deep(.van-cell__value){
+            text-align: left;
+        }
+        ```
+
+      - 通过控制loading来控制加载状态，控制finished来停止加载
+
+        ```vue
+        <template>
+            <div>
+                <van-list
+                    v-model:loading="loading"
+                    :finished="finished"
+                    finished-text="没有更多了"
+                    @load="onLoad"
+                    :immediate-check="false"
+                    :offset="10"
+                >
+                    <van-cell
+                        v-for="item in datalist"
+                        :key="item.filmId"
+                        @click="handleClick(item.filmId)"
+                    >
+                        <img
+                            :src="item.poster"
+                            alt=""
+                            style="width: 100px; float: left"
+                        />
+                        <div>{{ item.name }}</div>
+                    </van-cell>
+                </van-list>
+            </div>
+        </template>
+        
+        <script setup>
+        import axios from "axios";
+        import { ref, onMounted } from "vue";
+        import { useRouter } from "vue-router";
+        
+        import { List as vanList, Cell as vanCell } from "vant";
+        
+        // 加载状态
+        const loading = piniref(false);
+        // 结束状态
+        const finished = ref(false);
+        
+        const datalist = ref([]);
+        const router = useRouter();
+        
+        // 状态
+        const pageNum = ref(1);
+        const total = ref(0);
+        
+        onMounted(async () => {
+            // fetch
+            const res = await axios({
+                url: `https://m.maizuo.com/gateway?cityId=110100&pageNum=${pageNum.value}&pageSize=10&type=1&k=7564252`,
+                headers: {
+                    "X-Client-Info":
+                        '{"a":"3000","ch":"1002","v":"5.2.1","e":"1701324144895711134613505"}',
+                    "X-Host": "mall.film-ticket.film.list",
+                },
+            });
+            console.log(res.data);
+            datalist.value = res.data.data.films;
+            total.value = res.data.data.total;
+        });
+        const handleClick = (id) => {
+            console.log(id);
+            // 编程式
+            router.push(`/detail/${id}`);
+        };
+        
+        const onLoad = async () => {
+            if (total.value === datalist.value.length){
+                // 数据取完了
+                finished.value = true
+                return
+            }
+        
+        
+            console.log("到底了");
+            pageNum.value++;
+        
+            const res = await axios({
+                url: `https://m.maizuo.com/gateway?cityId=110100&pageNum=${pageNum.value}&pageSize=10&type=1&k=7564252`,
+                headers: {
+                    "X-Client-Info":
+                        '{"a":"3000","ch":"1002","v":"5.2.1","e":"1701324144895711134613505"}',
+                    "X-Host": "mall.film-ticket.film.list",
+                },
+            });
+        
+            // 追加数据
+            datalist.value = [...datalist.value, ...res.data.data.films];
+            // loading修改
+            loading.value = false;
+        };
+        </script>
+        
+        <style lang="scss" scoped>
+        ul {
+            li {
+                padding: 10px;
+            }
+        }
+        
+        :deep(.van-cell__value) {
+            text-align: left;
+        }
+        </style>
+        ```
+
+   8. IndexBar
+
+      - 数据处理：将数据处理成 `{‘A’: […], ‘B’: […], …}` 的字典形式
+      - indexlist：通过计算属性计算索引列表
+      - 返回上一页：`router.go(-1)`
+
+      ```vue
+      <template>
+          <div>
+              <van-index-bar :index-list="indexlist">
+                  <div v-for="(item, index) in datalist" :key="item.type">
+                      <van-index-anchor :index="item.type" />
+                      <van-cell
+                          v-for="x in item.list"
+                          :key="x.cityId"
+                          :title="x.name"
+                          @click="handleClick(x)"
+                      />
+                  </div>
+              </van-index-bar>
+          </div>
+      </template>
+      
+      <script setup>
+      import axios from "axios";
+      import { computed, onMounted, ref } from "vue";
+      import _ from "lodash";
+      import {
+          IndexBar as vanIndexBar,
+          IndexAnchor as vanIndexAnchor,
+          Cell as vanCell,
+      } from "vant";
+      import useCityStore from "../store/cityStore";
+      import { useRouter } from "vue-router";
+      
+      const router = useRouter()
+      const store = useCityStore();
+      const datalist = ref([]);
+      const indexlist = computed(() => {
+          return datalist.value.map((item) => item.type);
+      });
+      
+      onMounted(async () => {
+          var res = await axios({
+              url: "https://m.maizuo.com/gateway?k=7605862",
+              headers: {
+                  "X-Client-Info":
+                      '{"a":"3000","ch":"1002","v":"5.2.1","e":"1701324144895711134613505"}',
+                  "X-Host": "mall.film-ticket.city.list",
+              },
+          });
+          // console.log(res.data.data.cities);
+          datalist.value = filterCity(res.data.data.cities);
+      });
+      
+      // 方法1
+      const filterCity1 = (cities) => {
+          var letterArr = [];
+          for (let i = 65; i < 91; i++) {
+              letterArr.push(String.fromCharCode(i));
+          }
+          var newCities = [];
+          for (let index = 0; index < letterArr.length; index++) {
+              newCities.push({
+                  type: letterArr[index],
+                  list: cities.filter(
+                      (item) =>
+                          item.pinyin.substring(0, 1).toUpperCase() ===
+                          letterArr[index]
+                  ),
+              });
+          }
+          newCities = newCities.filter((item) => item.list.length);
+          console.log(newCities);
+      };
+      
+      // 方法2
+      const filterCity = (cities) => {
+          // 分组，lodash，js增强，方法增强
+          cities.sort(
+              (item1, item2) =>
+                  item1.pinyin.substring(0, 1).toUpperCase().charCodeAt() -
+                  item2.pinyin.substring(0, 1).toUpperCase().charCodeAt()
+          );
+          var group_list = _.groupBy(cities, (item) =>
+              item.pinyin.substring(0, 1).toUpperCase()
+          );
+          // console.log(111, group_list);
+      
+          var newCities = [];
+          for (let i in group_list) {
+              newCities.push({
+                  type: i,
+                  list: group_list[i],
+              });
+          }
+      
+          console.log(newCities);
+          return newCities;
+      };
+      
+      const handleClick = ({ name, cityId }) => {
+          store.change(name, cityId);
+      
+          router.go(-1)
+      };
+      </script>
+      
+      <style lang="scss" scoped></style>
+      ```
+
+### 11-测试
+
+1. 测试入门
+   - 测试类型：
+     - 单元测试：检查给定函数、类或组合式函数的输入是否产生预期的输出或副作用。
+     - 组件测试：检查你的组件是否正常挂载和渲染、是否可以与之互动，以及表现是否符合预期。这些测试比单元测试导入了更多的代码，更复杂，需要更多时间来执行。
+     - 端到端测试：检查跨越多个页面的功能，并对生产构建的Vue应用进行实际的网络请求。这些测试通常涉及到建立一个数据库或其他后端。
+
+2. 单元测试：
+
+   1. Vitest：速度很快，很简单。其他的还有 Peeky、Jest等等。
+
+   2. 安装：`npm i vitest -D`
+
+   3. 断言：`expect`，`expect(调用函数).toBe(结果)`
+
+   4. 测试：`npm test`，且需要在 `package.json` 中定义 `"test": "vitest"`
+
+   5. `beforeAll`：在进行测试之前的操作，比如显式激活pinia得到store
+
+   6. 测试：
+
+      1. 函数
+
+         ```js
+         import { increment } from './moduleA'
+         import { describe, test, expect } from 'vitest'
+         
+         describe('测试increment方法', () => {
+             test('测试1：increments the current number by 1', () => {
+                 expect(increment(0, 10)).toBe(1)
+             })
+         
+             test('测试2：does not increment the current number over the max', () => {
+                 expect(increment(10, 10)).toBe(10)
+             })
+         
+             test('测试3：has a default max of 10', () => {
+                 expect(increment(10)).toBe(10)
+             })
+         })
+         ```
+
+      2. store和异步
+
+         ```js
+         import { describe, test, expect } from 'vitest'
+         import useTabbarStore from '../24-pinia/store/tabbarStore'
+         import { setActivePinia, createPinia } from 'pinia'
+         import { beforeAll } from 'vitest'
+         
+         describe('测试store', () => {
+             let store
+             let cinemaStore
+             beforeAll(async () => {
+                 // 显式的激活pinia
+                 setActivePinia(createPinia())
+                 const useCinemaStore = await import('../24-pinia/store/cinemaStore')
+                 console.log(useCinemaStore.default);
+                 store = useTabbarStore()
+                 cinemaStore = useCinemaStore.default()
+             })
+             test('测试1：测试tabbarStore', () => {
+                 // 使用store
+                 expect(store.isTabbarShow).toBe(true)
+                 store.change(false)
+                 expect(store.isTabbarShow).toBe(false)
+             })
+             test('测试2：测试cenimaStore', async () => {
+                 expect(cinemaStore.cinemaList.length).toBe(0)
+                 await cinemaStore.getCinemaList()
+                 expect(cinemaStore.cinemaList.length).gt(0)
+             })
+         })
+         ```
+
+3. 组件测试（页面点击测试）
+
+   1. `npm i -D @testing-library/vue jsdom`
+
+   2. 配置vite的测试环境：
+
+      ```js
+      import { defineConfig } from 'vite'
+      import vue from '@vitejs/plugin-vue'
+      
+      // https://vitejs.dev/config/
+      export default defineConfig({
+        plugins: [vue()],
+        define: {
+          __VUE_PROD_DEVTOOLS__: true,
+        },
+        test: {
+          environment: "jsdom"
+        }
+      })
+      ```
+
+   3. 组件测试和父传子测试
+
+      ```js
+      import Counter from './App.vue'
+      import Child from './Child.vue'
+      import { render, fireEvent } from '@testing-library/vue'
+      
+      import { describe, test, expect } from 'vitest'
+      
+      describe('组件测试', () => {
+          test('测试1：测试App组件', async () => {
+              const { getByText } = render(Counter)
+              getByText("0")  // 隐式测试
+      
+              const button = getByText("add")
+              await fireEvent.click(button)
+              getByText("1")
+          })
+      
+          test('测试2：测试App组件的孩子组件', async () => {
+              const { getByText } = render(Child, {
+                  props: {
+                      title: "kerwin"
+                  }
+              })
+              getByText("kerwin")  // 隐式测试
+      
+          })
+      })
+      ```
 
 
+### 12-ts
 
+1. 引入
 
+   1. TypeScript的定位是静态类型语言，在写代码阶段就能检查错误，而非运行阶段；
+   2. 类型系统是最好的文档，增加了代码的可读性和可维护性；
+   3. 有一定的学习成术，需要理解接口 (Interfaces)、泛型(Generics)、类(Classes)等；
+   4. ts最后被编译成js。
 
+2. ts基础
 
+   ts的核心是类型系统，多了类型推断这一部分
 
+   - 变量标注数据类型：方案1，直接加
 
+     ```typescript
+     var myname: string = "kerwin"
+     myname = "100"
+     
+     var aa: boolean = true
+     
+     var mylist: number[] = [1, 2, 3]
+     mylist.push(4)
+     
+     var a: string | number = 12
+     a = "12"
+     
+     var b: (string | number)[] = [1, "2"]
+     b.push("12")
+     
+     var c: any = [12]
+     c = 1
+     ```
 
+   - 方案2，泛型
 
+     ```typescript
+     var d: Array<string> = ["aaa", "bbb"]
+     var e: Array<string | number> = ["aaa", 12]
+     var f: Array<any> = ["aaa", "bbb", 123, true]
+     ```
 
+   - 使用接口标注对象类型
 
+     接口是一种标准，方便进行对接
 
+     ```typescript
+     // 对象
+     var obj: InterObj = {
+         name: "kewin",
+         age: 100,
+         d: {}
+     }
+     // 定义接口
+     interface InterObj {
+         name: string,
+         age: number,
+         // 可选属性
+         location?: string,
+         // 未知属性
+         [propName: string]: any
+     }
+     ```
 
+   - 函数
 
+     ```typescript
+     function test(a: number, b: number):number {
+         return a + b
+     }
+     ```
 
+3. ts与Option API（不推荐）
 
+   1. `as`：是类型断言，更方便获取代码提示
 
+      ```vue
+      <template>
+          <div>
+              <div ref="mydiv">测试</div>
+              <div @click="handleClick">app-{{ myname }}-{{ computedName }}</div>
+              <button @click="handleAdd">click</button>
+      
+              <input type="text" v-model="mytext" />
+      
+              <ul>
+                  <li v-for="(item, index) in list" :key="item">
+                      {{ index }} - {{ item }}
+                      <button @click="handleDel(index)">del</button>
+                  </li>
+              </ul>
+      
+              <Child
+                  style="background: yellow"
+                  title="首页"
+                  :item="{
+                      name: 'kerwin',
+                      age: 100,
+                      list: [1, 2, 3],
+                  }"
+                  @event="handleEvent"
+              ></Child>
+          </div>
+      </template>
+      
+      <script lang="ts">
+      import Child from "./Child.vue";
+      interface MyData {
+          myname: string;
+          myage: number;
+          list: Array<string>;
+          mytext: string;
+      }
+      
+      export default {
+          components: {
+              Child,
+          },
+          data() {
+              // 断言
+              return {
+                  myname: "kerwin",
+                  myage: 100,
+                  list: [],
+                  mytext: "",
+              } as MyData;
+          },
+          methods: {
+              handleClick() {
+                  this.myname = this.myname.substring(0, 1);
+                  this.myage = 111;
+                  // 断言对象为任意类型
+                  console.log((this.$refs.mydiv as any).innerHTML);
+              },
+              handleAdd() {
+                  this.list.push(this.mytext);
+              },
+              handleDel(index: number) {
+                  this.list.splice(index, 1);
+              },
+              handleEvent(data: string) {
+                  console.log("click", data);
+              },
+          },
+          computed: {
+              computedName() {
+                  return (
+                      this.myname.substring(0, 1).toUpperCase() +
+                      this.myname.substring(1)
+                  );
+              },
+          },
+      };
+      </script>
+      
+      <style scoped></style>
+      ```
 
+   2. 通过在子类中 `emits` api里对事件名称进行传参约定进行类型限制
 
+      ```vue
+      <template>
+          <div>child-{{ title }}</div>
+          {{ item?.name }}
+          {{ item?.age }}
+      
+          <button @click="handleClick">子</button>
+      </template>
+      
+      <script lang="ts">
+      import type { PropType } from "vue";
+      
+      interface IProps{
+          name: string,
+          age: number,
+          list: Array<string>
+      }
+      
+      export default {
+          props: {
+              title: String,
+              item: Object as PropType<IProps>,
+          },
+          methods: {
+              handleClick(){
+                  // 子传父
+                  this.$emit("event", "aaa")
+              }
+          },
+          emits: {
+              event(payload:string){
+                  return payload
+              }
+          }
+      };
+      </script>
+      
+      <style scoped></style>
+      
+      ```
 
+4. ts与Composition API
 
+   1. 导入新的类型：`import type { Ref } from "vue";`；使用：`const cc: Ref<string> = ref("cc")`
 
+   2. 简写：`const dd = ref<string>("dd")`，就不用导入类型 `Ref` 啦
 
+   3. `ref` 的第二种用法，怎么拿到dom：
 
+      ```typescript
+      const mydiv = ref<HTMLDivElement>()
+      onMounted(() => {
+          console.log(mydiv.value?.innerHTML);
+      })
+      ```
 
+      `?`：如果前面的为false，就不会继续 `.` 了
 
+   4. 计算属性，computed
 
+      ```typescript
+      const computedName = computed<string>(
+          () =>
+              cc.value.substring(0, 1).toUpperCase() +
+              cc.value.substring(1).toLowerCase()
+      );
+      ```
 
+   5. 父传子：
 
+      - 之前：
 
+        ```typescript
+        const props = defineProps({
+            title: String,
+            obj: Object
+        })
+        ```
 
+      - 现在：
 
+        ```typescript
+        interface IProps {
+            name: string;
+            age: number;
+        }
+        
+        const props = defineProps<{
+            title: string;
+            obj: IProps;
+        }>()
+        ```
 
+      - defineProps可以接收泛型，这样也不用专门在参数中定义了，还能获取代码提示，父类子类都有。
+
+   6. 子传父
+
+      - 以前在子类里直接emit触发父类事件，并传参
+
+        ```typescript
+        const emit = defineEmits(["ee"])
+        const handleClick = () => {
+            emit("ee", "hello");
+        };
+        ```
+
+      - 现在的定义事件
+
+        ```typescript
+        const emit = defineEmits<{
+            (e: "ee", myvalue: string): void;
+        }>();
+        ```
+
+   7. 路由和pinia：简单来说就是把vue中的script改成 `lang="ts"`，然后是把红色的部分，给初始化的地方，**该加泛型的加泛型，该写接口的写接口，数组记得加 `接口名[]`**
+
+### 13-vue的内功心法
+
+1. 解释单向数据流和双向数据流的绑定
+
+   - 对于Vue来说，组件之间的数据传递具有单向数据流这样的特性称为单向数据流（Unidirectional data flow），该方式使用一个上传数据流和一个下传数据流进行双向数据通信，两个数据流之间相互独立，单向数据流只能从一个方向来修改状态。
+   - 而双向数据绑定即为当数据发生变化的时候，视图也就发生变化。当视图发生变化的时候，数据也会跟着同步变化，两个数据流之间互为影响。
+
+2. Object.defineProperty 有什么缺点
+
+   1. 无法监听es6的Set、Map的变化
+   2. 无法监听class类型的数据
+   3. 属性的新加或者删除也无法监听
+   4. 数组元素的增加和删除也无法监听
+
+3. 对MVC、MVP和MVVM的理解
+
+   - MVC
+
+     - 用户对View操作之后，View捕获到这个操作，会把处理的权力移交给Controller（Pass Calls）；Controller会对来自View数据进行预处理，决定调用哪个Model的接口；然后由Model执行相关的业务逻辑（数据请求）；当Model变更了以后，会通过 **观察者模式（Observer Pattern）** 通知View；View通过观察者模式收到Model变更的消息以后，会向Model请求最新的数据，然后重新更新界面。
+     - **把业务逻辑和展示逻辑分离，模块化程度高，但是由于View是强依赖特定的Model的，所以View无法组件化，无法复用** 
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/direct/980f086f2d1343c188c4e2fc3210ce82.png)
+
+   - MVP
+
+     - 和MVC模式一样，用户对View的操作，都会从View移交给Presenter，Presenter会执行相应的应用程序逻辑，并且对Model进行相应的操作；而这时候Model执行完业务逻辑之后，也是通过观察者模式把自己变更的消息传递出去，但是传给Presenter而不是View。Presenter获取到Model变更的消息以后，通过View提供的接口更新界面。
+
+     - **View不依赖Model，View可以进行组件化。但是Model->View的手动同步逻辑麻烦，维护困难**
+
+       ![在这里插入图片描述](https://img-blog.csdnimg.cn/direct/b4139edfce11443881d117474b79ff35.png)
+
+   - MVVM
+
+     - MVVM的的协调关系和MVP一样。但是在ViewModel 中会有一个叫Binder，或者是Data-binding engine的东西，你只需要在View的模板语法当中，指令式地声明View上的显示内容是和Model的哪一块数据绑定的。当ViewModel对进行Model更新的时候，Binder会自动把数据更新到View上去，当用户对View进行操作的时候（比如表单输入），Binder也会自动把数据更新到Model上去。这种方式成为：Two-way data-binding，双向数据绑定。 **可以简单的而不恰当的理解为一个模板引擎，但是会根据数据变更实时渲染**。
+     - **解决了MVP大量的手动View和Model同步的问题，提供双向绑定机制，提高了代码的可维护性。对于大型的图形应用程序，视图状态较多，ViewModel的构建和维护的成本都会比较高。**
+
+     ![在这里插入图片描述](https://img-blog.csdnimg.cn/direct/bfd0db4e947044afaa660da4a97f6abf.png)
+
+4. 生命周期
+
+   |    原方法     |     升级后      |
+   | :-----------: | :-------------: |
+   | beforeCreate  |      setup      |
+   |    created    |      setup      |
+   |  beforeMount  |  onBeforeMount  |
+   |    mounted    |    onMounted    |
+   | beforeUpdate  | onBeforeUpdate  |
+   |    updated    |    onUpdated    |
+   | beforeDestory | onBeforeUnmount |
+   |   destroyed   |   onUnmounted   |
+
+5. 你知道Vue响应式数据原理吗？Proxy和 Object.defineProperty 优劣对比？
+
+   - 响应式原理
+
+     Vue的响应式实现主要是利用了Object.defineProperty 的方法里面的setter和getter方法的观察者模式来实现，在组件初始化时会给每一个data属性注册getter和setter，然后再new一个自己的watcher对象，此时watcher会立即调用组件的render函数去生成虚拟dom。在调用render的时候，就会需要用到data的属性值，此时会触发getter函数，将当前的watcher函数注册进sub里。当data属性发生改变之后，就会遍历sub里所有的watcher对象，通知它们去重新渲染组件。
+
+   - Proxy的优势如下
+
+     - Proxy可以直接监听对象而非属性，可以直接监听数组的变化
+     - Proxy有多达13种拦截方法，不限于apply、ownKeys、deleteProperty、has等等，是Object.defineProperty 不具备的
+     - Proxy返回的是一个新对象，我们可以只操作新的对象来达到目的，而Object.defineProperty 只能遍历对象属性直接修改
+
+   - Object.defineProperty 的优势如下
+
+     - 兼容性好，支持IE9
+     - Proxy存在浏览器兼容性问题，且无法用polyfill（垫片）来弥补
+
+6. Composition API的出现带来了哪些新的开发体验，为啥需要这个？
+
+   1. 在VCA中是根据逻辑相关组织代码的，提高可读性和可维护性，类似react的hook写法
+   2. 更好的重用逻辑代码，在VOA中通过Mixins重用逻辑代码，容易发生命名冲突且关系不清楚
+   3. 解决在生命周期函数经常包含不相关的逻辑，但又不得不把相关逻辑分离到了几个不同方法中的问题，如在mounted中设置定时器，但需要在destroyed中来清除定时器，将同一功能的代码拆分到不同的位置，造成后期代码维护的困难
+
+7. 对比jQuery和Vue有什么不同
+
+   jQuery 专注视图层，通过直接操作 DOM 去实现页面的一些逻染； Vue 专注于数据层，通过数据的双向绑定，最终表现在 DOM 层面，减少了 DOM 操作。Vue 使用了组件化思想，使得项目子集职责清晰，提高了开发效率，方便重复利用，便于协同开发。
+
+8. 如何在Vue的单文件组件里的样式定义全局CSS
+
+   不加scoped
+
+9. `$root`、`$parent`、`$ref`
+
+   1. `$root` 拿到的是根组件
+   2. `$parent` 拿到的是最近一级的父组件
+   3. 通过在子组件标签定义 ref 属性，在父组件中可以使用 `$refs` 访问子组件实例
+
+10. Vue中怎么自定义指令
+
+    通过directive来自定义指令，自定义指令分为全局指令和局部指令，自定义指令也有几个钩子函数，常用的有bind和update，当bind和update时触发相同行为，而不关心其他的钩子时可以简写
+
+11. Vue中怎么自定义过滤器（vue3不支持）
+
+    通过filter来定义过滤器，包括全局/局部 过滤器，过滤器的主题是一个 普通的函数，来对数据进行处理，可以传递参数。当有局部和全局两个名称相同的过滤器时候，会以就近原则进行调用，即：局部优于全局。使用：`变量 | 过滤器`
+
+    其实用computed就好了，过滤器没啥用
+
+12. Vue 等单页面应用的优缺点
+
+    - 优点
+      1. 单页应用的内容的改变不需要重新加载整个页面，web应用更具响应性和更令人着迷
+      2. 单页应用没有页面之间的切换，就不会出现“白屏现象”，也不会出现假死并有“闪烁”现象
+      3. 单页应用相对服务器压力小，服务器只用出数据就可以，不用管展示逻辑和页面合成，吞吐能力会提高几倍
+      4. 良好的前后端分离。后瑞不再负责模板渲染、输出页面工作，后端API通用化，即同一套后程序代码，不用修改就可以用于web界面、手机、平板等多种客户端。
+    - 缺点
+      1. 首次加载耗时比较多
+      2. SEO问题，不利于百度、360等搜索引擎收录
+      3. 容易造成CSS命名冲突
+      4. 前进、后退、地址栏、数千等，都需要程序进行管理，页面的复杂度很高，需要一定的技能水平和开发成本较高
+
+13. Vue-router 使用 params 与 query 传参有什么区别
+
+    - params是路径，query是?
+    - 用法上：query要用path来引入，params要用name来引入，接收参数都是类似的，分别是`this.$route.query`和`this.$route.params`
+    - 展示上：params是路由的一部分，必须要有。query是拼接在url后面的参数
+      - 命名的路由，并加上参数，让路由建立 url /users/eduardo：`router.push({name: 'user', params: {username: 'eduardo'}})`
+      - 带查询参数，结果是 /register?plan=private：`router.push({path: '/register', query: {plan: 'private'}})`
+      - 带 hash，结果是 /about#team：`router.push({path: '/about', hash: '#team'})`
+
+14. Vue中keep-alive的作用
+
+    keep-alive 是 vue 内置的一个组件，可以使被包含的组件保留状态，或免重新渲染，一旦使用keepalive包裹组件，此时mouted，created等钩子函数只会在第一次进入组件时调用，当再次切换回来时将不会调用。此时如果我们还想在每次切换时做一些事情，就需要用到另外的周期函数，actived和deactived，这两个钓子函数只有被keepalive包裹后才会调用。
+
+15. Vue如何实现单页面应用
+
+    通常的 url 地址由以下内容构成：协议名 域名 端口号 路径 参数 哈希值，当哈希值改变，页面不会发生跳转，单页面应用就是利用了这一点，给window注册onhashchange事件，当哈希值改变时通过location.hash就能获得相应的哈希值，然后就能跳到相应的页面。
+
+    1. hash通过监听浏觉器的onhashchange()事件变化，查找对应的路由规则
+    2. history原理: 利用H5的 history 中新增的两个API pushstate() 和 replaceState() 和一个事件 onpopstate 监听URL变化
+
+16. 说出至少4种Vue当中的指令和它的用法
+
+    - `v-if`：判断是否隐藏，用来判断元素是否创建
+    - `v-show`：元素的显示隐藏，类似css中的display的block和hidden
+    - `v-for`：把数据遍历出来
+    - `v-bind`：绑定属性
+    - `v-model`：实现双向绑定
+
+17. 如何实现一个路径渲染多个组件
+
+    可以通过命名视图(router-view)，它容许同一界面中拥有多个单独命名的视图，而不是只有一个单独的出口。如果 router-view 没有设置名字，那么默认为 default。通过设置components 即可同时流染多个组件
+
+    ```
+    <router-view class="view left-sidebar" name="LeftSidebar"></router-view>
+    <router-view class="view main-content"></router-view>
+    <router-view class="view right-sidebar" name="RightSidebar"></router-view>
+    
+    
+    const router = createRouter({
+    	history: createWebHashHistory(),
+    	routes: [
+    		{
+    			path: '/',
+    			components: {
+    				default: Home,
+    				LeftSidebar,
+    				RightSidebar
+    			}
+    		}
+    	]
+    })
+    ```
+
+18. 如何实现多个路径共享一个组件
+
+    只需将多个路径的component字段的值设置为同一个组件即可
+
+19. 如何检测动态路由的变化
+
+    可以通过watch方法来对 `$route` 进行监听，或者通过导航守卫的钩子函数 `beforeRouteUpdate` 来监听它的变化
+
+20. vue-router中的router-link上 v-slot 属性怎么用？
+
+    router-link 通过一个作用域插槽暴露底层的定制能力。这是一个更高阶的 API，主要面向库作者，但也可以为开发者提供便利，多数情况用在一个类似 NavLink 这样的自定义组件里。
+
+    有时我们可能想把激活的 class 应用到一个外部元素而不是 `<a>` 标签本身，这时你可以在一个 router-link 中包裹该元素并使用 v-s1ot 属性来创建链接
+
+    ```html
+    <router-link to="/foo" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+    	<li class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
+    		<a :href="href" @click="navigate">{{ route.fullPath }}</a>
+    	</li>
+    </router-link>
+    ```
+
+21. 如何除去url的 #
+
+    - 将路由模式改为history
+
+    - 由于我们的应用是一个单页面的客户端应用，如果没有适当的服务器配置，用户在浏览器中直接访问 `https://example.com/user/id` ，就会得到一个404错误，这就尴尬了
+
+    - 解决：需要在服务器上添加一个简单的回退路由，如果URL不匹配任何静态资源，它应该提供与你的应用程序中的 index.html 相同的页面
+
+      ```js
+      var history = require('connect-history-api-fallback')
+      // 注意放在所有接口的后面
+      app.use(history({
+      	index: '/index.html'
+      }))
+      ```
+
+22. `$route` 和 `$router` 的区别
+
+    `$route` 用来获取路由的信息的，它是路由信息的一个对象，里面包含路由的一些基本信息，包括name、meta、path、hash、query、params、fullPath、matched、redirectedFrom等。而 `$router` 主要是用来操作路由的，它是VueRouter的实例，包含了一些路由的跳转方法push，go，replace，钩子函数等
+
+23. Vue路由守卫
+
+    vue-router 提供的导航守卫主要用来对路由的跳转进行监控，控制它的跳转或取济，路由守卫有全局的，单个路由独享的，或者组件级的。导航钩子有3个参数：
+
+    1. to：即将要进入的目标路由对象
+
+    2. from：当前导航即将要离开的路由对象
+
+    3. next：调用该方法后，才能进入下一个钩子函数（afterEach）
+
+       ```js
+       router.beforeEach(async (to, from) => {
+       	if(
+       		// 检查用户是否已登录
+       		!isAuthenticated &&
+       		// 避免无限重定向
+       		to.name !== 'Login'
+       	){
+       		// 将用户重定向到登录页面
+       		return { name: 'Login' }
+       	}
+       })
+       ```
+
+24. Vue路由实现的底层原理
+
+    - 在Vue中利用数据劫持defineProperty在原型prototype上初始化了一些getter，分别是
+      - router：代表当前Router的实例
+      - route：代表当前Router的信息
+    - 在install中也全局注册了router-view、router-link，其中的`Vue.util.defineReactive`，这是Vue里面观察者劫持数据的方法，劫持`_route`，当`_route`触发setter方法的时候，则会通知到依赖的组件。
+    - 接下来在init中，会挂载判断是路由的模式，是history或者是hash，点击行为按钮，调用hashchange或者popstate的同时更新`_route`、`_route`的更新会触发route-view的重新演染。
+
+25. 路由懒加载
+
+    Vue Router 支持开箱即用的动态导入，这意味着你可以用动态导入代替静态导入
+
+    ```js
+    const UserDetail = () => import('./views/UserDetails.vue')
+    
+    const router = createRouter({
+    	routes: [
+    		{
+    			path: '/users/:id',
+    			component: UserDetails
+    		}
+    	]
+    })
+    ```
+
+26. 插槽，具名插槽和匿名插槽
+
+    插槽相当于预留了一个位置，可以将我们书写在组件内的内容放入，写一个插槽就会将组件内的内容替换一次，两次则替换两次。为了自定义插槽的位置我们可以给插槽取名，它会根据插槽名来插入内容，一一对应。
+
+27. Vue-loader
+
+    解析和转换.vue文件，提取出其中的逻辑代码 script、样式代码 style、以及 HTML 模板 template，再分别把他们交给对应的 Loader 去处理。
+
+28. Vue和React中diff算法的区别
+
+    vue和react的diff算法，都是忽略跨级比较，只做同级比较。vue diff时调用patch函数，参数是vnode和oldVnode，分别代表新旧节点。
+
+    1. vue对比节点，当节点元素相同，但是classname不同，认为是不同类型的元素，删除重建，而react认为是同类型节点，只是修改节点属性。
+    2. vue的列表对比，采用的是两端到中间的对比方式，而react采用的是从左到右依次对比的方式。当一个集合只是把最后一个节点移到了第一个，react会把前面的节点依次移动，而vue只会把最后一个节点移到第一个。
+
+    总体上，vue的方式比较高效。
+
+29. Vue中create和mount的区别
+
+    create为组件初始化阶段，在此阶段主要完成数据观测（data observer），属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，此时还未生成真实的DOM，也就无法获取和操作DOM元。而mount主要完成从虚拟DOM到真实DOM的转换挂载，此时html已经渡染出来了，所以可以直接操作dom节点。
+
+30. axios是什么？怎么使用？描述使用它实现登录功能的流程
+
+    axios是请求后合资源的模块。通过`npm install axios -S`安装，在大多教情况下我们需要封装拦截器，在实现登录的过程中我们一般在请求拦截器中来加入token，在响应请求器中通过判断后返回的状态码来对返回的数据进行不同的处理。如果发送的是跨域请求，需在配置文件中`config/index.js` 进行代理配置。
+
+31. computed和watch的区别？watch实现原理？watch有几种写法？
+
+    1. 计算属性 computed：
+       1. 支持缓存，只有依赖数据发生改变，才会重新进行计算
+       2. 不支持异步，当computed内有异步操作时无效，无法监听数据的变化
+       3. computed属性值会默认走缓存，计算属性是基于它们的响应式依赖进行缓存的，也就是基于data中声明过或者父组件传递的props中的数据通过计算得到的值
+       4. 如果一个属性是由其他属性计算而来的，这个属性依其他属性，是一个多对一或者一对一，一般用computed
+       5. 如果computed属性的属性值是函数，那么默认会走get方法：函数的返回值就是属性的属性值；在computed中的，属性都有一个get和一个set方法，当数据变化时，调用set方法。
+    2. 监听属性 watch：
+       1. 不支持缓存，数据变，直接会触发相应的操作
+       2. **watch支持异步**
+       3. 监听的函数接收两个参数，新的值和之前的值
+       4. 当一个属性发生变化时，需要执行对应的操作：一对多
+       5. 监听数据必须是data中声明过或者父组件传递过来的props中的数据，当数据变化时，触发其他操作，函数有两个参数：
+          - immediate：组件加载时立即触发回调函数执行
+          - deep：深度监听，为了发现对象内部值的变化，复杂类型的数据时使用，例如数组中的对象内容的改变，注意监听数组的变动不需要这么做。
+
+32. vue $forceUpdate 的原理
+
+    1. 作用：迫使vue实例重新渲染，注意它仅仅影响实例本身和插入插槽内容的子组件，而不是所有子组件
+
+    2. 内部原理：
+
+       ```js
+       Vue.prototype.$forceUpdate = function() {
+       	const vm: Component = this
+       	if(vm._watcher){
+       		vm._watcher.update()
+       	}
+       }
+       ```
+
+       实例需要重新渲染是在依赖发生变化的时候通知watcher，然后通知watcher来调用update方法
+
+33. v-for key的使用
+
+    - key是为Vue中的vnode标记的唯一id，通过这个key，我们的diff操作可以更准确、更快速
+    - diff算法的过程中，先会进行新旧节点的首尾交叉对比，当无法匹配的时候会用新节点的key与旧节点进行比对，然后超出差异
+    - diff过程可以概括为：
+      - oldCh和newCh各有两个头尾的变量StartIdx和EndIdx，它们的2个变量相互比较，一共有4种比较方式。如果4种比较都没匹配，如果设置了key，就会用key进行比较，在比较的过程中，变量会往中间靠，一旦StartIdx>EndIdx表明oldch和newch至少有一个已经遍历完了，就会结束比较，这四种比较方式就是首、尾、旧尾新头、旧头新尾
+      - 准确：如果不加key，那么vue会选择复用节点(Vue的就地更新策略)，导致之前节点的状态被保留下来，会产生一系列的bug
+      - 快速：key的唯一性可以被Map数据结构充分利用，相比于遍历査找的时间复杂度`O(n)`，Map的时间复杂度仅仅为`O(1)`
+
+34. 为什么要设置key值，可以用index吗？为什么不能？
+
+    vue中列表循环需加 `:key="唯一标识”` 唯一标识可以是item里面id、index等，因为vue组件高度复用，增加Key可以标识组件的唯一性，为了更好地区别各个组件，key的作用主要是为了高效的更新虚拟DOM。
+
+35. diff复杂度原理及具体实现过程画图
+
+    diff算法是一种通过同层的树节点进行比较的高级算法，避免了对树进行逐层搜索遍历，所以时间复杂度只有 `O(n)`
+
+    ![在这里插入图片描述](https://img-blog.csdnimg.cn/direct/df8c0bba3c64417d80f0dacd33e66294.png)
+
+    diff算法有两个比较显著的特点：
+
+    - 比较只会在同层级进行，不会跨层级比较
+    - 在diff比较的过程中，循环从两边向中间收拢
+
+    diff流程：
+
+    1. 首先定义oldStartIdx、newStartIdx、oldEndIdx以及newEndIdx，分别是新老两个VNode的两边的索引
+
+    2. 接下来是一个while循环，在这过程中，oldStartIdx、newStartIdx、oldEndIdx以及newEndIdx会逐渐向中间靠拢。while循环的退出条件是直到老节点或者新节点的开始位置大于结束位置
+
+       while循环中会遇到四种情况：
+
+       1. 情形一：当新老 VNode 节点的 start 是同一节点时，査接 `patchVnode` 即可，同时新老 Node 节点的开始索引都加1。
+       2. 情形二：当新老 VNode 节点的 end 是同一节点时，査接 `patchVnode` 即可，同时新老 VNode 节点的结束索引都减1。
+       2. 情形三：当老 VNode 节点的 start 和新 VNode 节点的 end 是同一节点时，这说明这次数据更新后 oldStartVnode 已经跑到了 oldEndVnode 后面去了。这时候在 `patchVnode` 后，还需要将当前真实dom节点移动到 oldEndVnode 的后面，同时老 VNode 节点开始索引加1，新 VNode 节点的结束索引减1。
+       2. 情形四：当老 VNode 节点的 end 和新 VNode 节点的 start 是同一节点时，这说明这次数据更新后 oldEndVnode 跑到了 oldStartVnode 前面去了。这时候在 `patchVnode` 后，还需要将当前真实 dom 节点移动到 oldStartVnode 的前面，同时老 VNode 节点结束索引减1，新 VNode 节点的开始索引加1。
+
+    3. while循环的退出条件是直到老节点或者新节点的开始位置大于结束位置
+
+       1. 情形一：如果在循环中，oldStartIdx 大于 oldEndIdx 了，那就表示 oldChildren 比 newChildren 先循环完毕，那么 newChildren 里面剩余的节点都是需要新增的节点，把 `[newStartIdx, newEndIdx]` 之间的所有节点都插入到DOM中
+       2. 情形二：如果在循环中，newStartIdx 大于 newEndIdx 了，那就表示 newChildren 比 oldChildren 先循环完毕，那么 oldChildren 里面剩余的节点都是需要删除的节点，把 `[oldStartIdx, oldEndIdx]` 之间的所有节点都删除
+
+36. Vue组件中的Data为什么是函数，根组件却是对象呢？
+
+    综上可知，如果data是一个函数的话，这样每复用一次组件，就会返回一份新的data，类似于给每个组件实例创建一个私有的数据空间，让各个组件实例维护各自的数据。而单纯的写成对象形式，就使得所有组件实例共用了一份data，就会造成一个变了全都会变的结果。
+
+    所以说vue组件的data必须是函数。这都是因为js的特性带来的，跟vue本身的设计无关。
+
+37. Vue的组件通信
+
+    1. `props` 和 `$emit`
+
+       父组件向子组件传递数据是通过 `prop` 传递的，子组件传递数据给父组件是通过 `$emit` 触发事件
+
+    2. `$attrs` 和 `$listeners`
+
+    3. ~~中央事件总线bus~~（Vue3中已经删除）
+
+       上面两种方式处理的都是父子组件之间的数据传递，而如果两个组件之间不是父子关系呢？这种情况下可以使用中央事件总线的方式。新建一个Vue事件bus对象，然后通过 `bus.$emit` 触发事件，`bus.$on` 监听触发的事件。
+
+    4. provider和inject
+
+       父组件中通过provider来提供变量，然后在子组件中通过inject来注入变量。不论子组件有多深，只要调用了inject，那么就可以注入provider中的数据。而不是局限于只能从当前父组件的prop属性来获取数据，只要在父组件的生命周期内，子组件都可以调用。
+
+    5. v-model
+
+       父组件通过v-model传递值给子组件时，会自动传递一个value的prop属性，在子组件中通过 `this.$emit('input', val)` 自动修改v-model绑定的值。
+
+    6. `$parent` 和 `$children`
+
+    7. broadcast 和 dispatch，自己写一套
+
+    8. vuex处理组件之间的数据交互，如果业务逻辑复杂，很多组件之间需要同时处理一些公共的数据，这个时候才有上面这一些方法可能不利于项目的维护，vuex的做法就是将这些公共的数据抽离出来，然后其他组件就可以对这个公共数据进行读写操作，这样达到了解耦的目的。
+
+38. 什么情况下使用vuex
+
+    如果应用足够简单，最好不要使用vuex，一个简单的store模式即可，需要构建一个中大型单页面应用时，使用vuex能更好的在组件外部管理状态
+
+    ![](https://vuex.vuejs.org/vuex.png)
+
+39. Vuex可以直接修改state的值吗？
+
+    可以直接修改，但是极其不推荐，state的修改必须在mutation来修改，否则无法被devtool所监测，无法监测数据的来源，无法保存状态快照，也就无法实现时间漫游/回滚之类的操作。
+
+40. 为什么Vuex的mutation不能做异步操作
+
+    vuex中所有的状态更新的唯一途径都是mutation，异步操作通过action来提交mutation实现，这样使得我们可以方便地跟踪每一个状态的变化，从而让我们能够实现一些工具帮助我们更好地了解我们的应用。每个mutation执行完成后都会对应到一个新的状态变更，这样devtools就可以打个快照存下来，否则无法被devtools所监测。如果mutation支持异步操作，就没有办法知道状态是何时更新的，无法很好的进行状态的追踪，给调试带来困难。
+
+41. 怎么修改Vuex中的状态？Vuex中有哪些方法
+
+    - 通过 `this.$store.state.属性` 的方法来访问状态
+    - 通过 `this.$store.commit(mutation中的方法)` 来修改状态
+
+42. Vuex的缺点
+
+    如果您不打算开发大型但也应用，使用vuex可能是繁琐冗余的，并且state中的值会伴随着浏览器的刷新而初始化，无缓存。
+
+43. 什么是Vue.nextTick()？
+
+    `$nextTick` 是在下次DOM更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的DOM，意思是等你dom加载完毕之后再去调用 `nextTick()` 里面的内容
+
+44. nextTick实现的原理是什么？是宏任务还是微任务？
+
+    **微任务**
+
+    **原理**：`nextTick()` 方法主要是使用了宏任务和微任务，定义了一个异步方法，多次调用 `nextTick()` 会将方法存入队列中，通过这个异步方法清空队列。
+
+    **作用**：`nextTick()` 用于下次Dom更新循环结束之后执行延迟回调，在修改数据之后使用`nextTick()` 可以在回调中获取更新后的DOM。
+
+45. 虚拟 dom 为什么会提高性能？
+
+    虚拟DOM其实就是一个JavaScript对象。通过这个JavaScript对象来描述真实DOM和真实DOM的操作，一般都会对某块元素的整体重新渲染，采用虚拟DOM的话，当数据变化的时候，只需要局部刷新变化的位置就好了。
+
+    虚拟dom相当于在 js 和真实 dom 中间加了一个缓存，利用 `dom diff` 算法避免了没有必要的dom操作，从而提高性能
+
+    **具体实现步骤如下：**
+
+    - 用 `Javascript` 对象结构表示 `DOM` 树的结构；然后用这个树构建一个真正的 `DOM` 树，插到文档当中
+    - 当状态变更的时候，重新构造一棵新的对象树。然后用新的树和旧的树进行比较，记录两棵树差异
+    - 把2所记录的差异应用到步骤1所构建的真正的DOM树上，视图就更新
+
+46. 你做过哪些Vue的性能优化
+
+    1. 首屏加载优化
+
+    2. 路由懒加载
+
+       ```typescript
+       {
+       	path: '/',
+       	name: 'home',
+       	component: () => import('./views/home/index.vue'),
+       	meta: {isShowHead: true}
+       }
+       ```
+
+    3. 开启服务器Gzip
+
+       开启 Gzip 就是一种压缩技术，需要前端提供压缩包，然后在服务器开启压缩，文件在服务器压缩后传给浏览器，浏览器解压后进行再进行解析。首先安装 webpack 提供的`compression-webpack-plugin` 进行压缩,然后在vue.config.is:
+
+       ```typescript
+       const CompressionWebpackPlugin = require('compression-webpack-plugin')
+       const productionGzipExtensions = ['js', 'css']
+       ......
+       plugins: [
+       	new CompressionWebpackPlugin(
+       		{
+       			algorithm: 'gzip',
+       			test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+       			threshold: 10240,
+       			minRatio: 0.8
+       		}
+       	)]
+       ......
+       ```
+
+    4. 启动CDN加速
+
+       我们继续采用cdn的方式来引入一些第三方的资源，就可以缓解我们服务器的压力，原理是将我们的压力分给其他服务器点。
+
+    5. 代码层面的优化
+
+       - computed和watch区分使用场景
+         - computed：计算属性，依赖其他属性值，并且computed的值有缓存，只有它依赖的属性值发生改变，下一次获取computed的值才会重新计算。当我们需要进行数值计算，并且依赖于其它数据时，应该使用computed，因为可以利用computed的缓存特性，避免每次获取值时，都要重新计算。
+         - watch：类似于某些数据的监听回调，每当监听的数据变化时，都会执行回调进行后续操作。当我们需要在数据变化时执行异步或者开销较大的操作时，应该使用watch，使用watch选项允许我们执行**异步操作**（访问一个API），限制我们执行该操作的频率，并在我们得到最终结果前，设置中间状态。这些都是计算属性无法做到的。
+       - v-if和v-show区分使用场景
+         - v-if：适用于在运行时很少改变条件，不需要频繁切换条件的场景
+         - v-show：适用于需要非常频繁切换条件的场景。
+         - 这里需要说明的优化点是在于减少页面中dom总数，倾向于用v-if，因为较少了dom数量。
+       - v-for遍历必须为item添加key，且避免同时使用v-if。
+         - 循环调用子组件时添加key，key可以唯一标识一个循环体，可以使用例如 `item.id` 作为key避免同时使用v-if
+         - v-for比v-if优先级高，如果每一次都需要遍历整个数组，将会影响速度
+
+    6. Webpack对图片进行压缩
+
+    7. 避免内存泄漏
+
+    8. 减少ES6转为ES5的冗余代码
+
+47. Vue的常用修饰符
+
+    1. **v-model修饰符**
+
+       - .lazy
+
+         输入框改变，这个数据就会改变，lazy这个修饰符会在光标离开input框才会更新数据：
+
+         ```vue
+         <input type="text" v-model.lazy="value"></input>
+         ```
+
+       - .trim
+
+         输入框过滤首位的空格：
+
+         ```vue
+         <input type="text" v-model.trim="value"></input>
+         ```
+
+       - .number
+
+         先输入数字就会限制输入的只能是数字，先输入的是字符串就相当于没有加.number。注意，不是输入框不能输入字符串，是这个数据是数字。
+
+         ```vue
+         <input type="text" v-model.number="value"></input>
+         ```
+
+    2. **事件修饰符**
+
+       - .stop
+
+         阻止事件冒泡，相当于调用了 `event.stopPropagation()` 方法
+         
+       - .prevent
+       
+         阻止默认行为，相当于调用了 `event.preventDefault()` 方法，比如表单的提交，a标签的跳转就是默认事件
+       
+       - .self
+       
+         只有元素本身触发时才触发，就是只有点击元素本身才会触发。比如一个div里面有个按钮，div和按钮都有事件，我们点击按钮，div绑定的方法也会触发，如果div的click加上self，只有点击到div的时候才会触发，变相的算是阻止冒泡
+       
+       - .once
+       
+         事件只能用一次，无论点击几次，执行一次后都不会再执行
+       
+       - .capture
+       
+         事件的完整机制是捕获-目标-冒泡，事件触发是目标往外冒泡
+       
+       - .sync
+       
+         对prop进行双向绑定
+       
+       - .keyCode
+       
+         监听按键指令，具体可以看vue的键码对应表
+
+48. Vue中template的编译原理
+
+    vue template模板编译的过程经过`parse()`生成`ast(抽象语法树)`，`optimize()`对静态节点优化，`generate()`生成render字符串之后调用`new Watcher()`函数，用来监听数据的变化，`render` 函数就是数据监听的回调所调用的，其结果便是重新生成 vnode。当这个 render 函数字符串在第一次 mount、或者绑定的数据更新的时候，都会被调用，生成 Vnode。如果是数据的更新，那么 Vnode 会与数据改变之前的 Vnode 做 diff，对内容做改动之后，就会更新到我们真正的 DOM。
+
+49. 谈谈你对Vue3.0有什么了解？
+
+    - **六大亮点**
+
+      - 性能比Vue2.x快1.2~2倍
+      - 支持tree-shaking，按需编译，体积比vue2.x更小
+      - 支持组合式API
+      - 更好的支持TS
+      - 更先进的组件
+
+    - **性能更快是如何实现的？**
+
+      - diff算法更快
+        - vue2.0是需要全局去比较每个节点的，若发现有节点发生变化后，就去更新该节点
+        - vue3.0是在创建虚拟dom中，会根据DOM的内容会不会发生内容变化，添加静态标记，谁有fag比较谁！
+      - 静态提升
+        - vue2中无论元素是否参与更新，每次都会重新创建，然后再渲染
+        - vue3中对于不参与更新的元素，会做静态提升，只被创建一次，在渲染时直接复用即可
+      - 事件监听缓存
+        - 默认情况下，onclick为动态绑定，所以每次都会追踪它的变化，但是因为是同一函数，没有必要追踪变化，直接
+          缓存复用即可
+        - 在之前会添加静态标记，会把点击事件当做动态属性，会进行diff算法比较，但是在事件监听缓存之后就没有静态标记了，就会进行缓存复用
+
+    - **为什么vue3.0体积比vue2.x更小**
+
+      在vue3.0中创建vue项目除了`vue-cli`、`webpack`外还有一种创建方法是`Vite`。Vite是作者开发的一款有意取代webpack的工具，其实现原理是<u>利用ES6的import会发送请求去加载文件的特性，拦截这些请求，做一些预编译省去webpack冗长的打包时间</u>
+
+50. vue3.0组合API
+
+    - 3和2的逻辑区别
+
+      - 在vue2中：主要是往data和method里面添加内容，一个业务逻辑需要什么data和method就往里面添加，而组合API就是 有一个自己的方法，里面有自己专注的data和method。
+
+        ![](https://s2.51cto.com/images/blog/202211/29160550_6385bd5eb277d56491.gif)
+
+      - 组合式API的本质：首先Composition API（组合API）和Option API（vue2中的data和method）可以共用，Composition API本质就是把内容添加到Option API中进行使用
+
+51. ref和reactive的简单理解
+
+    1. ref和reactive都是vue3的监听数据的方法，本质是proxy
+    2. ref基本类型复杂类型都可以监听（我们一般用ref监听基本类型），reactive只能监听对象（arr、json）
+    3. ref底层还是reactive，ref是对reactive的二次包装，ref定义的数据访问的时候要多一个`.value`
+
+52. vuex和redux有什么区别？他们的共同思想。
+
+    - Redux和Vuex区别
+      - Vuex改进了Redux中的Action和Reducer函数，以mutations变化函数取代Reducer，无需switch，只需在对应的mutation函数里改变state值就可以
+      - Vuex由于Vue自动重新渲染的特性，无需订阅重新渲染函数，只要生成新的state就可以
+      - Vuex数据流的顺序是：View调用`store.commit`提交对应的请求到Store中对应的mutation函数， store改变(vue检测到数据变化自动渲染)
+    - 共同思想
+      - 单一的数据源
+      - 变化可以预测
+      - 本质上：Redux和Vuex都是对MVVM思想的服务，将数据从视图中抽离的一种方案
+      - 形式上：Vuex借鉴了Redux，将store作为全局的数据中心，进行数据管理
+
+53. 简单说一下 微信小程序 与 Vue 的区别
+
+    1. 声明周期
+
+       - 小程序的钩子函数要简单得多。vue的钩子函数在跳转新页面时，钩子的数都会触发，但是小程序的钩子函数页面不同的跳转方式，触发的钩子并不一样。
+       - 在页面加载请求数据时，两者钩子的使用有些类似，vue一般会在`created`或者`mounted`中请求数据，而在小程序，会在`onLoad`或者`onshow`中请求数据。
+
+    2. 数据绑定
+
+       - vue动态绑定一个变量的值为元素的某个属性的时候，会在变量前面加上冒号
+
+         ```vue
+         <img :src="imgSrc"/>
+         ```
+
+       - 小程序绑定某个变量的值为元素属性时，会用两个大括号括起来，如果不加括号，为被认为是字符串
+
+         ```
+         <img src="{{imgSrc}}"/>
+         ```
+
+    3. 列表循环
+
+    4. 显示与隐藏
+
+       - vue中，使用 `v-if` 和 `v-show` 控制元素的显示和隐藏
+       - 小程序中，使用 `wx-if` 和 `hidden` 控制元素的显示和隐藏
+
+    5. 事件处理
+
+       - vue中，使用 `v-on:event` 绑定事件，或者使用 `@event` 绑定事件
+       - 小程序中，使用 `bindtap(bnid+event)`，或者 `catchtap(catch+event)` 绑定事件
+
+    6. 数据的双向绑定
+
+       - 在vue中，只需要在表单元素上加上 `v-model` ，然后再绑定 `data` 中对应的一个值，当表单元素内容发生变化时，`data` 中对应的值也会相应的改变
+       - 当表单内容发生变化时，会触发表单元素上绑定的方法，然后在改方法中，通过 `this.setData({key: value})` 来将表单上的值赋值给 `data` 中的对应值
+
+    7. 绑定事件传参
+
+       - 在vue中，绑定事件传参很简单，只需要在触发事件方法中，把需要传递的数据作为形参传入就可以了
+       - 在小程序中，不能直接在绑定事件的方法中传入参数，需要将参数作为属性值，绑定到元素上的 `data-` 属性上，然后在方法中，通过 `e.currentTarget.dataset.*` 的方式获取
+
+    8. 父子组件通信
+
+       - 在vue中，父组件向子组件传递数据，只需要在子组件通过 `v-bind` 传入一个值，在子组件中，通过 `props` 接收，即可完成数据的传递
+       - 在小程序中，父组件向子组件通信和vue类似，但是小程序没有通过 `v-bind`，而是直接将值赋值给一个变量在子组件 `properties` 中，接收传递的值
 
 ---
 

@@ -1,10 +1,18 @@
-import {createStore} from 'vuex'
+import { createStore } from 'vuex'
 import { CHANGE_TABBAR } from './type'
+import { createPersistedState } from 'vuex-persistedstate'
 
 import axios from 'axios'
 
 const store = createStore({
-    state(){
+    plugins: [createPersistedState({
+        reducer: (state) => {
+            return {
+                isTabbarShow: state.TabbarModule.isTabbarShow
+            }
+        }
+    })],
+    state() {
         return {
             isTabbarShow: true,
             cinemaList: [],
@@ -18,16 +26,16 @@ const store = createStore({
         // hideTabbar(state){
         //     state.isTabbarShow = false
         // },
-        [CHANGE_TABBAR](state, payload){
+        [CHANGE_TABBAR](state, payload) {
             state.isTabbarShow = payload
         },
-        changeCinemaList(state, payload){
+        changeCinemaList(state, payload) {
             state.cinemaList = payload
         }
     },
     // 同步+异步
     actions: {
-        async getCinemaList(store){
+        async getCinemaList(store) {
             console.log("ajax");
             var res = await axios({
                 url: "https://m.maizuo.com/gateway?cityId=110100&ticketFlag=1&k=5385023",
@@ -40,6 +48,11 @@ const store = createStore({
             // console.log(res.data.data.cinemas);
             // 提交mutation
             store.commit("changeCinemaList", res.data.data.cinemas)
+        }
+    },
+    getters: {
+        filterCinemaList(state) {
+            return (type) => state.cinemaList.filter(item => item.eTicketFlag === type)
         }
     }
 })
