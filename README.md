@@ -84,6 +84,8 @@
 
 15. [Djongo操作MongoDB新增字段](https://blog.csdn.net/qq_21579045/article/details/125888666)
 
+15. [flash-Attention2安装和使用](https://blog.csdn.net/qq_21579045/article/details/140037802)
+
     
 
 ------
