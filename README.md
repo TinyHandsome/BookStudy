@@ -4,6 +4,7 @@
 
 ## 写在前面 | Header
 
+- 20240628：更新notes-18
 - 20240624：更新js、nodejs和vue笔记链接，新增note一篇
 - 20230901：取消关于tools和writting的track，仅本地留档
 
