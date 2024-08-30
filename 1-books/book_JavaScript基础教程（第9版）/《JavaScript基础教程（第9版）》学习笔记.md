@@ -10,7 +10,10 @@
 
 
 
-## 1. 了解JavaScript
+## 1. js基础
+
+1. 数组：`var arr = new Array(1, 2, 3)`
+2. 
 
 
 
