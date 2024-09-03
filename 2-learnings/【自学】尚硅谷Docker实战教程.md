@@ -18,9 +18,9 @@
 
 - 感想 | 摘抄 | 问题
 
-  - 麒麟系统离线安装docker，[参考](https://blog.csdn.net/zhaogangyyxf/article/details/141328640)
-    1. 官网下载docker后，解压：`tar -zxvf docker-*.tgz`
-    2. 
+  - [麒麟系统离线安装docker](https://blog.csdn.net/qq_21579045/article/details/141718124)
+  - 操作
+    - `docker images`：查看已有镜像
 
 
 ## 1. Docker简介
@@ -156,6 +156,29 @@
       - `yum remove docker-ce docker-ce-cli containerd.io`
       - `rm -rf /var/lib/docker`
       - `rm -rf /var/lib/containerd`
+   
+5. **阿里云镜像加速**
+
+   1. 是什么：https://promotion.aliyun.com/ntms/act/kubernetes.html
+
+   2. 注册账户，工具台，容器镜像服务，镜像工具，镜像加速器，**获取加速器地址链接**：https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+
+      ```bash
+      # 创建目录，将镜像配置反写回文件
+      sudo mkdir -p /etc/docker
+      sudo tee /etc/docker/daemon.json <<-'EOF'
+      {
+        "registry-mirrors": ["https://[你自己的].mirror.aliyuncs.com"]
+      }
+      EOF
+      
+      # 重启docker
+      sudo systemctl daemon-reload
+      sudo systemctl restart docker
+      ```
+
+   3. 
+
 
 
 

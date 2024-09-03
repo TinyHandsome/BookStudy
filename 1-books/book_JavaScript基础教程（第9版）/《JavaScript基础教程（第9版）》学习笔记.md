@@ -1,4 +1,4 @@
-# 《Python核心编程（第3版）》学习笔记
+# 《JavaScript基础教程（第9版）》学习笔记
 
 [TOC]
 
@@ -13,7 +13,19 @@
 ## 1. js基础
 
 1. 数组：`var arr = new Array(1, 2, 3)`
-2. 
+
+2. 通过 `onmouseover` 和 `onmouseout` 实现图片的修改：
+
+   ```html
+   <a
+       href="next.html"
+       onmouseover="document.images['arrow'].src='images/arrow_on.gif'"
+       onmouseout="document.images['arrow'].src='images/arrow_off.gif'"
+       ><img src="images/arrow_off.gif" id="arrow" ➝alt="arrow"
+   /></a>
+   ```
+
+3. 
 
 
 
