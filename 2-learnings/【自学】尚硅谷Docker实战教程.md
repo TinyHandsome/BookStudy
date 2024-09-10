@@ -19,8 +19,19 @@
 - 感想 | 摘抄 | 问题
 
   - [麒麟系统离线安装docker](https://blog.csdn.net/qq_21579045/article/details/141718124)
-  - 操作
-    - `docker images`：查看已有镜像
+
+  - 开发流程：
+
+    ```mermaid
+    graph LR
+    编码开发微服务-->上线部署容器化-->时时刻刻要监控-->devops
+    ```
+
+  - **面试题快速跳转：**
+
+    - [谈谈docker虚悬镜像是什么？](#1)
+    - [谈谈docker exec和docker attach两个命令的区别？工作中用哪一个？](#2)
+    - [为什么Docker镜像要采用分层结构？](#3)
 
 
 ## 1. Docker简介
@@ -89,13 +100,13 @@
 
 ## 2. Docker安装
 
-1. **前提说明**
+1. 前提说明
    1. Docker 并非是一个通用的容器工具，它依于已存在并运行的 Linux 内核环境。
    2. Docker 实质上是在已经运行的 Linux 下制造了个隔离的文件环境，因此它执行的效率几乎等同于所部署的 Linux 主机。
    3. 因此
       Docker 必须部署在 Linux 内核的系统上，如果其他系统想部署 Docker 就必须安装一个虚拟 Linux 环境。
    4. 获取系统版本内核：`uname -r`
-   
+
 2. docker的基本组成
    1. 镜像，image ==类==
       - `Redis r1 = docker run 镜像`类似鲸鱼背上的集装箱，就是一个容器实例
@@ -111,13 +122,13 @@
       - Docker Hub：放各种镜像模板
       
    4. 小总结：image文件可以看作是容器的模板，Docker根据image文件生成容器的实例。同一个image文件，可以生成多个同时运行的容器实例。
-   
+
       ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/c4ded02074a042efabcbb91dcc926ed2.png)
-   
+
       ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/6c66af26dd4044d4990590b53bcdffa2.png)
-   
+
       - docker daemon：真正干活的，通过Socket连接从客户端访问，守护进程从客户端接收命令并管理运行在主机上的容器。
-   
+
 3. docker平台架构
 
    - docker是一个C/S模式的架构，后端是一个松耦合架构，众多模块各司其职
@@ -156,8 +167,8 @@
       - `yum remove docker-ce docker-ce-cli containerd.io`
       - `rm -rf /var/lib/docker`
       - `rm -rf /var/lib/containerd`
-   
-5. **阿里云镜像加速**
+
+5. 阿里云镜像加速
 
    1. 是什么：https://promotion.aliyun.com/ntms/act/kubernetes.html
 
@@ -177,12 +188,344 @@
       sudo systemctl restart docker
       ```
 
-   3. 
+6. 测试运行hello-world
 
+   - `docker run hello-world`
 
+   - run到底干了什么
 
+     ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/df04829d096b496d87d148781f0bc6c9.png)
 
+7. 底层原理：为什么Docker会比VM虚拟机要快
 
+   - docker有着比虚拟机更少的抽象层
+
+     由于docker不需要Hypervisor（虚拟机）实现硬件层面的虚拟化，运行在docker容器上的程序直接使用的都是实际物理机的硬件资源。因此在CPU、内存利用率上，docker将会在效率上有明显优势。
+
+   - docker利用的是宿主机的内核，而不需要加载操作系统os内核
+
+     当新建一个容器时，docker不需要和和虚拟机一样重新加载一个操作系统内核。进而避免引寻、加载操作系统内核返回等比较费时费资源的过程，当新建一个虚拟机时，虚拟机软件需要加载OS，返回新建过程是分钟级别的。而docker由于直接利用宿主机的操作系统，则省略了返回过程，因此新建一个docker容器只需要几秒钟。
+
+   ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/af41bbd8acae4e38b0d847873b89be08.png)
+
+   |            | docker容器              | 虚拟机VM                       |
+   | :--------- | ----------------------- | ------------------------------ |
+   | 操作系统   | 与宿主机共享OS          | 宿主机OS上运行虚拟机OS         |
+   | 存储大小   | 镜像小，便于存储与运输  | 镜像庞大（vmdk、vdi等）        |
+   | 运行性能   | 几乎无额外性能损失      | 操作系统额外的ＣＰＵ、内存消耗 |
+   | 移植性     | 轻便、灵活，适用于Linux | 笨重，与虚拟化技术耦合度高     |
+   | 硬件亲和性 | 面向软件开发者          | 面向硬件运维者                 |
+   | 部署速度   | 快速，秒级              | 较慢，10s以上                  |
+
+## 3. Docker常用命令
+
+1. 帮助启动类命令
+
+   - `systemctl start docker`：启动docker
+   - `systemctl stop docker`：停止docker
+   - `systemctl restart docker`：重启docker
+   - `systemctl status docker`：查看docker状态
+   - `systemctl enable docker`：开机启动docker
+   - `docker info`：查看docker概要信息
+   - `docker --help`：查看docker总体帮助文档
+   - `docker 具体命令 --help`：查看docker命令帮助文档
+
+2. 镜像命令
+
+   - `docker images`：列出本地主机上的镜像
+
+     同一个仓库源可以有多个tag版本，代表这个仓库源的不同的版本，我们使用 `REPOSITORY:TAG `来定义不同的镜像。如果你不指定一个镜像的版本标签，例如你只使用 ubuntu，docker将默认使用 ubuntu:latest 镜像。
+
+     ```
+     REPOSITORY：表示镜像的仓库源
+     TAG：镜像的标签
+     IMAGE ID：镜像ID
+     CREATED：镜像创建时间
+     SIZE：镜像大小
+     ```
+
+     OPTIONS说明：
+
+     - `-a`：列出本地所有的镜像（含历史镜像层）
+     - `-q`：；只显示镜像ID
+
+   - `docker search 镜像名`：默认是从 `hub.docker.com` 上检索镜像列表，一般选第一个官方认证过的，比较靠谱
+
+     OPTIONS说明：
+
+     - `--limit`：只列出N个镜像，默认25个，例如`docker search --limit 5 redis`
+
+   - `docker pull 镜像名`：下载镜像，`docker pull 镜像名字[:TAG]`，没有tag就下载最新版
+
+   - `docker system df`：查看镜像/容器/数据卷所占的空间
+
+   - `docker rmi [-f] 镜像名/镜像ID`：[强制]删除镜像
+
+     - 删除多个镜像：`docker rmi -f id1 name2:tag2`
+     - 删除全部镜像：`docker rmi -f $(docker images -qa)`
+
+   > :question: <span id="1">谈谈docker虚悬镜像是什么？</span>
+   >
+   > - 是什么：仓库名、标签都是<none>的镜像，俗称虚悬镜像 dangling image
+   >
+   > :book: [参考延申](https://blog.csdn.net/Wod_7/article/details/132983731)
+   >
+   > 虚悬镜像可能会在以下几种情况下**产生**：
+   >
+   > 1. 构建过程中出现错误，导致镜像没有被正确标记。
+   > 2. 用户忘记为新创建的镜像添加标签。
+   > 3. 用户试图删除一个正在被使用的镜像，但该镜像仍有其他容器在使用。
+   >
+   > 虚悬镜像可能会带来一些**问题**：
+   >
+   > - 无法找到正确的镜像版本：当用户试图运行一个虚悬镜像时，他们可能无法确定应该使用哪个版本的镜像。这可能导致应用程序运行在不同的环境中，或者在不同版本的代码上运行，从而导致兼容性问题。
+   > - 无法进行有效的更新：虚悬镜像意味着用户无法对其进行更新。即使镜像内部的版本进行了升级，用户也无法通过简单地添加一个新标签来获取这个新版本的镜像。
+   > - 占用存储空间：虽然虚悬镜像不会立即影响应用程序的运行，但是它们会一直占用存储空间，直到有人为它们添加标签。
+   >
+   > 如何**解决**虚悬镜像问题，我们可以采取以下几种方案：
+   >
+   > - 检查并重新标记镜像：如果发现虚悬镜像，可以尝试查找出现问题的构建过程，并修复其中的错误。然后为镜像添加一个新的标签，以确保用户能够找到正确的版本。
+   > - 使用Dockerfile：Dockerfile可以帮助我们自动化镜像的构建过程，并确保每次构建的镜像都是正确且可重复的。通过编写详细的Dockerfile，我们可以确保每次构建的镜像都带有正确的标签。
+   > - 定期清理虚悬镜像：Docker提供了一些命令来帮助用户管理虚悬镜像，例如`docker rmi --force`可以强制删除虚悬镜像。然而，最好的方法还是定期检查并清理这些无用的虚悬镜像，以节省存储空间。
+
+3. 容器命令
+
+   有镜像才能创建容器，这是根本前提
+
+   - `docker run 镜像名`：新建+启动容器，启动交互式容器（前台命令行）
+
+     - `--name=名字`：容器新名字，为容器指定一个名称
+     - `-d`：后台运行容器并返回容器ID，启动守护式容器（后台运行）
+     - `-i`：以交互模式运行容器，通常与 `-t` 同时使用
+     - `-t`：为容器重新分配一个伪输入中断，通常与 `-i` 同时使用，也称交互式容器（前台有伪终端，等待交互）常用：`docker run -it ubuntu /bin/bash`（以交互模式启动一个容器，在容器内执行 /bin/bash 命令，退出：exit）
+     - `-P`：随机端口映射，大P
+     - `-p`：指定端口映射，小p。例：`-p 6379:6379`是指外面访问docker的6379服务（宿主机）被映射到容器内的6379服务（docker ）
+
+   - `docker ps`：列出当前所有正在运行的容器
+
+     - `-a`：列出当前所有正在运行的容器+历史上运行过的
+     - `-l`：显示最近创建的容器
+     - `-n`：显示最近n个创建的容器
+     - `-q`：静默模式，只显示容器编号
+
+   - 容器的退出
+
+     1. `exit`：run进去的容器，exit退出，容器停止（docker ps就没啦）
+     2. `ctrl+p+q`：run进去的容器，ctrl+p+q，容器不停止
+
+   - `docker start 容器id/容器名`：启动已经停止运行的容器
+
+   - `docker restart 容器id/容器名`：重启容器
+
+   - `docker stop 容器id/容器名`：停止容器
+
+   - `docker kill 容器id/容器名`：强制停止容器
+
+   - `docker rm [-f] 容器id/容器名`：[强制]删除容器
+
+     一次性删除多个实例：
+
+     - `docker rm -f $(docker ps -a -q)`
+     - `docker ps -a -q | xargs docker rm`
+
+4. 其他
+
+   - 启动守护式容器（后台服务器）
+
+     - 在大部分得场景下，我们希望docker的服务是在后台运行的，，我们可以通过 `-d` 指定容器的后台运行模式
+
+     - `docker run -d 容器名`
+
+       > 问题：直接用 `docker run 容器名` 启动后用`docker ps -a`进行查看发现容器已经退出了，需要注意很重要的一点是，**Docker容器后台运行，就必须有一个前台进程**。容器运行的命令如果不是那些一直挂起的命令（比如运行top，tail），就是会自动退出的。
+       >
+       > 这是docker的机制问题，最佳的解决方案是：**将你要运行的程序以前台进程的形式运行，常见就是命令行模式 `-it` **，表示我还有交互操作，别中断。
+
+     - 以redis为例，用前台交互式的启动肯定不行：`docker run -it redis`；所以要用后台守护式启动：`docker run -d redis`
+
+   - `docker log 容器id`：查看容器日志
+
+   - `docker top 容器id`：查看容器内运行的进程
+
+   - `docker inspect 镜像名/容器id`：查看镜像配置/查看容器内部细节
+
+   - **进入正在运行的容器，并以命令行交互**
+
+     - `docker exec -it 容器id bashShell`
+     - 重新进入还有一个命令：`docker attach 容器id`
+
+     > :question: <span id="2">上述两个命令的区别？工作中用哪一个？</span>
+     >
+     > - attach直接进入容器启动命令的终端，不会启动新的进程，用exit退出，会导致容器的停止
+     > - exec是在容器中打开新的终端，并且可以启动新的进程，用exit退出，不会导致容器的停止
+     >
+     > 推荐在工作中使用 `docker exec` 命令，因为退出容器终端也不会导致容器的停止
+     >
+     > 一般用 `-d` 后台启动的程序，再用 `docker exec`进入对应容器实例
+
+   - `docker cp 容器id:容器内路径 目的主机路径`：从容器内拷贝文件到主机上
+
+   - 导入导出容器：
+
+     - export 导出容器的内容留作为一个tar归档文件[对应import命令]
+     - import 从tar包中的内容创建一个新的文件系统再导入为镜像[对应export]
+     - 案例
+       - `docker export 容器id > 文件名.tar`
+       - `cat 文件名.tar | docker import - 镜像用户/镜像名:镜像版本号`，例如：`cat abcd.tar | docker import - atguigu/ubuntu:3.7`
+
+     > :sunny: docker save和docker export的区别
+     >
+     > :book: [docker知识点大全](https://www.cnblogs.com/happy-king/p/10028476.html)
+     >
+     > 1. `docker save`保存的是镜像（image），`docker export`保存的是容器（container）；
+     > 2. `docker load`用来载入镜像包，`docker import`用来载入容器包，但两者都会恢复为镜像；
+     > 3. `docker load`不能对载入的镜像重命名，而`docker import`可以为镜像指定新名称。
+
+5. 小结
+
+   ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/77f0c79ab6994c40acfb72cd1684a1cb.png)
+
+## 4. Docker镜像
+
+1. 是什么：镜像是一种轻量级、可执行的独立软件包，它包含运行某个软件所需的所有内容，我们把应用程序和配置依赖打包好形成一个可交付的运行环境(包括代码、运行时需要的库、环境变量和配置文件等)，这个打包好的运行环境就是image镜像文件。
+
+2. 分层的镜像：UnionFS（联合文件系统），Union文件系统（UnionFS）是一种分层、轻量级并且高性能的文件系统，它支持**对文件系统的修改作为一次提交来一层层的叠加**，同时可以将不同目录挂载到同一个虚拟文件系统下（unite several directories into a single virtual filesystem）。Union 文件系统是 Docker镜像的基础。**镜像可以通过分层来进行继承**，基于基研镜像（没有父镜像），可以制作各和具体的应用镜像。
+
+   特性：一次同时加载多个文件系统，但从外面看起来，只能看到一个文件系统，联合加载会把各层文件系统叠加起来，这样最终的文件系统会包含所有底层的文件和目录
+
+3. Docker镜像加载原理：docker的镜像实际上由一层一层的文件系统组成，这种层级的文件系统UnionFS。
+
+   bootfs(boot file system)主要包含bootloader和kernel, bootloader主要是引导加载kernel，Linux刚启动时会加载bootfs文件系统，**在Docker镜像的最底层是引导文件系统bootfs**。这一层与我们典型的Linux/unix系统是一样的，包含boot加载器和内核。当boot加载完成之后整个内核就都在内存中了，此时内存的使用权已由bootfs转交给内核，此时系统也会卸载bootfs。
+
+   rootfs (root file system)，在bootfs之上，包含的就是典型 Linux 系统中的`/dev`，`/proc`，`/bin`，`/etc`等标准目录和文件。rootfs就是各种不同的操作系统发行版，比如Ubuntu，Centos。
+
+   ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/e73d9f92af0b492a85a1bcd4a3827a8c.png)
+
+   > 对于一个精简的OS，rootfs可以很小，只需要包括最基本的命令、工具和程序库就可以了，因为底层直接用Host和Kernel，自己只需要提供rootfs就行了。由此可见对于不同的linux发行版，bootfs基本是一致的，rootfs会有差别，因此不同的发行版可以公用bootfs。
+
+   > :question: <span id="3">为什么Docker镜像要采用分层结构？</span>
+   >
+   > 镜像分层最大的一个好处就是**共享资源**，方便复制迁移，就是为了**复用**。
+   >
+   > 比如说有多个镜像都从相同的 base 镜像构建而来，那么 Docker Host 只需在磁盘上保存一份 base 镜像；同时内存中也只需加载一份 base 镜像，就可以为所有容器服务了。而且镜像的每一层都可以被共享。
+
+4. **重点理解**
+
+   - Docker镜像层都是**只读**的，容器层是**可写**的
+   - 当容器启动时，一个新的可写层被加载到镜像的顶部。这一层通常被称作“容器层"，**“容器层"之下的都叫“镜像层”**。
+
+5. Docker镜像commit操作案例
+
+   1. `docker commit` 提交容器副本，使之成为一个新的镜像
+
+   2. `docker commit -m="提交的描述信息" -a="作者" 容器ID 要创建的目标镜像名称[:标签名]`
+
+      ```bash
+      docker commit -m="vim cmd add ok" -a="huowang" de60078e6a9a huowang/myubuntu:1.0
+      docker images
+      ```
+
+6. 小结
+
+   Docker中的镜像分层，**支持通过扩展现有镜像，创建新的镜像**。类似Java继承于一个Base基础类，自己再按需扩展。新镜像是从 base 镜像一层一层叠加生成的。每安装一个软件，就在现有镜像的基础上增加一层。
+
+   ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/8cdf97e38e3245ec9316ef19dc6e85c8.png)
+
+## 5. 本地镜像发布到阿里云
+
+1. 本地镜像发布到阿里云流程
+
+   ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b4ba6662839649e3b2e6829fc88c0598.png)
+
+2. 镜像的生成方法
+
+   1. 方法1：基于当前容器创建一个新的镜像，新功能增强：`docker commit [OPTIONS] 容器ID [REPOSITORY[:TAG]]`
+   2. 方法2：DockerFile
+
+3. 将本地镜像推送到阿里云
+
+   1. 选择控制台，进入容器镜像服务
+
+   2. 选择个人实例
+
+   3. 命名空间-创建命名空间
+
+   4. 仓库名称-创建镜像仓库-选择命名空间-创建仓库名称-创建本地仓库-创建镜像仓库
+
+   5. 进入管理界面获得脚本
+
+   6. 将镜像推送到阿里云registry
+
+      ```bash
+      # 登录
+      docker login --username=你的用户名 registry.cn.qingdao.aliyuncs.com
+      # 输入密码，Login Succeeded就是登录成功
+      docker tag [ImageId，即镜像id] registry.cn.qingdao.aliyuncs.com/命名空间/仓库名:[镜像版本号]
+      docker push registry.cn.qingdao.aliyuncs.com/命名空间/仓库名:[镜像版本号]
+      ```
+
+4. 将阿里云上的镜像下载到本地
+
+   ```bash
+   docker login --username=你的用户名 registry.cn.qingdao.aliyuncs.com
+   docker pull registry.cn.qingdao.aliyuncs.com/命名空间/仓库名:[镜像版本号]
+   ```
+
+## 6. 本地镜像发布到私有库
+
+1. 是什么：官方是 `hub.docker.com`，国内一般选择阿里云，类似github，建立企业自己的github。**Docker Registry** 是官方提供的工具，用于构建私有镜像仓库。
+
+2. 将本地镜像推送到私有库
+
+   1. 下载镜像 Docker Registry：`docker pull registry`
+
+   2. 运行私有库 Registry，相当于本地有个私有的Docker Hub：`docker run -d -p 5000:5000 -v /主机路径:/容器路径 --privileged=true registry`
+
+      > -p 主机端口映射到容器端口
+      >
+      > -v 将主机路径"/host/path"挂载到容器路径"/container/path"，这样容器中的应用就可以访问"/container/path"目录，并且任何对这个路径的更改都会反映在主机的"/host/path"上
+      >
+      > 默认情况下，仓库被创建在容器的 `/var/lib/registry` 目录下，建议自行用容器卷映射，方便宿主机联调
+
+   3. 演示：创建一个新镜像，ubuntu安装ifconfig命令
+
+      `apt install net-tools`
+
+      1. 从Hub上下载ubuntu镜像到本地并成功运行
+      2. 原始的Ubuntu镜像是不带着ifconfg命令的
+      3. 外网连通的情况下，安装ifconfg命令并测试通过
+      4. 安装完成后，commit我们自己的新镜像
+      5. 启动我们的新镜像并和原来的对比
+
+   4. curl验证私服库上有什么镜像
+
+      - 根据上面的操作，pull并run了一个registry的容器；又打包了一个镜像，然后run，测试成功
+      - `curl -XGET http://...:5000/v2/_catalog`
+
+   5. 将新镜像修改符合私服规范的Tag
+
+      `docker tag 镜像名称[:TAG] http://...:5000/镜像名称[:TAG]`
+
+      相当于把本机的镜像克隆了一份，按规范命名
+
+   6. 修改配置文件使之支持http
+
+      1. `vim /etc/docker/daemon.json`，我们曾经在这里配置过阿里云的镜像
+
+         ```bash
+         "registry-mirrors": ["https://xxx.mirrors.aliyuncs.com"]
+         ```
+
+      2. 后面再加一个：
+
+         ```bash
+         "insecure-registries": ["你的registry ip地址:5000"]
+         ```
+
+   7. push推送到私服库
+
+   8. curl验证私服库上有什么镜像
+
+   9. pull到本地运行
 
 
 

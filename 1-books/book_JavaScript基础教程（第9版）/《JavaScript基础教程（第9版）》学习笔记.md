@@ -4,7 +4,7 @@
 
 ## 写在前面
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210717163123250.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIxNTc5MDQ1,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210717163123250.png)
 
 - 读后感：
 
@@ -14,7 +14,7 @@
 
 1. 数组：`var arr = new Array(1, 2, 3)`
 
-2. 通过 `onmouseover` 和 `onmouseout` 实现图片的修改：
+2. 通过 `onmouseover` 和 `onmouseout` 实现图片的修改：
 
    ```html
    <a
@@ -25,7 +25,18 @@
    /></a>
    ```
 
-3. 
+3. 在图像标签中包含了 alt 属性：因为如果希望 HTML 符合 W3C 标准，就必须有 alt
+   属性（这个属性为非图形化浏览器提供图像的名称或描述），而且使用 alt 属性有助于残障人士访问你的页面，比如用屏幕阅读器浏览页面的盲人用户
+
+4. JavaScript 并不在意开发者使用哪种引号
+
+
+
+
+
+
+
+
 
 
 
