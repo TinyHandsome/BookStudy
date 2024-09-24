@@ -18,17 +18,19 @@
 
 - 感想 | 摘抄 | 问题
 
+  - 什么是云原生：（我的理解）一切在云端，基于容器开发的都会打包push到registry中，然后pull下来进行使用
+
   - [麒麟系统离线安装docker](https://blog.csdn.net/qq_21579045/article/details/141718124)
 
   - 开发流程：
-
+  
     ```mermaid
     graph LR
     编码开发微服务-->上线部署容器化-->时时刻刻要监控-->devops
     ```
 
   - **面试题快速跳转：**
-
+  
     - [谈谈docker虚悬镜像是什么？](#1)
     - [谈谈docker exec和docker attach两个命令的区别？工作中用哪一个？](#2)
     - [为什么Docker镜像要采用分层结构？](#3)
@@ -360,7 +362,7 @@
      >
      > 推荐在工作中使用 `docker exec` 命令，因为退出容器终端也不会导致容器的停止
      >
-     > 一般用 `-d` 后台启动的程序，再用 `docker exec`进入对应容器实例
+     > 一般用 `-d` 后台启动的程序，再用 `docker exec`进入对应容器实例
 
    - `docker cp 容器id:容器内路径 目的主机路径`：从容器内拷贝文件到主机上
 
@@ -374,7 +376,7 @@
 
      > :sunny: docker save和docker export的区别
      >
-     > :book: [docker知识点大全](https://www.cnblogs.com/happy-king/p/10028476.html)
+     > :book: [docker知识点大全](https://www.cnblogs.com/happy-king/p/10028476.html)
      >
      > 1. `docker save`保存的是镜像（image），`docker export`保存的是容器（container）；
      > 2. `docker load`用来载入镜像包，`docker import`用来载入容器包，但两者都会恢复为镜像；
@@ -476,15 +478,17 @@
 
 2. 将本地镜像推送到私有库
 
-   1. 下载镜像 Docker Registry：`docker pull registry`
+   1. 下载镜像 Docker Registry：`docker pull registry`
 
    2. 运行私有库 Registry，相当于本地有个私有的Docker Hub：`docker run -d -p 5000:5000 -v /主机路径:/容器路径 --privileged=true registry`
+
+      ==我的实践==：`docker run -d -p 5005:5000 -v /mydocker:/tmp/registry --privileged=true registry`，这里端口号试了下用5005做映射，看看好不好使
 
       > -p 主机端口映射到容器端口
       >
       > -v 将主机路径"/host/path"挂载到容器路径"/container/path"，这样容器中的应用就可以访问"/container/path"目录，并且任何对这个路径的更改都会反映在主机的"/host/path"上
       >
-      > 默认情况下，仓库被创建在容器的 `/var/lib/registry` 目录下，建议自行用容器卷映射，方便宿主机联调
+      > 默认情况下，仓库被创建在容器的 `/var/lib/registry` 目录下，建议自行用容器卷映射，方便宿主机联调
 
    3. 演示：创建一个新镜像，ubuntu安装ifconfig命令
 
@@ -500,12 +504,18 @@
 
       - 根据上面的操作，pull并run了一个registry的容器；又打包了一个镜像，然后run，测试成功
       - `curl -XGET http://...:5000/v2/_catalog`
+      - ==我的实践==：`curl -XGET http://...:5005/v2/_catalog`
 
    5. 将新镜像修改符合私服规范的Tag
 
       `docker tag 镜像名称[:TAG] http://...:5000/镜像名称[:TAG]`
 
       相当于把本机的镜像克隆了一份，按规范命名
+
+      ==我的实践==：
+
+      - 先把容器commit成镜像：`docker commit -m="my ubuntu" -a="huowang" huowang huowang/myubuntu:1.0`
+      - 再修改tag：`docker tag huowang/myubuntu:1.0 ...:5005/huowangos:1.0`
 
    6. 修改配置文件使之支持http
 
@@ -521,11 +531,93 @@
          "insecure-registries": ["你的registry ip地址:5000"]
          ```
 
-   7. push推送到私服库
+      3. docker默认不允许http方式推送镜像，通过配置选项来取消这个限制。修改完如果不生效，建议重启docker
 
-   8. curl验证私服库上有什么镜像
+      ==我的实践==：
 
-   9. pull到本地运行
+      - 如果直接push，会报错：`GET ...: http: server gave HTTP response to HTTPS client`
+      - 所以需要在 `daemon.json` 中增加对应的ip从而支持 HTTP
+      - 然后重启docker `systemctl restart docker`，注意，这步操作会把你所有的镜像给关了，很要命的，小心点。
+      - 最终push：`docker push ...:5005/huowangos:1.0`
+
+   7. push推送到私服库：`docker push 镜像名称[:TAG]`，其实这里的镜像名称就是：`http://...:5005/镜像名称[:TAG]`
+
+      1. curl验证私服库上有什么镜像：`curl -XGET http://...:5005/v2/_catalog`，应该就有啦
+
+   8. pull到本地运行：`docker pull http://...:5005/镜像名称[:TAG]`
+
+## 7. Docker容器数据卷
+
+1. :no_entry_sign: 坑：容器卷记得加入 `--privileged=true`
+
+   否则，Docker挂载主机目录访问会出现 `cannot open directory: Permission denied`
+
+2. 参数v：默认情况下，仓库被创建在容器的 `/var/lib/registry` 目录下，建议自行用容器卷映射，方便宿主机联调
+
+3. 是什么
+
+   1. 有点类似我们redis里面的rdb和aof文件
+   2. 将docker容器内的数据保存进宿主机的磁盘中
+   3. 运行一个带有容器卷存储功能的容器实例
+
+   > 卷是目录或文件，存在于一个或多个容器中，由docker挂载到容器，但不属于联合文件系统，因此能够绕过 Union File System 提供一些用于持续存储或共享数据的特性。卷的设计目的就是`数据的持久化`，完全独立于容器的生存周期，因此Docker不会在容器删除时删除其挂载的数据卷
+   >
+   > `docker run -it -privileged=true -v /宿主机绝对路径目录:/容器内目录 镜像名`
+
+4. 能干嘛：将运用与运行的环境打包镜像，run后形成容器实例运行，但是我们对数据的要求希望是持久化的。Docker容器产生的数据，如果不备份，那么当容器实例删除后，容器内的数据自然也就没有了。为了能保存数据在docker中我们使用卷。
+
+   特点：
+
+   1. 数据卷可在容器之间共享或重用数据
+   2. 卷中的更改可以直接实时生效
+   3. 数据卷中的更改不会包含在镜像的更新中
+   4. 数据卷的生命周期一直持续到没有容器使用它为止
+
+5. 案例：
+
+   1. 宿主vs容器之间映射添加容器卷，直接命令添加
+
+      - `docker run -it -privileged=true -v /宿主机绝对路径目录:/容器内目录 镜像名`
+
+      - 查看数据卷是否挂载成功：可以在主机上看到 `/mydocker`，然后启动容器 `docker exec -it 容器id /bin/sh`（因为没有bash），在容器的路径中看到 `/tmp/registry`
+
+      - 也可以用 `docker inspect 容器id`，查看mount字段中的内容
+
+        ```bash
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/mydocker",
+                "Destination": "/tmp/registry",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            ...
+        ]
+        ```
+
+      - **注意：**如果把容器 `docker stop` 之后，在宿主机路径下增加文件，重启容器之后，容器内部依然能看到对应的文件增加
+
+   2. 读写规则映射添加说明
+
+      - 读写（默认）
+        - `docker run -it --privileged=true -v /宿主机绝对路径目录:/容器内目录:rw 镜像名`
+        - rw为默认值
+      - 只读
+        - 容器实例内部被限制，只能读取不能写
+        - `docker run -it --privileged=true -v /宿主机绝对路径目录:/容器内目录:ro 镜像名`
+        - 宿主机写如内容可以同步给容器，容器可以读取到
+   
+   3. 卷的继承和共享
+   
+      - 容器1完成和宿主机的映射
+      - 容器2继承容器1的卷规则：`docker run -it --privileged=true --volumnes-from 父类容器 --name u2 ubuntu`，其实这里的 `--volumnes` 就是 `-v`
+      - 实现：父容器、子容器、宿主机文件共享
+   
+   4. 
+   
+   
 
 
 
