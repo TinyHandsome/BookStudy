@@ -714,9 +714,9 @@ tags:
    4. mysql实战：
 
       1. 新建mysql容器实例：`docker run -d -p 33061:3306 --privileged=true -v /data/litian_test/mysql/log:/var/log/mysql -v /data/litian_test/mysql/data:/var/liv/mysql -v /data/litian_test/mysql/conf:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=root --name ltmysql mysql:8.0.29`
-      
+   
       2. 在宿主机 `/data/litian_test/mysql/conf` 新建 `my.cnf`：通过容器卷同步给mysql容器实例
-      
+   
          ```bash
          [client]
          default_character_set = utf8
@@ -724,9 +724,9 @@ tags:
          collation_server = utf8_general_ci
          character_set_server = utf8
          ```
-      
+   
       3. 重新启动mysql容器实例再重新进入并查看字符编码：`docker restart ltmysql`
-      
+   
          ```bash
          mysql> show variables like 'character%';
          +--------------------------+--------------------------------+
@@ -743,8 +743,10 @@ tags:
          +--------------------------+--------------------------------+
          8 rows in set (0.01 sec)
          ```
-      
-         
+   
+      4. **结论：docker安装完MySQL并run出容器后，建议请先修改完字符集编码后再新建mysql库-表-插数据**
+   
+   5. 删除容器后，里面的mysql数据怎么办
 
 4. 安装redis
 
