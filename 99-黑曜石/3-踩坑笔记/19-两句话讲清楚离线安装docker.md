@@ -1,3 +1,7 @@
+---
+tags:
+  - docker
+---
 # 两句话讲清楚离线安装docker
 
 [TOC]

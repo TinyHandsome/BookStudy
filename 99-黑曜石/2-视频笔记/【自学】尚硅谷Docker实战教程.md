@@ -1,6 +1,11 @@
+---
+tags:
+  - docker
+  - 尚硅谷
+---
 # 尚硅谷Docker实战教程学习笔记
 
-[TOC]
+[toc]
 
 ## 写在前面
 
@@ -608,23 +613,142 @@
         - 容器实例内部被限制，只能读取不能写
         - `docker run -it --privileged=true -v /宿主机绝对路径目录:/容器内目录:ro 镜像名`
         - 宿主机写如内容可以同步给容器，容器可以读取到
-   
+
    3. 卷的继承和共享
-   
+
       - 容器1完成和宿主机的映射
       - 容器2继承容器1的卷规则：`docker run -it --privileged=true --volumnes-from 父类容器 --name u2 ubuntu`，其实这里的 `--volumnes` 就是 `-v`
       - 实现：父容器、子容器、宿主机文件共享
+      - 简单来说，无论谁死都不影响文件传递，一主二从
+
+
+## 8. Docker常规安装简介
+
+1. 总体步骤
+   1. 搜索镜像
+   2. 拉取镜像
+   3. 查看镜像
+   4. 启动镜像，服务端口映射
+   5. 停止容器
+   6. 移除容器
    
-   4. 
+2. 安装tomcat
+   1. docker hub上查找tomcat镜像：`docker search tomcat`
+   2. 从docker hub上拉去tomcat镜像到本地：`docker pull tomcat`
+   3. docker images查看是否有拉取到的tomcat
+   4. 使用tomcat镜像创建容器实例（也叫运行镜像）：`docker run -it -p 8080:8080 --name t1 tomcat`
+   5. 访问 :cat: 首页
+      - 问题：最后发现访问报错404异常
+      - 解决：
+        - 可能没有映射端口或者没有关闭防火墙 
+        - 把webapps.dist目录换成webapps
+          - 先成功启动tomcat
+          - 查看webapps文件夹查看为空
    
-   
+3. 安装mysql
 
+   1. `docker search mysql`
 
+   2. `docker pull mysql:8.0.29`
 
+   3. 运行：
 
+      - `docker run -p 33061:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:8.0.29`
 
+      - `docker exec -it 3ce95ebd240c bash`
 
+        ```bash
+        bash-4.4# mysql -uroot -p
+        Enter password:
+        Welcome to the MySQL monitor.  Commands end with ; or \g.
+        Your MySQL connection id is 9
+        Server version: 8.0.29 MySQL Community Server - GPL
+        
+        Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+        
+        Oracle is a registered trademark of Oracle Corporation and/or its
+        affiliates. Other names may be trademarks of their respective
+        owners.
+        
+        Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+        
+        mysql> show databases;
+        +--------------------+
+        | Database           |
+        +--------------------+
+        | information_schema |
+        | mysql              |
+        | performance_schema |
+        | sys                |
+        +--------------------+
+        4 rows in set (0.00 sec)
+        
+        mysql> create database db01;
+        Query OK, 1 row affected (0.00 sec)
+        
+        mysql> use db01;
+        Database changed
+        mysql> create table t1(id int, name varchar(32));
+        Query OK, 0 rows affected (0.01 sec)
+        
+        mysql> insert into t1 values(1, 'zhangsan')
+            -> ;
+        Query OK, 1 row affected (0.01 sec)
+        
+        mysql> select * from t1;
+        +------+----------+
+        | id   | name     |
+        +------+----------+
+        |    1 | zhangsan |
+        +------+----------+
+        1 row in set (0.00 sec)
+        
+        mysql>
+        ```
 
+      - 用工具连接也没问题
+      - 问题：
+        - 插入中文数据报错：docker上默认字符集编码隐患
+        - 删除容器之后，里面的mysql数据怎么办
+
+   4. mysql实战：
+
+      1. 新建mysql容器实例：`docker run -d -p 33061:3306 --privileged=true -v /data/litian_test/mysql/log:/var/log/mysql -v /data/litian_test/mysql/data:/var/liv/mysql -v /data/litian_test/mysql/conf:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=root --name ltmysql mysql:8.0.29`
+      
+      2. 在宿主机 `/data/litian_test/mysql/conf` 新建 `my.cnf`：通过容器卷同步给mysql容器实例
+      
+         ```bash
+         [client]
+         default_character_set = utf8
+         [mysqld]
+         collation_server = utf8_general_ci
+         character_set_server = utf8
+         ```
+      
+      3. 重新启动mysql容器实例再重新进入并查看字符编码：`docker restart ltmysql`
+      
+         ```bash
+         mysql> show variables like 'character%';
+         +--------------------------+--------------------------------+
+         | Variable_name            | Value                          |
+         +--------------------------+--------------------------------+
+         | character_set_client     | utf8mb3                        |
+         | character_set_connection | utf8mb3                        |
+         | character_set_database   | utf8mb3                        |
+         | character_set_filesystem | binary                         |
+         | character_set_results    | utf8mb3                        |
+         | character_set_server     | utf8mb3                        |
+         | character_set_system     | utf8mb3                        |
+         | character_sets_dir       | /usr/share/mysql-8.0/charsets/ |
+         +--------------------------+--------------------------------+
+         8 rows in set (0.01 sec)
+         ```
+      
+         
+
+4. 安装redis
+
+5. 安装nginx
 
 
 
