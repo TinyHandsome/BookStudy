@@ -39,6 +39,7 @@ tags:
     - [谈谈docker虚悬镜像是什么？](#1)
     - [谈谈docker exec和docker attach两个命令的区别？工作中用哪一个？](#2)
     - [为什么Docker镜像要采用分层结构？](#3)
+    - [容器创建成功但是启不起来](#4)
 
 
 ## 1. Docker简介
@@ -746,11 +747,340 @@ tags:
    
       4. **结论：docker安装完MySQL并run出容器后，建议请先修改完字符集编码后再新建mysql库-表-插数据**
    
-   5. 删除容器后，里面的mysql数据怎么办
+   5. 删除容器后，里面的mysql数据怎么办：数据不丢失
 
 4. 安装redis
 
-5. 安装nginx
+   1. 拉取redis镜像到本地
+
+   2. 容器卷记得加 `--privileged=true`
+
+   3. 宿主机新建目录 `/app/redis`：`mkdir -p /app/redis`
+
+   4. 将一个 `redis.conf` 文件模板拷贝进 `/app/redis` 目录下
+
+   5. `/app/redis` 目录下修改 `redis.conf` 文件（默认出厂的原始是redis.conf）
+      - 开启redis密码验证（可选）：`requirepass 123`
+      - 允许redis外地连接（必须）：`bind 127.0.0.1 ::1`和 `bind 127.0.0.1` 这两行的注释取消
+      - 注释 `daemonize yes`，或者设置 `daemonize no` ，因为该配置和docker run中 -d 参数冲突，会导致容器一直启动失败
+      - 开启redis数据持久化（可选）：`appendonly yes`
+      - 开启外部访问链接（可选）：`protected-mode no`，关闭保护模式
+
+   6. 创建容器，运行镜像：`docker run -p 63791:6379 --name ltredis --privileged=true -v /app/redis/redis.conf:/etc/redis/redis.conf -v /app/redis/data:/data -d redis:6.0.8 redis-server /etc/redis/redis.conf`
+
+      注意：这里不是 `bash` 了，而是 `redis-server xxx`
+
+      测试效果：
+
+      ```bash
+      KAZ0VLGPT01:/app/redis # docker exec -it ltredis /bin/bash
+      root@1843deb637b4:/data# redis-cli
+      127.0.0.1:6379> set k1 v1
+      OK
+      127.0.0.1:6379> get k1
+      "v1"
+      127.0.0.1:6379> ping
+      PONG
+      127.0.0.1:6379> select 15
+      OK
+      127.0.0.1:6379[15]>
+      ```
+
+   7. 验证redis是按照指定的conf启动的：
+
+      - `select 15` 的结果是ok的
+
+      - 退出后修改conf中 `databases 16` 为 `databases 10`
+
+      - 重启redis服务：`docker restart ltredis`
+
+      - 进入容器内测试是否超出index，则为修改成功
+
+        ```bash
+        KAZ0VLGPT01:/app/redis # docker exec -it ltredis bash
+        root@1843deb637b4:/data# redis-cli
+        127.0.0.1:6379> get k1
+        "v1"
+        127.0.0.1:6379> select 3
+        OK
+        127.0.0.1:6379[3]> select 15
+        (error) ERR DB index is out of range
+        ```
+
+5. 安装nginx：见后续Portainer
+
+## 9. Docker复杂安装说明
+
+1. 安装mysql主从复制
+
+   - 主从复制原理（跳过不讲）
+
+   - 做下一步之前的建议
+
+     1. :imp: 直接用mysql:5.7的镜像，会报错容器起不起来，这个问题在下面步骤中解释了，不再细说，但是我发现如果指定容器版本 `mysql:5.7.29`，就没有出现如下问题，更无需修复，所以建议在执行以下代码时，将所有5.9改为5.9.29
+
+     2. :imp: 在重启mysql容器之后，再进去，输入用户名和密码的时候发现：
+
+        ```
+        ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+        ```
+
+        这个问题很玄学，先不要去百度，退出容器之后再进一次发现又好了，就很奇怪。。。==最后是内存不够==
+
+     3. :imp: 注意 `my.cnf` 千万别写成 `my.conf`，切记切记，血的教训
+
+   - 主从搭建步骤
+
+     1. 新建服务器容器实例3307：
+
+        ```bash
+        docker run -p 3307:3306 --name mysql-master --privileged=true -v /mydata/mysql-master/log:/var/log/mysql -v /mydata/mysql-master/data:/var/lib/mysql -v /mydata/mysql-master/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7
+        ```
+
+        > :warning: <span id="4">注意</span>：在这一步可能会报错，容器创建成功但是启不起来，查看容器报错内容：`docker logs mysql-master`发现：
+        >
+        > ```bash
+        > [ERROR] [Entrypoint]: mysqld failed while attempting to check config
+        >         command was: mysqld --verbose --help --log-bin-index=/tmp/tmp.WHijR591XA
+        >         mysqld: Can't read dir of '/etc/mysql/conf.d/' (Errcode: 2 - No such file or directory)
+        > mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
+        > ```
+        >
+        > :book: [原因分析](https://blog.csdn.net/javaboyweng/article/details/130928503)：官方的配置文件已经不放在/etc/mysql底下了
+        >
+        > :sailboat: 解决方案：
+        >
+        > 1. 先创建一个简单的mysql容器实例：
+        >
+        >    ```bash
+        >    docker run -p 3307:3306 --name mysql-master -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7
+        >    ```
+        >
+        > 2. 复制里面的`/etc/mysql`文件夹：`docker cp mysql-master:/etc/mysql/. /mydata/mysql-master/conf`
+        >
+        > 3. 删除这个临时容器：`docker rm -f mysql-master`
+        >
+        > 4. 重新启动原始命令
+     
+     2. 进入 `/mydata/mysql-master/conf` 目录下新建 `my.conf`，插入以下内容
+     
+        ```bash
+        [mysqld]
+        ## 设置server_id，同一局域网中需要唯一
+        server_id=101
+        ## 指定不需要同步的数据库名称
+        binlog-ignore-db=mysql
+        ## 开启二进制日志功能
+        log-bin=mall-mysql-bin
+        ## 设置二进制日志使用内存大小（事务）
+        binlog_cache_size=1M
+        ## 设置使用的二进制日志格式（mixed,statement,row）
+        binlog_format=mixed  
+        ## 二进制日志过期清理时间。默认值为0，表示不自动清理。
+        expire_logs_days=7
+        ## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。
+        ## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致
+        slave_skip_errors=1062
+        ```
+     
+     3. 修改完配置后重启master实例：`docker restart mysql-master`
+     
+     4. 进入mysql-master容器
+     
+        ```bash
+        KAZ0VLGPT01:/mydata/mysql-master/conf # docker exec -it mysql-master bash
+        bash-4.2# mysql -uroot -p
+        Enter password:
+        Welcome to the MySQL monitor.  Commands end with ; or \g.
+        Your MySQL connection id is 2
+        Server version: 5.7.44 MySQL Community Server (GPL)
+        
+        Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+        
+        Oracle is a registered trademark of Oracle Corporation and/or its
+        affiliates. Other names may be trademarks of their respective
+        owners.
+        
+        Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+        
+        mysql>
+        ```
+     
+     5. master容器实例内创建数据同步用户
+     
+        ```sql
+        # 新建用户
+        create user 'slave'@'%' identified by '123456';
+        # 授权
+        grant replication slave, replication client on *.* to 'slave'@'%';
+        ```
+     
+     6. 新建从服务器容器实例3308
+     
+        ```bash
+        docker run -p 3308:3306 --name mysql-slave --privileged=true -v /mydata/mysql-slave/log:/var/log/mysql -v /mydata/mysql-slave/data:/var/lib/mysql -v /mydata/mysql-slave/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7
+        ```
+     
+     7. 进入 `/mydata/mysql-slave/conf` 目录下新建 `my.conf`，插入以下内容
+     
+        ```bash
+        [mysqld]
+        ## 设置server_id，同一局域网中需要唯一
+        server_id=102
+        ## 指定不需要同步的数据库名称
+        binlog-ignore-db=mysql  
+        ## 开启二进制日志功能，以备Slave作为其它数据库实例的Master时使用
+        log-bin=mall-mysql-slave1-bin  
+        ## 设置二进制日志使用内存大小（事务）
+        binlog_cache_size=1M  
+        ## 设置使用的二进制日志格式（mixed,statement,row）
+        binlog_format=mixed  
+        ## 二进制日志过期清理时间。默认值为0，表示不自动清理。
+        expire_logs_days=7  
+        ## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。
+        ## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致
+        slave_skip_errors=1062  
+        ## relay_log配置中继日志
+        relay_log=mall-mysql-relay-bin  
+        ## log_slave_updates表示slave将复制事件写进自己的二进制日志
+        log_slave_updates=1  
+        ## slave设置为只读（具有super权限的用户除外）
+        read_only=1
+        ```
+     
+     8. 修改完配置后重启slave实例：`docker restart mysql-slave`
+     
+     9. 在主数据库中查看主从同步状态：`show master status;`（:imp: 真的能看到，如果是empty set，看看是不是配置文件的名称或者内容有问题），并且也可以通过 `show variables like '%log_bin%';` 看 `log_in` 是否开启
+     
+        ```
+        mysql> show master status;
+        +------------------------------+----------+--------------+------------------+-------------------+
+        | File                         | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
+        +------------------------------+----------+--------------+------------------+-------------------+
+        | mall-mysql-slave1-bin.000001 |      154 |              | mysql            |                   |
+        +------------------------------+----------+--------------+------------------+-------------------+
+        1 row in set (0.01 sec)
+        ```
+     
+     10. 进入mysql-slave容器中：`docker exec -it mysql-slave bash`
+     
+     11. 在**从**数据库中配置主从复制
+     
+         ```bash
+         change master to master_host='10.10.102.111', master_user='slave', master_password='123456', master_port=3307, master_log_file='mall-mysql-bin.000001', master_log_pos=154, master_connect_retry=30;
+         ```
+     
+         - master_host：主数据库的IP地址；
+         - master_port：主数据库的运行端口；
+         - master_user：在主数据库创建的用于同步数据的用户账号； 
+         - master_password：在主数据库创建的用于同步数据的用户密码；
+         - master_log_file：指定从数据库要复制数据的日志文件，通过查看主数据的状态，获取File参数；==重要，从master status中拿到的数据==
+         - master_log_pos：指定从数据库从哪个位置开始复制数据，通过查看主数据的状态，获取Position参数；==重要，从master status中拿到的数据==
+         - master_connect_retry：连接失败重试的时间间隔，单位为秒
+     
+     12. 在从数据库中查看主从同步状态：`show slave status \G;`
+     
+         ```
+         mysql> show slave status \G;
+         *************************** 1. row ***************************
+                        Slave_IO_State:
+                           Master_Host: 10.10.102.111
+                           Master_User: slave
+                           Master_Port: 3307
+                         Connect_Retry: 30
+                       Master_Log_File: mall-mysql-bin .000001
+                   Read_Master_Log_Pos: 154
+                        Relay_Log_File: mall-mysql-relay-bin.000001
+                         Relay_Log_Pos: 4
+                 Relay_Master_Log_File: mall-mysql-bin .000001
+                      Slave_IO_Running: No
+                     Slave_SQL_Running: No
+                       Replicate_Do_DB:
+                   Replicate_Ignore_DB:
+                    Replicate_Do_Table:
+                Replicate_Ignore_Table:
+               Replicate_Wild_Do_Table:
+           Replicate_Wild_Ignore_Table:
+                            Last_Errno: 0
+                            Last_Error:
+                          Skip_Counter: 0
+                   Exec_Master_Log_Pos: 154
+                       Relay_Log_Space: 154
+                       Until_Condition: None
+                        Until_Log_File:
+                         Until_Log_Pos: 0
+                    Master_SSL_Allowed: No
+                    Master_SSL_CA_File:
+                    Master_SSL_CA_Path:
+                       Master_SSL_Cert:
+                     Master_SSL_Cipher:
+                        Master_SSL_Key:
+                 Seconds_Behind_Master: NULL
+         Master_SSL_Verify_Server_Cert: No
+                         Last_IO_Errno: 0
+                         Last_IO_Error:
+                        Last_SQL_Errno: 0
+                        Last_SQL_Error:
+           Replicate_Ignore_Server_Ids:
+                      Master_Server_Id: 0
+                           Master_UUID:
+                      Master_Info_File: /var/lib/mysql/master.info
+                             SQL_Delay: 0
+                   SQL_Remaining_Delay: NULL
+               Slave_SQL_Running_State:
+                    Master_Retry_Count: 86400
+                           Master_Bind:
+               Last_IO_Error_Timestamp:
+              Last_SQL_Error_Timestamp:
+                        Master_SSL_Crl:
+                    Master_SSL_Crlpath:
+                    Retrieved_Gtid_Set:
+                     Executed_Gtid_Set:
+                         Auto_Position: 0
+                  Replicate_Rewrite_DB:
+                          Channel_Name:
+                    Master_TLS_Version:
+         1 row in set (0.01 sec)
+         ```
+     
+         `Slave_IO_Running: No`、`Slave_SQL_Running: No`表示还没开始
+     
+     13. 在从数据库中开启主从同步：`start slave;`
+     
+     14. 查看从数据库状态发现已经同步：`show slave status \G;`
+     
+         `Slave_IO_Running: Yes`、`Slave_SQL_Running: Yes`表示成功
+     
+         > :imp: 如果是发现Slave_IO为No，Slave_SQL为Yes
+         >
+         > :aerial_tramway: 可能是 `master_log_file` 文件名没写对，比如多了一个空格啥的
+     
+     15. 主从测试复制
+     
+         1. 主机新建库、使用库、新建表、插入数据
+         2. 从机使用库、查看记录
+     
+         结果表明：主机创建的表和数据，从机可以看到。
+
+2. 安装redis集群：**cluster（集群）模式-docker版，哈希槽分区进行亿级数据存储**
+
+   > :fox_face: 面试题：1-2亿数据需要缓存，请问如何设计这个存储案例
+   >
+   > :bow_and_arrow: 回答：单机单台100%不可能，肯定是分布式存储，用redis如何落地？（上述问题阿里P6-P7工程案例和场景设计类必考题目，一般业界有3种解决方案）
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
