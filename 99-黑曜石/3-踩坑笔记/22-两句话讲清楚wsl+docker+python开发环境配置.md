@@ -51,6 +51,23 @@ tags:
 
 4. 检查一下conda好不好使吧：`conda -v`
 
+5. 多说一句，conda的配置，[避免新建环境各种error的问题](https://blog.csdn.net/leviopku/article/details/140280296)
+
+   `vim ~/.condarc` 写入以下内容就行了
+
+   ```bash
+   channels:
+     - defaults
+   show_channel_urls: true
+   default_channels:
+     - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+     - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+     - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+   custom_channels:
+     conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+     pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+   ```
+
 最后，类似的，其他的sh啊，什么的，都可以这样传进来安装，当然了能直接下载 `apt install` 是最好的。
 
 
