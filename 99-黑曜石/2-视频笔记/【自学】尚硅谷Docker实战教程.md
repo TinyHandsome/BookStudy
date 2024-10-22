@@ -1135,7 +1135,7 @@ tags:
    >
    >      :question: 为什么redis集群最大的槽数是**16384**个？
    >
-   >      :book: [精心整理了20道Redis经典面试题(珍藏版)](https://zhuanlan.zhihu.com/p/448727651)
+   >      :book: [精心整理了20道Redis经典面试题(珍藏版)](https://zhuanlan.zhihu.com/p/448727651)
    >
    >      - Redis 集群没有使用一致性 hash，而是引入了哈希槽的概念，Redis 集群有`16384`个哈希槽，每个 key 通过 `CRC16` 校验后对 16384 取模来决定放置哪个槽，集群的每个节点负责一部分 hash 槽。
    >
@@ -1150,6 +1150,11 @@ tags:
    >      ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/025d54a1105b4f1ca31721605d3aa5fd.png)
 
 3. 3主3从redis集群扩缩配置案例架构说明
+
+   1. redis集群配置
+      1. 关闭防火墙+启动docker后台服务：`systemctl start docker`
+      2. 新建6个docker容器实例：
+
 
 
 
