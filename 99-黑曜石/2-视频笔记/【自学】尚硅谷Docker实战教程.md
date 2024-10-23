@@ -1152,8 +1152,65 @@ tags:
 3. 3主3从redis集群扩缩配置案例架构说明
 
    1. redis集群配置
+      
+      ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/19ea8541bab84858a417c6766ee2e667.png)
+      
       1. 关闭防火墙+启动docker后台服务：`systemctl start docker`
+      
       2. 新建6个docker容器实例：
+      
+         ```bash
+         docker run -d --name redis-node-1 --net host --privileged=true -v /data/redis/share/redis-node-1:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6381
+         
+         docker run -d --name redis-node-2 --net host --privileged=true -v /data/redis/share/redis-node-2:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6382
+         
+         docker run -d --name redis-node-3 --net host --privileged=true -v /data/redis/share/redis-node-3:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6383
+         
+         docker run -d --name redis-node-4 --net host --privileged=true -v /data/redis/share/redis-node-4:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6384
+         
+         docker run -d --name redis-node-5 --net host --privileged=true -v /data/redis/share/redis-node-5:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6385
+         
+         docker run -d --name redis-node-6 --net host --privileged=true -v /data/redis/share/redis-node-6:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6386
+         ```
+      
+         **注意：别瞎复制，要改3处**，name、v、port。否则会报错：
+      
+         > Sorry, the cluster configuration file nodes.conf is already used by a different Redis Cluster node. Please make sure that different nodes use different cluster configuration files.
+      
+         - `docker run`：创建并运行docker容器实例
+         - `--name redis-node-1`：容器名字
+         - `--net host`：使用宿主机的IP和端口，默认
+         - `--privileged=true`：获取宿主机root用户权限
+         - `-v /data/redis/share/redis-node-1:/data`：容器卷，宿主机地址:docker内部地址
+         - `redis:6.0.8`：redis镜像和版本号
+         - `--cluster-enabled yes`：开启redis集群
+         - `--appendonly yes`：开启持久化
+         - `--port 6386`：redis端口号
+      
+      3. 进入容器 `redis-node-1` 并为6台机器构建集群关系，这里的地址要改成自己的真实IP地址，运行后会自动进行两两配对
+      
+         ```
+         redis-cli --cluster create 172.24.113.146:6381 172.24.113.146:6382 172.24.113.146:6383 172.24.113.146:6384 172.24.113.146:6385 172.24.113.146:6386 --cluster-replicas 1
+         ```
+      
+         - `--cluster-replicas 1`：表示为每个master创建一个slave节点
+      
+         - 从下图结果也可以看出/证明：一共是16383个槽，这里分成了三份，并且分别建立映射关系
+      
+         ```
+         Master[0] -> Slots 0 - 5460
+         Master[1] -> Slots 5461 - 10922
+         Master[2] -> Slots 10923 - 16383
+         Adding replica 172.24.113.146:6385 to 172.24.113.146:6381
+         Adding replica 172.24.113.146:6386 to 172.24.113.146:6382
+         Adding replica 172.24.113.146:6384 to 172.24.113.146:6383
+         ```
+      
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/94ec53fe141d43aa9573ae04dfdee42b.png)
+         
+      4. 连接进入6381作为切入点，查看集群状态：`redis-cli -p 6381`、` cluster info`、`cluster nodes`
+      
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d3f02a3bf6344490b8a805758fde3a1e.png)
 
 
 
