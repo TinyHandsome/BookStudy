@@ -2,6 +2,8 @@
 tags:
   - docker
   - 尚硅谷
+banner: Cover/21-1.png
+sticker: emoji//1f40b
 ---
 # 尚硅谷Docker实战教程学习笔记
 

@@ -5,6 +5,8 @@ tags:
   - ubuntu
   - 容器
   - 镜像
+banner: Cover/21.png
+sticker: emoji//1f433
 ---
 # 两句话讲清楚windows安装wsl和docker
 

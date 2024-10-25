@@ -5,6 +5,8 @@ tags:
   - wsl
   - conda
   - python
+banner: Cover/22.png
+sticker: emoji//1f433
 ---
 # 两句话讲清楚wsl+docker+python开发环境配置
 
