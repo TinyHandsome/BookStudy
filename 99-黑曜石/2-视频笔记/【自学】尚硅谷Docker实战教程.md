@@ -1154,13 +1154,13 @@ sticker: emoji//1f40b
 3. 3主3从redis集群扩缩配置案例架构说明
 
    1. redis集群配置
-      
+
       ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/19ea8541bab84858a417c6766ee2e667.png)
-      
+
       1. 关闭防火墙+启动docker后台服务：`systemctl start docker`
-      
+
       2. 新建6个docker容器实例：
-      
+
          ```bash
          docker run -d --name redis-node-1 --net host --privileged=true -v /data/redis/share/redis-node-1:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6381
          
@@ -1174,11 +1174,11 @@ sticker: emoji//1f40b
          
          docker run -d --name redis-node-6 --net host --privileged=true -v /data/redis/share/redis-node-6:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6386
          ```
-      
+
          **注意：别瞎复制，要改3处**，name、v、port。否则会报错：
-      
+
          > Sorry, the cluster configuration file nodes.conf is already used by a different Redis Cluster node. Please make sure that different nodes use different cluster configuration files.
-      
+
          - `docker run`：创建并运行docker容器实例
          - `--name redis-node-1`：容器名字
          - `--net host`：使用宿主机的IP和端口，默认
@@ -1188,17 +1188,17 @@ sticker: emoji//1f40b
          - `--cluster-enabled yes`：开启redis集群
          - `--appendonly yes`：开启持久化
          - `--port 6386`：redis端口号
-      
+
       3. 进入容器 `redis-node-1` 并为6台机器构建集群关系，这里的地址要改成自己的真实IP地址，运行后会自动进行两两配对
-      
+
          ```
          redis-cli --cluster create 172.24.113.146:6381 172.24.113.146:6382 172.24.113.146:6383 172.24.113.146:6384 172.24.113.146:6385 172.24.113.146:6386 --cluster-replicas 1
          ```
-      
+
          - `--cluster-replicas 1`：表示为每个master创建一个slave节点
-      
+
          - 从下图结果也可以看出/证明：一共是16383个槽，这里分成了三份，并且分别建立映射关系
-      
+
          ```
          Master[0] -> Slots 0 - 5460
          Master[1] -> Slots 5461 - 10922
@@ -1207,18 +1207,96 @@ sticker: emoji//1f40b
          Adding replica 172.24.113.146:6386 to 172.24.113.146:6382
          Adding replica 172.24.113.146:6384 to 172.24.113.146:6383
          ```
-      
+
          ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/94ec53fe141d43aa9573ae04dfdee42b.png)
          
       4. 连接进入6381作为切入点，查看集群状态：`redis-cli -p 6381`、` cluster info`、`cluster nodes`
-      
+
          ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d3f02a3bf6344490b8a805758fde3a1e.png)
 
+   2. 主从容错切换迁移
 
+      1. 数据读写存储
 
+         - 启动6机构成的集群并通过exec进入
 
+         - 对6381新增两个key
 
+           ```bash
+           (base) root@L2010403019000# docker exec -it redis-node-1 bash
+           root@L2010403019000:/data# redis-cli -p 6381
+           127.0.0.1:6381> set k1 v1
+           (error) MOVED 12706 172.24.113.146:6383
+           127.0.0.1:6381> get k1
+           (error) MOVED 12706 172.24.113.146:6383
+           127.0.0.1:6381> set k2 v2
+           OK
+           127.0.0.1:6381> set k3 v3
+           OK
+           127.0.0.1:6381> set k4 v4
+           (error) MOVED 8455 172.24.113.146:6382
+           127.0.0.1:6381>
+           ```
 
+           **要用集群的命令**，单机版的命令有些key存不进去
+
+         - 防止路由失效加参数`-c`并新增两个key
+
+           **会根据存储的槽位自动跳转到对应的机器**
+
+           ```bash
+           root@L2010403019000:/data# redis-cli -p 6381 -c
+           127.0.0.1:6381> set k1 v1
+           -> Redirected to slot [12706] located at 172.24.113.146:6383
+           OK
+           172.24.113.146:6383>
+           ```
+
+         - 查看集群信息：`redis-cli --cluster check xxx:6381`
+
+           ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d279f3a64e6b4072aaf3aebb20e594ef.png)
+
+      2. 容错切换迁移
+
+         - 主6381和从机切换，先停止主机6381
+
+         - 再次查看集群信息，6381的主机挂了，6384上位成了master
+
+           ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/944f46f3e25049dd9a57c68b046b8ffb.png)
+
+         - 再启动6381，6381会变成**从机slave**，类似的再停6384，6381会成为master
+
+           ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/1e68448dff854fec9cf4a8d73657973a.png)
+
+   3. 主从扩容
+
+      1. 需求分析：三主三从到四主四从，关键在于**哈希槽的重新分配**
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/3280a30df8ff4fa6933e1202ed994c7c.png)
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/44376e5a0b2b4ad38a3d30b7655613fb.png)
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/5623c1b600b046b2801e2a854e3b1857.png)
+
+      2. 新建6387、6388两个节点+新建后启动+查看是否8节点
+
+      3. 进入6387容器实例内部，将新增的6387节点（空槽号）作为master节点加入原集群
+
+      4. 检查集群情况第1次
+
+      5. 重新分派槽号
+
+      6. 检查集群情况第2次
+
+      7. 为主节点6387分配从节点6388
+
+      8. 检查集群情况第3次
+
+   4. 主从缩容
+
+   
+
+   
 
 
 
