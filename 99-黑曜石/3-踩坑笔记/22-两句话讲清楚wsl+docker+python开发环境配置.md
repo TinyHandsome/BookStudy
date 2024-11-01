@@ -51,7 +51,7 @@ sticker: emoji//1f433
 
    - 一顿确认安装就行了
 
-4. 检查一下conda好不好使吧：`conda -v`
+4. 检查一下conda好不好使吧：`conda -v`。最后，类似的，其他的sh啊，什么的，都可以这样传进来安装，当然了能直接下载 `apt install` 是最好的。
 
 5. 多说一句，conda的配置，[避免新建环境各种error的问题](https://blog.csdn.net/leviopku/article/details/140280296)
 
@@ -69,8 +69,14 @@ sticker: emoji//1f433
      conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
      pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
    ```
+   
+6. 再多说一句，conda的打包和迁移，首先再当前env下，`pip install conda-pack`
 
-最后，类似的，其他的sh啊，什么的，都可以这样传进来安装，当然了能直接下载 `apt install` 是最好的。
+   - 打包环境：`conda pack -n 你的环境名 -o 名字.tar.gz`
+   - 迁移环境：直接复制到服务器就行，不方便的也可以考虑用scp命令迁移 `sudo scp 名字.tar.gz root@服务器ip:目标路径`
+   - 解压环境：
+     - 先去 `/root/miniconda3/envs/` 创建一个新环境的文件名：xxx
+     - `tar -zxvf 名字.tar.gz -C /root/miniconda3/envs/xxx/`
 
 
 ------

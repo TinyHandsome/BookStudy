@@ -7,6 +7,8 @@ sticker: emoji//1f40b
 ---
 # 尚硅谷Docker实战教程学习笔记
 
+*我从没想过因为即将要学习dockerfile而激动，也因这激动而顿感羞愧。————20241029*
+
 [toc]
 
 ## 写在前面
@@ -1252,7 +1254,7 @@ sticker: emoji//1f40b
            172.24.113.146:6383>
            ```
 
-         - 查看集群信息：`redis-cli --cluster check xxx:6381`
+         - 查看集群信息：`redis-cli --cluster check xxx:6381`
 
            ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d279f3a64e6b4072aaf3aebb20e594ef.png)
 
@@ -1280,23 +1282,155 @@ sticker: emoji//1f40b
 
       2. 新建6387、6388两个节点+新建后启动+查看是否8节点
 
+         ```bash
+         docker run -d --name redis-node-7 --net host --privileged=true -v /data/redis/share/redis-node-7:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6387
+         docker run -d --name redis-node-8 --net host --privileged=true -v /data/redis/share/redis-node-8:/data redis:6.0.8 --cluster-enabled yes --appendonly yes --port 6388
+         ```
+
       3. 进入6387容器实例内部，将新增的6387节点（空槽号）作为master节点加入原集群
 
-      4. 检查集群情况第1次
+         ```bash
+         docker exec -it redis-node-7 bash
+         
+         # 将新的6387作为master节点加入集群
+         redis-cli --cluster add-node xxx:6387 xxx:6381
+         # - 6387就是要作为master新增节点
+         # - 6381就是原来集群节点里面的领路人，相当于6387拜拜6381的码头从而找到组织加入集群
+         ```
 
-      5. 重新分派槽号
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/a5f9ce48dc4340c48f219ee18fc06fa8.png)
 
-      6. 检查集群情况第2次
+      4. 检查集群情况第1次：`redis-cli --cluster check 172.24.113.146:6381 `，可以看到6387已经整上了Master，但是没有槽位
 
-      7. 为主节点6387分配从节点6388
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/7bc6bad0c0834b049a267665ea16e57a.png)
 
-      8. 检查集群情况第3次
+      5. 重新分派槽号：`redis-cli --cluster reshard 172.24.113.146:6381`
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/9a991b1ba9fb44f18eaecf7a834b79ba.png)
+
+         - 4096：16384/4，四个master每个拥有4096个槽
+         - node id：谁接收新分配的槽，6387的id
+         - all：全部洗牌
+
+      6. 检查集群情况第2次：`redis-cli --cluster check 172.24.113.146:6381`，**每个node分一部分给新的节点**
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/66b099b9ff7e43c1888c488f5c79fa46.png)
+
+         - 为什么6387是3个新的区间，以前的还是连续？
+
+           重新分配成本太高，所以前3个节点**各自匀出来**一部分，从 6381/6382/6383 三个旧节点分别匀出1364个坑位给新节点6387
+
+           ==已经有的key存了，再调整太麻烦了，每个node匀一点==
+
+      7. 为主节点6387分配从节点6388：`redis-cli --cluster add-node 172.24.113.146:6388 172.24.113.146:6387 --cluster-slave --cluster-master-id 23cbf2d9015841575a35df2e890821b1a13f075b`
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/345cb468d9a9427e840519af460c1bfe.png)
+
+      8. 检查集群情况第3次：`redis-cli --cluster check 172.24.113.146:6383`
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/339432c2090b48e7a99e96a4d23443cc.png)
 
    4. 主从缩容
 
-   
+      1. 需求分析：（目的：6387和6388下线）
 
-   
+         - 先清除从节点6388
+         - 清出来的槽号重新分配
+         - 再删除6387
+         - 恢复成3主3从
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/71a168179b9949a7afb8d4421d462003.png)
+
+      2. 检查集群情况1，获得6388节点ID：`redis-cli --cluster check 172.24.113.146:6381`
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/482b231f6e1842a4acf9c13662a3700f.png)
+
+      3. 将6388删除，从集群中将4号从节点6388删除：`redis-cli --cluster del-node 172.24.113.146:6388 d9dfd3dd02ffd346494a48e4db26a789de471df0`
+
+         检查一下发现，6388被删除了，只生下了7台机器：`redis-cli --cluster check 172.24.113.146:6381`
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/137816411ce74574b8c9ecf2a3f4980c.png)
+
+      4. 将6387的槽号清空，重新分配（这里将清出来的槽号都给6381）：`redis-cli --cluster reshard 172.24.113.146:6381`
+
+         这里要把6397的槽都给6381，因此后续参数分别是：
+
+         - 4096
+         - 6381的id
+         - 6387的id
+         - done
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/37020c9ee8424422aae47090398cde92.png)
+
+         check一下可以看到，6387的4096全部给6381了
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/baa49d3b9ec0463daa7d401e075dddb1.png)
+
+      5. 将6387从集群中删除：`redis-cli --cluster del-node 节点ip:端口 节点id`
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/4225c0d6124e4e7e9dc0435d4b0b3bdb.png)
+
+         可以看到，6387的从点已经被删除了，此外三个Master槽分别是：8192、4096、4096
+
+
+## 10. DockerFile解析
+
+1. 是什么：
+
+   - DockerFile是用来构建Docker**镜像**的文本文件，是由一条条构建镜像所需的指令和参数构成的脚本。
+
+   - 解决什么问题：commit很麻烦，每次都要io。能不能一次性搞定？能不能给个清单，后续每次加入新的功能，直接在清单中写好。
+
+     ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/a9077d5c9b974fd1a04e78a81ec3467e.png)
+
+   - 官网：https://docs.docker.com/engine/reference/builder/
+
+   - 构建三步骤：
+
+     - 编写DockerFile文件
+     - docker build命令构建镜像
+     - docker run依照镜像运行容器实例
+
+2. DockerFile构建过程解析
+
+   - DockerFile内容基础知识
+
+     - 每条保留字指令都 **必须为大写字母** 且后面要跟随至少一个参数
+     - 指令按照从上到下，顺序执行
+     - \# 表示注释
+     - 每条指令都会创建一个新的镜像层并对镜像进行提交
+
+   - Docker执行DockerFile的大致流程
+
+     - docker从基础镜像运行一个容器
+     - 执行一条指令并对容器作出修改
+     - 执行类似docker commit的操作提交一个新的镜像层
+     - docker再基于刚提交的镜像运行一个新容器
+     - 执行dockerfile中的下一条指令知道所有指令都完成
+
+   - 总结：
+
+     从应用软件的角度来看，Dockerfile、Docker镜像与Docker容器分别代表软件的三个不同阶段：
+
+     *  Dockerfile是软件的原材料；
+     *  Docker镜像是软件的交付品；
+     *  Docker容器则可以认为是软件镜像的运行态，也即依照镜像运行的容器实例。
+
+     **Dockerfile面向开发，Docker镜像成为交付标准，Docker容器则涉及部署与运维，三者缺一不可，合力充当Docker体系的基石。**
+
+     ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/aaca444a0a4e4a4e83b1e754c003c7ee.png)
+
+     1.DockerFile：需要定义一个Dockerfile，Dockerfile定义了进程需要的一切东西。Dockerfile涉及的内容包括执行代码或者是文件、环境变量、依赖包、运行时环境、动态链接库、操作系统的发行版、服务进程和内核进程（当应用进程需要和系统服务和内核进程打交道，这时需要考虑如何设计namespace的权限控制）等等；
+
+     2.Docker镜像：在用Dockerfile定义一个文件之后，docker build时会产生一个Docker镜像，当运行Docker镜像时会真正开始提供服务；
+
+     3.Docker容器：容器是直接提供服务的。
+
+3. 
+
+
+
+
 
 
 
