@@ -452,7 +452,7 @@ sticker: emoji//1f40b
 2. 镜像的生成方法
 
    1. 方法1：基于当前容器创建一个新的镜像，新功能增强：`docker commit [OPTIONS] 容器ID [REPOSITORY[:TAG]]`
-   2. 方法2：DockerFile
+   2. 方法2：Dockerfile
 
 3. 将本地镜像推送到阿里云
 
@@ -1373,11 +1373,11 @@ sticker: emoji//1f40b
          可以看到，6387的从点已经被删除了，此外三个Master槽分别是：8192、4096、4096
 
 
-## 10. DockerFile解析
+## 10. Dockerfile解析
 
 1. 是什么：
 
-   - DockerFile是用来构建Docker**镜像**的文本文件，是由一条条构建镜像所需的指令和参数构成的脚本。
+   - Dockerfile是用来构建Docker**镜像**的文本文件，是由一条条构建镜像所需的指令和参数构成的脚本。
 
    - 解决什么问题：commit很麻烦，每次都要io。能不能一次性搞定？能不能给个清单，后续每次加入新的功能，直接在清单中写好。
 
@@ -1387,20 +1387,20 @@ sticker: emoji//1f40b
 
    - 构建三步骤：
 
-     - 编写DockerFile文件
+     - 编写Dockerfile文件
      - docker build命令构建镜像
      - docker run依照镜像运行容器实例
 
-2. DockerFile构建过程解析
+2. Dockerfile构建过程解析
 
-   - DockerFile内容基础知识
+   - Dockerfile内容基础知识
 
      - 每条保留字指令都 **必须为大写字母** 且后面要跟随至少一个参数
      - 指令按照从上到下，顺序执行
      - \# 表示注释
      - 每条指令都会创建一个新的镜像层并对镜像进行提交
 
-   - Docker执行DockerFile的大致流程
+   - Docker执行Dockerfile的大致流程
 
      - docker从基础镜像运行一个容器
      - 执行一条指令并对容器作出修改
@@ -1408,28 +1408,208 @@ sticker: emoji//1f40b
      - docker再基于刚提交的镜像运行一个新容器
      - 执行dockerfile中的下一条指令知道所有指令都完成
 
-   - 总结：
-
-     从应用软件的角度来看，Dockerfile、Docker镜像与Docker容器分别代表软件的三个不同阶段：
+   - 总结：从应用软件的角度来看，Dockerfile、Docker镜像与Docker容器分别代表软件的三个不同阶段：
 
      *  Dockerfile是软件的原材料；
      *  Docker镜像是软件的交付品；
      *  Docker容器则可以认为是软件镜像的运行态，也即依照镜像运行的容器实例。
-
+     
      **Dockerfile面向开发，Docker镜像成为交付标准，Docker容器则涉及部署与运维，三者缺一不可，合力充当Docker体系的基石。**
 
      ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/aaca444a0a4e4a4e83b1e754c003c7ee.png)
 
-     1.DockerFile：需要定义一个Dockerfile，Dockerfile定义了进程需要的一切东西。Dockerfile涉及的内容包括执行代码或者是文件、环境变量、依赖包、运行时环境、动态链接库、操作系统的发行版、服务进程和内核进程（当应用进程需要和系统服务和内核进程打交道，这时需要考虑如何设计namespace的权限控制）等等；
+     1. Dockerfile：需要定义一个Dockerfile，Dockerfile定义了进程需要的一切东西。Dockerfile涉及的内容包括执行代码或者是文件、环境变量、依赖包、运行时环境、动态链接库、操作系统的发行版、服务进程和内核进程（当应用进程需要和系统服务和内核进程打交道，这时需要考虑如何设计namespace的权限控制）等等；
+     1. Docker镜像：在用Dockerfile定义一个文件之后，docker build时会产生一个Docker镜像，当运行Docker镜像时会真正开始提供服务；
+     1. Docker容器：容器是直接提供服务的。
 
-     2.Docker镜像：在用Dockerfile定义一个文件之后，docker build时会产生一个Docker镜像，当运行Docker镜像时会真正开始提供服务；
+3. Dockerfile常用保留字指令
 
-     3.Docker容器：容器是直接提供服务的。
+   ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/045e3ed02c8d4d239df6a0ea8a0fef9d.png)
 
-3. 
+   1. **FROM**：基本出现在第一行，代表新构建的镜像来在于哪儿，指定一个已经存在的镜像作为模板
 
+   2. **MAINTAINER**：镜像维护者的姓名和邮箱地址
 
+   3. **RUN**：
+      
+      - 容器构建时需要运行的命令
+      - 两种格式：都可以，看你个人选择
+        - shell：类似在终端运行`RUN yum -y install vim`
+        - exec：`RUN ["./test.php", "dev", "offline"]` 类似于 `RUN ./test.php dev offline`
+      - RUN是在docker build时运行
+      
+   4. **EXPOSE**：当前容器对外暴露出的端口，类似p、P对端口的映射
 
+   5. **WORKDIR**：指定在创建容器后，终端默认登录进来的工作目录 ，一个落脚点（指定之后，后续run镜像的时候，进去的目录就是这个目录）
+
+   6. **USER**：指定该镜像以什么样的用户去执行，如果都不指定，默认是root（不考虑在镜像里面搞权限没什么意义）
+
+   7. **ENV**：用来在构建镜像过程中设置环境变量
+
+      比如 `ENV MY_PATH /usr/mytest`，这个环境变量可以在后续的任何RUN指令中使用，这就如同在命令前指定了环境变量前缀一样，也可以在其它指令中直接使用这些环境变量，比如 `WORKDIR $MY_PATH`
+
+   8. :star: **ADD**：（一般用这个，比COPY强大些）将宿主机目录下的文件拷贝进镜像且会自动处理URL和解压tar压缩包
+
+   9. **COPY**：类似ADD，拷贝文件和目录到镜像中。将从构建上下文目录中<源路径>的文件/目录复制到新的一层的镜像内的<目标路径>位置
+
+      - `COPY src dest`
+      - `COPY ["src", "dest"]`
+      - 其中，src为源文件、源路径；dest为容器内的指定路径，该路径不用事先建好
+
+   10. **VOLUME**：容器数据卷，用于数据保存和持久化工作
+
+   11. **CMD**：指定容器启动后要干的事情
+
+       - `CMD` 指令的格式和 `RUN` 相似，也是两种格式：
+         - `shell` 格式：`CMD <命令>`
+         - `exec` 格式：`CMD ["可执行文件", "参数1", "参数2", ...]`
+         - 参数列表格式：在指定了 `ENTRYPOINT` 指令后，用 `CMD` 指定具体的参数
+       - 注意：
+         - Dockerfile中可以有多个CMD命令，**但是只有最后一个生效，CMD会被docker run之后的参数替换**（简单来说，`docker run -it ... bash`，这行因为加了bash，因此相当于加了一行 `CMD ["bash"]`，那么原来最后一行CMD就运行不了）
+       - 和RUN的区别
+         - CMD是在docker run时运行
+         - RUN时在docker build时运行
+
+   12. **ENTRYPOINT**：也是用来指定一个容器启动时要运行的命令，类似CMD命令。**但是ENTRYPOINT不会被docker run后面的命令覆盖，而且这些命令行参数会被当作参数送给ENTRYPOINT指令指定的程序**
+
+       - 命令格式：`ENTRYPOINT ["执行的命令", "参数1", "参数2"...]`
+       - ENTRYPOINT可以和CMD一起用，
+         一般是变参才会使用CMD，这里的CMD等于是在给ENTRYPOINT传参
+       - 当指定了ENTRYPOINT后，CMD的含义就发生了变化，不再是直接运行其命令而是将CMD的内容作为参数传递给ENTRYPOINT指令，他两个组合会变成 `<ENTRYPOINT> "<CMD>"`
+       - 这里可以简单理解为，结合时候的时候，cmd里的参数是默认参数，`docker run`的时候不指定就是用默认的cmd里的，如果指定了就用指定的
+
+       ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/4dcbaea9d20f4494895b78f74fca82c1.png)
+
+4. 案例
+
+   1. 自定义镜像mycentosjava8
+      - 要求
+        - Centos7镜像具备vim+ifconfig+jdk8
+        - jdk下载镜像地址：
+          - 官网：https://www.oracle.com/java/technologies/downloads/#java8
+          - 镜像：https://mirrors.yangxingzhen.com/jdk/
+        
+      - 编写：准备编写Dockerfile文件，大写字母D
+
+        ```dockerfile
+        FROM centos
+        MAINTAINER litian<litian@whchem.com>
+        
+        ENV MYPATH /usr/local
+        WORKDIR $MYPATH
+        
+        # 配置源
+        RUN cd /etc/yum.repos.d/
+        RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+        RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+        RUN yum makecache
+        RUN yum update -y
+        
+        # 安装vim编译器
+        RUN yum -y install vim
+        # 安装ifconfig命令查看网络IP
+        RUN yum -y install net-tools
+        # 安装java8以及lib库
+        RUN yum -y install glibc.i686
+        RUN mkdir /usr/local/java
+        # ADD 是相对路径jar。把jdk的gz添加到容器中，安装包必须要和Dockerfile文件在同一位置
+        ADD jdk-8u221-linux-x64.tar.gz /usr/local/java
+        # 配置java环境变量
+        ENV JAVA_HOME /usr/local/java/jdk1.8.0_221
+        ENV JRE_HOME $JAVA_HOME/jre
+        ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH
+        ENV PATH $JAVA_HOME/bin:$PATH
+        
+        EXPOSE 80
+        
+        CMD echo $MYPATH
+        CMD echo "success.......ok"
+        CMD /bin/bash
+        ```
+
+        > https://blog.csdn.net/SC_CSDN_L/article/details/140356006
+        >
+        > 注意：关于yum install，运行到这儿就没忘了，所以我们在Dockerfile中还要加入修改yum源的步骤：
+        >
+        > ```dockerfile
+        > # 在新镜像中运行命令，切换到 `/etc/yum.repos.d/` 目录
+        > RUN cd /etc/yum.repos.d/
+        > 
+        > # 使用sed命令在 `/etc/yum.repos.d/CentOS-*` 文件中，将所有包含 `mirrorlist` 的行替换为 `#mirrorlist`。注释掉原有的镜像源地址。
+        > RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* 
+        > 
+        > # 使用sed命令在 `/etc/yum.repos.d/CentOS-*` 文件中，将 `#baseurl=http://mirror.centos.org` 替换为 `baseurl=http://vault.centos.org`。将镜像源地址改为CentOS Vault站点，用于访问旧版本软件包的站点。
+        > RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+        > 
+        > # 更新YUM缓存，以便系统可以访问最新的软件包信息。
+        > RUN yum makecache
+        > 
+        > # 执行完整的系统更新，安装所有可用更新的软件包。
+        > RUN yum update -y
+        > ```
+
+      - 构建：` docker build -t centosjava8:1.5 .`，注意这个点，是指当前目录构建，不要忘了
+
+      - 运行：`docker run -it centosjava8:1.5 bash`，vim、ifconfig、java都可以用了
+
+        ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/35ed9e8ad5d04759813bc127f692bb1b.png)
+
+   2. 虚悬镜像
+
+      1. 是什么：仓库名、标签名都是 `<none>` 的镜像，俗称dangling image
+
+      2. Dockerfile写一个：
+
+         - vim Dockerfile
+
+           ```dockerfile
+           FROM ubuntu
+           CMD echo 'action is success'
+           ```
+
+         - docker build .
+
+      3. 查看：`docker image ls -f dangling=true`
+
+      4. 删除：`docker image prune`
+
+## 11. Docker微服务实战
+
+一切在云端，处处皆镜像~
+
+1. 通过IDEA新建一个普通微服务模块
+
+   - 建Module，docker_boot
+   - 改POM
+   - 写YML
+   - 主启动
+   - 业务类
+
+2. 通过dockerfile发布微服务部署到dockerfile容器
+
+   - IDEA工具里面搞定微服务jar包
+
+   - 编写Dockerfile
+
+     ```dockerfile
+     FROM java:8
+     MAINTAINER test
+     VOLUME /tmp
+     ADD docker_boot-0.0.1-SNAPSHOT.jar test.jar
+     RUN bash -c 'tourch /test.jar'
+     ENTRYPOINT ["java", "- jar", "/test.jar"]
+     EXPOSE 6001
+     ```
+
+   - 构建镜像：`docker build -t test:1.6 .`
+
+   - 运行容器：`docker run -d -p 6001:6001 test:1.6`
+
+   - 访问测试
+
+## 12. Docker网络
+
+1. 
 
 
 
