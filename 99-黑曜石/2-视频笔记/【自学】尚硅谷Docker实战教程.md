@@ -1571,7 +1571,7 @@ sticker: emoji//1f40b
 
       3. 查看：`docker image ls -f dangling=true`
 
-      4. 删除：`docker image prune`
+      4. 删除：`docker image prune`
 
 ## 11. Docker微服务实战
 
@@ -1601,15 +1601,164 @@ sticker: emoji//1f40b
      EXPOSE 6001
      ```
 
-   - 构建镜像：`docker build -t test:1.6 .`
+   - 构建镜像：`docker build -t test:1.6 .`
 
-   - 运行容器：`docker run -d -p 6001:6001 test:1.6`
+   - 运行容器：`docker run -d -p 6001:6001 test:1.6`
 
    - 访问测试
 
 ## 12. Docker网络
 
-1. 
+1. 是什么：
+
+   - docker不启动，默认网络情况
+
+     - ens33
+     - lo
+     - virbr0：在CentOS7的安装过程中如果有选择相关虚拟化的的服务安装系统后，启动网卡时会发现有一个以网桥连接的私网地址的virbr0网卡（virbr0网卡：它还有一个固定的默认IP地址192.168.122.1），是做虚拟机网桥的使用的，其作用是为连接其上的虚机网卡提供 NAT访问外网的功能。
+
+   - docker启动后，网络情况
+
+     - 查看docker网络情况：`docker network ls`
+
+     - 默认创建的3大网络模式
+
+       ![在这里插入图片描述](【自学】尚硅谷Docker实战教程.assets/6f34dd0d16c145318a275cf74a03e9af.png)
+
+2. 常用基本命令：
+
+   - 创建：`docker network create mynet`
+   - 删除：`docker network rm mynet`
+   - 查看：`docker network inspect bridge`
+
+3. 能干嘛
+
+   - 容器间的互联和通信以及端口映射
+   - 容器IP变动的时候可以通过服务名直接网络通信而不受到影响
+
+4. 网络模式
+
+   - 总体介绍
+
+     | 网络模式  |                             简介                             |
+     | :-------: | :----------------------------------------------------------: |
+     |  bridge   | 为每一个容器分配、设置IP等，并将容器连接到一个 `docker0` 虚拟网桥，默认为该模式。 |
+     |   host    | 容器将不会虚拟出自己的网卡，配置自己的Ip等，而是使用宿主机的IP和端口。 |
+     |   none    | 容器有独立的Network namespace，但并没有对其进行任何网络设置，如分配veth pari和网桥连接、IP等。 |
+     | container | 新创建的容器不会创建自己的网卡和配置自己的IP，而是和一个指定的容器共享IP、端口范围等。 |
+
+     bridge模式：使用 `--network bridge` 指定，默认使用docker0
+
+     host模式：使用 `--network host` 指定
+
+     none模式：使用 `--network none` 指定
+
+     container模式：使用 `--network container:NAME或者容器ID` 指定
+
+   - 容器实例默认网络IP生产规则：**docker容器内部的IP是有可能会发生改变的**
+
+   - 案例说明：
+
+     - bridge：
+
+       - **是什么**
+
+         Docker服务默认会创建一个docker0网桥（其上有一个docker0内部接口），该桥接网络的名称为docker0，它在**内核层**连通了其他的物理或虚拟网卡，这就将所有容器和本地主机都放到**同一个物理网络**。Docker默认指定了docker0接口的IP地址和子网掩码，让主机和容器之间可以通过网桥相互通信。
+
+       - **案例**
+
+         - Docker使用Linux桥接，在宿主机虚拟一个Docker容器网桥(docker0)，Docker启动一个容器时会根据Docker网桥的网段分配给容器一个IP地址，称为Container-IP，同时Docker网桥是每个容器的默认网关。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能够通过容器的Container-IP直接通信。
+
+         - docker run的时候，没有指定network的话默认使用的网桥模式就是bridge，使用的就是docker0。在宿主机ifconfig,就可以看到docker0和自己create的network eth0，eth1，eth2……代表网卡一，网卡二，网卡三……，lo代表127.0.0.1，即localhost，inet addr用来表示网卡的IP地址
+
+         - 网桥docker0创建一对对等虚拟设备接口：一个叫veth，另一个叫eth0，成对匹配。
+
+           - 整个宿主机的网桥模式都是docker0，类似一个交换机有一堆接口，每个接口叫veth，在本地主机和容器内分别创建一个虚拟接口，并让他们彼此联通（这样的一对接口叫 veth pair）；
+           - 每个容器实例内部也有一块网卡，每个接口叫eth0；
+           - docker0上面的每个veth匹配某个容器实例内部的eth0，两两配对，一一匹配。
+
+           通过上述，将宿主机上的所有容器都连接到这个内部网络上，两个容器在同一个网络下，会从这个网关下各自拿到分配的ip，此时两个容器的网络是互通的。
+
+           ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/ea21d5bf0f964cd880431e1e5c05a1d6.png)
+
+         - 代码验证
+
+           - 创建两个tomcat的容器：
+
+             `docker run -d -p 8081:8080 --name tomcat81 billygoo/tomcat8-jdk8`
+
+             `docker run -d -p 8082:8080 --name tomcat82 billygoo/tomcat8-jdk8`
+
+           - `ip addr`：查看宿主机地址
+
+             ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/24d201af50a144a894053c32122aeab1.png)
+
+           - 查看tomcat81的地址
+
+             ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/79a77db6a17240b6a6b711fb666366ef.png)
+
+             这里的 `5: eth0@if6` 跟宿主机的 `6: vetheb86a37@if5` 对应，即eth0跟veth对应
+
+           - 同样的，查看tomcat82的地址
+
+             ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/7c9defd2e11142e79ebd54b23832e3ae.png)
+
+             `7: eth0@if8` 跟宿主机的 `8: veth4b8beaa@if7` 对应
+
+     - host
+
+       - 直接使用宿主机的IP地址与外界进行通信，不再需要额外进行NAT转换。
+
+       - 容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。**容器将不会虚拟出自己的网卡而是使用宿主机的IP和端口**。
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/e36bb545dc144c7f9bc0e1ca9f70ac6f.png)
+
+       - 案例：
+
+         - `docker run -d -p 8083:8080 --network host --name tomcat83 billygoo/tomcat8-jdk`
+
+           ```bash
+           WARNING: Published ports are discarded when using host network mode
+           5973d8b28d71d8172b5097b98a9d6be5806725407aa91ac58eb36be3f8c58ec1
+           ```
+
+           会出现警告的内容，且 `docker ps` 中可以看到 PORTS 那一栏为空。这是因为指定 `--network host` 之后，还指定 `-p` 映射端口将毫无作用，因为端口号会以主机端口号为主，重复时则递增。
+
+           :crossed_fingers: **解决**：使用其他网络模式，或者直接无视警告。
+
+           :heavy_check_mark: **正确**：在用host模式的时候，不要指定端口映射。
+
+         - 用 `ip addr` 可以看到没有之前的配对显示了，用 `docker inspect 容器ID` 可以看到容器实例内部的网关和地址的值为空字符串。
+
+         - :question: 没有设置-p的端口映射了，如何访问启动的tomcat83？
+
+           直接：`http://宿主机IP:8080/`
+
+           在CentOs里面用默认的浏览器访问容器内的tomcat83看到访问成功，因为此时容器的IP借用主机的.
+           所以容器共享宿主机网络IP，这样的好处是外部主机与容器可以直接通信。
+
+     - none
+
+       - 禁用网络功能，只有lo标识（就是127.0.0.1表示本地回环）
+       - 需要我们自己为Docker容器添加网络、配置IP等==基本不用==
+
+     - container
+
+       - 新建的容器和已经存在的一个容器共享一个网络ip配置而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的IP，而是和一个指定的容器共享IP、端口范围等。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。
+
+         ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d5ad58a08bb84c549af63996108265f8.png)
+
+       - :heavy_exclamation_mark: 坑：以tomcat测试会报错，对外发布的端口和这种网络模式是不匹配的。
+
+       - 验证可得：
+
+         - 两个容器内 `ip addr` 显示的eth0完全一样
+         - 关闭对应的容器之后，这种网络模式的容器的 eth0 将会消失
+
+     - 自定义网络
+
+       - 过时的link，可以通过自定义网络完成替代
+       - 问题：用原来的方式，按ip地址可以ping通，但是按照服务名无法ping通，`ping tomcat82`
 
 
 
