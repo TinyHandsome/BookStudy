@@ -4,9 +4,7 @@
 
 ## 写在前面 | Header
 
-- 20240628：更新notes-18
-- 20240624：更新js、nodejs和vue笔记链接，新增note一篇
-- 20230901：取消关于tools和writting的track，仅本地留档
+- 文档更新时间：**20241119**
 
 ## 读书笔记 | Books
 
@@ -37,7 +35,8 @@
 9. [HTML5+CSS3学习笔记](https://blog.csdn.net/qq_21579045/article/details/126626027)
 9. [JavaScript学习笔记](https://blog.csdn.net/qq_21579045/article/details/128727280)
 9. [Node.js学习笔记](https://blog.csdn.net/qq_21579045/article/details/128727454)
-9. [千锋Vue学习笔记](https://blog.csdn.net/qq_21579045/article/details/139767735)
+9. [Vue学习笔记](https://blog.csdn.net/qq_21579045/article/details/139767735)
+9. [Docker学习笔记](https://blog.csdn.net/qq_21579045/article/details/143872170)
 
 ## 设计笔记 | Designs
 
@@ -86,6 +85,20 @@
 15. [Djongo操作MongoDB新增字段](https://blog.csdn.net/qq_21579045/article/details/125888666)
 
 15. [flash-Attention2安装和使用](https://blog.csdn.net/qq_21579045/article/details/140037802)
+
+15. [两句话讲清楚离线安装docker](https://blog.csdn.net/qq_21579045/article/details/141718124)
+
+15. [两句话讲清楚离线安装docker镜像](https://blog.csdn.net/qq_21579045/article/details/141844650)
+
+15. [两句话讲清楚windows安装wsl和docker](https://blog.csdn.net/qq_21579045/article/details/143155408)
+
+15. [两句话讲清楚wsl+docker+python开发环境配置](https://blog.csdn.net/qq_21579045/article/details/143159201)
+
+15. [FLUX.schnell推理报错Could not load library, libnvrtc.so.12.](https://blog.csdn.net/qq_21579045/article/details/143225424)
+
+15. [两句话讲清楚离线安装screen](https://blog.csdn.net/qq_21579045/article/details/143232393)
+
+15. [记一次thinkpad检测不到麦克风的问题修复](https://blog.csdn.net/qq_21579045/article/details/143334847)
 
     
 
