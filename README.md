@@ -4,7 +4,7 @@
 
 ## 写在前面 | Header
 
-- 文档更新时间：**20241119**
+- 文档更新时间：**20241122**
 
 ## 读书笔记 | Books
 
@@ -99,6 +99,8 @@
 15. [两句话讲清楚离线安装screen](https://blog.csdn.net/qq_21579045/article/details/143232393)
 
 15. [记一次thinkpad检测不到麦克风的问题修复](https://blog.csdn.net/qq_21579045/article/details/143334847)
+
+15. [两句话讲清楚离线安装gcc](https://blog.csdn.net/qq_21579045/article/details/143975248)
 
     
 
