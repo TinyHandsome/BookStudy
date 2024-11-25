@@ -100,7 +100,7 @@
 
 15. [记一次thinkpad检测不到麦克风的问题修复](https://blog.csdn.net/qq_21579045/article/details/143334847)
 
-15. [两句话讲清楚离线安装gcc](https://blog.csdn.net/qq_21579045/article/details/143975248)
+15. [LocalColabFold安装全流程：离线安装解决gcc和GLIBCXX+openmm报错解决](https://blog.csdn.net/qq_21579045/article/details/143975248)
 
     
 
