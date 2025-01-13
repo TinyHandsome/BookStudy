@@ -10,6 +10,8 @@ sticker: emoji//1f433
 ---
 # 两句话讲清楚windows安装wsl和docker
 
+> 我不会设置仅粉丝可见，不需要你关注我，仅仅希望我的踩坑经验能帮到你。如果有帮助，麻烦点个 :+1: 吧，这会让我创作动力+1 :grin:
+
 [TOC]
 
 ## 写在前面
@@ -242,16 +244,66 @@ sticker: emoji//1f433
 
       - 检查一下docker换源成功没：`docker info`，往下翻，Registry Mirrors里面就是你的源
 
-   3. 验证一下docker好不好使吧：`docker pull hello-world`
+   6. 验证一下docker好不好使吧：`docker pull hello-world`
 
-最后：其实我不是很明白5中一顿操作安装`docker-ce`，还不如直接 `apt install docker.io`
+   最后：其实我不是很明白5中一顿操作安装`docker-ce`，还不如直接 `apt install docker.io`
 
-> https://blog.csdn.net/harryhare/article/details/106015022
->
-> - docker-ce 是 docker 官方维护的
-> - docker.io 是 Debian 团队维护的
-> - docker.io 采用 apt 的方式管理依赖
-> - docker-ce 用 go 的方式管理依赖，会自己管理所有的依赖。
+   > [!question] docker-ce 和 docker.io
+   >
+   > https://blog.csdn.net/harryhare/article/details/106015022
+   >
+   > - docker-ce 是 docker 官方维护的
+   > - docker.io 是 Debian 团队维护的
+   > - docker.io 采用 apt 的方式管理依赖
+   > - docker-ce 用 go 的方式管理依赖，会自己管理所有的依赖。
+
+6. 显卡驱动安装，搞AI怎么能不考虑显卡呢
+
+   1. 其实我是先安装的cuda驱动：`apt install nvidia-cuda-toolkit`，装完了可以用 `nvcc -V` 查看版本
+
+      ```bash
+      (base) root@L2010403019000:/home/litian# nvcc -V
+      nvcc: NVIDIA (R) Cuda compiler driver
+      Copyright (c) 2005-2021 NVIDIA Corporation
+      Built on Thu_Nov_18_09:45:30_PST_2021
+      Cuda compilation tools, release 11.5, V11.5.119
+      Build cuda_11.5.r11.5/compiler.30672275_0
+      ```
+
+   2. 其次我才装nvidia驱动：`apt install nvidia-utils-545`，后面545是我自己选的。因为用 `nvidia-smi` 指令会看到艺堆可选的，我直接选择了最新的，安装完成后同样可以看到 `nvidia-smi` 的情况
+
+      ```bash
+      (base) root@L2010403019000:/home/litian# nvidia-smi
+      Thu Jan  9 11:02:51 2025
+      +---------------------------------------------------------------------------------------+
+      | NVIDIA-SMI 545.29.06              Driver Version: 538.78       CUDA Version: 12.2     |
+      |-----------------------------------------+----------------------+----------------------+
+      | GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+      | Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+      |                                         |                      |               MIG M. |
+      |=========================================+======================+======================|
+      |   0  NVIDIA RTX 3500 Ada Gene...    On  | 00000000:01:00.0  On |                  Off |
+      | N/A   42C    P8               7W / 123W |    532MiB / 12282MiB |      0%      Default |
+      |                                         |                      |                  N/A |
+      +-----------------------------------------+----------------------+----------------------+
+      
+      +---------------------------------------------------------------------------------------+
+      | Processes:                                                                            |
+      |  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+      |        ID   ID                                                             Usage      |
+      |=======================================================================================|
+      |  No running processes found                                                           |
+      +---------------------------------------------------------------------------------------+
+      ```
+
+      > [!question] wsl中的docker和docker desktop的冲突
+      >
+      > 奇了怪了，因为我两个都装了，我发现了一个问题：
+      >
+      > 1. 如果没启动docker desktop，那么在wsl中看docker是wsl的ubuntu自带的
+      > 2. 如果启动了docker desktop，那么在wsl中看docker是win10的docker desktop
+      > 3. 在2的基础上关闭docker desktop，那么wsl的ubuntu中docker会出问题，看不到`docker ps`，报错：`Cannot connect to the Docker daemon at unix: ///var/run/docker.sock.`
+
 
 ------
 
