@@ -10,6 +10,8 @@
 - 列出当前文件以及文件夹的大小：`du -sh *`
 - 查看单独文件的大小：`du -s ，du -sh，ls -lh 文件名`
 - 服务器之间移动文件：`scp -r -P 10022 Qwen-VL-Chat/  root@10.5.32.169:/data/newDisk/`
+- 压缩文件夹：`tar -czvf xxx.tar.gz xxx`
+- 解压：`tar -xzvf xxx.tar.gz`
 
 
 

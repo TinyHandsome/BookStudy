@@ -2,7 +2,9 @@
 
 [TOC]
 
-==docker问题汇总贴，不断学习不断更新。当前更新时间：**20250110**==
+> 我不会设置仅粉丝可见，不需要你关注我，仅仅希望我的踩坑经验能帮到你。如果有帮助，麻烦点个 :+1: 吧，这会让我创作动力+1 :grin:
+>
+> **docker问题汇总贴，不断学习不断更新。当前更新时间：** ==20250211==
 
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/df9b936058c94cd8a81a9f262a5d9163.png)
 
@@ -35,6 +37,61 @@
     > 删掉后docker start *
     >
     > 世界清净了
+
+## docker怎么用gpu
+
+在用vllm的时候，发现使用 `docker run --runtime nvidia --gpus all`，增加了一些运行的命令，其中 `--gpus all` 就是用宿主机的gpu驱动，不过要想起作用还得装 **NVIDIA Container Toolkit**，[在线安装很简单](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)，我必然要搞离线安装的~
+
+先看清楚依赖，四个rpm，问题不大~
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/7cf344aa2da54a6e90417417d46a0c52.png)
+
+这四个可以从github上找到：https://github.com/NVIDIA/libnvidia-container/tree/gh-pages/stable/rpm/x86_64
+
+> [!warning] 问题来了，怎么从github中下载单个文件
+>
+> 从 `raw.githubusercontent.com` 中下载：比如 `wget https://raw.githubusercontent.com/NVIDIA/libnvidia-container/refs/heads/gh-pages/stable/rpm/x86_64/libnvidia-container1-1.17.4-1.x86_64.rpm`
+>
+> 包括下面4个，改一下url就行：
+>
+> - `nvidia-container-toolkit-base-1.17.4-1.x86_64.rpm`
+> - `nvidia-container-toolkit-1.17.4-1.x86_64.rpm`
+> - `libnvidia-container1-1.17.4-1.x86_64.rpm`
+> - `libnvidia-container-tools-1.17.4-1.x86_64.rpm`
+
+下载完了之后传到没网的服务器，再安装：`rpm -ivh *`
+
+## unknown or invalid runtime name: nvidia
+
+参考链接：https://developer.baidu.com/article/details/2805250
+
+配置 `/etc/docker/daemon.json`，既然没有这个runtime name，那我自己建一个
+
+```json
+{
+    ...
+	"runtimes": {
+    	"nvidia": {
+      		"path": "/usr/bin/nvidia-container-runtime",
+      		"runtimeArgs": []
+    		}
+  	}
+  	...
+}
+```
+
+然后重启 `systemctl restart docker` 完事儿~
+
+## Docker镜像和容器迁移
+
+参考：https://www.cnblogs.com/FatSheepKiller/p/17884682.html
+
+。。。待实践
+
+## Docker进阶命令
+
+1. 清除没有up的容器：`docker container prune`
+1. 以follow的形式查看日志：`docker logs -f xxx`
 
 
 
@@ -108,15 +165,35 @@ docker run -d -p 27017:27017 --restart=always --privileged=true --name mongo-tes
    mongodump --username root --password Qiangmima@666 --out /data/backup
    ```
 
+### Minio
+
+直接启动！直接启动！
+
+```bash
+docker run -d -p 9000:9000 -p 9001:9001 --restart=always --privileged=true --name minio-test -v E:/11-container/minio-test/data:/data -v E:/11-container/minio-test/config:/root/.minio -e MINIO_ACCESS_KEY=root -e MINIO_SECRET_KEY=Qiangmima@666 quay.io/minio/minio:RELEASE.2023-12-20T01-00-02Z server /data --console-address ":9001"
+```
+
+要注意版本问题，之前我跑2019的版本，反正就各种出错，上面的可以跑通。
+
+- `--console-address`：这里一定要制定管理端口，默认的可不是9001
+
 ### vLLM
 
 可恶啊vLLM不能在windows上跑，下好模型，做好路径映射，然后：
 
-```
-docker run --runtime nvidia --gpus all --name vllm-test -v /data/vllm/huggingface:/root/.cache/huggingface -v /data/models:/data/models -p 8000:8000 --ipc=host vllm/vllm-openai:latest --model /data/models/qwen-2.5-1.5b
+比如qwen
+
+```bash
+docker run -d --runtime nvidia --gpus all --name vllm-test -v /data/vllm/huggingface:/root/.cache/huggingface -v /data/models:/data/models -p 8000:8000 --ipc=host vllm/vllm-openai:latest --model /data/models/qwen-2.5-1.5b
 ```
 
-其中
+比如deepseek，注意，这里我80g A100也无法完美运行 `--max-model-len 32768`，因此修改为 `--max-model-len 10000`
+
+```bash
+docker run -d --runtime nvidia --gpus all --name vllm-test -v /data/models:/data/models -p 8000:8000 --ipc=host 10.4.32.48:5000/vllm/vllm-openai:latest --model /data/models/DeepSeek-R1-Distill-Qwen-32B --max-model-len 10000 --gpu-memory-utilization 0.88
+```
+
+其中，参考[vLLM相关配置参数](https://zhuanlan.zhihu.com/p/3722264996)，docker相关参数解释如下：
 
 - **--ipc=host**: 让容器与主机共享进程间通信（IPC）命名空间。这个选项能提高 GPU 任务的性能，尤其在使用诸如深度学习框架时。
 - **--runtime nvidia**: 指定使用 NVIDIA 的运行时环境，以便在容器中启用 GPU 功能。这个需要主机上有 NVIDIA 的驱动和 Docker 的 NVIDIA 插件。
@@ -175,6 +252,47 @@ docker run --runtime nvidia --gpus all --name vllm-test -v /data/vllm/huggingfac
   }'
   ```
 
+> [!tag] 在vllm后面加个ollama的备注不过分吧
+>
+> 部署参考官网：https://github.com/ollama/ollama/blob/main/docs/linux.md
+>
+> 量化bge reranker参考hf：https://huggingface.co/gpustack/bge-reranker-v2-m3-GGUF
+>
+> 注意：怎么导入hf上下的模型，先编写一个 `Modelfile`，里面 `FROM /data/models/bge-reranker-v2-m3-GGUF`，后面的文件夹就是你的模型路径，然后用ollama导入，`ollama create bge-reranker-v2-m3-GGUF -f Modelfile`，:tada: 然后你就能在 `ollama list` 中看到你导入的模型了~
+
+### Text Embedding Interface
+
+参考链接：https://huggingface.co/docs/text-embeddings-inference/quick_tour
+
+以embedding举例：
+
+```bash
+docker run -d --runtime nvidia --gpus all --name embedding-test  -v /data/models:/data/models -p 8001:8001 --ipc=host  text-embeddings-inference --model-id /data/models/bge-m3 --port 8001
+```
+
+调用：如果是dify，直接配置到端口就行
+
+```bash
+curl 127.0.0.1:8080/embed \
+    -X POST \
+    -d '{"inputs":"What is Deep Learning?"}' \
+    -H 'Content-Type: application/json'
+```
+
+以rerank举例：
+
+```bash
+docker run -d --runtime nvidia --gpus all --name rerank-test  -v /data/models:/data/models -p 8002:8002 --ipc=host  text-embeddings-inference --model-id /data/models/bge-reranker-v2-m3 --port 8002
+```
+
+调用：如果是dify，直接配置到端口就行，垃圾RAGFlow，TEI部署的rerank竟然不支持，ollama部署的也不支持，我真服了 :smile:
+
+```bash
+curl 127.0.0.1:8080/rerank \
+    -X POST \
+    -d '{"query":"What is Deep Learning?", "texts": ["Deep Learning is not...", "Deep learning is..."], "raw_scores": false}' \
+    -H 'Content-Type: application/json'
+```
 
 ### GitLab
 
@@ -207,11 +325,24 @@ gitlab_rails['gitlab_shell_ssh_port'] =8122
 gitlab_rails['time_zone'] = 'Asia/Shanghai'
 ```
 
-改好之后，要重启服务哦
+改好之后，生成配置文件：
 
 ```bash
 # 宿主机输入：在容器中执行 gitlab-ctl reconfigure
 docker exec -t mygitlab gitlab-ctl reconfigure
+```
+
+配置文件中，还要改个web server的端口，不然http的请求就不显示啦：`/opt/gitlab/embedded/service/gitlab-rails/config/gitlab.yml`，修改这个端口哦~
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/7f8a7682f0f64bf882da69123898e7c3.png)
+
+修改之后，这里的http才正常显示端口
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/8a6953608f9f482ab4bf15efe9e152c6.png)
+
+最后，要重启服务哦~
+
+```bash
 # 宿主机输入：在容器中执行 gitlab-ctl restart
 docker exec -t mygitlab gitlab-ctl restart
 ```
