@@ -47,7 +47,7 @@ func serverProcessMes(conn net.Conn) {
 		Conn: conn,
 	}
 	for {
-		fmt.Println("客户端正在等待读取服务器发送的消息。。。")
+		// fmt.Println("客户端正在等待读取服务器发送的消息。。。")
 		mes, err := tf.ReadPkg()
 		if err != nil {
 			fmt.Println("tf.ReadPkg err=", err)
@@ -64,8 +64,11 @@ func serverProcessMes(conn net.Conn) {
 				return
 			}
 			updateUserStatus(&notifyUserStatusMes)
+		case message.SmsMesType:
+			// 有人群发消息啦
+			outputGroupMes(&mes)
 		default:
-			fmt.Println("服务器发送了未知的消息。。。")
+			fmt.Println("服务器发送了未知的消息。。。1111", mes)
 		}
 		// fmt.Println("mes=", mes)
 	}

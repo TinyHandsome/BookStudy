@@ -34,7 +34,7 @@ func (this *SmsProcess) SendGroupMes(content string) (err error) {
 	}
 
 	tf := &utils.Transfer{Conn: CurUser.Conn}
-	tf.WritePkg(data)
+	fmt.Println("正在发送群消息，内容是：", string(data))
 	err = tf.WritePkg(data)
 	if err != nil {
 		fmt.Println("发送群聊消息失败")

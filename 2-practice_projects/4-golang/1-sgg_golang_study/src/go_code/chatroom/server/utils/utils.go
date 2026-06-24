@@ -16,7 +16,7 @@ type Transfer struct {
 }
 
 func (this *Transfer) ReadPkg() (mes message.Message, err error) {
-	fmt.Println("读取客户端发送的数据。。。")
+	fmt.Println("[server] 服务器读取客户端发送的数据。。。")
 	// conn.Read 在conn没有被关闭的情况下，才会阻塞
 	// 如果客户端关闭了 conn，则不会阻塞了
 	_, err = this.Conn.Read(this.Buf[:4])
@@ -49,7 +49,7 @@ func (this *Transfer) ReadPkg() (mes message.Message, err error) {
 }
 
 func (this *Transfer) WritePkg(data []byte) (err error) {
-	fmt.Println("发送数据给客户端。。。")
+	fmt.Println("[server] 服务器正在发送数据给客户端。。。")
 	// 先发送一个长度给对方
 	var pkgLen uint32
 	pkgLen = uint32(len(data))
