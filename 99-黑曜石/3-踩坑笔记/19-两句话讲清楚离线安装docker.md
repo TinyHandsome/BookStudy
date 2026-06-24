@@ -71,7 +71,7 @@ tags:
 
 2. 解压docker，移动到 `/usr/bin/`目录。本地解压的删不删随你，反正没用了：`rm -rf docker/`
 
-   这里的 `-*` 是让你写自己的版本，别照抄啊
+   这里的 `-*` 是让你写自己的版本，别照抄啊
 
    ```bash
    tar -xvf docker-*.tgz
@@ -94,6 +94,22 @@ tags:
    chmod +x /etc/systemd/system/docker.service
    ```
 
+5. :sailboat: 如果要从本地服务器拉取，要配置，要把镜像保存的位置改到指定的路径，显卡也一并配上：`/etc/docker/daemon.json`
+
+   ```json
+   {
+     "data-root": "/data/docker/",
+     "insecure-registries" : ["10.4.32.48:5000"],
+     "registry-mirrors": ["http://10.4.32.48:5000"],
+     "runtimes": {
+           "nvidia": {
+                   "path": "/usr/bin/nvidia-container-runtime",
+                   "runtimeArgs": []
+           }
+     }
+   }
+   ```
+
 5. 重新加载配置文件，启动docker，设置开机自启
 
    ```bash
@@ -108,6 +124,7 @@ tags:
    docker -v
    docker-compose -v
    ```
+   
 
 
 ------

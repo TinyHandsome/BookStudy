@@ -2,7 +2,7 @@
 
 [TOC]
 
-标签：flash-attn pytorch llm cuda 大模型
+标签：flash-attn pytorch llm cuda triton
 
 摘要：flash-Attention2从安装到使用一条龙服务。是不是pip安装吃亏了，跑来搜攻略了，哈哈哈哈哈，俺也一样
 
@@ -50,12 +50,19 @@
   - 安装：`pip install flash_attn-2.3.5+cu116torch1.13cxx11abiFalse-cp310-cp310-linux_x86_64.whl -i  https://mirrors.aliyun.com/pypi/simple/`，加个镜像提速没毛病
   - **注意：**abiTrue的不行，False的可以，就很奇怪，True的会报错：`...-linux-gnu.so: undefined symbol: _ZN3c104cuda9SetDeviceEi...`
 
-- **问题处理**：模型可以启起来，但是模型推理时报错`RuntimeError: CUDA errOr: CUBLAS STATUS INVALID VALUE when calling cublasGemmEx...`
+- **问题处理1**：模型可以启起来，但是模型推理时报错`RuntimeError: CUDA errOr: CUBLAS STATUS INVALID VALUE when calling cublasGemmEx...`
 
   ![报错截图](https://img-blog.csdnimg.cn/direct/df24283890184dda8a6907cb29a03459.png)
 
   - 解决：卸载了nvidia-cublas-cu11=11.10.3.66：`pip uninstall nvidia-cublas-cu11`
   - 再启就没问题了，怎么说，给个赞不过分吧~
+
+- **问题处理2**：加载模型报错：`RuntimeError: Triton Error [CUDA]: device kernel image is invalid`
+
+  ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/c4ce44d617d24cd8b4460a474bd8ad19.png)
+
+  - [参考链接](https://blog.csdn.net/w55100/article/details/143755971)，应该是 `triton` 版本的问题，`3.0.0` 切换为 `2.1.0` 即可
+  - `pip install triton==2.1.0`
 
 - **模型推理**
 

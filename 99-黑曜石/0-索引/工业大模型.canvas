@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"95e697cd72d1d5e4","type":"text","text":"> [!tag]  工业大模型: 体系架构、关键技术与典型应用\n> https://mp.weixin.qq.com/s/XYJSShGsq7chlgdPMDkUww\n\n工业大模型体系架构图\n![[./工业大模型.assets/Pasted image 20250217144204.png]]\n工业大模型构建方法\n![[./工业大模型.assets/Pasted image 20250217144306.png]]\n工业大模型多模态预训练\n![[./工业大模型.assets/Pasted image 20250217144726.png]]\n工业机理内嵌微调\n![[./工业大模型.assets/Pasted image 20250217144834.png]]\n人-智能体-工业赛博物理系统交互\n![[./工业大模型.assets/Pasted image 20250217144920.png]]\n工业大模型典型应用场景\n![[./工业大模型.assets/Pasted image 20250217144947.png]]\n","x":-700,"y":-1040,"width":660,"height":700}
+	],
+	"edges":[]
+}

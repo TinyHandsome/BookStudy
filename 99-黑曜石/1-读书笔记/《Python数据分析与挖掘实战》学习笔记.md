@@ -695,7 +695,25 @@
 
   ![在这里插入图片描述](https://img-blog.csdnimg.cn/f6a41bcac9934a0cbcdee2f76b61c494.png)
 
+- 主成分分析
+
+  - 
+    一般取80%
+  - `sklearn.decomposition.PCA(n_components=None, copy=True, whiten=False)`
+  - `n_components`：可以取 'mle'，自动选取特征个数
+  - `copy`：是否复制一份，复制的话原数据就不会改变
+  - `whiten`：是否白化，使得每个特征具有相同的方差
+  - 可以通过 `pca.inverse_transform(low_d)` 来复原数据
+
+
+#### ② 数值规约
+
+- 数值规约是指：通过选择替代的、较小的数据来减少数据量
+  - 有参方法：用一个模型来评估数据，只需要存放参数、不需要存放实际模型，如：线性回归、多元回归、对数线性模型
+  - 无参方法：需要存放实际数据，如：直方图、聚类、抽样、采样
 - 
+
+
 
 
 

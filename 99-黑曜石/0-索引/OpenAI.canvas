@@ -1,0 +1,6 @@
+{
+	"nodes":[
+		{"id":"b9cf1b03b4439412","x":-360,"y":-380,"width":759,"height":400,"type":"text","text":"> [!tag]  OpenAI 放王炸，将发布整合多项技术的 GPT-5，并免费无限使用，该模型有哪些技术亮点？ \n> https://www.zhihu.com/question/12072969887/answer/99624266596\n\n看计划，是先发布GPT-4.5，GPT-4.5就是之前已经在传的Orion模型，GPT-4.5和上一代GPT-4一样是常规模型，不像o系列模型有推理能力。之前一直听说GPT-4.5的开发遇到阻碍，看来OpenAI是已经解决了训练问题，但是注意**GPT-4.5会是OpenAI最后的一个非推理模型**，这大概说明**train-time compute scaling law**确实已经到了瓶颈，很大可能还是之前说的预训练数据已经到瓶颈了。\n\n然后会发布GPT-5，看描述，感觉GPT-5可能以GPT-4.5作为基础模型底座，用o3的强化学习方法让模型拥有了推理能力，或者换句话说，GPT-5可能就是GPT-4.5的**test-time compute scaling**。\n\n> In both ChatGPT and our API, we will release GPT-5 as a system that integrates a lot of our technology, including o3. We will no longer ship o3 as a standalone model\n\n"}
+	],
+	"edges":[]
+}

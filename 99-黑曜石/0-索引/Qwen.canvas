@@ -1,0 +1,8 @@
+{
+	"nodes":[
+		{"id":"b4b150d36b576d7b","type":"group","x":-540,"y":-580,"width":760,"height":1120,"color":"1","label":"Qwen3"},
+		{"id":"87938081ef26e531","type":"text","text":"Qwen3是国内首个“混合推理模型”，这个概念最早是Claude3.7提出来的，Gemini2.5 Flash最新也支持了。说白了就是一个模型既可以推理，也可以不推理。\n\n同时Qwen还给了建议参数配置，防止走丢！==解码策略==\n\n```\nThink模式：Temperature=0.6, TopP=0.95, TopK=20, MinP=0\n非Think模式：Temperature=0.7, TopP=0.8, TopK=20, MinP=0\n```\n\n\n>  阿里通义千问 Qwen3 系列模型正式发布，该模型有哪些技术亮点？ - 刘聪NLP的回答 - 知乎\n> https://www.zhihu.com/question/1900300358229652607/answer/1900452232018767979","x":-520,"y":-560,"width":720,"height":220},
+		{"id":"b53af63c6aa9411a","type":"text","text":"**核心亮点**\n\n- 多种思考模式：混合推理，可以思考也可以不思考。\n- 多语言：119 种语言和方言。\n- 增强的 Agent 能力：优化了 Qwen 3 模型的 Agent 和代码能力，同时也加强了对 MCP 的支持。\n\n**预训练**\n\nQwen3 的数据集相比 Qwen2.5 几乎是 2 倍。\n\n> 预训练过程分为**三个阶段**。在第一阶段（S1），模型在超过 30 万亿个 token 上进行了预训练，上下文长度为 4K token。这一阶段为模型**提供了基本的语言技能和通用知识**。在第二阶段（S2），我们通过**增加知识密集型数据**（如 STEM、编程和推理任务）的比例来**改进数据集**，随后模型又在额外的 5 万亿个 token 上进行了预训练。在最后阶段，我们使用**高质量的长上下文数据**将上下文长度扩展到 32K token，确保模型能够有效地处理更长的输入。\n\n**后训练**\n\n> 为了开发能够同时具备思考推理和快速响应能力的混合模型，我们实施了一个四阶段的训练流程。该流程包括：（1）长思维链冷启动，（2）长思维链强化学习，（3）思维模式融合，以及（4）通用强化学习。\n\n![](0-索引/Qwen.assets/Pasted%20image%2020250429111250.png)\n\n\n\n\n\n>  blog: https://qwenlm.github.io/blog/qwen3/\n>  \n>  docs: https://qwen.readthedocs.io/zh-cn/latest/getting_started/quickstart.html\n","x":-520,"y":-320,"width":720,"height":840}
+	],
+	"edges":[]
+}

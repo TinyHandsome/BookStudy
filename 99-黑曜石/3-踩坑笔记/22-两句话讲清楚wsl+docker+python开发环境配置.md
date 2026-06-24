@@ -51,7 +51,7 @@ sticker: emoji//1f433
 
    - 一顿确认安装就行了
 
-4. 检查一下conda好不好使吧：`conda -v`。最后，类似的，其他的sh啊，什么的，都可以这样传进来安装，当然了能直接下载 `apt install` 是最好的。
+4. 检查一下conda好不好使吧：`conda -v`。最后，类似的，其他的sh啊，什么的，都可以这样传进来安装，当然了能直接下载 `apt install` 是最好的。如果还是不行，可能是环境变量没配置好：`vim ~/.bashrc`，编辑这个文件，在最后加入一行：`export PATH="/root/miniconda3/bin:$PATH"`，然后保存并执行：`source ~/.bashrc`
 
 5. 多说一句，conda的配置，[避免新建环境各种error的问题](https://blog.csdn.net/leviopku/article/details/140280296)
 
@@ -70,12 +70,14 @@ sticker: emoji//1f433
      pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
    ```
    
+5. conda创建环境：`conda create -n xxx python=3.10`，记得自己取名字，如果创建的时候报错了：`Solving environment: unsuccessful attempt using repodata from current_repodata.json`，我当时是试图安装3.7.8版本的python，改成3.7就好了。
+
 6. 再多说一句，conda的打包和迁移，首先再当前env下，`pip install conda-pack`
 
    - 打包环境：`conda pack -n 你的环境名 -o 名字.tar.gz`
-   - 迁移环境：直接复制到服务器就行，不方便的也可以考虑用scp命令迁移 `sudo scp 名字.tar.gz root@服务器ip:目标路径`
+   - 迁移环境：直接复制到服务器就行，不方便的也可以考虑用scp命令迁移 `sudo scp 名字.tar.gz root@服务器ip:目标路径`
    - 解压环境：
-     - 先去 `/root/miniconda3/envs/` 创建一个新环境的文件名：xxx
+     - 先去 `/root/miniconda3/envs/` 创建一个新环境的文件名：xxx
      - `tar -zxvf 名字.tar.gz -C /root/miniconda3/envs/xxx/`
 
 
