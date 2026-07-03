@@ -4,36 +4,20 @@ nnoremap <s-tab> V<
 vnoremap <tab> >gv
 vnoremap <s-tab> <gv
 
-" 让键盘映射jk为Esc
-" set timeout ttimeoutlen=50
-" asdfghjkl uiop
-" U
-inoremap <C-j>q <C-/>
-inoremap <C-j>o <Esc>o
-inoremap <C-j>k <Esc>O
-inoremap <C-j>l <Esc>la
-inoremap <C-j>h <Esc>i
-inoremap <C-j>j <Esc>
-inoremap <C-j>a +
-inoremap <C-j>s -
-inoremap <C-j>d *
-inoremap <C-j>f /
-inoremap <C-j>g (
-inoremap <C-j>p %
-
-" 单词大写
-nnoremap <C-j>U bgUw
-inoremap <C-j>U <Esc>bgUw
-" 单词小写
-nnoremap <C-j>u bguw
-inoremap <C-j>u <Esc>bguw
+" 隐射快捷上一行下一行的
+inoremap jk <Esc>o
+inoremap kj <Esc>ko
+inoremap jl <Esc>
+inoremap lj <Esc>
+inoremap kl <Esc>la
+inoremap lk <Esc>i
 
 " 选择当前行
 inoremap <C-l> <Esc>^v$
 nnoremap <C-l> ^v$
 
 " 使用无名寄存器，这样复制粘贴和P、Y使用的都是系统的剪切板，【重要】我发现设置这个之后，双击word然后按s或者x就会删除并复制，很难顶
-" set clipboard=unnamedplusset
+set clipboard=unnamedplus
 " 共享剪贴板  
 set clipboard+=unnamed
 " 突出显示当前行
