@@ -11,13 +11,12 @@ inoremap jl <Esc>
 inoremap lj <Esc>
 inoremap kl <Esc>la
 inoremap lk <Esc>i
+set timeoutlen=100
 
 " 选择当前行
 inoremap <C-l> <Esc>^v$
 nnoremap <C-l> ^v$
 
-" 使用无名寄存器，这样复制粘贴和P、Y使用的都是系统的剪切板，【重要】我发现设置这个之后，双击word然后按s或者x就会删除并复制，很难顶
-set clipboard=unnamedplus
 " 共享剪贴板  
 set clipboard+=unnamed
 " 突出显示当前行
