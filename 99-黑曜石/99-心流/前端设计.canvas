@@ -1,0 +1,13 @@
+{
+	"nodes":[
+		{"id":"4a064c80aad4c10b","type":"group","x":-500,"y":-520,"width":980,"height":860,"color":"1","label":"B端工作台首页UI设计"},
+		{"id":"d2d56f5a71c05627","type":"file","file":"99-心流/assets/前端设计/454ebebefa739ef5a432d1366796555a.png","x":-480,"y":-500,"width":300,"height":400},
+		{"id":"742cd7ba4e57e39f","type":"file","file":"99-心流/assets/前端设计/0351371205071390bd14e02551250482 1.png","x":-160,"y":-500,"width":300,"height":400},
+		{"id":"950f330bb6e89d55","type":"file","file":"99-心流/assets/前端设计/76f81dcf48ddf89397deac88c5f8f782.png","x":160,"y":-500,"width":300,"height":400},
+		{"id":"19a038b0fcac7f94","type":"file","file":"99-心流/assets/前端设计/b2f180ac7cbb17a4a7d915eff3136fb3.png","x":-480,"y":-80,"width":300,"height":400},
+		{"id":"d51521eab201e552","type":"file","file":"99-心流/assets/前端设计/1ab90e9e5a4ee05916dc476378ab8297.png","x":-160,"y":-80,"width":300,"height":400},
+		{"id":"7b0280ccf76dcb68","type":"file","file":"99-心流/assets/前端设计/c595fff1ba588260e8f58c2f6709b536.png","x":160,"y":-80,"width":300,"height":400},
+		{"id":"ddd728b1fea28fca","type":"text","text":"[B端工作台首页UI设计](https://mp.weixin.qq.com/s/etNY6AusjJqv8phTM3cSxg)","x":-920,"y":-520,"width":392,"height":356}
+	],
+	"edges":[]
+}

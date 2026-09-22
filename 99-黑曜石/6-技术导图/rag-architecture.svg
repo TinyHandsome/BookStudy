@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 664" width="960" height="664">
+<defs>
+  <radialGradient id="glow" cx="48%" cy="52%" r="34%">
+    <stop offset="0%" stop-color="#d4a574" stop-opacity="0.06"/>
+    <stop offset="100%" stop-color="#d4a574" stop-opacity="0"/>
+  </radialGradient>
+  <marker id="arr-gold" markerWidth="10" markerHeight="7" refX="8.5" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#d4a574"/></marker>
+  <marker id="arr-mint" markerWidth="10" markerHeight="7" refX="8.5" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#6ee7b7"/></marker>
+  <marker id="arr-emerald" markerWidth="10" markerHeight="7" refX="8.5" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#34d399"/></marker>
+</defs>
+<style>
+  text { font-family: -apple-system,'Segoe UI','Microsoft YaHei','PingFang SC',sans-serif; }
+</style>
+<rect x="0" y="0" width="960" height="664" fill="#0a0a0a"/>
+<rect x="0" y="0" width="960" height="664" fill="url(#glow)"/>
+<text x="480" y="44" text-anchor="middle" font-family="Georgia,'Times New Roman','Microsoft YaHei','SimSun',serif" font-size="21" font-weight="700" fill="#f5f0eb">RAG 检索增强生成 · 系统架构</text>
+<text x="480" y="66" text-anchor="middle" font-size="11" letter-spacing="0.15em" fill="#a39787">RETRIEVAL-AUGMENTED GENERATION</text>
+<rect x="40" y="88" width="880" height="132" rx="8" fill="none" stroke="#c9a96e" stroke-width="0.8" stroke-dasharray="6,4" opacity="0.45"/>
+<text x="54" y="106" font-family="Georgia,'Times New Roman','Microsoft YaHei','SimSun',serif" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#c9a96e" opacity="0.85">在线查询</text>
+<text x="54" y="119" font-size="9" letter-spacing="0.06em" fill="#6b5f53" opacity="0.55">ONLINE QUERY PIPELINE</text>
+<rect x="40" y="470" width="880" height="132" rx="8" fill="none" stroke="#c9a96e" stroke-width="0.8" stroke-dasharray="6,4" opacity="0.45"/>
+<text x="54" y="488" font-family="Georgia,'Times New Roman','Microsoft YaHei','SimSun',serif" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#c9a96e" opacity="0.85">离线索引</text>
+<text x="54" y="501" font-size="9" letter-spacing="0.06em" fill="#6b5f53" opacity="0.55">OFFLINE INDEXING PIPELINE</text>
+<ellipse cx="460" cy="420" rx="100" ry="18" fill="#111111" stroke="#38bdf8" stroke-width="1.5"/>
+<rect x="360" y="310" width="200" height="110" fill="#111111" stroke="#38bdf8" stroke-width="1.5"/>
+<ellipse cx="460" cy="310" rx="100" ry="18" fill="#1a1a1a" stroke="#38bdf8" stroke-width="1.5"/>
+<line x1="368" y1="338" x2="552" y2="338" stroke="#38bdf8" stroke-width="1" opacity="0.22"/>
+<line x1="368" y1="392" x2="552" y2="392" stroke="#38bdf8" stroke-width="1" opacity="0.22"/>
+<text x="460" y="356" text-anchor="middle" font-size="15" font-weight="700" fill="#38bdf8">向量数据库</text>
+<text x="460" y="375" text-anchor="middle" font-size="10" fill="#a39787">Vector Database</text>
+<line x1="158" y1="150" x2="182" y2="150" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="282" y1="150" x2="306" y2="150" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="406" y1="150" x2="430" y2="150" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="530" y1="150" x2="554" y2="150" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="654" y1="150" x2="678" y2="150" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="778" y1="150" x2="802" y2="150" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="150" y1="532" x2="170" y2="532" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="270" y1="532" x2="290" y2="532" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="390" y1="532" x2="410" y2="532" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<line x1="366" y1="176" x2="445" y2="291" stroke="#6ee7b7" stroke-width="1.8" marker-end="url(#arr-mint)"/>
+<line x1="475" y1="291" x2="395" y2="176" stroke="#6ee7b7" stroke-width="1.8" marker-end="url(#arr-mint)"/>
+<line x1="460" y1="506" x2="460" y2="438" stroke="#34d399" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arr-emerald)"/>
+<text x="400" y="238" text-anchor="end" font-size="10" fill="#6ee7b7" opacity="0.92">查询向量</text>
+<text x="456" y="252" text-anchor="start" font-size="10" fill="#6ee7b7" opacity="0.92">top-k 文档块</text>
+<text x="470" y="474" text-anchor="start" font-size="10" fill="#34d399" opacity="0.92">存入向量</text>
+<rect x="58" y="124" width="100" height="52" rx="6" fill="#111111" stroke="#f87171" stroke-width="1.5"/>
+<text x="108" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#f87171">用户查询</text>
+<text x="108" y="164" text-anchor="middle" font-size="10" fill="#a39787">User Query</text>
+<rect x="182" y="124" width="100" height="52" rx="6" fill="#111111" stroke="#fbbf24" stroke-width="1.5"/>
+<text x="232" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#fbbf24">查询向量化</text>
+<text x="232" y="164" text-anchor="middle" font-size="10" fill="#a39787">Query Embed</text>
+<rect x="306" y="124" width="100" height="52" rx="6" fill="#111111" stroke="#a78bfa" stroke-width="1.5"/>
+<text x="356" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#a78bfa">向量检索</text>
+<text x="356" y="164" text-anchor="middle" font-size="10" fill="#a39787">Vector Search</text>
+<rect x="430" y="124" width="100" height="52" rx="6" fill="#111111" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="5,3"/>
+<text x="480" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#a78bfa">重排序</text>
+<text x="480" y="164" text-anchor="middle" font-size="10" fill="#a39787">Rerank</text>
+<rect x="554" y="124" width="100" height="52" rx="6" fill="#111111" stroke="#5a9e6f" stroke-width="1.5"/>
+<text x="604" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#5a9e6f">提示组装</text>
+<text x="604" y="164" text-anchor="middle" font-size="10" fill="#a39787">Prompt Assembly</text>
+<rect x="678" y="124" width="100" height="52" rx="6" fill="#1a1a1a" stroke="#d4a574" stroke-width="1.5"/>
+<text x="728" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#d4a574">大语言模型</text>
+<text x="728" y="164" text-anchor="middle" font-size="10" fill="#a39787">LLM</text>
+<rect x="802" y="124" width="100" height="52" rx="6" fill="#111111" stroke="#f87171" stroke-width="1.5"/>
+<text x="852" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#f87171">最终回答</text>
+<text x="852" y="164" text-anchor="middle" font-size="10" fill="#a39787">Answer</text>
+<rect x="50" y="506" width="100" height="52" rx="6" fill="#111111" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="100" y="528" text-anchor="middle" font-size="13" font-weight="600" fill="#94a3b8">数据源</text>
+<text x="100" y="546" text-anchor="middle" font-size="10" fill="#a39787">Data Sources</text>
+<rect x="170" y="506" width="100" height="52" rx="6" fill="#111111" stroke="#5a9e6f" stroke-width="1.5"/>
+<text x="220" y="528" text-anchor="middle" font-size="13" font-weight="600" fill="#5a9e6f">文档解析</text>
+<text x="220" y="546" text-anchor="middle" font-size="10" fill="#a39787">Loader</text>
+<rect x="290" y="506" width="100" height="52" rx="6" fill="#111111" stroke="#5a9e6f" stroke-width="1.5"/>
+<text x="340" y="528" text-anchor="middle" font-size="13" font-weight="600" fill="#5a9e6f">文本分块</text>
+<text x="340" y="546" text-anchor="middle" font-size="10" fill="#a39787">Chunking</text>
+<rect x="410" y="506" width="100" height="52" rx="6" fill="#111111" stroke="#fbbf24" stroke-width="1.5"/>
+<text x="460" y="528" text-anchor="middle" font-size="13" font-weight="600" fill="#fbbf24">向量化</text>
+<text x="460" y="546" text-anchor="middle" font-size="10" fill="#a39787">Embedding</text>
+<text x="70" y="632" font-size="10" letter-spacing="0.06em" fill="#6b5f53">图例</text>
+<line x1="118" y1="629" x2="146" y2="629" stroke="#d4a574" stroke-width="2" marker-end="url(#arr-gold)"/>
+<text x="154" y="632" font-size="10" fill="#a39787">主流程</text>
+<line x1="236" y1="629" x2="264" y2="629" stroke="#6ee7b7" stroke-width="2" marker-end="url(#arr-mint)"/>
+<text x="272" y="632" font-size="10" fill="#a39787">检索 / 数据流</text>
+<line x1="392" y1="629" x2="420" y2="629" stroke="#34d399" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arr-emerald)"/>
+<text x="428" y="632" font-size="10" fill="#a39787">索引写入</text>
+<rect x="512" y="622" width="20" height="13" rx="3" fill="none" stroke="#a78bfa" stroke-width="1.3" stroke-dasharray="4,2"/>
+<text x="540" y="632" font-size="10" fill="#a39787">可选组件</text>
+<text x="900" y="632" text-anchor="end" font-size="9" fill="#6b5f53" opacity="0.6">同一嵌入模型：查询向量化 ↔ 向量化 共享向量空间</text>
+</svg>

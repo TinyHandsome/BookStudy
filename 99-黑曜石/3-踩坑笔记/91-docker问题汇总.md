@@ -562,7 +562,7 @@ services:
 > 1. **PagedAttention**：借鉴操作系统虚拟内存分页思想，将KV缓存切分为固定大小的“页面”，实现跨请求的内存块复用，避免连续内存分配导致的碎片化问题。
 > 2. **CUDA Graph Optimization**：将整个前向计算流程捕获为静态CUDA图，减少GPU Kernel启动开销和CPU-GPU同步延迟，提升批处理吞吐量。
 >
-> :warning: 总结：不要使用 **enforce_eager=True**，不然没有高并发服务
+> :warning: 总结：不要使用 **enforce_eager=True**，不然没有高并发服务
 
 可恶啊vLLM不能在windows上跑，下好模型，做好路径映射，然后：
 
@@ -648,6 +648,62 @@ docker run -d --runtime nvidia --gpus all --name vllm-test --ipc=host -v /data/m
 > 量化bge reranker参考hf：https://huggingface.co/gpustack/bge-reranker-v2-m3-GGUF
 >
 > 注意：怎么导入hf上下的模型，先编写一个 `Modelfile`，里面 `FROM /data/models/bge-reranker-v2-m3-GGUF`，后面的文件夹就是你的模型路径，然后用ollama导入，`ollama create bge-reranker-v2-m3-GGUF -f Modelfile`，:tada: 然后你就能在 `ollama list` 中看到你导入的模型了~
+
+**Qwen-Image-2.1** ^5e20bf
+
+参考文章：[[../5-技术文档/拿下开源生图第一，千问Qwen-Image-2.1把生图卷出新高度|拿下开源生图第一，千问Qwen-Image-2.1把生图卷出新高度]]
+
+:warning: 一开始怎么搞都不行，最后发现删除 `--privileged` 就好了，可能是这个参数会导致gpu的定位有问题。
+
+```bash
+docker run -d \
+  --name=qwenimage21 \
+  --runtime=nvidia \
+  --ipc=host \
+  -p 6603:8000 \
+  -v /data2/litian/models:/data/models \
+  --gpus '"device=3"' \
+  10.4.32.48:5000/vllm/vllm-omni:qwen-image21 \
+  vllm serve \
+  --served-model-name qwenimage \
+  --omni \
+  --model /data/models/Qwen-Image-2.1 \
+  --host 0.0.0.0 \
+  --port 8000
+```
+
+**Qwen3.8 27b**
+
+参考：[Qwen/Qwen3.8-27B | vLLM Recipes](https://recipes.vllm.ai/Qwen/Qwen3.8-27B)
+
+```bash
+docker run -d \
+  --name=qwen3.8 \
+  --runtime=nvidia \
+  --ipc=host \
+  --shm-size=128g \ 
+  -p 6606:8000 \
+  -v /data2/litian/models:/data/models \
+  --gpus '"device=6,7"' \
+  10.4.32.48:5000/vllm/vllm-openai:v0.22.1 \
+  --tensor-parallel-size 2 \
+  --gpu_memory_utilization 0.8 \
+  --max_model_len 262144 \
+  --reasoning-parser qwen3 \
+  --enable-auto-tool-choice \
+  --tool-call-parser qwen3_coder \
+  --enable-prefix-caching \
+  --enable-chunked-prefill \
+  --async-scheduling \
+  --speculative-config '{"method": "mtp", "num_speculative_tokens": 1}' \
+  --mm-encoder-tp-mode data \
+  --mm-processor-cache-type shm \
+  --model /data/models/Qwen3.8-27B  \
+  --served-model-name qwen3.8 \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --omni
+```
 
 **Qwen3.6-35B-A3B**
 
