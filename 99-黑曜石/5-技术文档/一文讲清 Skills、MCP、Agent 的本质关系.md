@@ -7,8 +7,6 @@ tags:
 link:
   - https://developer.aliyun.com/article/1716024
 ---
-42 [一文讲清 Skills、MCP、Agent 的本质关系](https://developer.aliyun.com/article/1716024)
-
 **Agent 是智能决策的核心主体，Skills 是 Agent 执行任务的原子能力单元，MCP 是 Agent 与 Skills 之间的标准化通信桥梁与能力管理规范**。三者是**分层解耦、强依赖共生**的关系，共同构成了完整的 LLM Agent 落地体系，缺一不可（标准化工业级落地场景）。
 
 ![](../99-心流/flow.assets/file-20260916104509870.png)
