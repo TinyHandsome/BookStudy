@@ -1,11 +1,14 @@
+---
+tags:
+  - LLM
+  - 世界模型
+link:
+  - https://mp.weixin.qq.com/s/wJRDkwt-XvxJR5JhYLU6ZQ
+---
 
+- [英伟达「世界基础模型」诞生，引爆物理AI革命！75页报告出炉，GitHub狂飙2k星](https://mp.weixin.qq.com/s/wJRDkwt-XvxJR5JhYLU6ZQ)
 
-
-## 物理AI
-
-- [【新智元】英伟达「世界基础模型」诞生，引爆物理AI革命！75页报告出炉，GitHub狂飙2k星](https://mp.weixin.qq.com/s/wJRDkwt-XvxJR5JhYLU6ZQ)
-
-  ![image-20250115134352764](1-世界基础模型引爆物理AI革命.assets/image-20250115134352764.png)
+  ![image-20250115134352764](世界基础模型引爆物理AI革命.assets/image-20250115134352764.png)
 
 - 背景
   - 2025年1月8日，英伟达的老大黄仁勋在CES大会上宣布：**AI下一个前沿就是物理AI**。

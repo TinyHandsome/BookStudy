@@ -1,6 +1,8 @@
 ---
-reference:
+link:
   - https://mp.weixin.qq.com/s/s6YQOLHkYk2NmNaVvR5d4Q
+tags:
+  - LLM
 ---
 ## 蚂蚁集团Ling团队用低端硬件训练顶级AI
 

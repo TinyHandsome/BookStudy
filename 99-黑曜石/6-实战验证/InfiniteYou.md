@@ -1,7 +1,8 @@
-# 技术小试
-
-## InfiniteYou
-
+---
+tags:
+  - 图像生成
+  - LLM
+---
 > :link: https://github.com/bytedance/InfiniteYou
 >
 > :link: https://huggingface.co/ByteDance/InfiniteYou
@@ -18,9 +19,5 @@
 >
 > 实现灵活且高保真的保留身份特征的图像生成仍然极具挑战性，特别是对于像FLUX这样的先进扩散变压器（Diffusion Transformers，DiTs）而言。我们推出了InfiniteYou（InfU），它是最早利用DiTs完成此任务的强大框架之一。InfU解决了现有方法的重大问题，如身份相似度不足、文本 - 图像对齐不佳以及生成质量和美学效果较低等。InfU的核心是InfuseNet，这一组件通过残差连接将身份特征注入到DiT基础模型中，在保持生成能力的同时提高了身份相似度。一种多阶段训练策略，包括预训练和使用合成单人多样本（single - person - multiple - sample，SPMS）数据进行有监督的微调（supervised fine - tuning，SFT），进一步改善了文本 - 图像对齐，提高了图像质量，并缓解了面部复制粘贴问题。大量实验表明，InfU达到了当前最优性能，超越了现有的基线模型。此外，InfU的即插即用设计确保了与各种现有方法的兼容性，为更广泛的社区做出了有价值的贡献。
 
-![image-20250324134820790](技术小试.assets/image-20250324134820790.png)
-
-## Qwen2.5-Omni-7B
-
-![image-20250328090633993](技术小试.assets/image-20250328090633993.png)
+![image-20250324134820790](InfiniteYou.assets/image-20250324134820790.png)
 
