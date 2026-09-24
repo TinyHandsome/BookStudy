@@ -1,7 +1,7 @@
 ---
 tags:
   - agent
-reference:
+link:
   - https://www.zhihu.com/question/13476251758/answer/1898359865941931619
   - https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-llm-agents
 sticker: emoji//1f916

@@ -1,7 +1,7 @@
 ---
 banner: 5-技术文档/一文搞懂MCP和A2A.assets/640-17452847176304.webp
 sticker: emoji//1f916
-reference:
+link:
   - https://mp.weixin.qq.com/s/7w4Rc3k_xC6dt_9W8LGHig
 tags:
   - agent

@@ -1,7 +1,7 @@
 ---
 tags:
   - agent
-references:
+link:
   - https://www.zhihu.com/question/13476251758/answer/1904649623454357314
 sticker: emoji//1f916
 ---
