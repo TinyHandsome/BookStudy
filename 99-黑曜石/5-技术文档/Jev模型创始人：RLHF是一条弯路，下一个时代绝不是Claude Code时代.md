@@ -1,6 +1,8 @@
 ---
 link:
   - https://zhuanlan.zhihu.com/p/2084663688066290931
+tags:
+  - LLM
 ---
 关键词：[[../4-开发积累/Jev|Jev]]
 

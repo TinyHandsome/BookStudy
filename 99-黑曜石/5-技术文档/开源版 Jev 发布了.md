@@ -1,5 +1,7 @@
 ---
 link: https://mp.weixin.qq.com/s/8CaOLr99qL3RamtQtXJ6tQ
+tags:
+  - LLM
 ---
 - 关键词：[[../4-开发积累/Jev|Jev]]
 

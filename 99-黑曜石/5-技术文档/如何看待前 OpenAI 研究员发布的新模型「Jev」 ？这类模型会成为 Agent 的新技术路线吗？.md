@@ -1,6 +1,8 @@
 ---
 link:
   - https://www.zhihu.com/question/2083549123160925836/answer/2084204925609891620
+tags:
+  - LLM
 ---
 关键词：[[../4-开发积累/Jev|Jev]]
 
