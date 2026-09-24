@@ -3,10 +3,11 @@ tags:
   - deepseek
   - o1
   - openai
+  - LLM
+link:
+  - https://www.163.com/dy/article/JMF6TH700512MLBG.html
 ---
-# DeepSeek才是真正的OpenAI
-
-![image-20250123153155633](5-DeepSeek才是真正的OpenAI.assets/image-20250123153155633.png)
+![image-20250123153155633](DeepSeek才是真正的OpenAI.assets/image-20250123153155633.png)
 
 ## 前言
 
@@ -30,11 +31,11 @@ SFT的使用是ChatGPT当初成功的关键，而今天的R1 Zero完全用RL取�
 
 经过数千次RL步骤后，DeepSeek-R1-Zero的推理性能稳步提升：不仅大幅提高了在数学、编程等推理任务上的准确率，甚至学会了很多惊喜的“自发行为”，比如反思自己的答案，进行多次思考迭代等，甚至出现了“**顿悟时刻（aha moment）**”，模型学会重新思考，并使用拟人化的语气。顿悟时刻不仅证明了模型推理能力的不断增长，也是对强化学习所能产生复杂结果的绝佳说明。
 
-![顿悟时刻](5-DeepSeek才是真正的OpenAI.assets/d.jpg)
+![顿悟时刻](DeepSeek才是真正的OpenAI.assets/d.jpg)
 
 报告显示，DeepSeek-R1-Zero在AIME 2024上的pass@1分数从15.6%提高到了71.0%，通过多数投票，分数进一步提高到86.7%，与OpenAI-o1-0912的性能相匹配。
 
-![img](5-DeepSeek才是真正的OpenAI.assets/2.jpg)
+![img](DeepSeek才是真正的OpenAI.assets/2.jpg)
 
 然而，DeepSeek的团队发现，DeepSeek-R1-Zero的这种“自发行为”有时也带来缺点，比如文字可读性差、语言混乱等。**为了解决这一问题，他们设计了一个四阶段的流程，让模型从“能思考”到“会表达”，DeepSeek-R1也就此诞生。**
 
@@ -44,14 +45,14 @@ SFT的使用是ChatGPT当初成功的关键，而今天的R1 Zero完全用RL取�
 
 通过这种方法训练出的DeepSeek-R1达到了世界顶尖模型的性能，从图中可以看出，DeepSeek-R1在AIME2024上获得了79.8%的成绩，略高于OpenAI-o1-1217；在MATH-500上，它取得了97.3%的惊人成绩，表现与OpenAI-o1-1217相当，并明显优于其他模型；在编码相关的任务中，DeepSeek-R1在代码竞赛任务中表现出专家水平，在Codeforces上获得了2029 Elo评级，竞赛中的表现优于96.3%的人类参与者。对于工程相关的任务，DeepSeek-R1的表现略优于OpenAI-o1-1217。
 
-![](5-DeepSeek才是真正的OpenAI.assets/3.jpg)
+![](DeepSeek才是真正的OpenAI.assets/3.jpg)
 
 
 不仅开源了DeepSeeK-R1，DeepSeek还直接开源了从超小模型1.5B，到70B的各种型号模型。**这些小模型是DeepSeek团队训练好的DeepSeek-R1基础上，用Qwen和Llama等开源模型“蒸馏”的——先使用DeepSeek-R1 作为教师模型生成800K数据，再用这些数据对几个小模型进行微调。**相当于把老师的推理思路“蒸馏”到了学生身上。
 
 小模型的性能同样令人惊喜：DeepSeek-R1-Distill-Qwen-1.5B在数学基准测试上优于GPT-4和Claude-3.5-Sonnet，在AIME上得分为28.9%，在MATH上为83.9%；其32B和70B的模型在多项能力上更是实现了对标OpenAI o1-mini的效果。
 
-![img](5-DeepSeek才是真正的OpenAI.assets/4.jpg)
+![img](DeepSeek才是真正的OpenAI.assets/4.jpg)
 
 综上，DeepSeek-R1展现了一种非常清晰的模型训练思路——**数据即模型。**DeepSeek-R1-Zero很可能只是用来给DeepSeek-R1生成推理数据的，而“数据的调配”是DeepSeek-R1训练过程中平衡不同任务策略的基石。此外，DeepSeek-R1的超强性能也证明了模型的能力仍未见底，而**特定的数据是进一步挖掘模型能力的关键。**
 
@@ -77,7 +78,7 @@ SFT的使用是ChatGPT当初成功的关键，而今天的R1 Zero完全用RL取�
 
 正如NLP科学家Casper Hensen在X上发帖表示，“我的大脑拒绝接受这个强大模型的训练过程竟然可以如此简单”。但他拒绝接受的事实确实在DeepSeek身上发生了。
 
-![img](5-DeepSeek才是真正的OpenAI.assets/5.jpg)
+![img](DeepSeek才是真正的OpenAI.assets/5.jpg)
 
 ## 真正的开放AI在中国？
 
@@ -92,9 +93,9 @@ SFT的使用是ChatGPT当初成功的关键，而今天的R1 Zero完全用RL取�
 
 在这众多的模型之中，DeepSeek**不仅率先实现了媲美OpenAI-o1模型的效果，更是将推理模型的成本压缩到了极低**——基于R1模型的DeepSeek Reasoner每百万输入token成本为0.55美元（4元/百万tokens），每百万输出token成本为2.19美元（16元/百万tokens），相比OpenAI-o1的每百万输入token成本为15美元、每百万输出token成本为60美元，下降了约95%；
 
-![img](5-DeepSeek才是真正的OpenAI.assets/6.jpg)
+![img](DeepSeek才是真正的OpenAI.assets/6.jpg)
 
-![img](5-DeepSeek才是真正的OpenAI.assets/7.jpg)
+![img](DeepSeek才是真正的OpenAI.assets/7.jpg)
 
 这样的价格策略，不仅为中小企业带来了希望，还传递出一个信号：AI不再是少数精英企业的专属，它将成为全球各行各业的基础工具。低价还只是其次。更重要的是，**DeepSeek R1系列模型，是开源的。**
 
@@ -103,8 +104,4 @@ SFT的使用是ChatGPT当初成功的关键，而今天的R1 Zero完全用RL取�
 尽管OpenAI的做法有其自己的考量，但人类需要开源。开源不仅是技术上的“开放”，更是对商业和产业链上下游合作的重新定义。它为更多创新提供了诞生的土壤，也让全球的开发者可以共同参与进来，探索人工智能的下一个边界。
 
 而DeepSeek开源的选择，正是这种“美美与共”精神的体现。**换句话说，DeepSeek-R1的低价和开源战略，实际上在构建一个更加开放和包容的AI生态。**而在DeepSeek等开源模型厂商的共同努力下，一个全人类共同为AGI奋斗的时代，似乎离我们不远了。
-
----
-
-https://www.163.com/dy/article/JMF6TH700512MLBG.html
 
