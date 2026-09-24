@@ -1,3 +1,9 @@
+---
+link:
+  - https://mp.weixin.qq.com/s/ZO_Rv98OakPuBaZl9Tw5VA
+tags:
+  - LLM
+---
 [TOC]
 
 > **参考：**上交大发布首个OpenAI o1复现项目进展报告，满满的经验洞察：https://mp.weixin.qq.com/s/ZO_Rv98OakPuBaZl9Tw5VA

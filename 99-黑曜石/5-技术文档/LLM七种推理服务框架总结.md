@@ -1,16 +1,22 @@
+---
+link:
+  - https://zhuanlan.zhihu.com/p/653352979
+tags:
+  - LLM
+---
 # LLM七种推理服务框架总结
 
 [TOC]
 
 ## 前言
 
-![1](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/1.png)
+![1](LLM七种推理服务框架总结.assets/1.png)
 
 自从ChatGPT发布以来，国内外的开源大模型如雨后春笋般成长，但是对于很多企业和个人从头训练预训练模型不太现实，即使微调开源大模型也捉襟见肘，那么直接部署这些开源大模型服务于企业业务将会有很大的前景，本文将介绍七中主流的LLM推理和服务开源库。
 
 ## 一、vLLM
 
-![3](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/3.png)
+![3](LLM七种推理服务框架总结.assets/3.png)
 
 vLLM的吞吐量比HuggingFace Transformers（HF）高14x-24倍，比HuggingFace Text Generation Inference（TGI）高2.2x-2.5倍。
 
@@ -73,7 +79,7 @@ curl http://localhost:8000/generate \
 
 ## 二、Text generation inference
 
-![4](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/4.png)
+![4](LLM七种推理服务框架总结.assets/4.png)
 
 Text generation inference是用于文本生成推断的Rust、Python和gRPC服务器，在HuggingFace中已有LLM 推理API使用。
 
@@ -117,7 +123,7 @@ print(client.generate(prompt, max_new_tokens=17 temperature=0.95).generated_text
 
 ## 三、CTranslate2
 
-![5](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/5.png)
+![5](LLM七种推理服务框架总结.assets/5.png)
 
 CTranslate2是一个C++和Python库，用于使用Transformer模型进行高效推理。
 
@@ -170,7 +176,7 @@ print(output)
 
 ## 四、DeepSpeed-MII
 
-![6](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/6.png)
+![6](LLM七种推理服务框架总结.assets/6.png)
 
 在DeepSpeed支持下，DeepSpeed-MII可以进行低延迟和高通量推理。
 
@@ -231,7 +237,7 @@ print(result)
 
 ## 五、OpenLLM
 
-![7](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/7.png)
+![7](LLM七种推理服务框架总结.assets/7.png)
 
 OpenLLM是一个用于在生产中操作大型语言模型（LLM）的开放平台。
 
@@ -275,11 +281,11 @@ print(client.query("Funniest joke ever:"))
 
 ## 六、Ray Serve
 
-![8](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/8.png)
+![8](LLM七种推理服务框架总结.assets/8.png)
 
 Ray Serve是一个可扩展的模型服务库，用于构建在线推理API。Serve与框架无关，因此可以使用一个工具包来为深度学习模型的所有内容提供服务。
 
-![9](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/9.png)
+![9](LLM七种推理服务框架总结.assets/9.png)
 
 **运行web服务**
 
@@ -360,11 +366,11 @@ print(output)
 
 ## 七、MLC LLM
 
-![10](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/10.png)
+![10](LLM七种推理服务框架总结.assets/10.png)
 
 LLM的机器学习编译（MLC LLM）是一种通用的部署解决方案，它使LLM能够利用本机硬件加速在消费者设备上高效运行。
 
-![11](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/11.png)
+![11](LLM七种推理服务框架总结.assets/11.png)
 
 **运行web服务**
 
@@ -427,7 +433,7 @@ print(r.json()['choices'][0]['message']['content'])
 
 最后总结一下这些框架的特点，如下表所示：
 
-![2](1-LLM%E4%B8%83%E7%A7%8D%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93.assets/2.png)
+![2](LLM七种推理服务框架总结.assets/2.png)
 
 LLM推理有很多框架，各有其特点，表中七个框架的关键点如下：
 
