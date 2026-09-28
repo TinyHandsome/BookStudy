@@ -12,6 +12,13 @@
 - 服务器之间移动文件：`scp -r -P 10022 Qwen-VL-Chat/  root@10.5.32.169:/data/newDisk/`
 - 压缩文件夹：`tar -czvf xxx.tar.gz xxx`
 - 解压：`tar -xzvf xxx.tar.gz`
+- 查看端口是否占用：`netstat -tulpn | grep :8080`
+  - -t tcp端口
+  - -u udp端口
+  - -l 只看监听端口
+  - -p 显示进程PID/程序名
+  - -n 数字形式，不解析域名
+
 
 
 

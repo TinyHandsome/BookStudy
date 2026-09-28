@@ -212,6 +212,192 @@ sticker: emoji//1f6a2
 
 ## 常见容器使用
 
+### Harbor
+
+参考文档：https://blog.csdn.net/mxm553/article/details/154234002
+
+1. 先从github的releases中找最新的 `https://github.com/goharbor/harbor/releases`
+
+2. 在 Assets 中找最新的 offline.tgz 下载即可，离线的自带镜像，得劲儿~，比如我下的：`harbor-offline-installer-v2.15.2.tgz`
+
+3. 解压：`tar zxvf xxx.tgz`
+
+4. 进入 harbor 目录：`cd harbor`
+
+5. 复制配置文件：`cp harbor.yml.tmpl harbor.yml`
+
+6. 修改配置文件：`vim harbor.yml`
+
+   1. 把 hostname 换成本机 ip
+   2. 修改 http 的端口，我直接改成 5500
+   3. 注释 https 相关内容，端口、证书都注释
+
+7. 修改本机 docker 配置：`vim /etc/docker/daemon.json`
+
+   ```json
+   {
+   	"insecure-registries": ["本机IP:5500"],
+   	"registry-mirrors": ["http://本机IP:5500"]
+   }
+   ```
+
+8. 重启 docker：
+
+   ```bash
+   systemctl daemon-reload
+   systemctl restart docker
+   ```
+
+9. 执行安装：`sh install.sh`
+
+   其实这一步，就是加载离线的镜像文件，然后执行 `docker-compose` 相关命令
+
+10. 安装好了之后，直接去 `本机IP:5500` 登录就行，注意
+
+    - 用户名：admin
+    - 密码：Harbor12345
+
+### NewAPI
+
+这个简单，直接 `git clone` 把 `docker-compose.yml` 搞到，改改就行了，记得改镜像和做端口映射就行
+
+```yaml
+# New-API Docker Compose Configuration
+#
+# Quick Start:
+#   1. docker-compose up -d
+#   2. Access at http://localhost:3000
+#
+# Using MySQL instead of PostgreSQL:
+#   1. Comment out the postgres service and SQL_DSN line 15
+#   2. Uncomment the mysql service and SQL_DSN line 16
+#   3. Uncomment mysql in depends_on (line 28)
+#   4. Uncomment mysql_data in volumes section (line 64)
+#
+# ⚠️  IMPORTANT: Change all default passwords before deploying to production!
+
+version: '3.4' # For compatibility with older Docker versions
+
+services:
+  new-api:
+    image: 10.4.32.48:5000/calciumion/new-api:latest
+    # image: calciumion/new-api:latest
+    container_name: new-api
+    restart: always
+    command: --log-dir /app/logs
+    ports:
+      - "10086:3000"
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - SQL_DSN=postgresql://root:Qiangmima!666@postgres:5432/new-api # ⚠️ IMPORTANT: Change the password in production!
+      #      - SQL_DSN=root:123456@tcp(mysql:3306)/new-api  # Point to the mysql service, uncomment if using MySQL
+      #      - LOG_SQL_DSN=postgresql://root:123456@postgres:5432/new-api-log # OPTIONAL: If you want a separate database for logging, uncomment and set this
+      #      - LOG_SQL_DSN=clickhouse://default:123456@clickhouse:9000/new_api_logs # OPTIONAL: Use ClickHouse for logs only; also uncomment clickhouse in depends_on and the clickhouse service below
+      #      - LOG_SQL_CLICKHOUSE_TTL_DAYS=0 # OPTIONAL: ClickHouse log retention days. Unset or 0 disables automatic deletion; set to e.g. 30 to keep 30 days
+      - REDIS_CONN_STRING=redis://:Qiangmima!666@redis:6379 # ⚠️ IMPORTANT: Change the password in production!
+      - TZ=Asia/Shanghai
+      - ERROR_LOG_ENABLED=true # 是否启用错误日志记录 (Whether to enable error log recording)
+      - BATCH_UPDATE_ENABLED=true  # 是否启用批量更新 (Whether to enable batch update)
+      - NODE_NAME=new-api-node-1  # 节点名称，用于审计日志中标识节点身份；多节点/容器部署时建议设置 (Node name used in audit logs; recommended when running multiple instances or in containers)
+    #      - STREAMING_TIMEOUT=300  # 流模式无响应超时时间，单位秒，默认120秒，如果出现空补全可以尝试改为更大值 （Streaming timeout in seconds, default is 120s. Increase if experiencing empty completions）
+    #      - RELAY_IDLE_CONN_TIMEOUT=90  # Relay HTTP 客户端空闲连接超时时间，单位秒，默认跟随 Go 标准库，设置为0表示不限制 (Relay HTTP client idle keep-alive timeout in seconds, defaults to Go standard library; set 0 to disable)
+    #      - SESSION_SECRET=random_string  # 多机部署时设置，必须修改这个随机字符串！！ （multi-node deployment, set this to a random string!!!!!!!）
+    #      - SESSION_COOKIE_SECURE=true  # true：启用 Secure Refresh Cookie 和严格 refresh/logout OriginGuard；false/未配置：关闭 OriginGuard，仅用于本地 HTTP (true: Secure cookie + strict refresh/logout OriginGuard; false/unset: guard disabled for local HTTP only)
+    #      - SESSION_COOKIE_TRUSTED_URL=https://example.com,https://admin.example.com  # Secure=true 时必填的精确 HTTPS Origin；不是 relay CORS 白名单，不支持通配符/路径 (Required exact HTTPS origins when Secure=true; not a relay CORS allowlist, no wildcard/path)
+    #      - TRUSTED_PROXIES=172.20.0.0/16  # 未配置时信任回环/RFC1918/fc00::/7 并告警，none 为严格模式，显式列表替代默认值 (Unset trusts loopback/RFC 1918/fc00::/7 with a warning; none trusts no proxies; an explicit list replaces defaults)
+    #      - USER_SESSION_ACTIVE_LIMIT=50
+    #      - USER_SESSION_ISSUANCE_LIMIT=100
+    #      - USER_SESSION_ISSUANCE_WINDOW_SECONDS=86400  # 不得大于 revoked 保留期 (must not exceed revoked retention)
+    #      - USER_SESSION_REVOKED_RETENTION_DAYS=7
+    #      - USER_SESSION_HOURLY_ALERT_THRESHOLD=5000  # 仅告警，不做全局拒绝 (alert only; never globally rejects login)
+    #      - SYNC_FREQUENCY=60  # Uncomment if regular database syncing is needed
+    #      - GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX  # Google Analytics 的测量 ID (Google Analytics Measurement ID)
+    #      - UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  # Umami 网站 ID (Umami Website ID)
+    #      - UMAMI_SCRIPT_URL=https://analytics.umami.is/script.js  # Umami 脚本 URL，默认为官方地址 (Umami Script URL, defaults to official URL)
+
+    depends_on:
+      - redis
+      - postgres
+    #      - mysql  # Uncomment if using MySQL
+    #      - clickhouse  # Uncomment if using ClickHouse for LOG_SQL_DSN
+    networks:
+      - new-api-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: 10.4.32.48:5000/redis:7.4
+    # image: redis:latest
+    container_name: np-redis
+    restart: always
+    command: ["redis-server", "--requirepass", "Qiangmima!666"]  # ⚠️ IMPORTANT: Change this password in production!
+    ports:
+      - "16379:6379"
+    networks:
+      - new-api-network
+
+  postgres:
+    image: 10.4.32.48:5000/postgres:15-alpine
+    # image: postgres:15
+    container_name: np-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: Qiangmima!666  # ⚠️ IMPORTANT: Change this password in production!
+      POSTGRES_DB: new-api
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - new-api-network
+    ports:
+      - "15432:5432"  # Uncomment if you need to access PostgreSQL from outside Docker
+
+#  mysql:
+#    image: mysql:8.2
+#    container_name: mysql
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 123456  # ⚠️ IMPORTANT: Change this password in production!
+#      MYSQL_DATABASE: new-api
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    networks:
+#      - new-api-network
+#    ports:
+#      - "3306:3306"  # Uncomment if you need to access MySQL from outside Docker
+
+#  clickhouse:
+#    image: clickhouse/clickhouse-server:24.8
+#    container_name: clickhouse
+#    restart: always
+#    environment:
+#      CLICKHOUSE_DB: new_api_logs
+#      CLICKHOUSE_USER: default
+#      CLICKHOUSE_PASSWORD: 123456  # ⚠️ IMPORTANT: Change this password in production!
+#      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+#    volumes:
+#      - clickhouse_data:/var/lib/clickhouse
+#    networks:
+#      - new-api-network
+#    ports:
+#      - "8123:8123"  # HTTP interface, uncomment if you need external access
+#      - "9000:9000"  # Native interface used by the LOG_SQL_DSN example above
+
+volumes:
+  pg_data:
+#  mysql_data:
+#  clickhouse_data:
+
+networks:
+  new-api-network:
+    driver: bridge
+```
+
 ### OneAPI
 
 ```bash
@@ -221,6 +407,10 @@ docker run --name one-api --privileged=true -d -p 3282:3000 -e TZ=Asia/Shanghai 
 ### Higress
 
 参考文档：https://higress.cn/en/docs/latest/user/quickstart
+
+==【注意】用的是直接的这套方案，容器名叫 higress-full==
+
+prometheus、grafana是里面自己集成的
 
 ```bash
 # 先创建目录
@@ -238,7 +428,23 @@ docker run -d --name higress-ai -v ${PWD}:/data -e O11Y=on -p 3281:8001 -p 3280:
 - 15021：*还没搞明白*
 - `-e O11Y=on`：打开自带的监控功能，Prometheus 和 Granfana，如果省事儿可以开，否则可以自己对接。
 
+[查看日志](https://higress.cn/en/docs/latest/ops/how-tos/view-logs/)：
+
+```bash
+docker exec -it higress-ai-gateway bash
+
+cd /var/log/higress
+ls -l
+cat gateway.log
+```
+
+
+
+---
+
 :warning: 感觉问题很大，我整了一个yaml，这个好使了，解决了prometheus的问题，毕竟上面的端口少暴露了 15020，害我搞了半天，醉醉的。哎，把redis整上是因为在github上看到说mcp相关的需要redis，弄上吧，完一后面需要呢，我真服了。。。
+
+==【弃用】最后没有用这套方案，因为对接grafana和prometheus有点麻烦==
 
 ```yaml
 name: higress
@@ -653,7 +859,7 @@ docker run -d --runtime nvidia --gpus all --name vllm-test --ipc=host -v /data/m
 
 参考文章：[[../5-技术文档/拿下开源生图第一，千问Qwen-Image-2.1把生图卷出新高度|拿下开源生图第一，千问Qwen-Image-2.1把生图卷出新高度]]
 
-:warning: 一开始怎么搞都不行，最后发现删除 `--privileged` 就好了，可能是这个参数会导致gpu的定位有问题。
+:warning: 一开始怎么搞都不行，最后发现删除 `--privileged` 就好了，可能是这个参数会导致gpu的定位有问题。
 
 ```bash
 docker run -d \

@@ -99,8 +99,8 @@ tags:
    ```json
    {
      "data-root": "/data/docker/",
-     "insecure-registries" : ["10.4.32.48:5000"],
-     "registry-mirrors": ["http://10.4.32.48:5000"],
+     "insecure-registries" : ["10.4.32.48:5000", "10.5.33.10:5500"],
+     "registry-mirrors": ["http://10.4.32.48:5000", "http://10.5.33.10:5500"],
      "runtimes": {
            "nvidia": {
                    "path": "/usr/bin/nvidia-container-runtime",
