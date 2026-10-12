@@ -5,14 +5,12 @@ tags:
   - 笔记
   - markdown
 sticker: emoji//1f3d3
-banner: 3-踩坑笔记/30-玩转obsidian+dataview.assets/7faa8db11ee14e28bd8190d67bd686e5.png
+banner: 3-踩坑笔记/cover_output/30-玩转obsidian+dataview-封面.png
 ---
 
 # 玩转obsidian+dataview
 
 > 我不会设置仅粉丝可见，不需要你关注我，仅仅希望我的踩坑经验能帮到你。如果有帮助，麻烦点个 :+1: 吧，这会让我创作动力+1 :grin:。我发现有的时候会自动要求会员才能看，可以留言告诉我，不是我干的！😠
-
-[TOC]
 
 ## 写在前面
 
@@ -22,8 +20,7 @@ banner: 3-踩坑笔记/30-玩转obsidian+dataview.assets/7faa8db11ee14e28bd8190d
 
 - 参考链接：
 
-  - 这里有基础、有案例，慢慢看，沉住气：https://pkmer.cn/Pkmer-Docs/10-obsidian/obsidian%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6/dataview/dataview/
-
+  - 这里有基础、有案例，慢慢看，沉住气：[参考链接](https://pkmer.cn/Pkmer-Docs/10-obsidian/obsidian%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6/dataview/dataview/)
 
 ## dataview基础
 

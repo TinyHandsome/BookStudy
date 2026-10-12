@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《玩转 jupyterhub》封面参考稿</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0b0f17; color:#e5e7eb;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Source Han Sans SC",sans-serif;
+    padding:40px; display:flex; flex-direction:column; align-items:center; gap:34px;
+  }
+  .cap { font-size:13px; color:#8a93a3; letter-spacing:1px; margin-top:10px; text-align:center; }
+  .cap b { color:#34D399; font-weight:700; }
+  .page-title { font-size:15px; color:#6EE7B7; letter-spacing:2px; font-weight:700; margin-bottom:4px; }
+
+  /* ===== 通用 banner 场景 ===== */
+  .banner {
+    position:relative; overflow:hidden; border-radius:16px;
+    box-shadow:0 24px 70px rgba(0,0,0,.55);
+    background:radial-gradient(130% 130% at 32% 42%, #0E2A24 0%, #0A1626 46%, #05070F 100%);
+  }
+  .gridlayer {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(52,211,153,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52,211,153,.08) 1px, transparent 1px);
+    background-size:46px 46px;
+    -webkit-mask-image:radial-gradient(75% 95% at 34% 46%, #000 25%, transparent 82%);
+    mask-image:radial-gradient(75% 95% at 34% 46%, #000 25%, transparent 82%);
+  }
+  .glow {
+    position:absolute; left:70px; top:50px; width:360px; height:300px;
+    background:radial-gradient(circle, rgba(52,211,153,.4), transparent 68%);
+    filter:blur(24px);
+  }
+  .banner::after {
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(62% 70% at 34% 46%, transparent 38%, rgba(3,6,12,.8) 100%);
+    pointer-events:none;
+  }
+  /* HUD 角落括号 */
+  .hud { position:absolute; width:26px; height:26px; border:2px solid rgba(110,231,183,.55); z-index:4; }
+  .hud.tl { left:20px; top:20px; border-right:0; border-bottom:0; }
+  .hud.tr { right:20px; top:20px; border-left:0; border-bottom:0; }
+  .hud.bl { left:20px; bottom:20px; border-right:0; border-top:0; }
+  .hud.br { right:20px; bottom:20px; border-left:0; border-top:0; }
+  .ticks { position:absolute; top:0; left:0; right:0; height:6px; z-index:3;
+    background:repeating-linear-gradient(90deg, rgba(110,231,183,.5) 0 1px, transparent 1px 34px); opacity:.5; }
+
+  /* 粒子 */
+  .dot { position:absolute; width:4px; height:4px; border-radius:50%; background:#6EE7B7; box-shadow:0 0 8px #34D399; z-index:2; animation:tw 3.5s ease-in-out infinite; }
+  .dot.d1 { left:520px; top:70px; }
+  .dot.d2 { left:150px; top:300px; animation-delay:.8s; }
+  .dot.d3 { left:330px; top:120px; width:3px; height:3px; animation-delay:1.4s; }
+  .dot.d4 { left:600px; top:250px; animation-delay:2s; }
+  @keyframes tw { 0%,100%{opacity:.25;transform:scale(.8)} 50%{opacity:1;transform:scale(1.2)} }
+
+  /* ===== 3D 立方体容器（可复用，尺寸走 --s）===== */
+  .scene { position:absolute; perspective:1100px; z-index:3; }
+  .cube { position:relative; transform-style:preserve-3d; animation:bob 6s ease-in-out infinite; }
+  @keyframes bob {
+    0%,100%{ transform:rotateX(-24deg) rotateY(-38deg) translateY(0); }
+    50%    { transform:rotateX(-22deg) rotateY(-26deg) translateY(-12px); }
+  }
+  .face {
+    position:absolute; border:1.5px solid rgba(110,231,183,.78);
+    background:rgba(6,120,90,.10); box-shadow:inset 0 0 26px rgba(52,211,153,.30);
+  }
+  .f-front  { transform:translateZ(calc(var(--s) / 2)); }
+  .f-right  { transform:rotateY(90deg) translateZ(calc(var(--s) / 2)); background:rgba(6,120,90,.16); }
+  .f-top    { transform:rotateX(90deg) translateZ(calc(var(--s) / 2));
+              background:rgba(52,211,153,.16);
+              background-image:
+                linear-gradient(rgba(110,231,183,.28) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(110,231,183,.28) 1px, transparent 1px);
+              background-size:calc(var(--s) / 5) calc(var(--s) / 5); }
+  .f-back   { transform:rotateY(180deg) translateZ(calc(var(--s) / 2)); opacity:.35; }
+  .f-left   { transform:rotateY(-90deg) translateZ(calc(var(--s) / 2)); opacity:.35; }
+  .f-bottom { transform:rotateX(-90deg) translateZ(calc(var(--s) / 2)); opacity:.3; }
+
+  /* 漂浮的子容器碎片 */
+  .shard { position:absolute; border:1.5px solid rgba(110,231,183,.6); background:rgba(5,150,105,.12);
+    box-shadow:0 0 16px rgba(52,211,153,.45); transform:rotate(45deg); animation:floaty 5s ease-in-out infinite; }
+  @keyframes floaty { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(-10px)} }
+
+  /* ===== 头条 900x383 ===== */
+  #main { width:900px; height:383px; }
+  #main .scene { left:120px; top:96px; width:170px; height:170px; --s:150px; }
+  #main .cube { width:150px; height:150px; }
+  #main .cube .face { width:150px; height:150px; }
+  #main .shard.s1 { left:300px; top:80px;  width:34px; height:34px; }
+  #main .shard.s2 { left:96px;  top:250px; width:24px; height:24px; animation-delay:1s; }
+  #main .shard.s3 { left:330px; top:230px; width:20px; height:20px; animation-delay:2s; }
+
+  .headline { position:absolute; right:60px; top:50%; transform:translateY(-50%); text-align:left; z-index:5; max-width:440px; }
+  .kicker { display:flex; align-items:center; gap:9px; font-size:12px; letter-spacing:3px; font-weight:700; color:#6EE7B7; margin-bottom:18px; }
+  .kicker::before { content:""; width:7px; height:7px; background:#059669; border-radius:50%; box-shadow:0 0 8px #34D399; }
+  .h1 { font-size:43px; font-weight:900; color:#fff; line-height:1.16; letter-spacing:.5px; text-shadow:0 2px 24px rgba(0,0,0,.4); }
+  .h1 .green { color:#34D399; text-shadow:0 0 24px rgba(52,211,153,.5); }
+  .bar { width:52px; height:4px; background:#059669; border-radius:3px; margin-top:20px; box-shadow:0 0 14px rgba(52,211,153,.7); }
+  .meta { margin-top:20px; display:flex; gap:8px; align-items:center; }
+  .meta span { font-size:10px; font-weight:700; letter-spacing:1.5px; color:rgba(110,231,183,.85);
+    border:1px solid rgba(110,231,183,.4); padding:3px 9px; border-radius:4px; background:rgba(5,150,105,.12); }
+  .meta .date { color:#6B7280; border:0; background:0; font-weight:600; }
+
+  /* ===== 次条 200x200 ===== */
+  #sq { width:200px; height:200px; }
+  #sq .gridlayer { background-size:26px 26px; -webkit-mask-image:radial-gradient(80% 80% at 50% 45%, #000 20%, transparent 85%); mask-image:radial-gradient(80% 80% at 50% 45%, #000 20%, transparent 85%); }
+  #sq .glow { left:35px; top:20px; width:130px; height:120px; }
+  #sq .hud { width:16px; height:16px; }
+  #sq .hud.tl { left:10px; top:10px; } #sq .hud.tr { right:10px; top:10px; }
+  #sq .hud.bl { left:10px; bottom:10px; } #sq .hud.br { right:10px; bottom:10px; }
+  #sq .scene { left:52px; top:34px; width:96px; height:96px; --s:88px; }
+  #sq .cube { width:88px; height:88px; }
+  #sq .cube .face { width:88px; height:88px; }
+  #sq .sq-h { position:absolute; left:0; right:0; bottom:16px; text-align:center; z-index:5; }
+  #sq .sq-h .l1 { font-size:13px; font-weight:800; color:#fff; letter-spacing:1px; }
+  #sq .sq-h .l2 { font-size:15px; font-weight:900; color:#34D399; letter-spacing:1px; margin-top:2px; }
+</style>
+</head>
+<body>
+  <div class="page-title">《玩转 jupyterhub》· 公众号封面参考稿（摸鱼绿 · 科技风）</div>
+
+  <!-- 头条封面 900 × 383 -->
+  <section id="main" class="banner">
+    <div class="gridlayer"></div>
+    <div class="ticks"></div>
+    <div class="glow"></div>
+    <span class="hud tl"></span><span class="hud tr"></span><span class="hud bl"></span><span class="hud br"></span>
+    <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="dot d4"></span>
+    <div class="scene">
+      <div class="cube">
+        <div class="face f-front"></div><div class="face f-right"></div><div class="face f-top"></div>
+        <div class="face f-back"></div><div class="face f-left"></div><div class="face f-bottom"></div>
+      </div>
+    </div>
+    <div class="shard s1"></div><div class="shard s2"></div><div class="shard s3"></div>
+    <div class="headline">
+      <div class="kicker">TUTORIAL · JUPYTERHUB 部署实战</div>
+      <div class="h1">踩了无数个坑，<br>只推荐一个 <span class="green">Docker 最佳实践</span></div>
+      <div class="bar"></div>
+      <div class="meta"><span>DOCKER</span><span>K8S</span><span>容器隔离</span><span class="date">2026.10</span></div>
+    </div>
+  </section>
+  <div class="cap"><b>900 × 383</b> · 头条封面 · 主体偏左，右侧留白放标题（文字为叠字示意，建议纯背景出图后后期加字）</div>
+
+  <!-- 次条小方图 200 × 200 -->
+  <section id="sq" class="banner">
+    <div class="gridlayer"></div>
+    <div class="glow"></div>
+    <span class="hud tl"></span><span class="hud tr"></span><span class="hud bl"></span><span class="hud br"></span>
+    <div class="scene">
+      <div class="cube">
+        <div class="face f-front"></div><div class="face f-right"></div><div class="face f-top"></div>
+        <div class="face f-back"></div><div class="face f-left"></div><div class="face f-bottom"></div>
+      </div>
+    </div>
+    <div class="sq-h"><div class="l1">只推荐一个</div><div class="l2">Docker 最佳实践</div></div>
+  </section>
+  <div class="cap"><b>200 × 200</b> · 次条小方图 · 同套背景裁中央</div>
+
+</body>
+</html>
