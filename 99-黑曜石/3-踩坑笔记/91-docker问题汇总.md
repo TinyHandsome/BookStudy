@@ -259,7 +259,7 @@ sticker: emoji//1f6a2
 
 ### NewAPI
 
-这个简单，直接 `git clone` 把 `docker-compose.yml` 搞到，改改就行了，记得改镜像和做端口映射就行
+这个简单，直接 `git clone` 把 `docker-compose.yml` 搞到，改改就行了，记得改镜像和做端口映射就行
 
 ```yaml
 # New-API Docker Compose Configuration
@@ -855,6 +855,74 @@ docker run -d --runtime nvidia --gpus all --name vllm-test --ipc=host -v /data/m
 >
 > 注意：怎么导入hf上下的模型，先编写一个 `Modelfile`，里面 `FROM /data/models/bge-reranker-v2-m3-GGUF`，后面的文件夹就是你的模型路径，然后用ollama导入，`ollama create bge-reranker-v2-m3-GGUF -f Modelfile`，:tada: 然后你就能在 `ollama list` 中看到你导入的模型了~
 
+**Qwen3-TTS-12Hz-1.7B-CustomVoice**
+
+:warning: tts的Pipline不允许带 `--served-model-name qwentts \`
+
+就很奇妙，`--gpu_memory_utilization 0.6` 不行，`--kv-cache-memory-bytes 30G` 也不行，非要 `4G` 就行问题是，总体显存占用并不多
+
+```bash
+docker run -d \
+  --name=qwentts \
+  --runtime=nvidia \
+  --shm-size=128gb \
+  --ipc=host \
+  -p 6804:8000 \
+  -v /data2/litian/models:/data/models \
+  --gpus '"device=4"' \
+  10.4.32.48:5000/vllm/vllm-omni:qwen-image21 \
+  vllm serve \
+  --model /data/models/Qwen3-TTS-12Hz-1.7B-CustomVoice \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --kv-cache-memory-bytes 4G \
+  --omni
+```
+
+**Qwen3-ASR-1.7B**
+
+:warning: 注意，这里要用omni的镜像，同样的，也要加 `vllm serve`，用普通的vllm镜像会缺组件
+
+```bash
+docker run -d \
+  --name=qwenasr \
+  --runtime=nvidia \
+  --shm-size=4gb \
+  --ipc=host \
+  -p 6803:8000 \
+  -v /data2/litian/models:/data/models \
+  --gpus '"device=3"' \
+  10.4.32.48:5000/vllm/vllm-omni:qwen-image21 \
+  vllm serve \
+  --served-model-name qwenasr \
+  --model /data/models/Qwen3-ASR-1.7B \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --gpu_memory_utilization 0.4
+```
+
+**Z-Image-Turbo** ^cc59bd
+
+其实就是复用的下面的[[../3-踩坑笔记/91-docker问题汇总#^5e20bf|Qwen-Image-2.1]]
+
+```bash
+docker run -d \
+  --name=zimageturbo \
+  --runtime=nvidia \
+  --ipc=host \
+  -p 6604:8000 \
+  -v /data2/litian/models:/data/models \
+  --gpus '"device=4"' \
+  10.4.32.48:5000/vllm/vllm-omni:qwen-image21 \
+  vllm serve \
+  --served-model-name zimage \
+  --omni \
+  --model /data/models/Z-Image-Turbo \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --kv-cache-memory-bytes 4G
+```
+
 **Qwen-Image-2.1** ^5e20bf
 
 参考文章：[[../5-技术文档/拿下开源生图第一，千问Qwen-Image-2.1把生图卷出新高度|拿下开源生图第一，千问Qwen-Image-2.1把生图卷出新高度]]
@@ -875,25 +943,51 @@ docker run -d \
   --omni \
   --model /data/models/Qwen-Image-2.1 \
   --host 0.0.0.0 \
-  --port 8000
+  --port 8000 \
+  --kv-cache-memory-bytes 4G
+  
+  
+  
+  // 单卡部署多个模型，就不要设置比例独占了，而是设置 kv cache的占用上限
+  --gpu_memory_utilization 0.5
 ```
 
 **Qwen3.8 27b**
 
 参考：[Qwen/Qwen3.8-27B | vLLM Recipes](https://recipes.vllm.ai/Qwen/Qwen3.8-27B)
 
+==【放弃了】==单卡无论如何都跑不起来，即使降低 max_model_len
+
+- 删了 `--speculative-config '{"method": "mtp", "num_speculative_tokens": 1}'`，这玩意儿太吃内存了
+
+  开启 MTP（Multi-Token Prediction，原生多 Token 预测推测解码），每一步一次性猜测 1 个候选 token，交给主模型并行校验，加速生成，不需要额外单独的 draft 模型
+
+- 删了 `--enable-prefix-caching` **前缀缓存**
+
+  作用：相同前缀（system prompt、重复工具调用前缀）复用 KV，提升吞吐、减少重复计算
+
+  显存代价：会维护一个全局 prefix KV 缓存池，缓存越多不同前缀，占用越高；大量不一样的 prompt 时，缓存池持续涨。
+
+- 删了 `--mm-encoder-tp-mode data \
+    --mm-processor-cache-type shm`
+
+  - 前者：encoder 走数据并行，每个 GPU 都保留 encoder 副本，**显存翻倍吃 encoder**（这里 TP=2，两张卡各一份 encoder）
+  - 后者：多模态预处理缓存放到共享内存（shm），**不吃 GPU 显存，吃主机内存**，对 GPU 显存友好，这个本身不加剧显存。
+
+==【这里最终还是用了双卡】==
+
 ```bash
 docker run -d \
   --name=qwen3.8 \
   --runtime=nvidia \
   --ipc=host \
-  --shm-size=128g \ 
+  --shm-size=128g \
   -p 6606:8000 \
   -v /data2/litian/models:/data/models \
   --gpus '"device=6,7"' \
   10.4.32.48:5000/vllm/vllm-openai:v0.22.1 \
   --tensor-parallel-size 2 \
-  --gpu_memory_utilization 0.8 \
+  --gpu_memory_utilization 0.95 \
   --max_model_len 262144 \
   --reasoning-parser qwen3 \
   --enable-auto-tool-choice \
@@ -907,8 +1001,7 @@ docker run -d \
   --model /data/models/Qwen3.8-27B  \
   --served-model-name qwen3.8 \
   --host 0.0.0.0 \
-  --port 8000 \
-  --omni
+  --port 8000
 ```
 
 **Qwen3.6-35B-A3B**
@@ -1055,6 +1148,7 @@ docker run -d \
   -v /data2/litian/models:/data/models \
   --gpus '"device=5"' \
   10.4.32.48:5000/vllm/vllm-openai:v0.10.0 \
+  --gpu_memory_utilization 0.45 \
   --model /data/models/Qwen3-Embedding-8B \
   --served-model-name qwen3-embedding \
   --task embedding \
@@ -1084,13 +1178,14 @@ docker run -d \
   --shm-size=128g \
   -p 32804:8000 \
   -v /data2/litian/models:/data/models \
-  --gpus '"device=4"' \
+  --gpus '"device=5"' \
   10.4.32.48:5000/vllm/vllm-openai:v0.10.0 \
   --model /data/models/Qwen3-Reranker-8B \
   --served-model-name qwen3-reranker \
   --task score \
   --host 0.0.0.0 \
-  --port 8000
+  --port 8000 \
+  --gpu_memory_utilization 0.45
 ```
 
 测试参数：`http://xxx/v1/rerank`
