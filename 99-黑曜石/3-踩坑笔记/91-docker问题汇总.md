@@ -212,6 +212,10 @@ sticker: emoji//1f6a2
 
 ## 常见容器使用
 
+### Netdata
+
+[[../5-技术文档/零配置 AI 监控神器，服务器抖一下都逃不掉#Docker|监控服务器，all in one]]
+
 ### Harbor
 
 参考文档：https://blog.csdn.net/mxm553/article/details/154234002
