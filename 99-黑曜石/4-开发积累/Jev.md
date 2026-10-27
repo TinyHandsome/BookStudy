@@ -1,6 +1,8 @@
 ---
 tags:
   - LLM
+banner: 4-开发积累/Jev.assets/image-20261027153735627.png
+sticker: emoji//2708-fe0f
 ---
 # Jev
 
@@ -8,6 +10,7 @@ tags:
 
 - 作者：阿尔梅达
 - 公司：TypeSafe AI
+- 描述：System 1
 - 3 种任务：
 
   - choice：从选项里选一个，返回每个选项的概率，适合分诊路由和意图分类；
@@ -23,3 +26,15 @@ tags:
 
 - [[../5-技术文档/开源版 Jev 发布了#^5b9dcb|laya]]：基础版零样本接近瞎猜，多语言版的置信度要自己拟合，几十个选项的分类会吃亏。
 - OpenJav
+
+
+
+## 值得一读
+
+但是懒得读
+
+1. [Jev + LLM：Agent 架构里的新范式](https://mp.weixin.qq.com/s/JI-24HtoU5GqOmGOhUh7oQ)
+
+   ![image-20261027153735627](Jev.assets/image-20261027153735627.png)
+
+2. 
