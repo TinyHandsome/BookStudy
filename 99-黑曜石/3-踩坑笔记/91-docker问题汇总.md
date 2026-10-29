@@ -859,11 +859,40 @@ docker run -d --runtime nvidia --gpus all --name vllm-test --ipc=host -v /data/m
 >
 > 注意：怎么导入hf上下的模型，先编写一个 `Modelfile`，里面 `FROM /data/models/bge-reranker-v2-m3-GGUF`，后面的文件夹就是你的模型路径，然后用ollama导入，`ollama create bge-reranker-v2-m3-GGUF -f Modelfile`，:tada: 然后你就能在 `ollama list` 中看到你导入的模型了~
 
+**JEV-27B-VL** ^0800be
+
+```bash
+docker run -d \
+  --name=jev \
+  --runtime=nvidia \
+  --shm-size=128gb \
+  --ipc=host \
+  -p 6904:8000 \
+  -v /data2/litian/models:/data/models \
+  --gpus '"device=4"' \
+  10.4.32.48:5000/vllm/vllm-openai:v0.32.0 \
+  vllm serve /data/models/JEV-27B-VL \
+  --served-model-name jev \
+  --enable-lora \
+  --max-lora-rank 32 \
+  --lora-modules jev-decision=JEV-27B-VL/adapter_vllm \
+  --logprobs-mode processed_logprobs \
+  --max-model-len 32768 \
+  --enable-prefix-caching \
+  --mamba-cache-mode align \
+  --limit-mm-per-prompt '{"image": 8}' \
+  --max-num-seqs 8 \
+  --trust-request-chat-template \
+  --tensor-parallel-size 1 \
+  --host 0.0.0.0 \
+  --port 8000
+```
+
 **Qwen3-TTS-12Hz-1.7B-CustomVoice**
 
 :warning: tts的Pipline不允许带 `--served-model-name qwentts \`
 
-就很奇妙，`--gpu_memory_utilization 0.6` 不行，`--kv-cache-memory-bytes 30G` 也不行，非要 `4G` 就行问题是，总体显存占用并不多
+就很奇妙，`--gpu_memory_utilization 0.6` 不行，`--kv-cache-memory-bytes 30G` 也不行，非要 `4G` 就行问题是，总体显存占用并不多
 
 ```bash
 docker run -d \
@@ -949,8 +978,6 @@ docker run -d \
   --host 0.0.0.0 \
   --port 8000 \
   --kv-cache-memory-bytes 4G
-  
-  
   
   // 单卡部署多个模型，就不要设置比例独占了，而是设置 kv cache的占用上限
   --gpu_memory_utilization 0.5
