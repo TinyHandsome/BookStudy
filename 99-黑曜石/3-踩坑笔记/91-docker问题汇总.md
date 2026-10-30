@@ -859,7 +859,7 @@ docker run -d --runtime nvidia --gpus all --name vllm-test --ipc=host -v /data/m
 >
 > 注意：怎么导入hf上下的模型，先编写一个 `Modelfile`，里面 `FROM /data/models/bge-reranker-v2-m3-GGUF`，后面的文件夹就是你的模型路径，然后用ollama导入，`ollama create bge-reranker-v2-m3-GGUF -f Modelfile`，:tada: 然后你就能在 `ollama list` 中看到你导入的模型了~
 
-**JEV-27B-VL** ^0800be
+**JEV-27B-VL** ^0800be ==TODO==
 
 ```bash
 docker run -d \
