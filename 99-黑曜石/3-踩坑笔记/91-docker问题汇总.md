@@ -859,7 +859,7 @@ docker run -d --runtime nvidia --gpus all --name vllm-test --ipc=host -v /data/m
 >
 > 注意：怎么导入hf上下的模型，先编写一个 `Modelfile`，里面 `FROM /data/models/bge-reranker-v2-m3-GGUF`，后面的文件夹就是你的模型路径，然后用ollama导入，`ollama create bge-reranker-v2-m3-GGUF -f Modelfile`，:tada: 然后你就能在 `ollama list` 中看到你导入的模型了~
 
-**JEV-27B-VL** ^0800be ==TODO==
+**JEV-27B-VL** ^0800be ==完蛋啦，需要最少cuda129，下下来跑不起来==
 
 ```bash
 docker run -d \
@@ -867,11 +867,11 @@ docker run -d \
   --runtime=nvidia \
   --shm-size=128gb \
   --ipc=host \
-  -p 6904:8000 \
-  -v /data2/litian/models:/data/models \
-  --gpus '"device=4"' \
-  10.4.32.48:5000/vllm/vllm-openai:v0.32.0 \
-  vllm serve /data/models/JEV-27B-VL \
+  -p 8301:8000 \
+  -v /data/models:/data/models \
+  --gpus '"device=0"' \
+  10.5.33.10:5500/library/vllm-openai:v0.32.0 \
+  --model /data/models/JEV-27B-VL \
   --served-model-name jev \
   --enable-lora \
   --max-lora-rank 32 \

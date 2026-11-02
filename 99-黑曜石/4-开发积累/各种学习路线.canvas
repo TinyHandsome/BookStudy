@@ -1,0 +1,8 @@
+{
+	"nodes":[
+		{"id":"0d66ec7c85ea86e0","x":-780,"y":180,"width":891,"height":904,"color":"1","type":"group","label":"机器学习"},
+		{"id":"06eaa87c36df1710","type":"file","file":"4-开发积累/各种学习路线.assets/机器学习调优课程大纲.jpg","x":-760,"y":200,"width":480,"height":864},
+		{"id":"41bf85f74d793f9f","type":"file","file":"4-开发积累/各种学习路线.assets/机器学习面试题.png","x":-260,"y":200,"width":351,"height":864}
+	],
+	"edges":[]
+}

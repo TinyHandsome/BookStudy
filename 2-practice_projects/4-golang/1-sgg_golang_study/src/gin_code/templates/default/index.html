@@ -1,0 +1,48 @@
+{{define "default/index.html"}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/base.css" />
+  </head>
+  <body>
+    {{template "public/page_header.html" .}}
+    <h2>{{.title}}</h2>
+
+    {{$t := .title}}
+
+    <br />
+
+    <!-- 定义变量 -->
+    <h4>{{$t}}</h4>
+
+    <!-- 条件判断 -->
+    {{ if ge .score 60}}
+    <p>及格</p>
+    {{else}}
+    <p>不及格</p>
+    {{end}}
+
+    <!-- 循环 -->
+    {{range $key, $val := .hobby}}
+    <li>{{$key}}--{{$val}}</li>
+    {{end}}
+
+    <!-- 解构结构体 -->
+    <p>{{with .news}} {{.Title}} -- {{.Content}} {{end}}</p>
+
+    <!-- 预定义函数 -->
+    {{len .title}}
+
+    <br />
+
+    {{UnixToTime .date}}
+
+    <br />
+    <!-- 路由传值 -->
+    {{.username}} -- {{.age}}
+  </body>
+</html>
+{{end}}

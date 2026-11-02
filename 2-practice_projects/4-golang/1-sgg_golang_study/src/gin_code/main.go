@@ -2,6 +2,8 @@ package main
 
 import (
 	"net/http"
+	"text/template"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,14 +14,59 @@ type Article struct {
 	Content string `json:"content"`
 }
 
+func UnixToTime(timestamp int) string {
+	t := time.Unix(int64(timestamp), 0)
+	return t.Format("2006-01-02 15:04:05")
+}
+
 func main() {
 	// 创建一个默认的路由引擎
 	r := gin.Default()
+	// 注册模板函数
+	r.SetFuncMap(template.FuncMap{
+		"UnixToTime": UnixToTime,
+	})
 	// 加载模板
-	r.LoadHTMLGlob("templates/*")
+	r.LoadHTMLGlob("templates/**/*")
+	// 配置静态文件服务
+	r.Static("/static", "./static/")
 	// 配置路由
 	r.GET("/", func(c *gin.Context) {
-		c.String(200, "值：%v", "你好gin")
+		uname := c.Query("username")
+		age := c.DefaultQuery("age", "0")
+
+		c.HTML(http.StatusOK, "default/index.html", gin.H{
+			"title": "首页",
+			"score": 89,
+			"hobby": []string{"eat", "sleep", "coding"},
+			"news": &Article{
+				Title:   "皮卡丘",
+				Content: "皮皮虾",
+			},
+			"date":     1629423555,
+			"username": uname,
+			"age":      age,
+		})
+	})
+	r.POST("/user", func(ctx *gin.Context) {
+		uname := ctx.DefaultPostForm("username", "test")
+		pword := ctx.PostForm("password")
+		ctx.JSON(http.StatusOK, gin.H{
+			"username": uname,
+			"password": pword,
+		})
+	})
+	r.GET("/news", func(c *gin.Context) {
+		// c.String(200, "我是新闻页面111")
+		news := &Article{
+			Title:   "新闻标题",
+			Desc:    "我是描述",
+			Content: "测试",
+		}
+		c.HTML(http.StatusOK, "default/news.html", gin.H{
+			"title": "新闻页面",
+			"news":  news,
+		})
 	})
 	r.GET("/json", func(c *gin.Context) {
 		c.JSON(http.StatusOK, map[string]any{
@@ -54,12 +101,6 @@ func main() {
 		c.XML(http.StatusOK, gin.H{
 			"success": true,
 			"msg":     "hi gin, xml",
-		})
-	})
-	r.GET("/news", func(c *gin.Context) {
-		// c.String(200, "我是新闻页面111")
-		c.HTML(http.StatusOK, "new.html", gin.H{
-			"title": "我是后台数据",
 		})
 	})
 	r.POST("/add", func(c *gin.Context) {
