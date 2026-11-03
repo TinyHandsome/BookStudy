@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/xml"
+	"fmt"
+	"gin_code/routers"
 	"net/http"
 	"text/template"
 	"time"
@@ -12,6 +15,15 @@ type Article struct {
 	Title   string `json:"title"`
 	Desc    string `json:"desc"`
 	Content string `json:"content"`
+}
+
+type UserInfo struct {
+	Username string `json:"username" form:"username"`
+	Password string `json:"password" form:"password"`
+}
+type Info struct {
+	Title   string `json:"title" xml:"title"`
+	Content string `json:"content" xml:"content"`
 }
 
 func UnixToTime(timestamp int) string {
@@ -30,6 +42,20 @@ func main() {
 	r.LoadHTMLGlob("templates/**/*")
 	// 配置静态文件服务
 	r.Static("/static", "./static/")
+
+	// 路由分组
+
+	defaultRouters := r.Group("/v1")
+	{
+		defaultRouters.GET("/", func(ctx *gin.Context) {
+			ctx.String(200, "首页")
+		})
+		defaultRouters.GET("/news", func(ctx *gin.Context) {
+			ctx.String(200, "新闻")
+		})
+	}
+	routers.AdminRoutersInit(r)
+
 	// 配置路由
 	r.GET("/", func(c *gin.Context) {
 		uname := c.Query("username")
@@ -68,6 +94,42 @@ func main() {
 			"news":  news,
 		})
 	})
+	r.GET("/getuser", func(ctx *gin.Context) {
+		user := &UserInfo{}
+		if err := ctx.ShouldBind(&user); err == nil {
+			fmt.Printf("%#v\n", user)
+			ctx.JSON(http.StatusOK, user)
+		} else {
+			ctx.JSON(http.StatusOK, gin.H{
+				"err": err.Error(),
+			})
+		}
+	})
+	r.POST("/getuser2", func(ctx *gin.Context) {
+		user := &UserInfo{}
+		if err := ctx.ShouldBind(&user); err == nil {
+			fmt.Printf("%#v\n", user)
+			ctx.JSON(http.StatusOK, user)
+		} else {
+			ctx.JSON(http.StatusOK, gin.H{
+				"err": err.Error(),
+			})
+		}
+	})
+	r.POST("/xml2", func(ctx *gin.Context) {
+		// ctx.ShouldBindBodyWithXML(obj any)
+		info := &Info{}
+		xmlSliceData, _ := ctx.GetRawData()
+		fmt.Println(xmlSliceData)
+		if err := xml.Unmarshal(xmlSliceData, &info); err == nil {
+			ctx.JSON(http.StatusOK, info)
+		} else {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"err": err.Error(),
+			})
+		}
+	})
+
 	r.GET("/json", func(c *gin.Context) {
 		c.JSON(http.StatusOK, map[string]any{
 			"success": true,
@@ -112,5 +174,12 @@ func main() {
 	r.DELETE("/delete", func(c *gin.Context) {
 		c.String(http.StatusOK, "delete请求，主要用于删除数据")
 	})
+
+	// 动态路由传值
+	r.GET("/list/:cid", func(ctx *gin.Context) {
+		cid := ctx.Param("cid")
+		ctx.String(200, "%v", cid)
+	})
+
 	r.Run()
 }
