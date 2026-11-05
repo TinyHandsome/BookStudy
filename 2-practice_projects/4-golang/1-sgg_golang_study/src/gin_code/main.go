@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	"gin_code/models"
 	"gin_code/routers"
 	"net/http"
 	"text/template"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,17 +26,12 @@ type Info struct {
 	Content string `json:"content" xml:"content"`
 }
 
-func UnixToTime(timestamp int) string {
-	t := time.Unix(int64(timestamp), 0)
-	return t.Format("2006-01-02 15:04:05")
-}
-
 func main() {
 	// 创建一个默认的路由引擎
 	r := gin.Default()
 	// 注册模板函数
 	r.SetFuncMap(template.FuncMap{
-		"UnixToTime": UnixToTime,
+		"UnixToTime": models.UnixToTime,
 	})
 	// 加载模板
 	r.LoadHTMLGlob("templates/**/*")
