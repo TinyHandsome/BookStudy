@@ -8,6 +8,9 @@ import (
 	"net/http"
 	"text/template"
 
+	"github.com/gin-contrib/sessions"
+	_ "github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,9 +40,12 @@ func main() {
 	r.LoadHTMLGlob("templates/**/*")
 	// 配置静态文件服务
 	r.Static("/static", "./static/")
+	// 配置 Session 中间件
+	store, _ := redis.NewStore(10, "tcp", "localhost:6379", "", "", []byte("secret"))
+	// store := cookie.NewStore([]byte("secret"))
+	r.Use(sessions.Sessions("mysession", store))
 
 	// 路由分组
-
 	defaultRouters := r.Group("/v1")
 	{
 		defaultRouters.GET("/", func(ctx *gin.Context) {
