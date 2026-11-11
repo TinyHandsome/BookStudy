@@ -166,8 +166,27 @@ func main() {
 			"msg":     "hi gin, xml",
 		})
 	})
-	r.POST("/add", func(c *gin.Context) {
-		c.String(200, "我是post请求，主要用于增加数据")
+	r.GET("/get", func(c *gin.Context) {
+		// 查询数据库
+		userList := []models.User{}
+		// models.DB.Find(&userList)
+		// 条件查询
+		models.DB.Where("age>18").Find(&userList)
+		c.JSON(http.StatusOK, gin.H{
+			"result": userList,
+		})
+
+	})
+	r.GET("/add", func(c *gin.Context) {
+		user := models.User{
+			Username: "zhuzhu",
+			Age:      22,
+			Email:    "222@qq.com",
+			AddTime:  int(models.GetUnix()),
+		}
+		models.DB.Create(&user)
+		fmt.Println(user)
+		c.String(200, "增加用户成功")
 	})
 	r.PUT("/edit", func(c *gin.Context) {
 		c.String(200, "这是一个put请求，主要用于编辑数据")
