@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 780" width="1000" height="780">
+<style>text{font-family:'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif;}</style>
+<defs>
+  <marker id="ab" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+  </marker>
+  <marker id="ag" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+  </marker>
+  <marker id="ao" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/>
+  </marker>
+  <marker id="ap" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/>
+  </marker>
+  <marker id="agr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+  </marker>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.10"/>
+  </filter>
+</defs>
+<rect width="1000" height="780" fill="#ffffff"/>
+<text x="500" y="34" text-anchor="middle" font-size="20" font-weight="600" fill="#111827">AI 推理任务调度系统架构</text>
+<text x="500" y="54" text-anchor="middle" font-size="12" fill="#6b7280">Gin 调度主服务 · 消息队列解耦 · FastAPI 无状态推理集群</text>
+<g filter="url(#shadow)">
+<rect x="80" y="64" width="880" height="72" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+</g>
+<text x="96" y="48" font-size="13" font-weight="600" fill="#111827">上游客户端</text>
+<rect x="176" y="84" width="160" height="36" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="256" y="107" text-anchor="middle" font-size="13" fill="#111827">Web 前端</text>
+<rect x="436" y="84" width="160" height="36" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="516" y="107" text-anchor="middle" font-size="13" fill="#111827">SDK</text>
+<rect x="696" y="84" width="160" height="36" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="776" y="107" text-anchor="middle" font-size="13" fill="#111827">脚本</text>
+<g filter="url(#shadow)">
+<rect x="80" y="136" width="880" height="288" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+</g>
+<text x="100" y="166" font-size="15" font-weight="600" fill="#111827">Gin Service 调度主服务</text>
+<text x="944" y="166" text-anchor="end" font-size="11" fill="#6b7280">Go · 任务生命周期管理</text>
+<rect x="104" y="176" width="320" height="64" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="118" y="199" font-size="13" font-weight="600" fill="#111827">HTTP 接口层</text>
+<text x="118" y="223" font-size="12" fill="#6b7280">提交任务 · 查任务状态 · 查结果 · 取消任务</text>
+<rect x="502" y="176" width="442" height="64" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="518" y="199" font-size="13" font-weight="600" fill="#111827">校验 &amp; 鉴权</text>
+<text x="518" y="223" font-size="12" fill="#6b7280">参数校验 · Token 认证 · 限流 · 权限控制</text>
+<line x1="426" y1="208" x2="496" y2="208" stroke="#ea580c" stroke-width="1.5" marker-end="url(#ao)"/>
+<rect x="437" y="180" width="70" height="18" rx="9" fill="#ffffff" opacity="0.92"/>
+<text x="472" y="193" text-anchor="middle" font-size="11" fill="#6b7280">校验/鉴权</text>
+<rect x="104" y="262" width="320" height="94" rx="8" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.5"/>
+<text x="118" y="286" font-size="13" font-weight="600" fill="#111827">消息队列（核心解耦）</text>
+<text x="118" y="305" font-size="11" fill="#6b7280">Redis List / RabbitMQ / Kafka</text>
+<rect x="118" y="314" width="140" height="30" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+<text x="188" y="333" text-anchor="middle" font-size="11" fill="#111827">任务队列 · 待推理任务</text>
+<rect x="268" y="314" width="144" height="30" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+<text x="354" y="333" text-anchor="middle" font-size="11" fill="#111827">结果队列 · 回调通知</text>
+<rect x="502" y="262" width="442" height="94" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="560" y="286" font-size="13" font-weight="600" fill="#111827">数据库</text>
+<text x="560" y="304" font-size="11" fill="#6b7280">PostgreSQL / MySQL</text>
+<text x="560" y="326" font-size="12" fill="#111827">task 表：任务ID · 状态 · 输入参数 · 结果</text>
+<text x="560" y="343" font-size="12" fill="#111827">错误信息 · 创建时间 · 回调地址</text>
+<ellipse cx="892" cy="288" rx="26" ry="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<path d="M 866,288 L 866,326 A 26,8 0 0 0 918,326 L 918,288" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<path d="M 866,288 A 26,8 0 0 0 918,288" fill="none" stroke="#16a34a" stroke-width="1.5"/>
+<line x1="518" y1="240" x2="518" y2="261" stroke="#16a34a" stroke-width="1.5" marker-end="url(#ag)"/>
+<rect x="528" y="240" width="52" height="18" rx="9" fill="#ffffff" opacity="0.92"/>
+<text x="554" y="253" text-anchor="middle" font-size="11" fill="#6b7280">读写</text>
+<rect x="104" y="376" width="338" height="40" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="118" y="392" font-size="11" font-weight="600" fill="#111827">调度协程池（Goroutine）</text>
+<text x="118" y="408" font-size="10" fill="#6b7280">消费队列 → 推理 → 更新DB → 回调 → 失败重试</text>
+<line x1="263" y1="356" x2="263" y2="374" stroke="#9333ea" stroke-width="1.5" marker-end="url(#ap)"/>
+<path d="M 442,396 L 560,396 L 560,358" fill="none" stroke="#16a34a" stroke-width="1.5" marker-end="url(#ag)"/>
+<rect x="458" y="374" width="82" height="16" rx="8" fill="#ffffff" opacity="0.95"/>
+<text x="499" y="386" text-anchor="middle" font-size="10" fill="#6b7280">更新DB · 回调</text>
+<g filter="url(#shadow)">
+<rect x="80" y="482" width="880" height="118" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+</g>
+<text x="96" y="506" font-size="15" font-weight="600" fill="#111827">FastAPI 推理服务集群</text>
+<text x="310" y="506" font-size="11" fill="#6b7280">多实例 · 无状态 · 可水平扩展</text>
+<rect x="116" y="520" width="252" height="70" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="130" y="545" font-size="13" font-weight="600" fill="#111827">/predict_async</text>
+<text x="130" y="568" font-size="11" fill="#6b7280">批量 / 长耗时推理 · 推荐</text>
+<rect x="392" y="520" width="252" height="70" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="406" y="545" font-size="13" font-weight="600" fill="#111827">/predict</text>
+<text x="406" y="568" font-size="11" fill="#6b7280">同步推理（短耗时任务）</text>
+<rect x="668" y="520" width="264" height="70" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="682" y="545" font-size="13" font-weight="600" fill="#111827">/health</text>
+<text x="682" y="568" font-size="11" fill="#6b7280">健康检查 · 供 Gin 探活</text>
+<line x1="472" y1="424" x2="472" y2="476" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>
+<rect x="484" y="440" width="122" height="18" rx="9" fill="#ffffff" opacity="0.92"/>
+<text x="545" y="453" text-anchor="middle" font-size="11" fill="#6b7280">调用 FastAPI 推理</text>
+<g filter="url(#shadow)">
+<rect x="80" y="666" width="880" height="58" rx="10" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+</g>
+<rect x="110" y="681" width="18" height="18" rx="3" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<rect x="115" y="686" width="8" height="8" fill="#fde68a"/>
+<line x1="112" y1="681" x2="112" y2="677" stroke="#d97706" stroke-width="1.5"/>
+<line x1="112" y1="699" x2="112" y2="703" stroke="#d97706" stroke-width="1.5"/>
+<line x1="117" y1="681" x2="117" y2="677" stroke="#d97706" stroke-width="1.5"/>
+<line x1="117" y1="699" x2="117" y2="703" stroke="#d97706" stroke-width="1.5"/>
+<line x1="122" y1="681" x2="122" y2="677" stroke="#d97706" stroke-width="1.5"/>
+<line x1="122" y1="699" x2="122" y2="703" stroke="#d97706" stroke-width="1.5"/>
+<line x1="127" y1="681" x2="127" y2="677" stroke="#d97706" stroke-width="1.5"/>
+<line x1="127" y1="699" x2="127" y2="703" stroke="#d97706" stroke-width="1.5"/>
+<text x="142" y="692" font-size="14" font-weight="600" fill="#111827">模型层</text>
+<text x="142" y="710" font-size="12" fill="#111827">vLLM / Torch / 自定义 Mol 模型</text>
+<text x="400" y="700" font-size="12" fill="#6b7280">GPU 推理卡</text>
+<line x1="472" y1="600" x2="472" y2="660" stroke="#16a34a" stroke-width="2" marker-end="url(#ag)"/>
+<rect x="484" y="622" width="56" height="18" rx="9" fill="#ffffff" opacity="0.92"/>
+<text x="512" y="635" text-anchor="middle" font-size="11" fill="#6b7280">GPU 推理</text>
+<line x1="40" y1="136" x2="40" y2="170" stroke="#ea580c" stroke-width="1.5" marker-end="url(#ao)"/>
+<text x="52" y="150" font-size="11" fill="#6b7280">查询 / 取消 / 回调</text>
+<line x1="540" y1="136" x2="540" y2="170" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>
+<text x="554" y="156" font-size="11" fill="#6b7280">提交推理任务</text>
+<line x1="64" y1="424" x2="64" y2="480" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#agr)"/>
+<rect x="70" y="438" width="106" height="18" rx="9" fill="#ffffff" opacity="0.92"/>
+<text x="123" y="451" text-anchor="middle" font-size="11" fill="#6b7280">健康检查（Gin 探活）</text>
+<path d="M 960,520 L 972,520 L 972,280 L 948,280" fill="none" stroke="#9333ea" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ap)"/>
+<rect x="835" y="444" width="128" height="18" rx="9" fill="#ffffff" opacity="0.95"/>
+<text x="899" y="457" text-anchor="middle" font-size="11" fill="#6b7280">写回推理结果（可选）</text>
+<text x="80" y="756" font-size="12" font-weight="600" fill="#111827">图例</text>
+<line x1="140" y1="752" x2="172" y2="752" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>
+<text x="180" y="756" font-size="12" fill="#6b7280">主请求/结果流</text>
+<line x1="280" y1="752" x2="312" y2="752" stroke="#16a34a" stroke-width="2" marker-end="url(#ag)"/>
+<text x="320" y="756" font-size="12" fill="#6b7280">数据/推理流</text>
+<line x1="410" y1="752" x2="442" y2="752" stroke="#ea580c" stroke-width="1.5" marker-end="url(#ao)"/>
+<text x="450" y="756" font-size="12" fill="#6b7280">控制流（查询/取消）</text>
+<line x1="590" y1="752" x2="622" y2="752" stroke="#9333ea" stroke-width="1.5" marker-end="url(#ap)"/>
+<text x="630" y="756" font-size="12" fill="#6b7280">异步队列消息</text>
+<line x1="750" y1="752" x2="782" y2="752" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#agr)"/>
+<text x="790" y="756" font-size="12" fill="#6b7280">回调/健康检查</text>
+</svg>

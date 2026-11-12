@@ -175,7 +175,6 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{
 			"result": userList,
 		})
-
 	})
 	r.GET("/add", func(c *gin.Context) {
 		user := models.User{
@@ -188,11 +187,39 @@ func main() {
 		fmt.Println(user)
 		c.String(200, "增加用户成功")
 	})
-	r.PUT("/edit", func(c *gin.Context) {
-		c.String(200, "这是一个put请求，主要用于编辑数据")
+	r.GET("/edit", func(c *gin.Context) {
+		// 更新数据
+		user := models.User{Id: 946749}
+		models.DB.Find(&user)
+		user.Username = "皮卡丘"
+		user.Email = "pika@qq.com"
+		models.DB.Save(&user)
+		c.String(200, "修改用户")
 	})
-	r.DELETE("/delete", func(c *gin.Context) {
-		c.String(http.StatusOK, "delete请求，主要用于删除数据")
+	r.GET("/edit2", func(c *gin.Context) {
+		// 更新数据
+		user := models.User{}
+		models.DB.Model(&user).Where("id = ?", 946749).Update("username", "大狗")
+		c.String(200, "修改用户成功")
+	})
+	r.GET("/edit3", func(c *gin.Context) {
+		// 更新数据
+		user := models.User{}
+		models.DB.Where("id = ?", 946749).Find(&user)
+		user.Username = "小小猪"
+		user.Email = "333@email.com"
+		models.DB.Save(&user)
+		c.String(200, "修改用户成功")
+	})
+	r.GET("/delete", func(c *gin.Context) {
+		user := models.User{Id: 208320}
+		models.DB.Delete(&user)
+		c.String(200, "删除用户成功")
+	})
+	r.GET("/delete2", func(c *gin.Context) {
+		user := models.User{}
+		models.DB.Where("id = ?", 428830).Delete(&user)
+		c.String(200, "删除用户成功")
 	})
 
 	// 动态路由传值
