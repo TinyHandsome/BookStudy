@@ -902,7 +902,7 @@ docker run -d \
   --ipc=host \
   -p 6804:8000 \
   -v /data2/litian/models:/data/models \
-  --gpus '"device=4"' \
+  --gpus '"device=3"' \
   10.4.32.48:5000/vllm/vllm-omni:qwen-image21 \
   vllm serve \
   --model /data/models/Qwen3-TTS-12Hz-1.7B-CustomVoice \
@@ -969,7 +969,7 @@ docker run -d \
   --ipc=host \
   -p 6603:8000 \
   -v /data2/litian/models:/data/models \
-  --gpus '"device=3"' \
+  --gpus '"device=4"' \
   10.4.32.48:5000/vllm/vllm-omni:qwen-image21 \
   vllm serve \
   --served-model-name qwenimage \
