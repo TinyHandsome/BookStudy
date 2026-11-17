@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 640" width="1040" height="640">
+<style>text{font-family:'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif;}</style>
+<defs>
+<marker id="mg" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<marker id="mgreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="mred" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1040" height="640" fill="#ffffff"/>
+<text x="520" y="30" text-anchor="middle" font-size="20" font-weight="600" fill="#111827">AI 项目需求处理流程图</text>
+<text x="520" y="50" text-anchor="middle" font-size="12" fill="#6b7280">按需求来源与保密级别分流处理 · 开发平台：ZHIN / SupOS 原生</text>
+<g filter="url(#shadow)">
+<rect x="410" y="64" width="220" height="36" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+</g>
+<text x="520" y="87" text-anchor="middle" font-size="14" font-weight="600" fill="#1e40af">AI 项目需求</text>
+<line x1="520" y1="100" x2="520" y2="119" stroke="#6b7280" stroke-width="2" marker-end="url(#mg)"/>
+<g filter="url(#shadow)">
+<polygon points="520,122 650,172 520,222 390,172" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+</g>
+<text x="520" y="177" text-anchor="middle" font-size="14" font-weight="600" fill="#92400e">是否保密</text>
+<path d="M 390,172 L 160,172 L 160,241" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#mgreen)"/>
+<line x1="160" y1="228" x2="880" y2="228" stroke="#16a34a" stroke-width="2"/>
+<line x1="400" y1="228" x2="400" y2="241" stroke="#16a34a" stroke-width="2" marker-end="url(#mgreen)"/>
+<line x1="640" y1="228" x2="640" y2="241" stroke="#16a34a" stroke-width="2" marker-end="url(#mgreen)"/>
+<line x1="880" y1="228" x2="880" y2="241" stroke="#16a34a" stroke-width="2" marker-end="url(#mgreen)"/>
+<rect x="243" y="184" width="64" height="20" rx="10" fill="#dcfce7"/>
+<text x="275" y="198" text-anchor="middle" font-size="12" font-weight="600" fill="#15803d">非保密</text>
+<path d="M 650,172 L 1016,172 L 1016,414 L 160,414" fill="none" stroke="#dc2626" stroke-width="2"/>
+<line x1="160" y1="414" x2="160" y2="449" stroke="#dc2626" stroke-width="2" marker-end="url(#mred)"/>
+<line x1="400" y1="414" x2="400" y2="449" stroke="#dc2626" stroke-width="2" marker-end="url(#mred)"/>
+<line x1="640" y1="414" x2="640" y2="449" stroke="#dc2626" stroke-width="2" marker-end="url(#mred)"/>
+<line x1="880" y1="414" x2="880" y2="449" stroke="#dc2626" stroke-width="2" marker-end="url(#mred)"/>
+<rect x="802" y="184" width="56" height="20" rx="10" fill="#fee2e2"/>
+<text x="830" y="198" text-anchor="middle" font-size="12" font-weight="600" fill="#b91c1c">保密</text>
+<g filter="url(#shadow)">
+<rect x="36" y="236" width="968" height="124" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+</g>
+<g filter="url(#shadow)">
+<rect x="36" y="444" width="968" height="96" rx="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+</g>
+<rect x="56" y="244" width="208" height="108" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+<text x="160" y="266" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">AI Coding 自研</text>
+<text x="160" y="298" text-anchor="middle" font-size="12" fill="#111827">重构项目架构</text>
+<text x="160" y="322" text-anchor="middle" font-size="12" fill="#111827">基于 ZHIN 平台开发实现</text>
+<rect x="296" y="244" width="208" height="108" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+<text x="400" y="266" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">开源项目本地部署</text>
+<text x="400" y="310" text-anchor="middle" font-size="12" fill="#111827">申请服务器部署</text>
+<rect x="536" y="244" width="208" height="108" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+<text x="640" y="266" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">外部厂家开发</text>
+<text x="640" y="310" text-anchor="middle" font-size="12" fill="#111827">申请服务器部署</text>
+<rect x="776" y="244" width="208" height="108" rx="8" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+<text x="880" y="266" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">产学研高校合作</text>
+<text x="880" y="294" text-anchor="middle" font-size="12" fill="#111827"><tspan font-weight="600" fill="#059669">小模型：</tspan>老师负责开发模型</text>
+<text x="880" y="313" text-anchor="middle" font-size="12" fill="#111827"><tspan font-weight="600" fill="#059669"></tspan>应用基于 ZHIN 开发实现</text>
+<text x="880" y="332" text-anchor="middle" font-size="12" fill="#111827"><tspan font-weight="600" fill="#059669">大模型：</tspan>Agent 类项目</text>
+<text x="880" y="348" text-anchor="middle" font-size="12" fill="#111827"><tspan font-weight="600" fill="#059669"></tspan>申请服务器部署</text>
+<rect x="56" y="452" width="208" height="76" rx="8" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5"/>
+<text x="160" y="476" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">AI Coding 自研</text>
+<text x="160" y="504" text-anchor="middle" font-size="13" fill="#7f1d1d">按 SupOS 原生要求改造实现</text>
+<rect x="296" y="452" width="208" height="76" rx="8" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5"/>
+<text x="400" y="476" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">开源项目本地部署</text>
+<text x="400" y="504" text-anchor="middle" font-size="13" font-weight="600" fill="#b91c1c">存在安全风险，不允许部署</text>
+<rect x="536" y="452" width="208" height="76" rx="8" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5"/>
+<text x="640" y="476" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">外部厂家开发</text>
+<text x="640" y="504" text-anchor="middle" font-size="13" fill="#7f1d1d">申请保密服务器部署</text>
+<rect x="776" y="452" width="208" height="76" rx="8" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5"/>
+<text x="880" y="476" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">产学研高校合作</text>
+<text x="880" y="504" text-anchor="middle" font-size="13" fill="#7f1d1d">申请保密服务器部署</text>
+<line x1="287" y1="594" x2="323" y2="594" stroke="#6b7280" stroke-width="2" marker-end="url(#mg)"/>
+<text x="331" y="598" font-size="12" fill="#374151">需求输入</text>
+<line x1="457" y1="594" x2="493" y2="594" stroke="#16a34a" stroke-width="2" marker-end="url(#mgreen)"/>
+<text x="501" y="598" font-size="12" fill="#374151">非保密路径</text>
+<line x1="637" y1="594" x2="673" y2="594" stroke="#dc2626" stroke-width="2" marker-end="url(#mred)"/>
+<text x="681" y="598" font-size="12" fill="#374151">保密路径</text>
+</svg>
