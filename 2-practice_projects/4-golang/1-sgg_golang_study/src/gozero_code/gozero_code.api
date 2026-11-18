@@ -1,0 +1,16 @@
+syntax = "v1"
+
+type Request {
+	Name string `path:"name"`
+// Name string `path:"name,options=you|me"`
+}
+
+type Response {
+	Message string `json:"message"`
+}
+
+service gozero_code-api {
+	@handler Gozero_codeHandler
+	get /from/:name (Request) returns (Response)
+}
+

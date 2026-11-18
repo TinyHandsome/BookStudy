@@ -1,0 +1,5 @@
+Name: gozero_code-api
+Host: 0.0.0.0
+Port: 8888
+Mysql: 
+  DataSource: "root:Qiangmima%40666@tcp(localhost:3306)/beego?charset=utf8mb4&parseTime=True&loc=Local"
