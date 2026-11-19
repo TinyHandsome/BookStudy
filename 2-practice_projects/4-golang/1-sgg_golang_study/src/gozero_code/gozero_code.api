@@ -12,5 +12,8 @@ type Response {
 service gozero_code-api {
 	@handler Gozero_codeHandler
 	get /from/:name (Request) returns (Response)
+
+	@handler UserHandler
+	get /user returns (Response)
 }
 
