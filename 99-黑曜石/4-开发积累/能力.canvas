@@ -12,19 +12,10 @@
 		{"id":"7d12d0c4398cd560","type":"text","text":"- PYQT\n- Tkinter","x":-1359,"y":420,"width":180,"height":80},
 		{"id":"bdd88dc2499960ef","type":"text","text":"科学计算","x":-1160,"y":320,"width":180,"height":60,"color":"3"},
 		{"id":"970d5f629849ee47","type":"text","text":"- SciPy\n- Statsmodels\n- <font color=\"#646a73\">SymPy</font>","x":-1160,"y":420,"width":180,"height":120},
-		{"id":"25bd3983a75faba4","type":"text","text":"**ML&DL**\n- TensorFlow\n- Pytorch\n- Scikit-learn\n- <font color=\"#646a73\">JAX</font>\n- <font color=\"#646a73\">MindSpore</font>\n\n","x":-569,"y":420,"width":204,"height":267},
-		{"id":"98c011206cb4e120","type":"text","text":"爬虫&数据采集","x":-1580,"y":320,"width":200,"height":60,"color":"5"},
-		{"id":"0ad7b8671bf7dbaf","type":"text","text":"- Requests\n- Aiohttp\n- Httpx\n- Beautifulsoup\n- Lxml\n- Scrapy\n- <font color=\"#646a73\">Crawlee</font>\n- Selenium\n- Playwright","x":-1580,"y":420,"width":201,"height":300},
-		{"id":"4716675ea68c1d70","type":"text","text":"客户端开发","x":258,"y":320,"width":180,"height":60,"color":"2"},
-		{"id":"080fd6701d93b546","type":"text","text":"Node.js","x":69,"y":420,"width":180,"height":60},
-		{"id":"70d92cad951e400d","type":"text","text":"<font color=\"#646a73\">Electron</font>","x":259,"y":420,"width":180,"height":60},
-		{"id":"8e329176587e9e29","type":"text","text":"- <font color=\"#646a73\">Fastify</font>\n- <font color=\"#646a73\">Express</font>","x":69,"y":500,"width":180,"height":95},
-		{"id":"41502ca379d95144","type":"text","text":"<font color=\"#646a73\">NestJS</font>","x":69,"y":615,"width":180,"height":60},
-		{"id":"f7aff04c8eb3da0e","type":"text","text":"- jQuery","x":-120,"y":420,"width":180,"height":60},
-		{"id":"f7b870bb44c6adac","type":"text","text":"- Vue\n- <font color=\"#646a73\">React</font>","x":-120,"y":500,"width":180,"height":80},
-		{"id":"592d978e3960985f","type":"text","text":"前端开发","x":-120,"y":320,"width":180,"height":60,"color":"5"},
+		{"id":"25bd3983a75faba4","type":"text","text":"**ML&DL**\n- TensorFlow\n- Pytorch\n- Scikit-learn\n- PaddlePaddle\n- <font color=\"#646a73\">JAX</font>\n- <font color=\"#646a73\">MindSpore</font>\n\n","x":-569,"y":420,"width":204,"height":267},
+		{"id":"98c011206cb4e120","type":"text","text":"爬虫&数据采集","x":-1580,"y":320,"width":200,"height":60,"color":"2"},
+		{"id":"0ad7b8671bf7dbaf","type":"text","text":"- Requests\n- Aiohttp\n- Httpx\n- Beautifulsoup\n- Lxml\n- Scrapy\n-  Selenium\n- Playwright\n- <font color=\"#646a73\">Crawlee</font>","x":-1580,"y":420,"width":201,"height":300},
 		{"id":"e69c11336bdfd98f","type":"text","text":"TS、JS、HTML、CSS","x":26,"y":120,"width":265,"height":60},
-		{"id":"38bdf617f1490bad","type":"text","text":"后端开发","x":68,"y":320,"width":180,"height":60,"color":"6"},
 		{"id":"3f09cfa24bd74ebe","type":"text","text":" Golang","x":585,"y":120,"width":180,"height":60},
 		{"id":"a0fee3bbb9636c52","type":"text","text":"Web 开发","x":480,"y":320,"width":180,"height":60,"color":"6"},
 		{"id":"b3c84c234bd3e2ca","type":"text","text":"客户端开发","x":680,"y":320,"width":180,"height":60,"color":"2"},
@@ -34,7 +25,17 @@
 		{"id":"d9afcc567f9cd1c9","type":"text","text":"<u>Rust</u>","x":-33,"y":-330,"width":111,"height":60},
 		{"id":"56d89b3d9fe8c564","type":"text","text":"**CV**\n- OpenCV\n- TorchVision\n- SAM、CLIP\n- Detectron\n- YOLO\n- <font color=\"#646a73\">OpenMMLab</font>\n\n","x":-569,"y":693,"width":204,"height":267},
 		{"id":"5ab4376406cb4f3d","type":"text","text":"**NLP&LLM**\n- Transformers\n- Diffusers\n- LangChain\n- LlamaIndex\n- NLTK\n- <font color=\"#646a73\">SpaCy</font>\n\n","x":-356,"y":693,"width":204,"height":267},
-		{"id":"6af2924d1d84eb17","type":"text","text":"**推理部署**\n- vLLM\n- SGLang\n- TGI\n- ONNX Runtime\n- Ollama\n- <font color=\"#646a73\">TorchServe</font>","x":-356,"y":420,"width":204,"height":267}
+		{"id":"6af2924d1d84eb17","type":"text","text":"**推理部署**\n- vLLM\n- SGLang\n- TGI\n- ONNX Runtime\n- Ollama\n- <font color=\"#646a73\">TorchServe</font>","x":-356,"y":420,"width":204,"height":267},
+		{"id":"080fd6701d93b546","type":"text","text":"Node.js","x":78,"y":420,"width":180,"height":60},
+		{"id":"8e329176587e9e29","type":"text","text":"- <font color=\"#646a73\">Fastify</font>\n- <font color=\"#646a73\">Express</font>","x":78,"y":500,"width":180,"height":95},
+		{"id":"41502ca379d95144","type":"text","text":"**SSR**\n- <font color=\"#646a73\">Nuxt</font>\n- <font color=\"#646a73\">Nest.js</font>\n","x":78,"y":615,"width":180,"height":155},
+		{"id":"4716675ea68c1d70","type":"text","text":"客户端开发","x":267,"y":320,"width":180,"height":60,"color":"2"},
+		{"id":"70d92cad951e400d","type":"text","text":"<font color=\"#646a73\">Electron</font>","x":268,"y":420,"width":180,"height":60},
+		{"id":"592d978e3960985f","type":"text","text":"前端开发","x":-111,"y":320,"width":180,"height":60,"color":"5"},
+		{"id":"f7aff04c8eb3da0e","type":"text","text":"- jQuery","x":-111,"y":420,"width":180,"height":60},
+		{"id":"f7b870bb44c6adac","type":"text","text":"**SPA**\n- Vue\n- <font color=\"#646a73\">React</font>","x":-111,"y":500,"width":180,"height":160},
+		{"id":"38bdf617f1490bad","type":"text","text":"后端开发","x":77,"y":320,"width":180,"height":60,"color":"6"},
+		{"id":"1f74d664a12b1d1a","type":"text","text":"**SPA（单页应用）**：\n\n- 打包出 html + js + css；浏览器加载空白 html，拉取 JS，在前端执行 Vue，渲染页面、请求后端接口\n- 优点：上手简单、开发快、交互流畅、组件复用好，你写 Vue+TS 日常就是这套\n- 底层特点：**渲染在浏览器端（客户端渲染 ==CSR==）**\n\n> [! info]- **SSR（Server-Side Rendering 服务端渲染）**\n> \n> SSR = 在服务端先把 Vue 组件渲染成完整 HTML 字符串，发给浏览器；浏览器拿到能直接展示的页面，之后再注水（hydrate）变成可交互 Vue 应用。\n> \n> SPA 的问题\n> \n> - **SEO 差**：内部后台、管理系统、企业工作台完全不在乎 SEO → 不需要 SSR；面向公网、内容站、商品页、官网、营销页才需要。\n> - **首屏白屏、TTI（可交互时间）差，弱网环境很明显**：SPA 要等 JS 下载、解析、执行、再请求接口拿数据才出内容。网络差的时候长时间白屏、转圈。 SSR 返回的 HTML 可以立刻展示骨架 / 内容，视觉上更快。\n> - **大 JS 包、低端设备卡顿**：所有业务逻辑、组件都丢给浏览器，低配手机打开页面卡顿。\n> \n> SSR 的代价（很重要）\n> \n> - 复杂度暴涨：需要 Node 服务（Nuxt）、服务端环境兼容（不能随便用 `window/document`）、服务端内存 / CPU 开销、缓存策略、部署运维变麻烦；\n> - 同一份代码要兼容「服务端执行 + 客户端注水」，很多坑（生命周期、第三方库、状态、定时器）；\n> - 不是 “越快越好”：SSR 服务本身也有耗时，如果没做好缓存，首屏反而比 SPA 慢。\n> \n> \n\n","x":-111,"y":820,"width":558,"height":300,"color":"4"}
 	],
 	"edges":[
 		{"id":"4562286bbb123499","fromNode":"bdf21ccde547fd1b","fromSide":"bottom","toNode":"f4ceb1345b37d11a","toSide":"top"},
@@ -70,6 +71,7 @@
 		{"id":"a80c5eebd84d7ace","fromNode":"cb0725cbf4b27eb8","fromSide":"bottom","toNode":"bdd88dc2499960ef","toSide":"top"},
 		{"id":"aac5f17018e5409b","fromNode":"cb0725cbf4b27eb8","fromSide":"bottom","toNode":"98c011206cb4e120","toSide":"top"},
 		{"id":"0da685ee5d262ef0","fromNode":"00030857779c8c41","fromSide":"bottom","toNode":"6af2924d1d84eb17","toSide":"top"},
-		{"id":"6165071d81906a98","fromNode":"00030857779c8c41","fromSide":"bottom","toNode":"5ab4376406cb4f3d","toSide":"right"}
+		{"id":"6165071d81906a98","fromNode":"00030857779c8c41","fromSide":"bottom","toNode":"5ab4376406cb4f3d","toSide":"right"},
+		{"id":"ee24fa9a58adc772","fromNode":"f7b870bb44c6adac","fromSide":"bottom","toNode":"41502ca379d95144","toSide":"left"}
 	]
 }

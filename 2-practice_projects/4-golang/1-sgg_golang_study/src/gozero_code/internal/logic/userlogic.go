@@ -28,7 +28,7 @@ func NewUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserLogic {
 
 func (l *UserLogic) User() (resp *types.Response, err error) {
 	resp = &types.Response{
-		Message: "你好 用户",
+		Message: "你好 用户 222",
 	}
 
 	return

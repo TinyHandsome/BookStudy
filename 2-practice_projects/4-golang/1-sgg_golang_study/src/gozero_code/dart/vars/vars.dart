@@ -1,0 +1,1 @@
+const serverHost='http://go-zero.dev';
